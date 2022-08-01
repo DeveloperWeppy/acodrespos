@@ -53,6 +53,7 @@ class RegisterController extends Controller
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
+            'number_identification' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -77,6 +78,7 @@ class RegisterController extends Controller
     {
         $user = User::create([
             'name' => $data['name'],
+            'number_identification' => $data['number_identification'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
