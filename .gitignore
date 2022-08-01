@@ -1,2 +1,3 @@
 /storage/*.key
 .env
+storage/installed
