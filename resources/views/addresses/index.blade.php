@@ -14,6 +14,10 @@
                             <div class="col-8">
                                 <h3 class="mb-0">{{ __('My Addresses') }}</h3>
                             </div>
+                            <div class="col-4 text-right">
+                            <button type="button" data-toggle="modal" data-target="#modal-new-address" class="btn btn-sm btn-primary">Agregar nuevo</button>
+                                
+                            </div>
                         </div>
                     </div>
 

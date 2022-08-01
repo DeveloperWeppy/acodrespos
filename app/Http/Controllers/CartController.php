@@ -224,7 +224,8 @@ class CartController extends Controller
             $businessHours=$restaurant->getBusinessHours();
             $now = new \DateTime('now');
 
-            $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+            //$formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+            $formatter = new \IntlDateFormatter('en', \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
             $formatter->setPattern(config('settings.datetime_workinghours_display_format_new'));
         
             //Table ID

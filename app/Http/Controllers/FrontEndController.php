@@ -31,6 +31,7 @@ use Akaunting\Module\Facade as Module;
 use App\Models\Allergens;
 use App\Models\Config;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 use Spatie\OpeningHours\Exceptions\MaximumLimitExceeded;
 
 class FrontEndController extends Controller
@@ -886,8 +887,8 @@ class FrontEndController extends Controller
                
         if ($restorant && $restorant->active == 1) {
 
-            if(config('settings.is_pos_cloud_mode')){
-                return redirect(route('admin.restaurants.edit',$restorant->id));
+            if(config('settings.is_pos_cloud_mode') && Auth::user()){
+               return redirect(route('admin.restaurants.edit',$restorant->id));
             }
     
             //Set config based on restaurant
@@ -949,7 +950,8 @@ class FrontEndController extends Controller
            $tz= $restorant->getConfig('time_zone',config('app.timezone'));
            $now = new \DateTime('now',new \DateTimeZone($tz));
 
-           $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+          // $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+          $formatter = new \IntlDateFormatter('en', \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
            $formatter->setPattern(config('settings.datetime_workinghours_display_format_new'));
            $formatter->setTimeZone($tz);
 
