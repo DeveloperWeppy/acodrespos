@@ -30,6 +30,20 @@
                                     </span>
                                 @endif
                             </div>
+                            <div class="form-group{{ $errors->has('number_identification') ? ' has-danger' : '' }}">
+                                <div class="input-group input-group-alternative mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-id-badge"></i></span>
+                                    </div>
+                                    <input class="form-control{{ $errors->has('number_identification') ? ' is-invalid' : '' }}" 
+                                    minlength="7" maxlength="10" placeholder="Número de Identificación" type="text" name="number_identification" value="{{ old('number_identification') }}" required autofocus>
+                                </div>
+                                @if ($errors->has('number_identification'))
+                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                        <strong>{{ $errors->first('number_identification') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                             <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
                                 <div class="input-group input-group-alternative mb-3">
                                     <div class="input-group-prepend">
