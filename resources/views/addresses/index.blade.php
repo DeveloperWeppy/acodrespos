@@ -15,8 +15,7 @@
                                 <h3 class="mb-0">{{ __('My Addresses') }}</h3>
                             </div>
                             <div class="col-4 text-right">
-                            <button type="button" data-toggle="modal" data-target="#modal-new-address" class="btn btn-sm btn-primary">Agregar nuevo</button>
-                                
+                            <button type="button" data-toggle="modal" data-target="#modal-new-address" class="btn btn-sm btn-primary">Agregar dirección</button>
                             </div>
                         </div>
                     </div>

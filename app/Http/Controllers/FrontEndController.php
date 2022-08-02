@@ -886,8 +886,13 @@ class FrontEndController extends Controller
         $doWeHaveGoogleTranslateApp=Module::has('googletranslate')&&$restorant->getConfig('gt_enable',false)=="true";
                
         if ($restorant && $restorant->active == 1) {
-
-            if(config('settings.is_pos_cloud_mode') && Auth::user()){
+            $notClient=false;
+            if(Auth::user()){
+                if(Auth::user()->hasRole('client')==""){
+                    $notClient=true;
+                }
+            }
+            if(config('settings.is_pos_cloud_mode') && $notClient ){
                return redirect(route('admin.restaurants.edit',$restorant->id));
             }
     

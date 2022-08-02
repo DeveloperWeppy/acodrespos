@@ -169,7 +169,7 @@
   <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
   <script>
-    "use strict";
+    //"use strict";
     var RESTORANT = <?php echo json_encode($restorant) ?>;
     var STRIPE_KEY="{{ config('settings.stripe_key') }}";
     var ENABLE_STRIPE="{{ config('settings.enable_stripe') }}";
