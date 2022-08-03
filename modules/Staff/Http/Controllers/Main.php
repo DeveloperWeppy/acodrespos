@@ -2,17 +2,18 @@
 
 namespace Modules\Staff\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
-
-use App\RestoArea;
-use App\Tables;
 use App\User;
+use App\Tables;
+use App\RestoArea;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+
+
+use Illuminate\Http\Response;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class Main extends Controller
 {
@@ -39,12 +40,12 @@ class Main extends Controller
     /**
      * Title of this crud.
      */
-    private $title = 'staff';
+    private $title = 'Personal';
 
     /**
      * Title of this crud in plural.
      */
-    private $titlePlural = 'staff';
+    private $titlePlural = 'Personal';
 
     /**
      * Auth checker functin for the crud.
@@ -59,9 +60,18 @@ class Main extends Controller
     private function getFields()
     {
         return [
-            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'First and Last name', 'required'=>true],
-            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Email', 'id'=>'email', 'placeholder'=>'Enter email', 'required'=>true],
-            ['class'=>'col-md-4', 'ftype'=>'input','type'=>"password", 'name'=>'Password', 'id'=>'password', 'placeholder'=>'Enter password', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Nombre y Apellido', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Email', 'id'=>'email', 'placeholder'=>'Ingrese un Correo', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input','type'=>"password", 'name'=>'Password', 'id'=>'password', 'placeholder'=>'Ingrese una contraseña', 'required'=>true],
+        ];
+    }
+
+    private function getFieldsTable()
+    {
+        return [
+            ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Nombre y Apellido', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Email', 'id'=>'email', 'placeholder'=>'Ingrese un Correo', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Rol', 'id'=>'email', 'placeholder'=>'Ingrese un Correo', 'required'=>true],
         ];
     }
 
@@ -73,14 +83,18 @@ class Main extends Controller
     public function index()
     {
         $this->authChecker();
-        $fields=$this->getFields();
-        unset($fields[2]);
-
+        $fields=$this->getFieldsTable();
+        unset($fields[3]);
+        /* dd($this->getRestaurant()->staff()->with('roles')->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'owner');
+        })->paginate(config('settings.paginate'))); */
         return view($this->view_path.'index', ['setup' => [
-            'title'=>__('crud.item_managment', ['item'=>__($this->titlePlural)]),
+            'title'=>__('Administrar Personal', ['item'=>__($this->titlePlural)]),
             'action_link'=>route($this->webroute_path.'create'),
-            'action_name'=>__('crud.add_new_item', ['item'=>__($this->title)]),
-            'items'=>$this->getRestaurant()->staff()->paginate(config('settings.paginate')),
+            'action_name'=>__('Añadir Nuevo', ['item'=>__($this->title)]),
+            'items'=>$this->getRestaurant()->staff()->with('roles')->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'owner');
+            })->paginate(config('settings.paginate')),
             'item_names'=>$this->titlePlural,
             'webroute_path'=>$this->webroute_path,
             'fields'=>$fields,
@@ -96,14 +110,16 @@ class Main extends Controller
     public function create()
     {
         $this->authChecker();
+        $all_roles = Role::whereNotIn('name', ['admin', 'owner', 'driver', 'client'])->get();
 
         return view('general.form', ['setup' => [
             'inrow'=>true,
-            'title'=>__('crud.new_item', ['item'=>__($this->title)]),
+            'title'=>__('Nuevo Miembro', ['item'=>__($this->title)]),
             'action_link'=>route($this->webroute_path.'index'),
             'action_name'=>__('crud.back'),
             'iscontent'=>true,
             'action'=>route($this->webroute_path.'store'),
+            'roles' => $all_roles,
         ],
         'fields'=>$this->getFields(), ]);
     }
@@ -128,7 +144,7 @@ class Main extends Controller
         ]);
         $item->save();
 
-        $item->assignRole('staff');
+        $item->assignRole($request->rol);
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
     }

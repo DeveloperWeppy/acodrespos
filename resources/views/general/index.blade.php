@@ -25,6 +25,7 @@
                                 <div class="col-4 text-right">
                                     @isset($action_link)
                                         <a href="{{ $action_link }}" class="btn btn-sm btn-primary">{{ __($action_name) }}</a>
+                                        {{-- <a href="{{ $action_link }}" class="btn btn-sm btn-primary">Agregar Nuevo Personal</a> --}}
                                     @endisset
                                     @isset($action_link2) 
                                             <a href="{{ $action_link2 }}" class="btn btn-sm btn-primary">{{ __($action_name2) }}</a>
@@ -64,7 +65,7 @@
                                         @foreach ($fields as $field)
                                             <th>{{ __( $field['name'] ) }}</th>
                                         @endforeach 
-                                        <th>{{ __('crud.actions') }}</th>
+                                        <th>{{ __('Acciones') }}</th>
                                     @else
                                         @yield('thead')
                                     @endif

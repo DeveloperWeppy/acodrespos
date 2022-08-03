@@ -15,10 +15,10 @@ Route::group([
     'middleware' =>[ 'web','impersonate'],
     'namespace' => 'Modules\Staff\Http\Controllers'
 ], function () {
-    Route::prefix('staff')->group(function() {
+    Route::prefix('personal')->group(function() {
 
    
-            Route::get('/list', 'Main@index')->name('staff.index');
+            Route::get('/listado', 'Main@index')->name('staff.index');
             Route::get('/{table}/edit', 'Main@edit')->name('staff.edit');
             Route::get('/create', 'Main@create')->name('staff.create');
             Route::post('/', 'Main@store')->name('staff.store');

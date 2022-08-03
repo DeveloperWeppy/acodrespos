@@ -38,6 +38,9 @@
          <!-- Font Awesome Icons -->
         <link href="{{ asset('argonfront') }}/css/font-awesome.css" rel="stylesheet" />
 
+        <!-- Styles Personalizados -->
+        <link href="{{ asset('css') }}/dashboard.css" rel="stylesheet">
+
         <!-- Lottie -->
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 

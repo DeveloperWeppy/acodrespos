@@ -12,6 +12,7 @@
       @endif
     </a>
 
+    @if(auth()->user()->hasRole('staff'))
     <div class="col-auto">
       <button onclick="showOrders()" type="button" class="btn bg-gradient-primary my-1 me-1">
         <span>{{ __('Active Orders') }}</span>
@@ -21,7 +22,7 @@
       <button onclick="showFloor()" type="button" class="btn bg-gradient-info my-1 mx-2 me-1">{{ __('Floor Plan') }}</button>
     
     </div>
-    
+    @endif
 
     <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon mt-2">

@@ -102,6 +102,12 @@
                 <span></span>
             @endif
 
+            @if(auth()->user()->hasRole('kitchen'))
+                @include('layouts.navbars.menus.kitchen')
+            @else
+                <span></span>
+            @endif
+
             @if(auth()->user()->hasRole('client'))
                 @include('layouts.navbars.menus.client')
             @else

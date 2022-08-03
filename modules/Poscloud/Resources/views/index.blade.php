@@ -1,5 +1,6 @@
 @extends('poscloud::layouts.master')
 
+@if(auth()->user()->hasRole('staff'))
 @section('floorPlan')
   @include('poscloud::pos.floor')
 @endsection
@@ -13,6 +14,6 @@
   @include('poscloud::pos.order')
 @endsection
 
-
+@endif
 
 
