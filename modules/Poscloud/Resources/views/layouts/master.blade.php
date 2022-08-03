@@ -124,7 +124,10 @@
 
    <!-- Notify JS -->
    <script src="{{ asset('custom') }}/js/notify.min.js"></script>
-
+   <script src="{{ asset('custom') }}/js/notify.min.js"></script>
+   <link rel="stylesheet" href="{{asset('vendor/intltelinput/build/css/intlTelInput.css')}}">
+<script src="{{asset('vendor/intltelinput/build/js/intlTelInput.js')}}"></script>
+<script src="{{asset('vendor/intltelinput/build/js/utils.js')}}"></script>
 
   @stack('js')
   @yield('js')
@@ -142,7 +145,19 @@
 
 
   <script type="text/javascript">
-
+  var datalistClient=@json($selectClient);
+  var datalistPhone=@json($selectTelefono);
+  $('#client_name').select2({
+      width: '100%',
+      allowClear: true,
+      multiple: false,
+      placeholder: "Nombre o Documento",
+      data: datalistClient
+  });
+  $( "#client_name").change(function() {
+    $( "#client_phone").val(datalistPhone[$( "#client_name").val()]);
+  });
+  
       $(function() {
 
         $('#printPos').on("click", function () {
@@ -400,6 +415,56 @@
       openTable(id,"");
       event.preventDefault()
     });
+
+    function initPhone(name){
+        var input = document.querySelector("input[name='"+name+"']");
+        if(input!=null){
+            var iti=window.intlTelInput(input, {
+              nationalMode:true,
+                hiddenInput: name,
+                //customContainer:"form-controls",
+                autoHideDialCode:true,
+                separateDialCode:true,
+                autoPlaceholder:"aggressive",
+                initialCountry: "auto",
+                utilsScript: "/vendor/intltelinput/build/js/utils.js", 
+                geoIpLookup: function(success, failure) {
+                    $.get("https://ipinfo.io?token=c2999fc5e1aefc",function() {}, "jsonp").always(function(resp) {
+                    var countryCode = (resp && resp.country) ? resp.country : "co";
+                    success(countryCode);
+                    });
+                },
+            });
+
+
+        var reset = function() {
+		  input.classList.remove("error");
+          setTheHidden();
+		};
+
+        var setTheHidden =function(){
+            var theHidden=document.querySelector("input[type=hidden][name='"+name+"']");
+            theHidden.value = iti.getSelectedCountryData().dialCode+input.value;
+            console.log(theHidden.value);
+        }
+
+
+		input.addEventListener('change', reset);
+		input.addEventListener('keyup', reset);	 
+
+        input.addEventListener("countrychange", function() {
+            setTheHidden();
+        });
+
+        setTheHidden();
+
+        }
+    }
+    $( ".btnFormClient" ).click(function() {
+    setTimeout(() => {
+            initPhone('phone');
+        }, 1000);
+   });
     </script>
 
     

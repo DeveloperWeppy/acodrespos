@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SimpleDelivery;
 use App\Restorant;
 use App\Tables;
+use App\User;
 use Darryldecode\Cart\CartCollection;
 use Carbon\Carbon;
 use Cart;
@@ -56,9 +57,24 @@ class Main extends Controller
 
             $deliveryAreas=SimpleDelivery::where('restaurant_id',$vendor->id)->get();
             $deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
-
-
-            return view('poscloud::index',['deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan]);
+            $listClient=User::role('client')->where('active','1')->get();
+            $selectClient=array();
+            $selectTelefono=array();
+            $clienteGeneral=User::role('client')->where('name','cliente general')->get();
+            
+            if(count($clienteGeneral)>0){
+                array_push($selectClient,array('id'=>$clienteGeneral[0]->id,'text'=>$clienteGeneral[0]->name));
+                $selectTelefono[$clienteGeneral[0]->id]="";
+            }else{
+              $clienteGeneral[0]->id=0;
+            }
+            foreach ($listClient as $key => $item) {
+                    if($clienteGeneral[0]->id!=$item->id){
+                        array_push($selectClient,array('id'=>$item->id,'text'=>$item->name." - ".$item->number_identification));
+                        $selectTelefono[$item->id]=$item->phone;
+                    }
+            }
+            return view('poscloud::index',['deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono]);
         }else{
             return redirect(route('login'));
         }
