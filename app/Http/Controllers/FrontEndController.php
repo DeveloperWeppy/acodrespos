@@ -207,6 +207,7 @@ class FrontEndController extends Controller
         }
 
         //Multy City mode, and we don't have location atm
+       
         if (config('settings.multi_city') && ! ($hasLocation || $hasQuery)) {
             return $this->multyCityMode();
         }
@@ -604,6 +605,7 @@ class FrontEndController extends Controller
      */
     public function showStores($city_alias)
     {
+        
         //Variants
         /**
          * 1. Nothing no city, no q, no location
@@ -649,8 +651,10 @@ class FrontEndController extends Controller
                 //No query
                 $restorants = $theRestorants->get()->shuffle();
             }
+          
             array_push($sections, ['title'=>__('Restaurants in').' '.$city->name.$aditionInTitle, 'restorants' =>$restorants]);
         } elseif ($hasLocation) {
+           
             //LOCATION BASED SEARCH CASE 4 and 5
             //First, find the provided location, convert it to lat/lng
             $client = new \GuzzleHttp\Client();
@@ -750,6 +754,7 @@ class FrontEndController extends Controller
                 array_push($sections, ['title'=>$allReastaurantsTitle.$aditionInTitle, 'restorants' => $allRestorantDeliveringCollection]);
             }
         } elseif ($hasQuery) {
+           
             //CASE 6
             //IS IS Query String Search
             $restorants = $this->filterRestaurantsOnQuery(Restorant::where(['active' => 1, $expedition => 1])->pluck('id')->toArray());
@@ -757,7 +762,36 @@ class FrontEndController extends Controller
         } else {
             //CASE 1 - nothing at all
             //No query at all
-            array_push($sections, ['title'=>__('Popular restaurants'), 'restorants' =>Restorant::where('active', 1)->get()->shuffle()]);
+            $arrayRestorant=Restorant::where('active', 1)->get()->shuffle();
+            if(Auth::user()){
+                if(Auth::user()->hasRole('client')!=""){
+                    $ordersClient = Order::orderBy('created_at', 'desc')->where(['client_id'=>auth()->user()->id])->whereNotNull('restorant_id')->groupBy('restorant_id')->get();
+                    $arrayNewRestorant=array();
+                    $arrayAdd=array();
+                    $array = json_decode( json_encode( $arrayRestorant ), true );
+                    foreach ($ordersClient as $item) {
+                        $key = array_search($item->restorant_id,array_column($array, 'id'));
+                        array_push($arrayNewRestorant,$arrayRestorant[$key]);
+                        array_push($arrayAdd,$key);
+                    }
+                    foreach ($arrayRestorant as $clave => $item) {
+                        $ifEx=0;
+                        foreach ($arrayNewRestorant as $item2) {
+                            if($item2->id==$item->id){
+                                $ifEx=1;
+                            }
+                        } 
+                        if($ifEx==0){
+                            array_push($arrayNewRestorant,$item);
+                        }
+                       
+                    }
+                    $arrayRestorant=array();
+                    $arrayRestorant=$arrayNewRestorant;
+                    
+                }
+            }
+            array_push($sections, ['title'=>__('Popular restaurants'), 'restorants' =>$arrayRestorant]);
         }
 
         $banners_data = Banners::all();

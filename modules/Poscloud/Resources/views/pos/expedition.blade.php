@@ -5,9 +5,11 @@
       <div class="card-content ">
         <br />
 
-        <label>{{ __('Client name') }}</label>
+        <label style="width:100%;display: contents;"><span>{{ __('Client name') }}</span> <button style="float: right;" type="button" data-bs-toggle="modal" data-bs-target="#modalRegister" class="btnFormClient btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius"><span class="btn-inner--icon btn-cart-icon"><i aria-hidden="true" class="fa fa-plus"></i></span></button></label>
         <div class="input-group mb-3">
-            <input :value="config.client_name"  type="text" id="client_name" class="form-control" placeholder="{{ __('Client name') }}" aria-label="o" autofocus>
+            <select :value="config.client_name" style="width:100%;" type="text" id="client_name" class="form-control"   required>
+               
+            </select>
         </div>
 
         <label>{{ __('Client phone') }}</label>
@@ -53,4 +55,66 @@
       </div>
     </div>
 
+</div>
+<div class="modal fade" id="modalRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar Cliente</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close" style="color: black;">
+           <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text2"><i class="ni ni-hat-3"></i></span>
+            </div>
+            <input class="form-control" style="border: 0px;" placeholder="Nombre" type="text" name="name" value="" required="" autofocus="">
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text2"><i class="far fa-id-badge"></i></span>
+            </div>
+            <input class="form-control" style="border: 0px;" minlength="7" maxlength="10" placeholder="Número de Identificación" type="text" name="number_identification" value="" required="" autofocus="">
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text2"><i class="ni ni-email-83"></i></span>
+            </div>
+            <input class="form-control"  style="border: 0px;"  placeholder="Correo electrónico" type="email" name="email" value="" required="">
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <input class="form-control" id="formPhone"  placeholder="Teléfono" type="phone" name="phone" value="" required="">
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text2"><i class="ni ni-lock-circle-open"></i></span>
+            </div>
+            <input class="form-control" style="border: 0px;"  placeholder="Clave" type="password" name="password" required="">
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="input-group input-group-alternative mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text2"><i class="ni ni-lock-circle-open"></i></span>
+            </div>
+            <input class="form-control" style="border: 0px;"  placeholder="Confirmar contraseña" type="password" name="password_confirmation" required="">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">CREAR</button>
+      </div>
+    </div>
+  </div>
 </div>
