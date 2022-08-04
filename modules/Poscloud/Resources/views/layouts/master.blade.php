@@ -15,7 +15,6 @@
 -->
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -128,7 +127,8 @@
    <link rel="stylesheet" href="{{asset('vendor/intltelinput/build/css/intlTelInput.css')}}">
 <script src="{{asset('vendor/intltelinput/build/js/intlTelInput.js')}}"></script>
 <script src="{{asset('vendor/intltelinput/build/js/utils.js')}}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @stack('js')
   @yield('js')
 
@@ -465,6 +465,103 @@
             initPhone('phone');
         }, 1000);
    });
+   $(document).ready(function() {
+    $("#from-create-client").validate({
+   rules: {
+     name: {
+       required: true,
+     },
+     number_identification: {
+       required: true,
+     },
+     email: {
+       required: true,
+     },
+     phone: {
+       required: true,
+     },
+
+   },
+   messages: {
+     name: "Por favor ingrese el nombre",
+     number_identification: "Por favor ingrese el documento de identificacion",
+     email: "Por favor ingrese el email",
+     phone: "Por favor el numero de telefono",
+   
+   },
+   errorElement: 'span',
+   errorPlacement: function (error, element) {
+     error.addClass('invalid-feedback');
+     element.closest('.form-group').append(error);
+   },
+   highlight: function (element, errorClass, validClass) {
+     if($(element).attr('id')!="formPhone"){
+      $(element).addClass('is-invalid');
+     }
+   },
+   unhighlight: function (element, errorClass, validClass) {
+     $(element).removeClass('is-invalid');
+   },
+   submitHandler: function(form,event){
+    event.preventDefault();
+             var formDataClient=new FormData(form);
+             formDataClient.append( 'password', $( '#fromDocCleint' ).val() );
+             formDataClient.append( 'password_confirmation', $( '#fromDocCleint' ).val() );
+             $.ajax({
+                headers: {
+                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                type: "post",
+                encoding:"UTF-8",
+                url: "{{route('register')}}",
+                data:formDataClient ,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                beforeSend:function(){
+                  $('#modalRegister').modal('hide');
+                  Swal.fire({
+                           title: 'Validando datos, espere por favor...',
+                           button: false,
+                           showConfirmButton: false,
+                           allowOutsideClick: false,
+                           allowEscapeKey: false,
+                           showCancelButton: false,
+                           showConfirmButton: false,
+                           timer: 4000,
+                           timerProgressBar: true,
+                               didOpen: () => {
+                                   Swal.showLoading()
+                               },
+                       });
+                }
+             }).done(function( respuesta ) {
+                 Swal.fire({
+                              title: 'Cliente registrado',
+                              icon: 'success',
+                              button: true,
+                              timer: 2000
+                          });
+             }).fail(function( jqXHR,textStatus ) {
+                var mensajeError="";
+                if (typeof jqXHR.responseJSON.errors.email != "undefined"){
+                     mensajeError="El correo electrónico ya se tomó.";
+                }
+                Swal.fire({
+                              title: 'Los datos proporcionados no son válidos',
+                              text:mensajeError,
+                              icon: 'error',
+                              button: true,
+                              timer: 2000
+                          });
+                setTimeout(() => {
+                   $('#modalRegister').modal('show');
+                }, 2000);
+            });
+   }
+ });
+});
+
     </script>
 
     
