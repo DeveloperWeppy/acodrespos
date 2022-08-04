@@ -2,7 +2,7 @@
 
 return [
 
-    'name'              => 'Personal',
+    'name'              => 'staff',
     'description'       => 'This is my awesome module',
 
 ];
