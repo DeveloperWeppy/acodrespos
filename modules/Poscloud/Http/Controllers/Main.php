@@ -68,6 +68,7 @@ class Main extends Controller
                 $selectTelefono[$clienteGeneral->id]="";
             }else{
               $clienteGeneral= (object) array('id' => 0); 
+              array_push($selectClient,array('id'=>'','text'=>"Seleccióna un cliente"));
             }
             foreach ($listClient as $key => $item) {
                     if($clienteGeneral->id!=$item->id){
