@@ -58,14 +58,14 @@
 </div>
 <div class="modal fade" id="modalRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <form class="modal-content" id="from-create-client">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Registrar Cliente</h5>
         <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close" style="color: black;">
            <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" >
         <div class="form-group" >
           <div class="input-group input-group-alternative mb-3">
             <div class="input-group-prepend">
@@ -79,7 +79,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text2"><i class="far fa-id-badge"></i></span>
             </div>
-            <input class="form-control" style="border: 0px;" minlength="7" maxlength="10" placeholder="Número de Identificación" type="text" name="number_identification" value="" required="" autofocus="">
+            <input class="form-control" style="border: 0px;" id="fromDocCleint" minlength="7" maxlength="10" placeholder="Número de Identificación" type="text" name="number_identification" value="" required="" autofocus="">
           </div>
         </div>
         <div class="form-group" >
@@ -95,26 +95,10 @@
             <input class="form-control" id="formPhone"  placeholder="Teléfono" type="phone" name="phone" value="" required="">
           </div>
         </div>
-        <div class="form-group" >
-          <div class="input-group input-group-alternative mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text2"><i class="ni ni-lock-circle-open"></i></span>
-            </div>
-            <input class="form-control" style="border: 0px;"  placeholder="Clave" type="password" name="password" required="">
-          </div>
-        </div>
-        <div class="form-group" >
-          <div class="input-group input-group-alternative mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text2"><i class="ni ni-lock-circle-open"></i></span>
-            </div>
-            <input class="form-control" style="border: 0px;"  placeholder="Confirmar contraseña" type="password" name="password_confirmation" required="">
-          </div>
-        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">CREAR</button>
+        <button type="subtmin" class="btn btn-primary">CREAR</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>

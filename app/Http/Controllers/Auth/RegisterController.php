@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Auth;
 class RegisterController extends Controller
 {
     /*
@@ -38,9 +38,12 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->middleware('guest');
+        if(!isset($request->name) ){
+           $this->middleware('guest');
+         }
+       
     }
 
     /**
@@ -65,6 +68,7 @@ class RegisterController extends Controller
             $rules['birth_date'] = 'required|date|date_format:Y-m-d|before:-'.config('settings.minimum_years_to_register').' years';
         }
         //dd($rules);
+
         return Validator::make($data, $rules);
     }
 
@@ -93,7 +97,11 @@ class RegisterController extends Controller
     }
 
     protected function registered(Request $request, User $user)
-    {
-        return redirect($this->redirectPath());
+    {   
+        if(!isset($request->name) && !Auth::user()){
+            return redirect($this->redirectPath());
+          }
+            
+         
     }
 }
