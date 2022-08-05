@@ -107,7 +107,6 @@ class Main extends Controller
         //Get all the active orders
         $orders=CartStorageModel::where('vendor_id',auth()->user()->restaurant_id)->get();
 
-
         //Create an array to suit our needs
         $returnArray=[];
         // $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
@@ -165,7 +164,7 @@ class Main extends Controller
         }
         
         $restorant = Restorant::findOrFail($vendor_id);
-
+        
         //Organize the item
         $items=[];
         foreach (Cart::getContent() as $key => $item) {

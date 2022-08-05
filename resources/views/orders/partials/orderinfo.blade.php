@@ -80,7 +80,7 @@
             @if ( $item->pivot->qty>0)
             <li><h4>{{ $item->pivot->qty." X ".$item->name }} -  @money($theItemPrice, $currency,$convert)  =  ( @money( $item->pivot->qty*$theItemPrice, $currency,true) )
                  
-                @if($item->pivot->vatvalue>0))
+                @if($item->pivot->vatvalue>0)
                     <span class="small">-- {{ __('VAT ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                 @endif
                  @hasrole('admin|owner|staff')
