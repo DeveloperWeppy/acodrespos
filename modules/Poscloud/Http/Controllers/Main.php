@@ -63,13 +63,15 @@ class Main extends Controller
             $clienteGeneral=User::role('client')->where('name','cliente general')->get();
             
             if(count($clienteGeneral)>0){
-                array_push($selectClient,array('id'=>$clienteGeneral[0]->id,'text'=>$clienteGeneral[0]->name));
-                $selectTelefono[$clienteGeneral[0]->id]="";
+                $clienteGeneral=$clienteGeneral[0];
+                array_push($selectClient,array('id'=>$clienteGeneral->id,'text'=>$clienteGeneral->name));
+                $selectTelefono[$clienteGeneral->id]="";
             }else{
-              $clienteGeneral[0]->id=0;
+              $clienteGeneral= (object) array('id' => 0); 
+              array_push($selectClient,array('id'=>'','text'=>"Seleccióna un cliente"));
             }
             foreach ($listClient as $key => $item) {
-                    if($clienteGeneral[0]->id!=$item->id){
+                    if($clienteGeneral->id!=$item->id){
                         array_push($selectClient,array('id'=>$item->id,'text'=>$item->name." - ".$item->number_identification));
                         $selectTelefono[$item->id]=$item->phone;
                     }
