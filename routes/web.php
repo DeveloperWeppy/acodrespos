@@ -178,7 +178,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
     Route::get('driverlocations', 'DriverController@driverlocations');
     Route::get('restaurantslocations', 'RestorantController@restaurantslocations');
 
-    Route::get('live', 'OrderController@live')->middleware('isOwnerOnPro');
+    Route::get('live', 'OrderController@live')->name('live')->middleware('isOwnerOnPro');
     Route::get('/updatestatus/{alias}/{order}', ['as' => 'update.status', 'uses'=>'OrderController@updateStatus']);
 
     Route::resource('settings', 'SettingsController');
