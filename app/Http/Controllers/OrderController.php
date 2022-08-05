@@ -812,7 +812,7 @@ class OrderController extends Controller
             }
         }
 
-        if (auth()->user()->hasRole('sstaff')) {
+        if (auth()->user()->hasRole('staff')) {
             //This user is owner, but we must check if this is order from his restaurant
             if (auth()->user()->restaurant_id != $order->restorant->id) {
                 abort(403, 'Unauthorized action. You are not owner of this order restaurant');

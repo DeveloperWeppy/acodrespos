@@ -9,20 +9,22 @@
             <div class="row">
         @endisset
             @include('partials.fields',['fiedls'=>$fields])
-            <div class="col-md-6">
-                <div class="form-group" id="new_address_checkout_holder">
-                    <label class="form-control-label" for="new_address_checkout">Rol</label>
-                    <select class=" form-control" id="new_address_checkout" name="rol">
-                        @if (isset($setup['roles']))
-                            @foreach ($setup['roles'] as $item)
-                                <option value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
-                            @endforeach
+            @if (Request::route()->getName() == 'staff.create')
+                <div class="col-md-6">
+                    <div class="form-group" id="new_address_checkout_holder">
+                        <label class="form-control-label" for="new_address_checkout">Rol</label>
+                        <select class=" form-control" id="new_address_checkout" name="rol">
+                            @if (isset($setup['roles']))
+                                @foreach ($setup['roles'] as $item)
+                                    <option value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
+                                @endforeach
+                                
+                            @endif
                             
-                        @endif
-                        
-                    </select>
+                        </select>
+                    </div>
                 </div>
-            </div>
+            @endif
            
         @isset($setup['inrow'])
             </div>
