@@ -598,7 +598,7 @@ class OrderController extends Controller
         foreach ($orders as $key => $order) {
             $client="";
             if(config('app.isft')){
-                $client=$order['client']['name'];
+                //$client=$order['client']['name'];
 
                 if($order['table']&&$order['table']['restoarea']&&$order['table']['restoarea']['name']&&$order['table']['name']){
                     $client=$order['table']['restoarea']['name'].' - '.$order['table']['name'];
@@ -606,7 +606,11 @@ class OrderController extends Controller
                     $client=$order['table']['name'];
                 }else{
                     //If the order was made by a registered user, returns his name
-                    $client=$order['client']['name'];
+                    if(isset($order['client']['name'])){
+                        $client=$order['client']['name'];
+                    }else{
+                        $client="";
+                    }
                 }
             }else{
                 if(!config('settings.is_whatsapp_ordering_mode')){
