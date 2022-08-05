@@ -114,8 +114,10 @@
                             <br/>
                             <!-- End Cooupo Code -->
                         @endif
-
-                        <button id='dineincheckout' type="button" class="btn btn-lg w-100 btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">{{ __('Checkout') }}</button>
+                        <div  class="row" style="display:flex;justify-content: space-around;">
+                            <button id='createOrder' onclick="submitOrderPOS(1)" type="button" style="padding:10px" class="col-5 btn btn-lg  btn-primary text-white">Crear Pedido</button>
+                            <button id='dineincheckout' type="button" style="padding:10px"   class="col-5 btn btn-lg btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">Pagar</button>
+                        </div>
                     </div>
                 </div>
 
