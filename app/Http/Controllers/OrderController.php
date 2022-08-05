@@ -435,6 +435,7 @@ class OrderController extends Controller
         if (auth()->user()->hasRole('client') && auth()->user()->id == $order->client_id ||
             auth()->user()->hasRole('owner') && auth()->user()->id == $order->restorant->user->id ||
             auth()->user()->hasRole('staff') && auth()->user()->restaurant_id == $order->restorant->id ||
+            auth()->user()->hasRole('kitchen') && auth()->user()->restaurant_id == $order->restorant->id ||
                 auth()->user()->hasRole('driver') && auth()->user()->id == $order->driver_id || auth()->user()->hasRole('admin')
             ) {
 
@@ -666,7 +667,7 @@ class OrderController extends Controller
         }
 
         //----- Restaurant ------
-        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')) {
+        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')||auth()->user()->hasRole('kitchen')) {
             foreach ($items as $key => $item) {
 
                 
