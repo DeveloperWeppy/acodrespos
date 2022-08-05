@@ -22,13 +22,13 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         return $validator;
     }
 
-    public function makeOrder(){
+    public function makeOrder($client_id=null){
 
         //From Parent - Construct the order
         $this->constructOrder();
 
         //In POS - currently logged in user is not the client
-        $this->order->client_id=null;
+        $this->order->client_id=$client_id;
 
         //Payed by default
         $this->order->payment_status='paid';

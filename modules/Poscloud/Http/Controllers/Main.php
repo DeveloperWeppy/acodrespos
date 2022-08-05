@@ -297,7 +297,17 @@ class Main extends Controller
             }
 
             //Proceed with making the order
-            $validatorOnMaking=$orderRepo->makeOrder();
+            if($request->has('custom')){
+                $customFields=$request->custom;
+                if(isset($customFields['client_id'])) {
+                    $validatorOnMaking=$orderRepo->makeOrder($customFields['client_id']);
+                }else{
+                    $validatorOnMaking=$orderRepo->makeOrder();
+                }
+            }else{
+                $validatorOnMaking=$orderRepo->makeOrder();
+            }
+            
             if ($validatorOnMaking->fails()) { 
                 return response()->json([
                     'status' => false,
