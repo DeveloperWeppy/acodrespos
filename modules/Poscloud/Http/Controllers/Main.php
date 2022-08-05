@@ -110,10 +110,9 @@ class Main extends Controller
 
         //Create an array to suit our needs
         $returnArray=[];
-
-        $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+        // $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+        $formatter = new \IntlDateFormatter('en', \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
         $formatter->setPattern(config('settings.datetime_workinghours_display_format_new'));
-
         foreach ($orders as $key => $order) {
 
             $theOrder=new CartCollection($order->cart_data);
@@ -305,7 +304,7 @@ class Main extends Controller
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder();
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->tipo);
             }
             
             if ($validatorOnMaking->fails()) { 

@@ -53,6 +53,7 @@ function updatePrices(net,delivery,expedition){
 
 
   }else{
+   
     //No delivery
     //Delivery
     cartTotal.delivery=false;
@@ -66,8 +67,12 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPrice=net-deduct;
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
     modalPayment.received=0;
-
   }
+  if($('#expedition').is(':visible')){
+    $('#createOrder').css('display','none');
+ }else{
+   $('#createOrder').css('display','block');
+ }
   total.lastChange=new Date().getTime();
   cartTotal.lastChange=new Date().getTime();
 
@@ -278,14 +283,15 @@ function updateExpeditionPOS(){
 
 }
 
-function submitOrderPOS(){
-  
+function submitOrderPOS(tipo=0){
+  //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
   $('#submitOrderPOS').hide();
   $('#indicator').show();
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
     expedition:EXPEDITION,
+    tipo:tipo
   };
   if(EXPEDITION==1||EXPEDITION==2){
     //Pickup OR deliver
@@ -300,13 +306,12 @@ function submitOrderPOS(){
       dataToSubmit.addressID=$('#client_address').val();
       dataToSubmit.custom.deliveryFee=cartTotal.deliveryPrice;
     }
-    
   }
-
+ 
   if(cartTotal.deduct>0){
+    
     dataToSubmit.coupon_code=$('#coupon_code').val();
   }
-  
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
 
    
