@@ -296,7 +296,7 @@ class Main extends Controller
                 ]);
             }
 
-            //Proceed with making the order
+            //Proceed with making the order   POSOrderRepository
             if($request->has('custom')){
                 $customFields=$request->custom;
                 if(isset($customFields['client_id'])) {
