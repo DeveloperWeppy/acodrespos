@@ -110,8 +110,10 @@
 
       // "Global" flag to indicate whether the select2 control is oedropped down).
       var _selectIsOpen = false;
-
-      
+      var datalistClient=@json($selectClient);
+      var datalistPhone=@json($selectTelefono);
+      var selectClientId=0;
+      var selectClientText="";
    </script>
    <script src="{{ asset('custom') }}/js/cartPOSFunctions.js"></script>
    
@@ -145,22 +147,26 @@
 
 
   <script type="text/javascript">
-  var datalistClient=@json($selectClient);
-  var datalistPhone=@json($selectTelefono);
+  
   $('#client_name').select2({
       width: '100%',
-      allowClear: true,
-      multiple: false,
       placeholder: "Nombre o Documento",
       data: datalistClient
   });
-  if($('#client_name').val()==""){
-
-  }
-  $( "#client_name").change(function() {
+  $('#client_name').change(function() {
+    selectClientId=$( "#client_name").val();
+    selectClientText=$("#client_name option:selected").text();
     $( "#client_phone").val(datalistPhone[$( "#client_name").val()]);
   });
-  
+  if(datalistClient.length>0){
+     if(datalistClient[0]['text']=="cliente general"){
+      $("#client_name").val(datalistClient[0]['id']).trigger('change');
+     }else{
+      $("#client_name").val("").trigger('change');
+     }
+   
+  }
+ 
       $(function() {
 
         $('#printPos').on("click", function () {
