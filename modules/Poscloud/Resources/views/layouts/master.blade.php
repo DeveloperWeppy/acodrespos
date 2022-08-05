@@ -154,6 +154,9 @@
       placeholder: "Nombre o Documento",
       data: datalistClient
   });
+  if($('#client_name').val()==""){
+
+  }
   $( "#client_name").change(function() {
     $( "#client_phone").val(datalistPhone[$( "#client_name").val()]);
   });
