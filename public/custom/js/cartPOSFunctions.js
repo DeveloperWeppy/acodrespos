@@ -290,8 +290,8 @@ function submitOrderPOS(){
   if(EXPEDITION==1||EXPEDITION==2){
     //Pickup OR deliver
     dataToSubmit.custom={
-      client_id:$('#client_name').val(),
-      client_name:$("#client_name option:selected").text(),
+      client_id:selectClientId,
+      client_name:selectClientText,
       client_phone:$( "#client_phone").val(),
     }
     dataToSubmit.phone=$('#client_phone').val();
