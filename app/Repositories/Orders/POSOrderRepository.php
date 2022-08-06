@@ -31,8 +31,8 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         $this->order->client_id=$client_id;
 
         //Payed by default
-        if($tipo==1){
-            $this->order->cart_storage_id="eee";
+        if($tipo!=0){
+            $this->order->cart_storage_id=$tipo;
             $this->order->payment_status='unpaid';
         }else{
             $this->order->payment_status='paid';
