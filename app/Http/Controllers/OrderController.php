@@ -318,13 +318,13 @@ class OrderController extends Controller
             "coupon_code"=> $request->has('coupon_code')&&strlen($request->coupon_code)>3?$request->coupon_code:null
         ];
 
-        
+
 
         return new Request($requestData);
     }
 
     public function store(Request $request){
-
+        dd($request);
         //Convert web request to mobile like request
         if(config('app.issd',false)||$request->has('issd')){
             //Web ride
@@ -386,6 +386,37 @@ class OrderController extends Controller
         return $orderRepo->redirectOrInform();
     }
 
+    public function statusitemorder(Request $request)
+    {
+
+        $class_status = $text_status = '';
+        $status = 'cocina';
+
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
+            $id = $request->id;
+
+            $item = DB::table('order_has_items')
+            ->where('id', $id)
+            ->first();
+            $active = ($item->item_status == 'cocina') ? 'servicio' : 'cocina';
+
+            $actualiza = DB::table('order_has_items')
+              ->where('id', $id)
+              ->update(['item_status' => $active]);
+
+          
+
+            if ($actualiza == 1) {
+
+                $class_status = ($active == 'servicio') ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
+                $text_status = ($active == 'servicio') ? "Servicio" : "Cocina";
+                $status = 'servicio';
+            } 
+            
+        }
+
+        echo json_encode(array("status" => $status, "class_status" => $class_status, "text_status" => $text_status));
+    }
 
     public function orderLocationAPI(Order $order)
     {

@@ -6,15 +6,19 @@
                 <div class="col-8">
                     <h3 class="mb-0">{{ __('Orders') }}</h3>
                 </div>
-                <div class="col-4 text-right">
-                    <button id="show-hide-filters" class="btn btn-icon btn-1 btn-sm btn-outline-secondary" type="button">
-                        <span class="btn-inner--icon"><i id="button-filters" class="ni ni-bold-down"></i></span>
-                    </button>
-                </div>
+                @hasrole('admin|staff|owner')
+                    <div class="col-4 text-right">
+                        <button id="show-hide-filters" class="btn btn-icon btn-1 btn-sm btn-outline-secondary" type="button">
+                            <span class="btn-inner--icon"><i id="button-filters" class="ni ni-bold-down"></i></span>
+                        </button>
+                    </div>
+                @endhasrole
             </div>
             <br/>
             <div class="tab-content orders-filters">
+                @hasrole('admin|staff|owner')
                     <div class="row">
+                        
                         <div class="col-md-6">
                             <div class="input-daterange datepicker row align-items-center">
                                 <div class="col-md-6">
@@ -41,6 +45,7 @@
                                 </div>
                             </div>
                         </div>
+                        
 
                         <!-- statuses -->
                         <div class="col-md-3">
@@ -51,6 +56,7 @@
                         <div class="col-md-3">
                             @include('partials.select', ['name'=>"Payment status",'id'=>"payment_status",'placeholder'=>"Select status",'data'=>['paid'=>__("Paid"),'unpaid'=>("Unpaid")],'required'=>false, 'value'=>''])
                         </div>
+                        
 
                         
                         @hasrole('admin|driver')
@@ -117,6 +123,7 @@
                                 </div>
                         </div>
                     </div>
+                @endhasrole
              </div>
         </form>
         @endif

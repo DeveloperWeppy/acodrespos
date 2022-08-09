@@ -313,8 +313,8 @@ function submitOrderPOS(tipo=0){
     dataToSubmit.coupon_code=$('#coupon_code').val();
   }
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
-
    
+    
     
     $('#submitOrderPOS').show();
     $('#indicator').hide();

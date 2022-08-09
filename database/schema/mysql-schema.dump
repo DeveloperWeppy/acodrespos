@@ -269,6 +269,7 @@ CREATE TABLE `order_has_items` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `order_id` bigint unsigned NOT NULL,
   `item_id` bigint unsigned NOT NULL,
+  `item_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `qty` int NOT NULL DEFAULT '1',
   `extras` varchar(800) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
   `vat` double(8,2) DEFAULT '0.00',

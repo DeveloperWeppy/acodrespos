@@ -209,7 +209,8 @@ class BaseOrderRepository extends Controller
                 'vat'=>$theItem->vat, 
                 'vatvalue'=>$totalCalculatedVAT, 
                 'variant_name'=>$variantName, 
-                'variant_price'=>$itemSelectedPrice
+                'variant_price'=>$itemSelectedPrice,
+                'item_status'=>'cocina'
             ]);
         } 
 

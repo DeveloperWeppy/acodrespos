@@ -83,8 +83,9 @@
                 @if($item->pivot->vatvalue>0)
                     <span class="small">-- {{ __('VAT ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                 @endif
-                 @hasrole('admin|owner|staff')
+                @hasrole('admin|owner|staff|kitchen')
                     <?php $lasStatusId=$order->status->pluck('id')->last(); ?>
+                    {{-- @hasrole('staff|admin|owner') --}}
                     @if ($lasStatusId!=7&&$lasStatusId!=11)
                         <span class="small">
                             <button 
@@ -99,7 +100,37 @@
                             </button>
                         </span>
                     @endif
+                    {{-- @endhasanyrole --}}
+
+                     @php
+                        $class_status = $item->pivot->item_status == 'servicio' ? 'btn-outline-success btn-sm' : 'btn-outline-warning btn-sm';
+                        $text_status = $item->pivot->item_status == 'servicio' ? 'Servicio' : 'Cocina';
+                     @endphp
+                    @hasrole('kitchen|admin|owner')
+                        @if ($item->pivot->item_status=='cocina')
+                            <span class="small">
+                                <button 
+                                type="submit" id="{{$item->pivot->id}}"
+                                class="bg-transparent change-status">
+                                    <span class="btn <?php echo $class_status; ?> ">
+                                        <?php echo $text_status; ?> <i class="fas fa-bell"></i>
+                                    </span>
+                                </button>
+                            </span>
+                        @else
+                            <span class="small">
+                                <button 
+                                class="btn btn-outline-success btn-sm">
+                                    <span class="btn-inner--icon ">
+                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
+                                    </span>
+                                </button>
+                            </span>
+                            
+                        @endif
+                    @endhasanyrole
                  @endif
+                
              </h4>
                  @if (strlen($item->pivot->variant_name)>2)
                      <br />

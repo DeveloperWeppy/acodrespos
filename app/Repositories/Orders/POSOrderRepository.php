@@ -42,7 +42,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         if(auth()->user()){
             $this->order->employee_id=auth()->user()->id;
         }
-
+        
         $this->order->update();
 
 
@@ -88,7 +88,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
 
          //Local - Notify
          $this->notify();
-
+         
         //At the end, return that all went ok
         return Validator::make([], []);
     }

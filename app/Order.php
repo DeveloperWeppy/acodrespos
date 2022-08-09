@@ -121,7 +121,7 @@ class Order extends Model
 
     public function items()
     {
-        return $this->belongsToMany(\App\Items::class, 'order_has_items', 'order_id', 'item_id')->withPivot(['qty', 'extras', 'vat', 'vatvalue', 'variant_price', 'variant_name','id'])->withTrashed();
+        return $this->belongsToMany(\App\Items::class, 'order_has_items', 'order_id', 'item_id')->withPivot(['id', 'qty', 'item_status', 'extras', 'vat', 'vatvalue', 'variant_price', 'variant_name','id'])->withTrashed();
     }
 
     public function ratings()
