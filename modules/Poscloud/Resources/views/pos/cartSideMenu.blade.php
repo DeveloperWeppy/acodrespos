@@ -2,7 +2,8 @@
     <div class="offcanvas-menu-inner">
         <div class="minicart-content">
             <div class=" minicart-heading ">
-                <span id="orderNumber"></span>
+                    <span id="orderNumber"></span>
+                    <span id="orderId"></span>
                     <h4 id="tableName"></h4>
 
                 </div>
@@ -16,9 +17,9 @@
                 <div id="cartList">
                     <ul class="list-group items" v-for="item in items">
                         
-                        <li v-cloak class="list-group-item border-0 d-flex p-2 mb-2 bg-gray-100 border-radius-lg">
+                        <li v-cloak v-bind:class="[item.order_has_items_id==0 ? 'btn': 'border-0 ','list-group-item d-flex p-2 mb-2 bg-gray-100 border-radius-lg']"  :data="item.order_has_items_id">
                             <div class="d-flex flex-column">
-                              <h6 class="mb-3 text-sm">@{{ item.name }}</h6>
+                              <h6 class="mb-3 text-sm">@{{ item.name }}  </h6>
                               <span class="mb-2 text-xs">{{ __('Price') }}: <span class="text-dark font-weight-bold ms-2">@{{ item.attributes.friendly_price }}</span></span>
                               <span class="mb-2 text-xs">{{ __('QTY') }}: <span class="text-dark ms-2 font-weight-bold">@{{ item.quantity }}</span></span>
                             </div>
@@ -115,7 +116,7 @@
                             <!-- End Cooupo Code -->
                         @endif
                         <div  class="row" style="display:flex;justify-content: space-around;">
-                            <button id='createOrder' onclick="submitOrderPOS(1)" type="button" style="padding:10px" class="col-5 btn btn-lg  btn-primary text-white">Crear Pedido</button>
+                            <button id='createOrder' onclick="submitOrderPOS(1)" type="button" style="padding:10px;display:none" class="col-5 btn btn-lg  btn-primary text-white ocultarBtn">Crear Pedido</button>
                             <button id='dineincheckout' type="button" style="padding:10px"   class="col-5 btn btn-lg btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">Pagar</button>
                         </div>
                     </div>

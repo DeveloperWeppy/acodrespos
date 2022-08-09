@@ -208,8 +208,8 @@ class BaseOrderRepository extends Controller
                 'extras'=>json_encode($extras), 
                 'vat'=>$theItem->vat, 
                 'vatvalue'=>$totalCalculatedVAT, 
-                'variant_name'=>$variantName, 
-                'variant_price'=>$itemSelectedPrice
+                'variant_price'=>$itemSelectedPrice,
+                'cart_item_id'=>$item['cart_item_id']
             ]);
         } 
 
