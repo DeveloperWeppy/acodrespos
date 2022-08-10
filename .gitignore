@@ -3,3 +3,4 @@
 /storage/*.key
 .env
 storage/installed
+public/uploads
