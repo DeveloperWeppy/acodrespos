@@ -17,14 +17,13 @@
                 <div id="cartList">
                     <ul class="list-group items" v-for="item in items">
                         
-                        <li v-cloak v-bind:class="[item.order_has_items_id==0 ? 'btn': 'border-0 ','list-group-item d-flex p-2 mb-2 bg-gray-100 border-radius-lg']"  :data="item.order_has_items_id">
+                        <li v-cloak v-bind:class="[item.order_has_items_id==0 ? 'cardAdd': 'border-0',' list-group-item d-flex p-2 mb-2 bg-gray-100 border-radius-lg']"  :data="item.order_has_items_id">
                             <div class="d-flex flex-column">
                               <h6 class="mb-3 text-sm">@{{ item.name }}  </h6>
                               <span class="mb-2 text-xs">{{ __('Price') }}: <span class="text-dark font-weight-bold ms-2">@{{ item.attributes.friendly_price }}</span></span>
                               <span class="mb-2 text-xs">{{ __('QTY') }}: <span class="text-dark ms-2 font-weight-bold">@{{ item.quantity }}</span></span>
                             </div>
-                            <div class="ms-auto">
-                               
+                            <div class="ms-auto" v-show="item.status_id<3">
                                 <button v-if="item.quantity==1" type="button" v-on:click="remove(item.id)"  :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
                                     <span class="btn-inner--icon btn-cart-icon"><i class="fa fa-trash"></i></span>
                                 </button>
@@ -117,7 +116,9 @@
                         @endif
                         <div  class="row" style="display:flex;justify-content: space-around;">
                             <button id='createOrder' onclick="submitOrderPOS(1)" type="button" style="padding:10px;display:none" class="col-5 btn btn-lg  btn-primary text-white ocultarBtn">Crear Pedido</button>
+                            <button id='actualizarPedido' onclick="submitOrderPOS(2)" type="button" style="padding:10px;display:none" class="col-5 btn btn-lg  btn-primary text-white ">Actualizar pedido</button>
                             <button id='dineincheckout' type="button" style="padding:10px"   class="col-5 btn btn-lg btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">Pagar</button>
+   
                         </div>
                     </div>
                 </div>

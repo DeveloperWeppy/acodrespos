@@ -114,9 +114,9 @@ class Order extends Model
         
     }
 
-    public function stakeholders()
+    public function stakeholders($order="ASC")
     {
-        return $this->belongsToMany(\App\User::class, 'order_has_status', 'order_id', 'user_id')->withPivot('status_id', 'created_at', 'comment')->orderBy('order_has_status.id', 'ASC');
+        return $this->belongsToMany(\App\User::class, 'order_has_status', 'order_id', 'user_id')->withPivot('status_id', 'created_at', 'comment')->orderBy('order_has_status.id', $order);
     }
 
     public function items()

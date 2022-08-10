@@ -74,6 +74,11 @@ function updatePrices(net,delivery,expedition){
   }
  
   setTimeout(() => {
+    if ($(".cardAdd").length > 0 ) {
+      $('#actualizarPedido').show();
+    }else{
+      $('#actualizarPedido').hide();
+    }
     if($('#expedition').is(':visible')){
       $('#createOrder').hide();
    }else{
@@ -368,11 +373,14 @@ function submitOrderPOS(tipo=0){
       receiptPOS.order=response.data.order;
       if(tipo==0){
         js.notify(response.data.message, "success");
-        receiptPOS.order=response.data.order;
         $('#modalPOSInvoice').modal('show');
       }else{
-        js.notify('Orden registrada', "success");
-        receiptPOS.order=response.data.order;
+        if(tipo==2){
+          js.notify('Orden Actualizada', "success");
+        }else{
+          js.notify('Orden registrada', "success");
+        }
+        
       }
     }else{
       js.notify(response.data.message, "warning");
