@@ -1,6 +1,8 @@
 
 "use strict";
 var cartContent=null;
+var ordenId=null;
+var cartSessionId=null;
 var orderContent=null;
 var receiptPOS=null;
 var cartTotal=null;
@@ -18,6 +20,8 @@ $('#localorder_phone').hide();
  * @param {String} expedition 1 - Delivery 2 - Pickup 3 - Dine in
  */
 function updatePrices(net,delivery,expedition){
+ 
+
   net=parseFloat(net);
   delivery=parseFloat(delivery);
   var formatter = new Intl.NumberFormat(LOCALE, {
@@ -68,11 +72,21 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
     modalPayment.received=0;
   }
-  if($('#expedition').is(':visible')){
-    $('#createOrder').css('display','none');
- }else{
-   $('#createOrder').css('display','block');
- }
+ 
+  setTimeout(() => {
+    if($('#expedition').is(':visible')){
+      $('#createOrder').hide();
+   }else{
+    if($('#orderId').is(':visible')){
+      $('#createOrder').hide();
+    }else{
+      $('#createOrder').show();
+    }
+   }
+   if(ordenId==0 || ordenId==null){
+    $("#orderId").hide();
+   }
+ }, 100);
   total.lastChange=new Date().getTime();
   cartTotal.lastChange=new Date().getTime();
 
@@ -92,7 +106,7 @@ function addToCartVUE(){
   if(CURRENT_TABLE_ID!=null&&CURRENT_TABLE_ID!=undefined){
     addCartEndpoint+="?session_id="+CURRENT_TABLE_ID;
   }
-
+ 
     $("#itemsSelect").val([]);
     $('#itemsSelect').trigger('change');
 
@@ -112,6 +126,7 @@ function addToCartVUE(){
             $('#productModal').modal('hide');
             js.notify(response.data.errMsg,"warning");
           }
+
       })
       .catch(function (error) {
         
@@ -126,6 +141,7 @@ function getAllOrders(){
     
     
     orderContent.items=response.data.orders;
+
     makeFree();
     response.data.orders.forEach(element => {
       makeOcccupied(element.id)
@@ -178,6 +194,22 @@ function getCartContentAndTotalPrice(){
 
 
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
+    if (typeof response.data.order_id !== 'undefined'){
+          ordenId=0;
+          if(response.data.order_id>0){
+             ordenId=response.data.order_id;
+            $("#orderId").html('Numero de orden: <a style="background-color: #28a745;" class="btn badge badge-success badge-pill" href="../orders/'+response.data.order_id+'">#'+response.data.order_id+'</a>');
+            $("#orderId").show();
+            $("#orderNumber").hide();
+          }else{
+            $("#orderId").hide();
+          }
+    }else{
+      ordenId=0;
+      $("#orderId").hide();
+      $("#orderNumber").show();
+    }
+    cartSessionId=response.data.id;
     cartContent.items=response.data.data;
     //cartTotal.deduct=0;
 
@@ -198,9 +230,13 @@ function getCartContentAndTotalPrice(){
         $('#timeslot').trigger('change');
       }
     }
-   
-    
     updateSubTotalPrice(response.data.total,EXPEDITION);
+    $(".listItemCart").each(function(){
+      if($(this).attr("data")=="0"){
+      
+       $(this).css("border","1px solid #0a8eff");
+       }
+   });
    })
    .catch(function (error) {
      
@@ -210,7 +246,7 @@ function getCartContentAndTotalPrice(){
    if(IS_POS){
     getAllOrders();
    }
-   
+
  };
 
  function setDeduct(deduction){
@@ -231,6 +267,7 @@ function applyDiscount(){
   var code = $('#coupon_code').val();
 
   axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice}).then(function (response) {
+   
       if(response.data.status){
           //$("#promo_code_btn").attr("disabled",true);
           //$("#promo_code_btn").attr("readonly");
@@ -291,7 +328,9 @@ function submitOrderPOS(tipo=0){
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
     expedition:EXPEDITION,
-    tipo:tipo
+    tipo:tipo,
+    order_id:ordenId,
+    cart_id:cartSessionId
   };
   if(EXPEDITION==1||EXPEDITION==2){
     //Pickup OR deliver
@@ -320,14 +359,21 @@ function submitOrderPOS(tipo=0){
     $('#indicator').hide();
 
     $('#modalPayment').modal('hide');
+  
     //Call to get the total price and items
     getCartContentAndTotalPrice();
 
     if(response.data.status){
       window.showOrders();
-      js.notify(response.data.message, "success");
       receiptPOS.order=response.data.order;
-      $('#modalPOSInvoice').modal('show');
+      if(tipo==0){
+        js.notify(response.data.message, "success");
+        receiptPOS.order=response.data.order;
+        $('#modalPOSInvoice').modal('show');
+      }else{
+        js.notify('Orden registrada', "success");
+        receiptPOS.order=response.data.order;
+      }
     }else{
       js.notify(response.data.message, "warning");
     }
@@ -546,7 +592,6 @@ window.onload = function () {
     }
   })
 
-
   orderContent = new Vue({
     el: '#orderList',
     data: {
@@ -628,6 +673,7 @@ window.onload = function () {
           console.log(event.target.value)
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"){
             this.received=this.totalPrice;
+           
           }
       }
   }

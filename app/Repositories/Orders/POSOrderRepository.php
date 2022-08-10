@@ -10,6 +10,7 @@ namespace App\Repositories\Orders;
 
 use Illuminate\Support\Facades\Validator;
 use Cart;
+use App\Order;
 use Illuminate\Support\Facades\Cookie;
 
 class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterface
@@ -22,21 +23,27 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         return $validator;
     }
 
-    public function makeOrder($client_id=null,$tipo=0){
+    public function makeOrder($client_id=null,$tipo=0,$orderId=0,$cart_id=0){
 
         //From Parent - Construct the order
-        $this->constructOrder();
-
-        //In POS - currently logged in user is not the client
+        if($orderId==0){
+            $this->constructOrder();
+            if($tipo!=0){
+                $this->order->cart_storage_id=$cart_id."_cart_items";
+                $this->order->payment_status='unpaid';
+            }else{
+                $this->order->payment_status='paid'; 
+            }
+        }else{
+            $this->order=Order::findOrFail($orderId);
+            $this->order->payment_status='paid'; 
+        }
         $this->order->client_id=$client_id;
+        //In POS - currently logged in user is not the client
+       
 
         //Payed by default
-        if($tipo!=0){
-            $this->order->cart_storage_id=$tipo;
-            $this->order->payment_status='unpaid';
-        }else{
-            $this->order->payment_status='paid';
-        }
+
         
          //Employee
         if(auth()->user()){
@@ -81,7 +88,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         $this->setInitialStatus();
 
          //Local - clear cart
-         if($tipo==0){
+         if($tipo==0 || ($orderId!=0 && $orderId!=null)){
             $this->clearCart();
          }
         

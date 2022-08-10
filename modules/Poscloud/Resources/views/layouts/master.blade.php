@@ -282,6 +282,7 @@
       $("#floorAreas").hide();
       $("#orders").show();
       $("#orderDetails").hide();
+      $("#createOrder").hide();
       SHOWN_NOW="orders";
     }
 
@@ -301,7 +302,6 @@
 
 
      SHOWN_NOW="order";
-
      clearDeduct();
      $('#coupon_code').html("");
    }
@@ -386,7 +386,7 @@
     }
 
     function openTable(id,receipt_number) {
-
+      
       CURRENT_TABLE_ID=id;
       CURRENT_RECEIPT_NUMBER=receipt_number;
       idLength=(id+"").length;
@@ -400,7 +400,7 @@
         CURRENT_TABLE_NAME="Delivery order";
         EXPEDITION=1;
       }
-      
+     
       getCartContentAndTotalPrice();
       showOrderDetail(id);
     }

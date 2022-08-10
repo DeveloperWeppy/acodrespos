@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Traits\Fields;
 use App\Items;
 use App\Models\Variants;
+use App\Models\Orderitems;
 use App\Order;
 use App\Restorant;
 use App\Tables;
@@ -127,15 +128,44 @@ class CartController extends Controller
         
 
         $cs=CartStorageModel::where('id',$_GET['session_id']."_cart_items")->first();
-
+        $orderCart=Order::where(['cart_storage_id'=>$_GET['session_id']."_cart_items","payment_status"=>"unpaid"])->first();
+        $arrayItem=array();
+        $order_id=0;
+        $arrayAddId=array();
+        if(isset($orderCart->id)){
+            $order_id=$orderCart->id;
+            $order = Order::findOrFail($orderCart->id);
+            $order=$order->items()->get();
+            if(count($order)>0){
+                $cartObj=json_decode(json_encode(Cart::getContent()),true);
+                $cartKey=array_keys($cartObj);
+                foreach ($cartKey as $key => $item) {
+                    $tItems=$cartObj[$item];
+                    $tItems['order_has_items_id']=0;
+                    $tItems['qty']=1;
+                    foreach ($order as $key2 => $item2) {
+                        if($tItems['attributes']['id']==$item2->id && $tItems['id']==$item2->pivot->cart_item_id){
+                            $tItems['order_has_items_id']=$item2->pivot->id;
+                            $tItems['qty']=$item2->pivot->qty;
+                            array_push($arrayAddId,$item2->pivot->id);
+                        }
+                    }
+                    $arrayItem[$item]=$tItems;
+                }
+            }
+        }else{
+            $arrayItem=Cart::getContent();
+        }
         return response()->json([
-            'data' => Cart::getContent(),
+            'data' => $arrayItem,
             'config'=> $cs?$cs->getAllConfigs():[],
             'id'=>$_GET['session_id'],
+            'order_id'=>$order_id,
             'total' => Cart::getSubTotal(),
             'status' => true,
             'errMsg' => '',
         ]);
+
     }
 
     public function cart()

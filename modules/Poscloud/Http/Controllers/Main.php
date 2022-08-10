@@ -175,6 +175,7 @@ class Main extends Controller
             array_push($items,array(
                 "id"=>$item->attributes->id,
                 "qty"=>$item->quantity,
+                "cart_item_id"=>$item->id,
                 "variant"=>$item->attributes->variant,
                 "extrasSelected"=>$extras
             ));
@@ -302,9 +303,8 @@ class Main extends Controller
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder(null,$request->tipo);
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->tipo,$request->order_id,$request->cart_id);
             }
-            
             if ($validatorOnMaking->fails()) { 
                 return response()->json([
                     'status' => false,
