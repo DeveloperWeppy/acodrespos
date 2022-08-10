@@ -36,7 +36,9 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
             }
         }else{
             $this->order=Order::findOrFail($orderId);
-            $this->order->payment_status='paid'; 
+            if($tipo!=2){
+              $this->order->payment_status='paid'; 
+            }
         }
         $this->order->client_id=$client_id;
         //In POS - currently logged in user is not the client
