@@ -42,7 +42,7 @@
   <link type="text/css" href="{{ asset('custom') }}/css/custom.css" rel="stylesheet">
 
   <link type="text/css" href="{{ asset('custom') }}/css/pos.css" rel="stylesheet">
-  
+
   @laravelPWA
 
 </head>
@@ -86,7 +86,7 @@
 
   <!-- printThis -->
   <script src="{{ asset('vendor') }}/printthis/printThis.js"></script> 
-
+  <link type="text/css" href="{{ asset('css/dashboard.css') }}/" rel="stylesheet">
 
 
    <!-- Add to Cart   -->

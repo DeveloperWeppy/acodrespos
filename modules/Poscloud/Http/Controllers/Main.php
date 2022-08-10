@@ -176,6 +176,7 @@ class Main extends Controller
                 "id"=>$item->attributes->id,
                 "qty"=>$item->quantity,
                 "cart_item_id"=>$item->id,
+                "order_has_items_id"=>$item->order_has_items_id,
                 "variant"=>$item->attributes->variant,
                 "extrasSelected"=>$extras
             ));

@@ -1,3 +1,6 @@
 .change-status{
     border: none !important;
 }
+.cardAdd{
+    border: 1px solid rgb(152 245 255);
+}

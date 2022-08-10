@@ -135,6 +135,7 @@ class CartController extends Controller
         if(isset($orderCart->id)){
             $order_id=$orderCart->id;
             $order = Order::findOrFail($orderCart->id);
+            $orderStatus= $order->stakeholders("DESC")->get();
             $order=$order->items()->get();
             if(count($order)>0){
                 $cartObj=json_decode(json_encode(Cart::getContent()),true);
@@ -143,10 +144,12 @@ class CartController extends Controller
                     $tItems=$cartObj[$item];
                     $tItems['order_has_items_id']=0;
                     $tItems['qty']=1;
+                    $tItems['status_id']=0;
                     foreach ($order as $key2 => $item2) {
                         if($tItems['attributes']['id']==$item2->id && $tItems['id']==$item2->pivot->cart_item_id){
                             $tItems['order_has_items_id']=$item2->pivot->id;
                             $tItems['qty']=$item2->pivot->qty;
+                            $tItems['status_id']=$orderStatus[0]->pivot->status_id;
                             array_push($arrayAddId,$item2->pivot->id);
                         }
                     }
