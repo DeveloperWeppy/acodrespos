@@ -23,6 +23,7 @@ class RolesTableSeeder extends Seeder
         $driver = Role::create(['name' => 'driver']);
         $client = Role::create(['name' => 'client']);
         $staff = Role::create(['name' => 'staff']);
+        $kitchen = Role::create(['name' => 'kitchen']);
 
         //Permissions
         $admin->givePermissionTo(Permission::create(['name' => 'manage restorants']));
