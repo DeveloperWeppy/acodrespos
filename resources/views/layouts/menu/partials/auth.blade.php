@@ -53,6 +53,10 @@
         <a href="/home" class="dropdown-item">{{ __('Dashboard') }}</a>
         <a href="/orders" class="dropdown-item">{{ __('Orders') }}</a>
     @endif
+    @if(auth()->user()->hasRole('kitchen'))
+        <a href="/orders" class="dropdown-item">{{ __('Orders') }}</a>
+        <a class="dropdown-item " href="/live">{{ __('Live Orders') }}</a>
+    @endif
 
    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <span>{{ __('Logout') }}</span>

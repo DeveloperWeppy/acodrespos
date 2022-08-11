@@ -78,6 +78,12 @@ class OrderController extends Controller
             ConfChanger::switchCurrency(auth()->user()->restaurant);
 
             $orders = $orders->where(['restorant_id'=>auth()->user()->restaurant_id]);
+        }elseif (auth()->user()->hasRole('kitchen')) {
+             
+            //Change currency
+            ConfChanger::switchCurrency(auth()->user()->restaurant);
+
+            $orders = $orders->where(['restorant_id'=>auth()->user()->restaurant_id]);
         }
 
         //FILTER BT RESTORANT
