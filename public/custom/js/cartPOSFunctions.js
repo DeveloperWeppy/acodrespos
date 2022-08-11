@@ -2,6 +2,7 @@
 "use strict";
 var cartContent=null;
 var ordenId=null;
+var commentOrd=null;
 var cartSessionId=null;
 var orderContent=null;
 var receiptPOS=null;
@@ -100,7 +101,11 @@ function updatePrices(net,delivery,expedition){
 
  
 }
-
+$("textarea#order_comment").change(function() {
+   if(commentOrd !=$('textarea#order_comment').val()){
+    $('#actualizarPedido').show();
+   }
+});
 function updateSubTotalPrice(net,expedition){
   updatePrices(net,(cartTotal.deliveryPrice?cartTotal.deliveryPrice:0),expedition)
 }
@@ -202,6 +207,7 @@ function getCartContentAndTotalPrice(){
           ordenId=0;
           if(response.data.order_id>0){
              ordenId=response.data.order_id;
+             commentOrd=response.data.comment;
             $('textarea#order_comment').val(response.data.comment);
             $("#orderId").html('Numero de orden: <a style="background-color: #28a745;" class="btn badge badge-success badge-pill" href="../orders/'+response.data.order_id+'">#'+response.data.order_id+'</a>');
             $("#orderId").show();
