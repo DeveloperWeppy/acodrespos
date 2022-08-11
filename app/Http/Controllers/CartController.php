@@ -131,9 +131,11 @@ class CartController extends Controller
         $orderCart=Order::where(['cart_storage_id'=>$_GET['session_id']."_cart_items","payment_status"=>"unpaid"])->first();
         $arrayItem=array();
         $order_id=0;
+        $comment="";
         $arrayAddId=array();
         if(isset($orderCart->id)){
             $order_id=$orderCart->id;
+            $comment=$orderCart->comment;
             $order = Order::findOrFail($orderCart->id);
             $orderStatus= $order->stakeholders("DESC")->get();
             $order=$order->items()->get();
@@ -164,6 +166,7 @@ class CartController extends Controller
             'config'=> $cs?$cs->getAllConfigs():[],
             'id'=>$_GET['session_id'],
             'order_id'=>$order_id,
+            'comment'=>$comment,
             'total' => Cart::getSubTotal(),
             'status' => true,
             'errMsg' => '',
@@ -432,7 +435,18 @@ class CartController extends Controller
         }
 
         Cart::remove($request->id);
-
+        if($request->has('orderId')) {
+            if($request->orderId>0){
+                $order = Order::findOrFail($request->orderId);
+                foreach ($order->items()->get() as $key => $item) {
+                    if($item->pivot->cart_item_id==$request->id){
+                        $oi=Orderitems::findOrFail($item->pivot->id);
+                        $oi->delete();
+                    }
+                }
+            }
+        }
+       
         return response()->json([
             'status' => true,
             'errMsg' => '',
@@ -453,38 +467,50 @@ class CartController extends Controller
     /**
      * Updates cart.
      */
-    private function updateCartQty($howMuch, $item_id)
+    private function updateCartQty($howMuch, $item_id,$orderId=0)
     {
         if(isset($_GET['session_id'])){
             $this->setSessionID($_GET['session_id']);
         }
 
         Cart::update($item_id, ['quantity' => $howMuch]);
-
+        $carItem=Cart::getContent();
+        if($orderId>0){
+            $order = Order::findOrFail($orderId);
+            foreach ($order->items()->get() as $key => $item) {
+                if($item->pivot->cart_item_id==$item_id){
+                   $oi=Orderitems::findOrFail($item->pivot->id);
+                   $oi->qty= $carItem[$item_id]->quantity;
+                   $oi->update();
+                   $totalRecaluclatedVAT =  $carItem[$item_id]->quantity* ($item->vat > 0?$item->pivot->variant_price * ($item->vat / 100):0);
+                   $oi->vatvalue=$totalRecaluclatedVAT;
+                   $oi->update();
+                }
+            }
+        }
         return $this->generalApiResponse();
     }
 
     /**
      * Increase cart.
      */
-    public function increase($id)
+    public function increase($id,$orderId=0)
     {
         if(isset($_GET['session_id'])){
+            
             $this->setSessionID($_GET['session_id']);
         }
-
-        return $this->updateCartQty(1, $id);
+        return $this->updateCartQty(1, $id,$orderId);
     }
 
     /**
      * Decrese cart.
      */
-    public function decrease($id)
+    public function decrease($id,$orderId=0)
     {
         if(isset($_GET['session_id'])){
             $this->setSessionID($_GET['session_id']);
         }
-        
-        return $this->updateCartQty(-1, $id);
+        return $this->updateCartQty(-1, $id,$orderId);
     }
 }

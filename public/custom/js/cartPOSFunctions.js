@@ -20,7 +20,6 @@ $('#localorder_phone').hide();
  * @param {String} expedition 1 - Delivery 2 - Pickup 3 - Dine in
  */
 function updatePrices(net,delivery,expedition){
- 
 
   net=parseFloat(net);
   delivery=parseFloat(delivery);
@@ -203,6 +202,7 @@ function getCartContentAndTotalPrice(){
           ordenId=0;
           if(response.data.order_id>0){
              ordenId=response.data.order_id;
+            $('textarea#order_comment').val(response.data.comment);
             $("#orderId").html('Numero de orden: <a style="background-color: #28a745;" class="btn badge badge-success badge-pill" href="../orders/'+response.data.order_id+'">#'+response.data.order_id+'</a>');
             $("#orderId").show();
             $("#orderNumber").hide();
@@ -335,7 +335,8 @@ function submitOrderPOS(tipo=0){
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,
-    cart_id:cartSessionId
+    cart_id:cartSessionId,
+    order_comment:$('textarea#order_comment').val()
   };
   if(EXPEDITION==1||EXPEDITION==2){
     //Pickup OR deliver
@@ -369,6 +370,7 @@ function submitOrderPOS(tipo=0){
     getCartContentAndTotalPrice();
 
     if(response.data.status){
+      $('textarea#order_comment').val("");
       window.showOrders();
       receiptPOS.order=response.data.order;
       if(tipo==0){
@@ -401,7 +403,7 @@ function submitOrderPOS(tipo=0){
  * @param {Number} product_id
  */
 function removeProductIfFromCart(product_id){
-    axios.post(withSession('/cart-remove'), {id:product_id}).then(function (response) {
+    axios.post(withSession('/cart-remove'), {id:product_id,orderId:ordenId}).then(function (response) {
       getCartContentAndTotalPrice();
       
     }).catch(function (error) {
@@ -414,7 +416,7 @@ function removeProductIfFromCart(product_id){
  * @param {Number} product_id
  */
 function incCart(product_id){
-  axios.get(withSession('/cartinc/'+product_id)).then(function (response) {
+  axios.get(withSession('/cartinc/'+product_id+"/"+ordenId)).then(function (response) {
     getCartContentAndTotalPrice();
   }).catch(function (error) {
     
@@ -423,7 +425,8 @@ function incCart(product_id){
 
 
 function decCart(product_id){
-  axios.get(withSession('/cartdec/'+product_id)).then(function (response) {
+
+  axios.get(withSession('/cartdec/'+product_id+"/"+ordenId)).then(function (response) {
     getCartContentAndTotalPrice();
   }).catch(function (error) {
     

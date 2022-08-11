@@ -15,6 +15,7 @@ use App\User;
 use Darryldecode\Cart\CartCollection;
 use Carbon\Carbon;
 use Cart;
+use App\Order;
 use Akaunting\Module\Facade as Module;
 use PDO;
 
@@ -167,19 +168,31 @@ class Main extends Controller
         
         //Organize the item
         $items=[];
+        $order=[];
+        if($request->order_id>0){
+            $order = Order::findOrFail($request->order_id);
+            $order=$order->items()->get();
+        }
         foreach (Cart::getContent() as $key => $item) {
-            $extras=[];
-            foreach ($item->attributes->extras as $keyExtra => $extra_id) {
-                array_push($extras,array('id'=>$extra_id));
+            $ifAdd=true;
+            foreach ($order as $key2 => $item2) {
+                if($item->attributes->id==$item2->id && $item->id==$item2->pivot->cart_item_id){
+                    $ifAdd=false; 
+                }
             }
-            array_push($items,array(
-                "id"=>$item->attributes->id,
-                "qty"=>$item->quantity,
-                "cart_item_id"=>$item->id,
-                "order_has_items_id"=>$item->order_has_items_id,
-                "variant"=>$item->attributes->variant,
-                "extrasSelected"=>$extras
-            ));
+            if($ifAdd){
+                $extras=[];
+                foreach ($item->attributes->extras as $keyExtra => $extra_id) {
+                    array_push($extras,array('id'=>$extra_id));
+                }
+                array_push($items,array(
+                    "id"=>$item->attributes->id,
+                    "qty"=>$item->quantity,
+                    "cart_item_id"=>$item->id,
+                    "variant"=>$item->attributes->variant,
+                    "extrasSelected"=>$extras
+                ));
+            }
         }
 
 
@@ -299,12 +312,12 @@ class Main extends Controller
             if($request->has('custom')){
                 $customFields=$request->custom;
                 if(isset($customFields['client_id'])) {
-                    $validatorOnMaking=$orderRepo->makeOrder($customFields['client_id']);
+                    $validatorOnMaking=$orderRepo->makeOrder($customFields['client_id'],$request->order_comment);
                 }else{
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder(null,$request->tipo,$request->order_id,$request->cart_id);
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id);
             }
             if ($validatorOnMaking->fails()) { 
                 return response()->json([

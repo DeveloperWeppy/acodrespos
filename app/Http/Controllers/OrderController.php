@@ -324,6 +324,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request){
+       // dd($request);
         //Convert web request to mobile like request
         if(config('app.issd',false)||$request->has('issd')){
             //Web ride
@@ -399,7 +400,6 @@ class OrderController extends Controller
             ->first();
             $active = ($item->item_status == 'cocina') ? 'servicio' : 'cocina';
 
-            //update product status of the order
             $actualiza = DB::table('order_has_items')
               ->where('id', $id)
               ->update(['item_status' => $active]);

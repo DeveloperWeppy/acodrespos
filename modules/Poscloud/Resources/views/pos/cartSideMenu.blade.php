@@ -23,7 +23,7 @@
                               <span class="mb-2 text-xs">{{ __('Price') }}: <span class="text-dark font-weight-bold ms-2">@{{ item.attributes.friendly_price }}</span></span>
                               <span class="mb-2 text-xs">{{ __('QTY') }}: <span class="text-dark ms-2 font-weight-bold">@{{ item.quantity }}</span></span>
                             </div>
-                            <div class="ms-auto" v-show="item.status_id<3">
+                            <div class="ms-auto" v-show="item.status_id<3 || item.status_id == null">
                                 <button v-if="item.quantity==1" type="button" v-on:click="remove(item.id)"  :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
                                     <span class="btn-inner--icon btn-cart-icon"><i class="fa fa-trash"></i></span>
                                 </button>
@@ -54,7 +54,16 @@
             <!-- Client Card -->
             @include('poscloud::pos.expedition')
             <!-- End client cart -->
-
+            <div class="card card-profile shadow mt-3 mb-3" >
+                <div class="px-4" > 
+                    <div class="card-content  " >  
+                            <label style="margin-top:20px">Comentarios</label>
+                            <div class="input-group mb-3">
+                              <textarea id="order_comment" name="order_comment" rows="3" cols="40" class="form-control"></textarea>
+                            </div>   
+                    </div>  
+                </div>  
+            </div>
             <br />
 
             <div id="totalPrices" v-cloak>

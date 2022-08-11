@@ -273,8 +273,8 @@ Route::get('/cart-getContent-POS', 'CartController@getContentPOS')->name('cart.g
 Route::post('/cart-add', 'CartController@add')->name('cart.add');
 Route::post('/cart-remove', 'CartController@remove')->name('cart.remove');
 Route::get('/cart-update', 'CartController@update')->name('cart.update');
-Route::get('/cartinc/{item}', 'CartController@increase')->name('cart.increase');
-Route::get('/cartdec/{item}', 'CartController@decrease')->name('cart.decrease');
+Route::get('/cartinc/{item}/{orderId?}', 'CartController@increase')->name('cart.increase');
+Route::get('/cartdec/{item}/{orderId?}', 'CartController@decrease')->name('cart.decrease');
 
 Route::post('/order', 'OrderController@store')->name('order.store');
 

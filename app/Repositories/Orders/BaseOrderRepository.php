@@ -202,28 +202,20 @@ class BaseOrderRepository extends Controller
             
             //Total vat on this item
             $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?$itemSelectedPrice * ($theItem->vat / 100):0);
-            $ifCreate=true;
-            if(isset($item['order_has_items_id'])){
-                if($item['order_has_items_id']!=0){
-                    $ifCreate=false;
-                }
-            }
             $cart_item_id=0;
             if(isset($item['cart_item_id'])){
                 $cart_item_id=$item['cart_item_id'];
             }
-            if($ifCreate){
-                $this->order->items()->attach($item['id'], [
-                    'qty'=>$item['qty'], 
-                    'extras'=>json_encode($extras), 
-                    'vat'=>$theItem->vat, 
-                    'vatvalue'=>$totalCalculatedVAT,
-                    'variant_name'=>$variantName, 
-                    'variant_price'=>$itemSelectedPrice,
-                    'item_status'=>'cocina',
-                    'cart_item_id'=>$cart_item_id
-                ]);
-            }
+            $this->order->items()->attach($item['id'], [
+                'qty'=>$item['qty'], 
+                'extras'=>json_encode($extras), 
+                'vat'=>$theItem->vat, 
+                'vatvalue'=>$totalCalculatedVAT,
+                'variant_name'=>$variantName, 
+                'variant_price'=>$itemSelectedPrice,
+                'item_status'=>'cocina',
+                'cart_item_id'=>$cart_item_id
+            ]);
         } 
 
 
