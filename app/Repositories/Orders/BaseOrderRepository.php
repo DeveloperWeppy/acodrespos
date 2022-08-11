@@ -208,6 +208,10 @@ class BaseOrderRepository extends Controller
                     $ifCreate=false;
                 }
             }
+            $cart_item_id=0;
+            if(isset($item['cart_item_id'])){
+                $cart_item_id=$item['cart_item_id'];
+            }
             if($ifCreate){
                 $this->order->items()->attach($item['id'], [
                     'qty'=>$item['qty'], 
@@ -217,7 +221,7 @@ class BaseOrderRepository extends Controller
                     'variant_name'=>$variantName, 
                     'variant_price'=>$itemSelectedPrice,
                     'item_status'=>'cocina',
-                    'cart_item_id'=>$item['cart_item_id']
+                    'cart_item_id'=>$cart_item_id
                 ]);
             }
         } 
