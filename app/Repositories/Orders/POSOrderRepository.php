@@ -23,7 +23,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         return $validator;
     }
 
-    public function makeOrder($client_id=null,$tipo=0,$orderId=0,$cart_id=0){
+    public function makeOrder($client_id=null,$comment=null,$tipo=0,$orderId=0,$cart_id=0){
 
         //From Parent - Construct the order
         if($orderId==0){
@@ -36,10 +36,12 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
             }
         }else{
             $this->order=Order::findOrFail($orderId);
+            $this->constructOrder();
             if($tipo!=2){
               $this->order->payment_status='paid'; 
             }
         }
+        $this->order->comment=$comment;
         $this->order->client_id=$client_id;
         //In POS - currently logged in user is not the client
        
@@ -90,7 +92,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         $this->setInitialStatus();
 
          //Local - clear cart
-         if($tipo==0 || ($orderId!=0 && $orderId!=null)){
+         if($tipo==0 || ($orderId!=0 && $orderId!=null && $tipo!=2)){
             $this->clearCart();
          }
         

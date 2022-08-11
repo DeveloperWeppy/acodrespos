@@ -287,7 +287,8 @@
     }
 
     function showOrderDetail(id) {
-     
+      
+     $('textarea#order_comment').val("");
      $("#floorTabs").hide();
      $("#floorAreas").hide();
      $("#orders").hide();
