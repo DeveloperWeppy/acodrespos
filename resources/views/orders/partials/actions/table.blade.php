@@ -1,7 +1,7 @@
 <?php
 $lastStatusAlisas=$order->status->pluck('alias')->last();
 ?>
-@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('kitchen') )
+@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('staff') )
     @if(auth()->user()->hasRole('admin'))
     <script>
         function setSelectedOrderId(id){
@@ -21,7 +21,7 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
         @endif
     </td>
     @endif
-    @if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver')  || auth()->user()->hasRole('staff') )
+    @if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('staff'))
     <td>
         @include('orders.partials.actions.actions')
     </td>
