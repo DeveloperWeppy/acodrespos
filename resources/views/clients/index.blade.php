@@ -47,7 +47,9 @@
                                         <th scope="col">{{ $client->birth_date }}</th>
                                     @endif
                                         <td class="text-right">
+                                            @if(auth()->user()->hasRole('admin'))
                                             <div class="dropdown">
+
                                                 <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
@@ -64,6 +66,7 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

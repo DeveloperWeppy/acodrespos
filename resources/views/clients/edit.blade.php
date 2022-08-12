@@ -36,7 +36,10 @@
                                     <label class="form-control-label" for="name_client">{{ __('Client Name') }}</label>
                                     <input type="text" name="name_client" id="name_client" class="form-control form-control-alternative" placeholder="{{ __('Client Name') }}" value="{{ old('name', $client->name) }}" readonly>
                                 </div>
-
+                                <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
+                                    <label class="form-control-label" for="name_client">Número de Identificación</label>
+                                    <input type="text" name="number_identification_client" id="number_identification_client" class="form-control form-control-alternative" placeholder="Número de Identificación" value="{{ old('name', $client->number_identification) }}" readonly>
+                                </div>
                                 <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                     <label class="form-control-label" for="email_client">{{ __('Client Email') }}</label>
                                     <input type="text" name="email_client" id="email_client" class="form-control form-control-alternative" placeholder="{{ __('Client Email') }}" value="{{ old('name', $client->email) }}" readonly>

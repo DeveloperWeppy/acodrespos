@@ -7,6 +7,7 @@ use App\Order;
 use App\Restorant as Vendor;
 use App\Items;
 use App\Models\Variants;
+use App\Models\RestaurantClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
@@ -147,6 +148,13 @@ class BaseOrderRepository extends Controller
             //Client
             if(auth()->user()){
                 $this->order->client_id=auth()->user()->id;
+                $client=RestaurantClient::where(['companie_id'=>$this->order->restorant_id,'user_id'=>$this->order->client_id])->count();
+                if($client==0){
+                    $resUser = RestaurantClient::create([
+                        'user_id' => $this->order->client_id,
+                        'companie_id' =>$this->order->restorant_id,
+                    ]);
+                }
             }
 
             $this->order->order_price=0;

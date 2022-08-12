@@ -16,7 +16,6 @@
             <div class="searchable-container">
                 <div id="cartList">
                     <ul class="list-group items" v-for="item in items">
-                        
                         <li v-cloak v-bind:class="[item.order_has_items_id==0 ? 'cardAdd': 'border-0',' list-group-item d-flex p-2 mb-2 bg-gray-100 border-radius-lg']"  :data="item.order_has_items_id">
                             <div class="d-flex flex-column">
                               <h6 class="mb-3 text-sm">@{{ item.name }}  </h6>
@@ -33,16 +32,9 @@
                                 <button type="button" v-on:click="incQuantity(item.id)" :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
                                     <span class="btn-inner--icon btn-cart-icon"><i class="fa fa-plus"></i></span>
                                 </button>
-                                
-                            
-
-
 
                             </div>
                           </li>
-                        
-                        
-                        
                       </ul>
                 </div>
                     

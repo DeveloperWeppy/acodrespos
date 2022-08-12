@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Models\RestaurantClient;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -14,13 +15,23 @@ class ClientController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
+            if(auth()->user()->hasRole('owner')){
+                $arrayId=[];
+                $client=RestaurantClient::where(['companie_id'=>auth()->user()->restaurant_id])->get();
+                foreach ($client as $key => $Item){ 
+                    array_push($arrayId,$Item->user_id);
+                }
+                $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->paginate(15);
+            }else{
+                $User=User::role('client')->where(['active'=>1])->paginate(15);
+            }
             return view('clients.index', [
-                    'clients' => User::role('client')->where(['active'=>1])->paginate(15),
+                    'clients' =>$User,
                 ]
             );
         } else {
-            return redirect()->route('orders.index')->withStatus(__('No Access'));
+           return redirect()->route('orders.index')->withStatus(__('No Access'));
         }
     }
 
@@ -64,7 +75,7 @@ class ClientController extends Controller
      */
     public function edit(User $client)
     {
-        if (auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
             return view('clients.edit', compact('client'));
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access'));

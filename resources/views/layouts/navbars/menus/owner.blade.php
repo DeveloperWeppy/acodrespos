@@ -51,8 +51,13 @@
                 <i class="ni ni-ungroup text-red"></i> {{ __('Tables') }}
             </a>
         </li>
+       
     @endif
-
+    <li class="nav-item">
+            <a class="nav-link" href="{{ route('clients.index') }}">
+                <i class="ni ni-single-02 text-blue"></i> {{ __('Clients') }}
+            </a>
+        </li>
     <!-- Exrta menus -->
     @foreach (auth()->user()->getExtraMenus() as $menu)
             <li class="nav-item">
@@ -155,4 +160,7 @@
     
 </ul>
 @endif
+<script>
+    
+</script>
 
