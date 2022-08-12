@@ -55,14 +55,21 @@
 
         }
     }
+    var parametro = window.location.href;
+    parametro=parametro.split("/");
+    parametro=parametro[parametro.length-1];
     setTimeout(() => {
+            
             initPhone('whatsapp_phone');
-            initPhone('phone');
+            if(parametro!="clients"){
+                initPhone('phone');
+            }
             initPhone('phone_owner');
             initPhone('phone_number');
             //initPhone('phone_driver');
             
             
         }, 3000);
-  
+
+
 </script>

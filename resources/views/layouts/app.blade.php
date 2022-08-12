@@ -80,7 +80,9 @@
 
         <!-- Commented because navtabs includes same script -->
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
-
+        <script src="{{ asset('vendor') }}/jasny/js/jasny-bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('argonfront') }}/js/core/popper.min.js" type="text/javascript"></script>
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -94,7 +96,6 @@
         </script>
 
         <!-- Navtabs -->
-        <script src="{{ asset('argonfront') }}/js/core/jquery.min.js" type="text/javascript"></script>
 
 
         <script src="{{ asset('argon') }}/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -103,7 +104,7 @@
         <script src="{{ asset('argon') }}/vendor/nouislider/distribute/nouislider.min.js" type="text/javascript"></script>
 
         <!-- Latest compiled and minified JavaScript -->
-        <script src="{{ asset('vendor') }}/jasny/js/jasny-bootstrap.min.js"></script>
+       
         <!-- Custom js -->
         <script src="{{ asset('custom') }}/js/orders.js"></script>
          <!-- Custom js -->
@@ -173,5 +174,106 @@
 
         <!-- Custom JS defined by admin -->
         <?php echo file_get_contents(base_path('public/byadmin/back.js')) ?>
+        <script>
+            $(document).ready(function() {
+  $("#from-create-client").validate({
+   rules: {
+     name: {
+       required: true,
+     },
+     number_identification: {
+       required: true,
+     },
+     email: {
+       required: true,
+     },
+     phone: {
+       required: true,
+     },
+
+   },
+   messages: {
+     name: "Por favor ingrese el nombre",
+     number_identification: "Por favor ingrese el documento de identificacion",
+     email: "Por favor ingrese el email",
+     phone: "Por favor el numero de telefono",
+   
+   },
+   errorElement: 'span',
+   errorPlacement: function (error, element) {
+     error.addClass('invalid-feedback');
+     element.closest('.form-group').append(error);
+   },
+   highlight: function (element, errorClass, validClass) {
+     if($(element).attr('id')!="formPhone"){
+      $(element).addClass('is-invalid');
+     }
+   },
+   unhighlight: function (element, errorClass, validClass) {
+     $(element).removeClass('is-invalid');
+   },
+   submitHandler: function(form,event){
+    event.preventDefault();
+             var formDataClient=new FormData(form);
+             formDataClient.append( 'password', $( '#fromDocCleint' ).val() );
+             formDataClient.append( 'password_confirmation', $( '#fromDocCleint' ).val() );
+             $.ajax({
+                headers: {
+                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                type: "post",
+                encoding:"UTF-8",
+                url: "{{route('register')}}",
+                data:formDataClient ,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                beforeSend:function(){
+                  $('#modalRegister').modal('hide');
+                  Swal.fire({
+                           title: 'Validando datos, espere por favor...',
+                           button: false,
+                           showConfirmButton: false,
+                           allowOutsideClick: false,
+                           allowEscapeKey: false,
+                           showCancelButton: false,
+                           showConfirmButton: false,
+                           timer: 4000,
+                           timerProgressBar: true,
+                               didOpen: () => {
+                                   Swal.showLoading()
+                               },
+                       });
+                }
+             }).done(function( respuesta ) {
+                 Swal.fire({
+                              title: 'Cliente registrado',
+                              icon: 'success',
+                              button: true,
+                              timer: 2000
+                          });
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+             }).fail(function( jqXHR,textStatus ) {
+                var mensajeError="";
+                if (typeof jqXHR.responseJSON.errors.email != "undefined"){
+                     mensajeError="El correo electrónico ya se tomó.";
+                }
+                Swal.fire({
+                              title: 'Los datos proporcionados no son válidos',
+                              text:mensajeError,
+                              icon: 'error',
+                              button: true,
+                              timer: 2000
+                          });
+                setTimeout(() => {
+                   $('#modalRegister').modal('show');
+                }, 2000);
+            });
+   }
+ });
+});
+</script>
     </body>
 </html>
