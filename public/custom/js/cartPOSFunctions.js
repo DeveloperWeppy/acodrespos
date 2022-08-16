@@ -1,6 +1,7 @@
 
 "use strict";
 var cartContent=null;
+var cartItemId=null;
 var ordenId=null;
 var commentOrd=null;
 var cartSessionId=null;
@@ -94,12 +95,7 @@ function updatePrices(net,delivery,expedition){
  }, 100);
   total.lastChange=new Date().getTime();
   cartTotal.lastChange=new Date().getTime();
-
   cartTotal.expedition=1;
-
-  
-
- 
 }
 $("textarea#order_comment").change(function() {
    if(commentOrd !=$('textarea#order_comment').val()){
@@ -144,11 +140,6 @@ function addToCartVUE(){
 
 function getAllOrders(){
   axios.get('/poscloud/orders').then(function (response) {
-
-
-    
-    
-    
     orderContent.items=response.data.orders;
 
     makeFree();
@@ -431,11 +422,45 @@ function incCart(product_id){
 
 
 function decCart(product_id){
-
   axios.get(withSession('/cartdec/'+product_id+"/"+ordenId)).then(function (response) {
     getCartContentAndTotalPrice();
   }).catch(function (error) {
     
+  });
+}
+function updataObser(){
+  $("#modalObservacion").modal('hide');
+  Swal.fire({
+    title: 'Validando datos, espere por favor...',
+    button: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showCancelButton: false,
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+        },
+  });
+  axios.post(withSession('/updataObser'),{id:cartItemId,orderid:ordenId,observacion:$('textarea#item_observacion').val()}).then(function (response) {
+    Swal.fire({
+      title: 'Actualizado',
+      icon: 'success',
+      button: true,
+      timer: 1000
+    });
+    getCartContentAndTotalPrice();
+  }).catch(function (error) {
+    Swal.fire({
+      title: 'Los datos proporcionados no son válidos',
+      text:mensajeError,
+      icon: 'error',
+      button: true,
+      timer: 2000
+     });
+     $("#modalObservacion").modal('show');
   });
 }
 
@@ -605,6 +630,12 @@ window.onload = function () {
       },
       decQuantity: function (product_id){
         decCart(product_id)
+      },
+      modalObserv: function (product_id,name,observ){
+        $('textarea#item_observacion').val(observ);
+        $("#modalObservacion").modal('show');
+        cartItemId=product_id;
+        $("#titleModalOb").html('Observacion de '+name);
       },
     }
   })

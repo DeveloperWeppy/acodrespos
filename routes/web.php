@@ -275,6 +275,7 @@ Route::post('/cart-remove', 'CartController@remove')->name('cart.remove');
 Route::get('/cart-update', 'CartController@update')->name('cart.update');
 Route::get('/cartinc/{item}/{orderId?}', 'CartController@increase')->name('cart.increase');
 Route::get('/cartdec/{item}/{orderId?}', 'CartController@decrease')->name('cart.decrease');
+Route::post('/updataObser', 'CartController@updateCartObser')->name('cart.updataObser');
 
 Route::post('/order', 'OrderController@store')->name('order.store');
 

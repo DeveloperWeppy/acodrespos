@@ -467,6 +467,29 @@ class CartController extends Controller
     /**
      * Updates cart.
      */
+    public function updateCartObser(Request $request){
+        
+        if(isset($request->session_id)){
+            $this->setSessionID($request->session_id);
+        }
+        if ($request->has('observacion')) {
+            Cart::update($request->id, ['observacion' =>$request->observacion]);
+            if($request->orderid>0){
+                $carItem=Cart::getContent();
+                $order = Order::findOrFail($request->orderid);
+                foreach ($order->items()->get() as $key => $item) {
+                    if($item->pivot->cart_item_id==$request->id){
+                       $oi=Orderitems::findOrFail($item->pivot->id);
+                       $oi->item_observacion= $request->observacion;
+                       $oi->update();
+                    }
+                }
+            }
+        }else{
+            return json_encode(array('messeger'=>"falta observacion","error"=>true));
+        }
+    }
+    
     private function updateCartQty($howMuch, $item_id,$orderId=0)
     {
         if(isset($_GET['session_id'])){
