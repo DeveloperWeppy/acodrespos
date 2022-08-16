@@ -154,7 +154,7 @@ class Cart
      * @return $this
      * @throws InvalidItemException
      */
-    public function add($id, $name = null, $price = null, $quantity = null, $attributes = array(), $conditions = array(), $associatedModel = null)
+    public function add($id, $name = null, $price = null, $quantity = null, $attributes = array(), $conditions = array(), $associatedModel = null,$observacion=null)
     {
         // if the first argument is an array,
         // we will need to call add again
@@ -194,7 +194,8 @@ class Cart
             'price' => Helpers::normalizePrice($price),
             'quantity' => $quantity,
             'attributes' => new ItemAttributeCollection($attributes),
-            'conditions' => $conditions
+            'conditions' => $conditions,
+            'observacion'=>$observacion
         );
 
         if (isset($associatedModel) && $associatedModel != '') {

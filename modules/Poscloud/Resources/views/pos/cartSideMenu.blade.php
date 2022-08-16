@@ -21,6 +21,7 @@
                               <h6 class="mb-3 text-sm">@{{ item.name }}  </h6>
                               <span class="mb-2 text-xs">{{ __('Price') }}: <span class="text-dark font-weight-bold ms-2">@{{ item.attributes.friendly_price }}</span></span>
                               <span class="mb-2 text-xs">{{ __('QTY') }}: <span class="text-dark ms-2 font-weight-bold">@{{ item.quantity }}</span></span>
+                              <span class="mb-2 text-xs">Observacion: <span class="text-dark ms-2 font-weight-bold">@{{ item.observacion }}</span></span>
                             </div>
                             <div class="ms-auto" v-show="item.status_id<3 || item.status_id == null">
                                 <button v-if="item.quantity==1" type="button" v-on:click="remove(item.id)"  :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
@@ -32,7 +33,9 @@
                                 <button type="button" v-on:click="incQuantity(item.id)" :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
                                     <span class="btn-inner--icon btn-cart-icon"><i class="fa fa-plus"></i></span>
                                 </button>
-
+                                <button type="button" v-on:click="modalObserv(item.id,item.name,item.observacion)" :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
+                                    <span class="btn-inner--icon btn-cart-icon"><i class="fa fa-eye"></i></span>
+                                </button>
                             </div>
                           </li>
                       </ul>
@@ -47,7 +50,7 @@
             @include('poscloud::pos.expedition')
             <!-- End client cart -->
             <div class="card card-profile shadow mt-3 mb-3" >
-                <div class="px-4" > 
+                <div class="px-4" style="display:none" > 
                     <div class="card-content  " >  
                             <label style="margin-top:20px">Comentarios</label>
                             <div class="input-group mb-3">
@@ -130,4 +133,22 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="modalObservacion" tabindex="-1" role="dialog" aria-labelledby="modalObservacion" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titleModalOb">Observacion</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close" style="color: black;">
+           <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <textarea id="item_observacion" name="item_observacion" rows="3" cols="40" class="form-control"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="updataObser()" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
 </div>

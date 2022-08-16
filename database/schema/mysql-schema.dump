@@ -271,6 +271,7 @@ CREATE TABLE `order_has_items` (
   `item_id` bigint unsigned NOT NULL,
   `item_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cart_item_id` varchar(260) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `item_observacion` varchar(260) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `qty` int NOT NULL DEFAULT '1',
   `extras` varchar(800) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
   `vat` double(8,2) DEFAULT '0.00',
