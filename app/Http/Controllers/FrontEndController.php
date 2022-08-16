@@ -763,35 +763,21 @@ class FrontEndController extends Controller
             //CASE 1 - nothing at all
             //No query at all
             $arrayRestorant=Restorant::where('active', 1)->get()->shuffle();
+            $arrayNewRestorant=array();
             if(Auth::user()){
                 if(Auth::user()->hasRole('client')!=""){
                     $ordersClient = Order::orderBy('created_at', 'desc')->where(['client_id'=>auth()->user()->id])->whereNotNull('restorant_id')->groupBy('restorant_id')->get();
-                    $arrayNewRestorant=array();
-                    $arrayAdd=array();
                     $array = json_decode( json_encode( $arrayRestorant ), true );
                     foreach ($ordersClient as $item) {
                         $key = array_search($item->restorant_id,array_column($array, 'id'));
                         array_push($arrayNewRestorant,$arrayRestorant[$key]);
-                        array_push($arrayAdd,$key);
                     }
-                    foreach ($arrayRestorant as $clave => $item) {
-                        $ifEx=0;
-                        foreach ($arrayNewRestorant as $item2) {
-                            if($item2->id==$item->id){
-                                $ifEx=1;
-                            }
-                        } 
-                        if($ifEx==0){
-                            array_push($arrayNewRestorant,$item);
-                        }
-                       
-                    }
-                    $arrayRestorant=array();
-                    $arrayRestorant=$arrayNewRestorant;
-                    
                 }
             }
-            array_push($sections, ['title'=>__('Popular restaurants'), 'restorants' =>$arrayRestorant]);
+            if(count($arrayNewRestorant)>0){
+                array_push($sections, ['title'=>'Favoritos', 'restorants'  =>$arrayNewRestorant]);
+            }
+            array_push($sections, ['title'=>__('Popular restaurants'), 'restorants' =>$arrayRestorant,'favorite_restorants' =>$arrayNewRestorant]);
         }
 
         $banners_data = Banners::all();

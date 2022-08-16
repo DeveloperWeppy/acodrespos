@@ -10,7 +10,7 @@
 
 
     @foreach ($sections as $section)
-
+       
         <section class="section" id="main-content">
             <div class="container mt--100">
                 <h2>{{ $section['title'] }}</h2>
