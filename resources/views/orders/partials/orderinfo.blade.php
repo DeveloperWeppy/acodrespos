@@ -106,52 +106,57 @@
                         $class_status = $item->pivot->item_status == 'servicio' ? 'btn-outline-success btn-sm' : 'btn-outline-warning btn-sm';
                         $text_status = $item->pivot->item_status == 'servicio' ? 'Servicio' : 'Cocina';
                      @endphp
-                    @hasrole('kitchen|admin|owner')
-                        @if ($item->pivot->item_status=='cocina')
-                            <span class="small">
-                                <button 
-                                type="submit" id="{{$item->pivot->id}}"
-                                class="bg-transparent change-status">
-                                    <span class="btn <?php echo $class_status; ?> ">
-                                        <?php echo $text_status; ?> <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                        @else
-                            <span class="small">
-                                <button 
-                                class="btn btn-outline-success btn-sm">
-                                    <span class="btn-inner--icon ">
-                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                            
-                        @endif
+                     @if ($order->restorant->has_kitchen == 1)
+                        @hasrole('kitchen|admin|owner')
+                            @if ($item->pivot->item_status=='cocina')
+                                <span class="small">
+                                    <button 
+                                    type="submit" id="{{$item->pivot->id}}"
+                                    class="bg-transparent change-status">
+                                        <span class="btn <?php echo $class_status; ?> ">
+                                            <?php echo $text_status; ?> <i class="fas fa-bell"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                            @else
+                                <span class="small">
+                                    <button 
+                                    class="btn btn-outline-success btn-sm">
+                                        <span class="btn-inner--icon ">
+                                            {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                                
+                            @endif
+                        @endhasanyrole
+                     @endif
+                   
+                @endif
+                @if ($order->restorant->has_kitchen == 1)
+                    @hasrole('client|staff')
+                            @if ($item->pivot->item_status=='cocina')
+                                <span class="small">
+                                    <button
+                                        class="btn btn-warning btn-sm">
+                                        <span class="btn-inner--icon">
+                                            En Cocina <i class="fas fa-bell"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                            @else
+                                <span class="small">
+                                    <button 
+                                        class="btn btn-success btn-sm">
+                                        <span class="btn-inner--icon">
+                                            Preparado <i class="fas fa-bell"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                                
+                            @endif
                     @endhasanyrole
                 @endif
-                @hasrole('client|staff')
-                        @if ($item->pivot->item_status=='cocina')
-                            <span class="small">
-                                <button
-                                    class="btn btn-outline-warning btn-sm">
-                                    <span class="btn-inner--icon">
-                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                        @else
-                            <span class="small">
-                                <button 
-                                    class="btn btn-outline-success btn-sm">
-                                    <span class="btn-inner--icon">
-                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                            
-                        @endif
-                @endhasanyrole
                 
              </h4>
                  @if (strlen($item->pivot->variant_name)>2)

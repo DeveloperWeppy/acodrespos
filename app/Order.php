@@ -226,6 +226,8 @@ class Order extends Model
             return $this->getOwnerOrderActions();
         }else if (auth()->user()->hasRole('staff')) {
             return $this->getOwnerOrderActions();
+        }else if (auth()->user()->hasRole('kitchen')) {
+            return $this->getOwnerOrderActions();
         }
     }
 

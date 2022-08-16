@@ -3,7 +3,8 @@
                 ['ftype'=>'bool','name'=>"Pickup",'id'=>"can_pickup",'value'=>$restorant->can_pickup == 1 ? "true" : "false"],
                 ['ftype'=>'bool','name'=>"Delivery",'id'=>"can_deliver",'value'=>$restorant->can_deliver == 1 ? "true" : "false"],
                 ['ftype'=>'bool','name'=>"Free Delivery",'id'=>"free_deliver",'value'=>$restorant->free_deliver == 1 ? "true" : "false"],
-                ['ftype'=>'bool','name'=>"Disable ordering",'id'=>"disable_ordering",'value'=>$restorant->getConfig('disable_ordering', false) ? "true" : "false"],
+                ['ftype'=>'bool','name'=>"Deshabilitar pedidos",'id'=>"disable_ordering",'value'=>$restorant->getConfig('disable_ordering', false) ? "true" : "false"],
+                ['ftype'=>'bool','name'=>"Habilitar Cocina",'id'=>"has_kitchen",'value'=>$restorant->has_kitchen == 1 ? "true" : "false"],
             ]])
             @if(config('app.isft')&&auth()->user()->hasRole('admin'))
                 @include('partials.fields',['fields'=>[

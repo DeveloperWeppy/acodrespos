@@ -832,32 +832,32 @@ class OrderController extends Controller
             'accepted_by_admin'=>'admin',
             'assigned_to_driver'=>['admin','owner'],
             'rejected_by_admin'=>'admin',
-            'accepted_by_restaurant'=>['owner', 'staff'],
-            'prepared'=>['owner', 'staff'],
+            'accepted_by_restaurant'=>['owner', 'staff', 'kitchen'],
+            'prepared'=>['owner', 'staff', 'kitchen'],
             'rejected_by_restaurant'=>['owner', 'staff'],
             'picked_up'=>['driver', 'owner', 'staff'],
             'delivered'=>['driver', 'owner', 'staff'],
-            'closed'=>['owner', 'staff'],
+            'c'=>['owner', 'staff'],
             'accepted_by_driver'=>['driver'],
             'rejected_by_driver'=>['driver']
         ];
 
         if (! auth()->user()->hasRole($rolesNeeded[$alias])) {
-            abort(403, 'Unauthorized action. You do not have the appropriate role');
+            abort(403, 'Acción no autorizada. No tienes el rol apropiado');
         }
 
         //For owner - make sure this is his order
         if (auth()->user()->hasRole('owner')) {
             //This user is owner, but we must check if this is order from his restaurant
             if (auth()->user()->id != $order->restorant->user_id) {
-                abort(403, 'Unauthorized action. You are not owner of this order restaurant');
+                abort(403, 'Acción no autorizada. No tienes el rol apropiado');
             }
         }
 
         if (auth()->user()->hasRole('staff')) {
             //This user is owner, but we must check if this is order from his restaurant
             if (auth()->user()->restaurant_id != $order->restorant->id) {
-                abort(403, 'Unauthorized action. You are not owner of this order restaurant');
+                abort(403, 'Acción no autorizada. No tienes el rol apropiado');
             }
         }
 
@@ -865,7 +865,7 @@ class OrderController extends Controller
         if (auth()->user()->hasRole('driver')) {
             //This user is owner, but we must check if this is order from his restaurant
             if (auth()->user()->id != $order->driver->id) {
-                abort(403, 'Unauthorized action. You are not driver of this order');
+                abort(403, 'Acción no autorizada. No tienes el rol apropiado');
             }
         }
 

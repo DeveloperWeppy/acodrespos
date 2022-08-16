@@ -523,6 +523,7 @@ CREATE TABLE `restorants` (
   `can_deliver` int NOT NULL DEFAULT '1',
   `self_deliver` int NOT NULL DEFAULT '0',
   `free_deliver` int NOT NULL DEFAULT '0',
+  `has_kitchen` int NOT NULL DEFAULT '0',
   `whatsapp_phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fb_username` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `do_covertion` int NOT NULL DEFAULT '1',

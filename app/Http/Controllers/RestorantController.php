@@ -385,6 +385,7 @@ class RestorantController extends Controller
         $restaurant->can_pickup = $request->can_pickup == 'true' ? 1 : 0;
         $restaurant->can_deliver = $request->can_deliver == 'true' ? 1 : 0;
         $restaurant->can_dinein = $request->can_dinein == 'true' ? 1 : 0;
+        $restaurant->has_kitchen = $request->has_kitchen == 'true' ? 1 : 0;
         if($request->has('self_deliver')){
             $restaurant->self_deliver = $request->self_deliver == 'true' ? 1 : 0;
         }
