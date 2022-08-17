@@ -48,12 +48,12 @@ class RestaurantCreated extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->greeting('Hola: '.$this->user->name)
+                    ->greeting(__('notifications_hello', ['username' => $this->user->name]))
                     ->subject(__('notifications_acc_create', ['app_name'=>env('APP_NAME', '')]))
                     ->line(__('notifications_rest_acc_created', ['restoname'=>$this->restaurant->name]))
                     ->action(__('notifications_login'), route('login'))
-                    ->line('Nombre de Usuario: '.$this->user->email)
-                    ->line('Contraseña: '.$this->user->password)
+                    ->line(__('notifications_username', ['email'=>$this->user->email]))
+                    ->line(__('notifications_password', ['password'=>$this->password]))
                     ->line(__('notifications_reset_pass'))
                     ->line(__('notifications_thanks_for_using_us'));
     }
