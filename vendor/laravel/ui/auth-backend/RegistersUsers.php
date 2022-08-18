@@ -2,6 +2,7 @@
 
 namespace Illuminate\Foundation\Auth;
 use App\Models\RestaurantClient;
+use App\Restorant;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,6 +41,14 @@ trait RegistersUsers
                     'user_id' => $user->id,
                     'companie_id' => Auth::user()->restaurant_id,
                 ]);
+            }else{
+               $restaurants=Restorant::where('user_id', Auth::user()->id)->get();
+               if(count($restaurants)>0){
+                    $flight = RestaurantClient::create([
+                        'user_id' => $user->id,
+                        'companie_id' => $restaurants[0]->id,
+                    ]);
+               }
             }
         }
         if ($response = $this->registered($request, $user)) {

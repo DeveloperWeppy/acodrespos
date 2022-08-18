@@ -19,10 +19,14 @@ $(document).ready(function() {
         });
 
         channel.bind('neworder-event', function(data) {
-            if(data.client_id){
-                js.notify(data.msg + " #" + data.order.id,"primary");
+            if(!data.order.ifclient){
+                js.notify(data.msg + " #" + data.order.id,"primary","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");
             }else{
-                js.notify(data.msg + ". Orden #" + data.order.id,"","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");  
+                var type="";
+                if(data.msg=="Pedido rechazado"){
+                    type="warning";
+                }
+                js.notify(data.msg + ". Orden #" + data.order.id,type,"onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");  
             }
             audio.play();
         });

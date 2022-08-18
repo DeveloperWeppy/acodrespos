@@ -25,12 +25,11 @@ class NewOrder implements ShouldBroadcast
      */
     public function __construct($order, $msg,$client_id=null)
     {
-        $this->order = ["id"=>$order->id];
+        $this->order = ["id"=>$order->id,"ifclient"=>false];
         $this->msg = $msg;
-        $this->client_id=false;
         if($client_id!=null){
             $this->owner=$client_id;
-            $this->client_id=true;
+            $this->order = ["id"=>$order->id,"ifclient"=>true];
         }else{
             $this->owner=$order->restorant->user->id;
         }

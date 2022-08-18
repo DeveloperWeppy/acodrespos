@@ -170,6 +170,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
 
     Route::resource('clients', 'ClientController');
     Route::resource('orders', 'OrderController');
+    Route::get('/notificacion/{index?}', 'OrderController@notificacion')->name('notificacion.list');
     Route::post('/rating/{order}', 'OrderController@rateOrder')->name('rate.order');
     Route::post('/orders/status', 'OrderController@statusitemorder')->name('itemcart.status');
     Route::get('/check/rating/{order}', 'OrderController@checkOrderRating')->name('check.rating');

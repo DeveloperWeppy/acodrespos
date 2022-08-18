@@ -878,7 +878,7 @@ class OrderController extends Controller
          */
 
         if (config('app.isft')&&$order->client) {
-            if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9') {
+            if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7') {
                 
                 $res=new OrderNotification($order, $status_id_to_attach);
                
@@ -917,7 +917,7 @@ class OrderController extends Controller
             }
         }
 
-       // $order->status()->attach([$status_id_to_attach => ['comment'=>'', 'user_id' => auth()->user()->id]]);
+        $order->status()->attach([$status_id_to_attach => ['comment'=>'', 'user_id' => auth()->user()->id]]);
 
 
         //Dispatch event
@@ -934,7 +934,7 @@ class OrderController extends Controller
         }
 
 
-        //return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
+        return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
     }
 
     public function rateOrder(Request $request, Order $order)
@@ -1111,5 +1111,11 @@ class OrderController extends Controller
 
         
         return view('orders.success', ['order' => $order,'showWhatsApp'=>$showWhatsApp]);
+    }
+    public function notificacion($index=1)
+    {
+        $page=($index-1)*10;
+        $notificacion=auth()->user()->notifications()->offset($page)->limit(10)->get();;
+        return json_encode($notificacion);
     }
 }

@@ -12,8 +12,18 @@
        
         <!-- User -->
         <ul class="navbar-nav align-items-center d-none d-md-flex">
-
-           
+        <li class="nav-item dropdown">
+                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="media align-items-center">
+                        <span class="avatar avatar-sm rounded-circle">
+                            <i class="ni ni-bell-55"></i>
+                        </span>
+                    </div>
+                </a>
+                <div id="listNotif" class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" style="width: 330px; max-width: 80vw;">
+                  
+                </div>
+          </li>
           <!-- If user is owner or staff, show go to store-->
           @if((auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff'))&&!config('settings.is_pos_cloud_mode')&&!config('app.issd'))
             @if (auth()->user()->hasRole('owner'))

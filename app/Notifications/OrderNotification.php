@@ -229,7 +229,7 @@ class OrderNotification extends Notification
 
     public function toDatabase($notifiable)
     {
-        print_r("<pre>");
+        
         if ($this->status.'' == '1') {
             //Created
             $greeting = __('There is new order');
@@ -238,7 +238,7 @@ class OrderNotification extends Notification
             //ed:3
             //Accepted
             $greeting = __('Your order has been accepted');
-            $line = __('order').'#'.$this->order->id.' '.__('We are now working on it!');
+            $line = __('order').' #'.$this->order->id.' '.__('We are now working on it!');
             
         } elseif ($this->status.'' == '4') {
             //Assigned to driver
@@ -248,17 +248,25 @@ class OrderNotification extends Notification
             //Prepared
             $greeting = __('Your order is ready.');
             $line = $this->order->delivery_method && $this->order->delivery_method.'' == '1' ? __('Your order is ready for delivery. Expect us soon.') : __('Your order is ready for pickup. We are expecting you.');
-        } elseif ($this->status.'' == '9') {
+        } elseif ($this->status.'' == '7') {
+            //ed:3
+            //Accepted
+            $greeting ="Tu pedido ha sido entregado";
+            $line = __('order').' #'.$this->order->id.' Muchas gracias por tu compra';
+            
+        }
+         elseif ($this->status.'' == '9') {
             //Rejected
             $greeting = __('Order rejected');
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
-        if($this->status==3 ||$this->status==5 || $this->status==9 ){
+        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 ){
             event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
         }
         return [
             'title'=>$greeting,
             'body' =>$line,
+            'order_id' =>$this->order->id,
         ];
     }
 }
