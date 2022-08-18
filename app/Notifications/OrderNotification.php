@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Notifications;
-
+use App\Events\NewOrder as PusherNewOrder;
 use Akaunting\Money\Currency;
 use Akaunting\Money\Money;
 use Illuminate\Bus\Queueable;
+
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -34,6 +35,7 @@ class OrderNotification extends Notification
         $this->order = $order;
         $this->status = $status;
         $this->user = $user;
+        //ed:1
     }
 
     /**
@@ -45,7 +47,7 @@ class OrderNotification extends Notification
     public function via($notifiable)
     {
         $notificationClasses = ['database'];
-        
+        //ed:2
         //Mail notification on vendor email
         if($this->order->restorant->getConfig('enable_email_order_notification',false)){
             array_push($notificationClasses, 'mail');
@@ -69,6 +71,7 @@ class OrderNotification extends Notification
 
     public function toExpo($notifiable)
     {
+       //no
         $messages=$this->getMessages();
         $greeting=$messages[0];
         $line=$messages[1];
@@ -85,6 +88,7 @@ class OrderNotification extends Notification
 
     public function toTwilio($notifiable)
     {
+        //no
         if ($this->status.'' == '1') {
             //Created
              $line = $this->order->delivery_method.'' == '3'? __('You have just received an order on table').' '.$this->order->table->name :  __('You have just received an order');
@@ -101,11 +105,11 @@ class OrderNotification extends Notification
             //Rejected
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
-
         return (new TwilioSmsMessage())->content($line);
     }
 
     private function getMessages(){
+        //no
         if ($this->status.'' == '1') {
             //Created
             $greeting = __('There is new order');
@@ -139,7 +143,6 @@ class OrderNotification extends Notification
         $url = url('/orders/'.$this->order->id);
 
         //Inders in the db
-
         return OneSignalMessage::create()
             ->subject($greeting)
             ->body($line)
@@ -184,7 +187,6 @@ class OrderNotification extends Notification
             $greeting = __('Order rejected');
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
-
         $message = (new MailMessage)
             ->greeting($greeting)
             ->subject(__('Order notification').' #'.$this->order->id)
@@ -227,14 +229,17 @@ class OrderNotification extends Notification
 
     public function toDatabase($notifiable)
     {
+        print_r("<pre>");
         if ($this->status.'' == '1') {
             //Created
             $greeting = __('There is new order');
             $line = __('You have just received an order');
         } elseif ($this->status.'' == '3') {
+            //ed:3
             //Accepted
             $greeting = __('Your order has been accepted');
             $line = __('order').'#'.$this->order->id.' '.__('We are now working on it!');
+            
         } elseif ($this->status.'' == '4') {
             //Assigned to driver
             $greeting = __('There is new order for you.');
@@ -248,7 +253,9 @@ class OrderNotification extends Notification
             $greeting = __('Order rejected');
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
-
+        if($this->status==3 ||$this->status==5 || $this->status==9 ){
+            event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
+        }
         return [
             'title'=>$greeting,
             'body' =>$line,

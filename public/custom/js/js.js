@@ -44,7 +44,7 @@ var js = {
       }
       
     },
-    notify:function(text, type){
+    notify:function(text, type,evento=""){
       var color="#4fd69c";
       var autoHideDelay=5000;
       var autoHide= true;
@@ -56,7 +56,7 @@ var js = {
         autoHide=false;
       }
       $.notify.addStyle('custom', {
-          html: "<div><strong><span data-notify-text /></strong></div>",
+          html: "<div "+evento+"><strong><span data-notify-text /></strong></div>",
           classes: {
               base: {
                   "position": "relative",

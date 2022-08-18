@@ -11,6 +11,7 @@ use App\Status;
 use App\User;
 use Carbon\Carbon;
 use Cart;
+use App\Events\NewOrder as PusherNewOrder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -878,7 +879,10 @@ class OrderController extends Controller
 
         if (config('app.isft')&&$order->client) {
             if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9') {
-                $order->client->notify(new OrderNotification($order, $status_id_to_attach));
+                
+                $res=new OrderNotification($order, $status_id_to_attach);
+               
+                $order->client->notify( $res);
             }
 
             if ($status_id_to_attach.'' == '4') {
@@ -906,18 +910,19 @@ class OrderController extends Controller
         if (config('app.isft')) {
             //When orders is accepted by restaurant, auto assign to driver
             if ($status_id_to_attach.'' == '3') {
+                //ed :2
                 if (config('settings.allow_automated_assign_to_driver')) {
                     $this->autoAssignToDriver($order);
                 }
             }
         }
 
-        $order->status()->attach([$status_id_to_attach => ['comment'=>'', 'user_id' => auth()->user()->id]]);
+       // $order->status()->attach([$status_id_to_attach => ['comment'=>'', 'user_id' => auth()->user()->id]]);
 
 
         //Dispatch event
         if($alias=="accepted_by_restaurant"){
-            OrderAcceptedByVendor::dispatch($order);
+           //ed: 3 OrderAcceptedByVendor::dispatch($order);
         }
         if($alias=="accepted_by_admin"){
             //IN FT send email
@@ -929,7 +934,7 @@ class OrderController extends Controller
         }
 
 
-        return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
+        //return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
     }
 
     public function rateOrder(Request $request, Order $order)

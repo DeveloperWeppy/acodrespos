@@ -19,7 +19,11 @@ $(document).ready(function() {
         });
 
         channel.bind('neworder-event', function(data) {
-            js.notify(data.msg + " #" + data.order.id,"primary");
+            if(data.client_id){
+                js.notify(data.msg + " #" + data.order.id,"primary");
+            }else{
+                js.notify(data.msg + ". Orden #" + data.order.id,"","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");  
+            }
             audio.play();
         });
     }
