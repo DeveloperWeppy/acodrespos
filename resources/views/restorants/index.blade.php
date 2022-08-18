@@ -82,12 +82,12 @@
                                                         @if($restorant->active == 0)
                                                             <a class="dropdown-item" href="{{ route('restaurant.activate', $restorant) }}">{{ __('Activate') }}</a>
                                                         @else
-                                                            <button type="button" class="dropdown-item" onclick="confirm('{{ __("Are you sure you want to deactivate this restaurant?") }}') ? this.parentElement.submit() : ''">
+                                                            <button type="button" class="dropdown-item" onclick="confirm('{{ __("¿Estás seguro de que quieres desactivar este restaurante?") }}') ? this.parentElement.submit() : ''">
                                                                 {{ __('Deactivate') }}
                                                             </button>
                                                         @endif
                                                     </form>
-                                                    <a class="dropdown-item warning red" onclick="return confirm('Are you sure you want to delete this Restaurant from Database? This will aslo delete all data related to it. This is irreversible step.')"  href="{{ route('admin.restaurant.remove',$restorant)}}">{{ __('Delete') }}</a>
+                                                    <a class="dropdown-item warning red" onclick="return confirm('¿Está seguro de que desea eliminar este restaurante de la base de datos? Esto también eliminará todos los datos relacionados con él. Este es un paso irreversible.')"  href="{{ route('admin.restaurant.remove',$restorant)}}">{{ __('Delete') }}</a>
                                                 </div>
                                             </div>
                                         </td>
