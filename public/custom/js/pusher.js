@@ -7,7 +7,11 @@ $(document).ready(function() {
         var audio = new Audio('https://soundbible.com/mp3/old-fashioned-door-bell-daniel_simon.mp3');
 
         Pusher.logToConsole = true;
-
+        if ($("#undiv").length > 0 ) {
+            if(typeof listnotificacion === 'function') { 
+                listnotificacion(1);
+            }
+        }
         var pusher = new Pusher(PUSHER_APP_KEY, {
             cluster: PUSHER_APP_CLUSTER
         });

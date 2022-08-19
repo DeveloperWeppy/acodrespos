@@ -1115,7 +1115,7 @@ class OrderController extends Controller
     public function notificacion($index=1)
     {
         $page=($index-1)*10;
-        $notificacion=auth()->user()->notifications()->offset($page)->limit(10)->get();;
-        return json_encode($notificacion);
+        $notificacion=auth()->user()->notifications()->offset($page)->limit(10)->get();
+        return json_encode(array("data"=>$notificacion,"total"=>$notificacion=auth()->user()->notifications()->count()));
     }
 }

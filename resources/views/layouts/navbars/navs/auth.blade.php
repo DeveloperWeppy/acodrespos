@@ -20,7 +20,7 @@
                         </span>
                     </div>
                 </a>
-                <div id="listNotif" class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" style="width: 330px; max-width: 80vw;">
+                <div id="listNotif" class="dropdown-menu dropdown-menu-arrow dropdown-menu-right " style="width: 330px; max-width: 80vw;max-height:60vh;overflow-y: scroll;overflow-x: hidden;">
                   
                 </div>
           </li>
