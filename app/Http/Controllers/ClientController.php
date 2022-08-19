@@ -19,7 +19,7 @@ class ClientController extends Controller
             if(auth()->user()->hasRole('owner')){
                 $arrayId=[];
                 $restaurant_id=0;
-                if(auth()->user()->restaurant_id!=null){
+                if(auth()->user()->restaurant_idO==null){
                     $restaurants=Restorant::where('user_id', auth()->user()->id)->get();
                     if(count($restaurants)>0){
                         $restaurant_id=$restaurants[0]->id;
