@@ -18,7 +18,16 @@ class ClientController extends Controller
         if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
             if(auth()->user()->hasRole('owner')){
                 $arrayId=[];
-                $client=RestaurantClient::where(['companie_id'=>auth()->user()->restaurant_id])->get();
+                $restaurant_id=0;
+                if(auth()->user()->restaurant_id==null){
+                    $restaurants=Restorant::where('user_id', Auth::user()->id)->get();
+                    if(count($restaurants)>0){
+                        $restaurant_id=$restaurants[0]->id;
+                    }
+                }else{
+                    $restaurant_id=auth()->user()->restaurant_id;
+                }
+                $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
                 foreach ($client as $key => $Item){ 
                     array_push($arrayId,$Item->user_id);
                 }
