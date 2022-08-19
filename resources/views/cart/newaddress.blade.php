@@ -7,7 +7,7 @@
         <br />
         @include('partials.fields',
         ['fields'=>[
-          ['ftype'=>'input','name'=>"",'id'=>"addressID",'placeholder'=>"Your delivery address here ...",'required'=>true],
+          ['ftype'=>'input','name'=>"",'id'=>"addressID",'placeholder'=>"Su dirección de entrega aquí ...",'required'=>true],
           ]])
 
         <label>{{ __('Delivery area') }}</label>

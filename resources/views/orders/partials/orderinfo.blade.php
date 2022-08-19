@@ -157,28 +157,6 @@
                             @endif
                     @endhasanyrole
                 @endif
-                @hasrole('client|staff')
-                        @if ($item->pivot->item_status=='cocina')
-                            <span class="small">
-                                <button
-                                    class="btn btn-outline-warning btn-sm">
-                                    <span class="btn-inner--icon">
-                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                        @else
-                            <span class="small">
-                                <button 
-                                    class="btn btn-outline-success btn-sm">
-                                    <span class="btn-inner--icon">
-                                        {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                    </span>
-                                </button>
-                            </span>
-                            
-                        @endif
-                @endhasanyrole
              </h4>
              @if ($item->pivot->item_observacion!='' && $item->pivot->item_observacion!=null)
              <h4>Observación: {{$item->pivot->item_observacion}}</h4>

@@ -111,7 +111,7 @@ return [
     |
     */
 
-    'timezone' => env('TIME_ZONE', 'UTC'),
+    'timezone' => env('TIME_ZONE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +124,7 @@ return [
     |
     */
 
-    'locale' => strtolower(env('APP_LOCALE', 'en')),
+    'locale' => strtolower(env('APP_LOCALE', 'es')),
 
     /*
     |--------------------------------------------------------------------------

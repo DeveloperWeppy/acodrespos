@@ -969,14 +969,14 @@ class FrontEndController extends Controller
 
             //dd($restorant->categories[1]->items[0]->extras);
            // dd(Categories::where('restorant_id',$restorant->id)->ordered()->get());
-
+           
            $businessHours=$restorant->getBusinessHours();
            
            $tz= $restorant->getConfig('time_zone',config('app.timezone'));
            $now = new \DateTime('now',new \DateTimeZone($tz));
 
-          // $formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
-          $formatter = new \IntlDateFormatter('en', \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+           //$formatter = new \IntlDateFormatter(config('app.locale'), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
+           $formatter = new \IntlDateFormatter('en', \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT);
            $formatter->setPattern(config('settings.datetime_workinghours_display_format_new'));
            $formatter->setTimeZone($tz);
 

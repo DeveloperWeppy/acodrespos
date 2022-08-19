@@ -109,7 +109,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Discounted price'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number'])
+                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Precio de Descuento'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number'])
 
                                         @if ($restorant->getConfig('hide_tax_input',"false")!="false")
                                             <!-- Hidden -->
@@ -121,12 +121,12 @@
                                         <?php $image=['name'=>'item_image','label'=>__('Item Image'),'value'=> $item->logom,'style'=>'width: 290px; height:200']; ?>
                                         @include('partials.images',$image)
                                         @include('partials.toggle',['id'=>'itemAvailable','name'=>'Item available','checked'=>($item->available == 1)])
-                                        @include('partials.toggle',['id'=>'has_variants','name'=>'Enable variants','checked'=>($item->has_variants==1)])
+                                        @include('partials.toggle',['id'=>'has_variants','name'=>'Habilitar Variantes','checked'=>($item->has_variants==1)])
                                         @if($item->has_variants==1)
-                                            @include('partials.toggle',['additionalInfo'=>' Missing variants will have the same price as the item','id'=>'enable_system_variants','name'=>'Enable System Variants','checked'=>($item->enable_system_variants==1)])
+                                            @include('partials.toggle',['additionalInfo'=>' Las variantes faltantes tendrán el mismo precio que el artículo','id'=>'enable_system_variants','name'=>'Habilitar variantes del sistema','checked'=>($item->enable_system_variants==1)])
                                         @else
                                             <hr />
-                                                @include('partials.toggle',['additionalInfo'=>'Plate, where client can select different options, and include paid or free extras','id'=>'enable_plate','name'=>'This item is a plate','checked'=>($item->enable_system_variants==1)])
+                                                @include('partials.toggle',['additionalInfo'=>'Plato, donde el cliente puede seleccionar diferentes opciones, e incluir extras de pago o gratuitos','id'=>'enable_plate','name'=>'Este artículo es un plato.','checked'=>($item->enable_system_variants==1)])
                                                 <a class="btn btn-success btn-sm" href="{{  route('items.options.index',$item->id)}}">{{ __('Edit Plate Options')}}</a>
                                             <hr />
                                         @endif

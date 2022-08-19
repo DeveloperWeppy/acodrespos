@@ -214,8 +214,8 @@ class Restorant extends MyModel
             'sunday'     => [],
             'overflow' => true
         ];
-
-        $dayKeys=array_keys($creationArray);
+       
+        $dayKeys=array_keys($creationArray); 
         
         //Get all working hours
         $workingHours=$this->hours()->get()->toArray();
@@ -225,6 +225,7 @@ class Restorant extends MyModel
                 $from = $i.'_from';
                 $to = $i.'_to';
                 if($shift[$from]&&$shift[$to]){
+                    setlocale(LC_ALL,"es_ES");
                     $toHour=date("H:i", strtotime($shift[$to]));
                     array_push($creationArray[$dayKeys[$i]],date("H:i", strtotime($shift[$from]))."-".$toHour);
                 }
