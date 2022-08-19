@@ -73,7 +73,23 @@
                     </ul>
                 </li>
               @endif
+              @auth()
+              <li class="nav-item dropdown">
+                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="notifivisto()">
+                    <div class="media align-items-center">
+                        <span class="avatar avatar-sm rounded-circle" style="background-color: transparent;">
+                            <i class="ni ni-bell-55" style="font-size:22px;color:#5e72e4"></i>
+                            <div class="notifi-count-conter" id="notifCount">0</div>
+                        </span>
+                    </div>
+                </a>
+                <div id="listNotif" class="dropdown-menu dropdown-menu-arrow dropdown-menu-right " style="width: 330px; max-width: 80vw;max-height:60vh;overflow-y: auto;overflow-x: hidden;">
+                   <div style='text-align:center;'> No hay notificaciones</div>
+                </div>
+            </li>
+            @endauth
             <li class="nav-item dropdown">
+           
                 @auth()
                     @include('layouts.menu.partials.auth')
                 @endauth
