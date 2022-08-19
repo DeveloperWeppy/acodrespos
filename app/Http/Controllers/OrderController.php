@@ -1114,8 +1114,15 @@ class OrderController extends Controller
     }
     public function notificacion($index=1)
     {
-        $page=($index-1)*10;
-        $notificacion=auth()->user()->notifications()->offset($page)->limit(10)->get();;
-        return json_encode($notificacion);
+        if($index==-1){
+            $ee=auth()->user()->unreadNotifications()->update(['read_at' => now()]);
+            return  json_encode(array("error"=>false));
+        }else{
+            $page=($index-1)*10;
+            $notificacion=auth()->user()->notifications()->offset($page)->limit(10)->get();
+            //$e=auth()->user()->unreadNotifications()->update(['read_at' => now()]);
+            return json_encode(array("data"=>$notificacion,"total"=>auth()->user()->notifications()->count(),"totalNo"=>auth()->user()->notifications()->where("read_at",null)->count()));
+        }
+       
     }
 }

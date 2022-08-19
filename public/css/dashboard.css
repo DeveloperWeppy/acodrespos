@@ -18,3 +18,15 @@
     background-color: #fff;
     align-items: center;
 }
+.notifi-count-conter {
+    display:none;
+    position: absolute;
+    text-align:center;
+    font-size: 11px;
+    top: 8px;
+    right: 1px;
+    border-radius: 9px;
+    background: red;
+    width: 18px;
+    height: 18px;
+}

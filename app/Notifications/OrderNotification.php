@@ -233,7 +233,7 @@ class OrderNotification extends Notification
         if ($this->status.'' == '1') {
             //Created
             $greeting = __('There is new order');
-            $line = __('You have just received an order');
+            $line = __('order').' #'.$this->order->id." ".__('You have just received an order');
         } elseif ($this->status.'' == '3') {
             //ed:3
             //Accepted
@@ -247,7 +247,7 @@ class OrderNotification extends Notification
         } elseif ($this->status.'' == '5') {
             //Prepared
             $greeting = __('Your order is ready.');
-            $line = $this->order->delivery_method && $this->order->delivery_method.'' == '1' ? __('Your order is ready for delivery. Expect us soon.') : __('Your order is ready for pickup. We are expecting you.');
+            $line = $this->order->delivery_method && $this->order->delivery_method.'' == '1' ?__('order').' #'.$this->order->id." ".__('Your order is ready for delivery. Expect us soon.') : __('order').' #'.$this->order->id." ".__('Your order is ready for pickup. We are expecting you.');
         } elseif ($this->status.'' == '7') {
             //ed:3
             //Accepted

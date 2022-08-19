@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Models\RestaurantClient;
 use Illuminate\Http\Request;
-
+use App\Restorant;
 class ClientController extends Controller
 {
     /**
@@ -20,10 +20,11 @@ class ClientController extends Controller
                 $arrayId=[];
                 $restaurant_id=0;
                 if(auth()->user()->restaurant_id==null){
-                    $restaurants=Restorant::where('user_id', Auth::user()->id)->get();
+                    $restaurants=Restorant::where('user_id', auth()->user()->id)->get();
                     if(count($restaurants)>0){
                         $restaurant_id=$restaurants[0]->id;
                     }
+                  
                 }else{
                     $restaurant_id=auth()->user()->restaurant_id;
                 }
@@ -31,6 +32,7 @@ class ClientController extends Controller
                 foreach ($client as $key => $Item){ 
                     array_push($arrayId,$Item->user_id);
                 }
+                
                 $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->paginate(15);
             }else{
                 $User=User::role('client')->where(['active'=>1])->paginate(15);

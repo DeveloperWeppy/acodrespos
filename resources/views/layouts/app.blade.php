@@ -175,53 +175,9 @@
         <!-- Custom JS defined by admin -->
         <?php echo file_get_contents(base_path('public/byadmin/back.js')) ?>
         <script>
+ 
   $(document).ready(function() {
-    setTimeout(function () {listNotificacion()}, 1000);
-        function listNotificacion(){
-            $.ajax({
-                      headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                              },
-                      type: "get",
-                      encoding:"UTF-8",
-                      url: "{{route('notificacion.list')}}",
-                      processData: false,
-                      contentType: false,
-                      dataType:'json',
-                      beforeSend:function(){
-                      }
-                  }).done(function( respuesta ) {
-                    var itemIcon='<i class=" ni ni-single-02" style="font-size: 28px;"></i>';
-                    var conItem='<a href="/orders/%orderid%" class="row" style="margin-top:10px"><div class="col-2" style="display:flex;align-items:center;">%icon%</div> <span class="col-10">%title%  <br><span style="font-size:11px">%body%</span> <br><span style="font-size:11px">%fecha%</span></span></a>';
-                    var listItem="";
-                    for (var i = 0; i < respuesta.length ;i++) {
-                      if(respuesta[i]['data']['title']=="Pedido rechazado"){
-                        itemIcon='<i class="col-2 fa fa-ban" style="color:#f80031;font-size: 28px;"></i>';
-                      }
-                      if(respuesta[i]['data']['title']=="Su pedido ha sido aceptado"){
-                        itemIcon='<i class="col-2  fa fa-check-circle-o" style="color:#03acca;font-size: 28px;"></i>';
-                      }
-                      if(respuesta[i]['data']['title']=="Tu pedido está listo."){
-                        itemIcon='<i class="col-2 fa fa-shopping-bag" style="color:#ff3709ca;font-size: 28px;"></i>';
-                      }
-                      if(respuesta[i]['data']['title']=="Tu pedido ha sido entregado"){
-                        itemIcon='<i class="col-2 fa fa-handshake-o" style="color:#4fd69c;font-size: 28px;"></i>';
-                      }
-                      
-                   
-                      var fecha=new Date(respuesta[i]['created_at']).toLocaleString('en-US', { hour12: true });
-                      listItem+=conItem.replace('%orderid%',respuesta[i]['data']['order_id']).replace('%icon%',itemIcon).replace('%title%', respuesta[i]['data']['title']).replace('%body%', respuesta[i]['data']['body']).replace('%fecha%', fecha);
-                    }
-                    if(respuesta.length>0){
-                      $("#listNotif").html(listItem);
-                    }else{
-                      $("#listNotif").html("<span style='padding-left:10px'> No hay notificaciones</span>");
-                    }
-                    
-                  }).fail(function( jqXHR,textStatus ) {
-                      
-                  });
-      }
+      listnotificacion(notificacionIndes);
       $("#from-create-client").validate({
    rules: {
      name: {
