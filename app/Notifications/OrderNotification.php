@@ -30,11 +30,12 @@ class OrderNotification extends Notification
     protected $status;
     protected $user;
 
-    public function __construct($order, $status = '1',$user=null)
+    public function __construct($order, $status = '1',$user=null,$producto=null)
     {
         $this->order = $order;
         $this->status = $status;
         $this->user = $user;
+        $this->producto = $producto;
         //ed:1
     }
 
@@ -260,8 +261,20 @@ class OrderNotification extends Notification
             $greeting = __('Order rejected');
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
-        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 ){
+        elseif ($this->status.'' == 'cocina'  || $this->status.'' == 'servicio') {
+            //Rejected
+            $greeting = "Cambio el estado del Producto";
+            $line = __('order').' #'.$this->order->id.' El producto '.$this->producto." Esta en preparación";
+            if($this->status.'' == 'servicio' ){
+                $line = __('order').' #'.$this->order->id.' El producto '.$this->producto." Esta listo";
+            }
+           
+        }
+        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7){
             event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
+        }
+        if($this->status.'' == 'cocina' || $this->status.'' == 'servicio' ){
+            event(new PusherNewOrder($this->order,$greeting));
         }
         return [
             'title'=>$greeting,
