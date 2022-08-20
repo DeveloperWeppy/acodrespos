@@ -132,6 +132,10 @@ class Main extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ];
+        $this->validate($request, $rules);
 
         $this->authChecker();
         $item = $this->provider::create([

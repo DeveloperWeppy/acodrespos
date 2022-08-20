@@ -132,13 +132,13 @@ return [
 
     'custom' => [
         'order_price' => [
-            'min' => 'Order minimum is :min. Please add few more items in cart',
+            'min' => 'El pedido mínimo es :min. Agregue algunos artículos más en el carrito',
         ],
         'address_id' => [
-            'required' => 'Please select your address',
+            'required' => 'Por favor seleccione su dirección',
         ],
         'stripe_payment_error_action'=>[
-            'required'=>'The payment attempt failed because additional action is required before it can be completed'
+            'required'=>'El intento de pago falló porque se requiere una acción adicional antes de que pueda completarse'
         ],
         'stripe_payment_failure'=>[
             'required'=>'The payment attempt failed for various other reasons, such as being out of available funds. Please check your provided data.'
