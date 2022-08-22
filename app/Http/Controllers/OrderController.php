@@ -412,9 +412,14 @@ class OrderController extends Controller
               ->update(['item_status' => $active]);
 
           
-
+            $order = Order::findOrFail($item->order_id);
+            if(auth()->user()->id!=$order->employee_id){
+                  $producto= DB::table('items')->where('id',$item->item_id)->get();
+                  $employee = User::findOrFail($order->employee_id);
+                  $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
+            }
             if ($actualiza == 1) {
-
+             
                 $class_status = ($active == 'servicio') ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
                 $text_status = ($active == 'servicio') ? "Servicio" : "Cocina";
                 $status = 'servicio';
@@ -424,7 +429,39 @@ class OrderController extends Controller
 
         echo json_encode(array("status" => $status, "class_status" => $class_status, "text_status" => $text_status));
     }
+    public function statusitemorder2($id)
+    {
 
+        $class_status = $text_status = '';
+        $status = 'cocina';
+        $_POST['id']=$id;
+        if (isset($_POST['id']) && !empty($_POST['id'])) {
+            $item = DB::table('order_has_items')
+            ->where('id', $id)
+            ->first();
+            $active = ($item->item_status == 'cocina') ? 'servicio' : 'cocina';
+
+            $actualiza = DB::table('order_has_items')
+              ->where('id', $id)
+              ->update(['item_status' => $active]);
+
+            $order = Order::findOrFail($item->order_id);
+            if(auth()->user()->id!=$order->employee_id){
+                $producto= DB::table('items')->where('id',$item->item_id)->get();
+                $employee = User::findOrFail($order->employee_id);
+                $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
+            }
+            
+            if ($actualiza == 1) {
+                $class_status = ($active == 'servicio') ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
+                $text_status = ($active == 'servicio') ? "Servicio" : "Cocina";
+                $status = 'servicio';
+            } 
+            
+        }
+
+        echo json_encode(array("status" => $status, "class_status" => $class_status, "text_status" => $text_status));
+    }
     public function orderLocationAPI(Order $order)
     {
         if ($order->status->pluck('alias')->last() == 'picked_up') {
@@ -922,7 +959,8 @@ class OrderController extends Controller
 
         //Dispatch event
         if($alias=="accepted_by_restaurant"){
-           //ed: 3 OrderAcceptedByVendor::dispatch($order);
+           //ed: 3 
+           OrderAcceptedByVendor::dispatch($order);
         }
         if($alias=="accepted_by_admin"){
             //IN FT send email

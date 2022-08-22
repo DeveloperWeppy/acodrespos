@@ -114,7 +114,7 @@ $(document).ready(function() {
                 listNotificacionAumenta(1);
             }
             if(!data.order.ifclient){
-                js.notify(data.msg + " #" + data.order.id,"primary","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");
+                js.notify(data.msg + " Orden #" + data.order.id,"primary","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");
             }else{
                 var type="";
                 if(data.msg=="Pedido rechazado"){

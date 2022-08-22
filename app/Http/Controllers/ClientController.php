@@ -51,6 +51,20 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function listclients($tipo="")
+    {
+        $listClient=User::role('client')->where(['active'=>1])->get();
+        if($tipo=="select"){
+            $selectClient=array();
+            $selectTelefono=array();
+            foreach ($listClient as $key => $item) {
+                    array_push($selectClient,array('id'=>$item->id,'text'=>$item->name." - ".$item->number_identification));
+                    $selectTelefono[$item->id]=$item->phone;
+            }
+            return json_encode(array("selectTelefono"=>$selectTelefono,"selectClient"=>$selectClient));
+        }
+        return json_encode($listClient);
+    }
     public function create()
     {
         //

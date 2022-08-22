@@ -546,6 +546,20 @@
                        });
                 }
              }).done(function( respuesta ) {
+
+                  $.ajax({
+                    method: "GET",
+                    url: "/listclients/select",
+                    dataType:'json',
+                  }).done(function(resp) {
+                    datalistClient=resp.selectClient;
+                    datalistPhone=resp.selectTelefono;
+                    $('#client_name').select2({
+                        width: '100%',
+                        placeholder: "Nombre o Documento",
+                        data: datalistClient
+                    });
+                 });
                  Swal.fire({
                               title: 'Cliente registrado',
                               icon: 'success',
