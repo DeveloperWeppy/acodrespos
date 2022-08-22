@@ -1,6 +1,9 @@
 
 var notificacionIndes=1;
 var arraynotificacion=[];
+if(typeof urlNotificacion === 'undefined'){
+  var urlNotificacion="notificacion";
+}
 function notifivisto(){
  $.ajax({
            headers: {
@@ -8,7 +11,7 @@ function notifivisto(){
                    },
            type: "get",
            encoding:"UTF-8",
-           url: "notificacion/-1",
+           url: urlNotificacion+"/-1",
            processData: false,
            contentType: false,
            dataType:'json',
@@ -27,7 +30,7 @@ function listnotificacion(index){
                    },
            type: "get",
            encoding:"UTF-8",
-           url: "notificacion/"+index,
+           url: urlNotificacion+"/"+index,
            processData: false,
            contentType: false,
            dataType:'json',
