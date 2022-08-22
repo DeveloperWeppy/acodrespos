@@ -91,13 +91,13 @@
         </li>
     @endif
 
-    @if(config('settings.enable_pricing'))
+    {{-- @if(config('settings.enable_pricing'))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('plans.current') }}">
                 <i class="ni ni-credit-card text-orange"></i> {{ __('Plan') }}
             </a>
         </li>
-    @endif
+    @endif --}}
 
         @if(config('app.ordering')&&config('settings.enable_finances_owner'))
             <li class="nav-item">

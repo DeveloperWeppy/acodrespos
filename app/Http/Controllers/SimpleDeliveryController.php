@@ -48,8 +48,8 @@ class SimpleDeliveryController extends Controller
     private function getFields()
     {
         return [
-            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Enter delivery area name', 'required'=>true],
-            ['class'=>'col-md-4', 'ftype'=>'input', 'type'=>'number', 'name'=>'Delivery cost', 'id'=>'cost', 'placeholder'=>'Enter delovery cost', 'required'=>true],
+            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Ingrese el nombre del área de entrega', 'required'=>true],
+            ['class'=>'col-md-4', 'ftype'=>'input', 'type'=>'number', 'name'=>'Costo de envío', 'id'=>'cost', 'placeholder'=>'Ingrese el costo de entrega', 'required'=>true],
             ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Phone', 'id'=>'phone', 'placeholder'=>'Enter phone','required'=>false]
         ];
     }

@@ -32,6 +32,13 @@ class Main extends Controller
             if(isset($item['table_id'])){
                 $table=Tables::findOrFail($item['table_id']);
             }else{
+                //$table_exist=Tables::where('name', $item['name'])->count();
+
+                /* if ($table_exist > 0) {
+                    return $status;
+                } else {
+                    
+                } */
                 $table=Tables::create([
                     'name'=>"",
                     'size'=>4,
@@ -39,6 +46,8 @@ class Main extends Controller
                     'restaurant_id'=>$restoarea->restaurant_id
                 ]);
                 $table->save();
+                
+               
             }
 
             if(isset($item['name'])){

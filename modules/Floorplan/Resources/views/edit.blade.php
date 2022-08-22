@@ -64,18 +64,18 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{__('Manage Table')}}</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{__('Administrar la Mesa')}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="exampleFormControlInput1">{{ __('Table name') }}</label>
-          <input type="text" class="form-control" id="table_name" name="table_name" placeholder="{{ __('Table name') }}">
+          <label for="exampleFormControlInput1">{{ __('Nombre de la Mesa') }}</label>
+          <input type="text" class="form-control" id="table_name" name="table_name" placeholder="{{ __('Nombre de la Mesa') }}">
         </div>
         <div class="form-group">
-          <label for="exampleFormControlInput1">{{ __('Table size') }}</label>
+          <label for="exampleFormControlInput1">{{ __('Número de Puestos de la Mesa') }}</label>
           <input type="number" class="form-control" id="table_size" name="table_size" placeholder="4">
         </div>
         <div class="custom-control custom-checkbox">
