@@ -146,6 +146,7 @@
             var USER_ID = '{{  auth()->user()&&auth()->user()?auth()->user()->id:"" }}';
             var PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
             var PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
+            var urlNotificacion="{{route('order.notificacion')}}";
         </script>
         @if (auth()->user()!=null&&auth()->user()->hasRole('staff'))
             <script>

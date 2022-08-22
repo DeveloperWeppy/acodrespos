@@ -171,7 +171,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
     Route::resource('clients', 'ClientController');
     Route::resource('orders', 'OrderController');
     Route::get('/listclients/{tipo?}', 'ClientController@listclients')->name('clients.list');
-    Route::get('/notificacion/{index?}', 'OrderController@notificacion')->name('notificacion.list');
+    Route::get('/notificacion/{index?}', 'OrderController@notificacion')->name('order.notificacion');
     Route::post('/rating/{order}', 'OrderController@rateOrder')->name('rate.order');
     Route::post('/orders/status', 'OrderController@statusitemorder')->name('itemcart.status');
     Route::get('/orders/status2/{id}', 'OrderController@statusitemorder2')->name('itemcart.status2');
