@@ -62,7 +62,8 @@
     @foreach (auth()->user()->getExtraMenus() as $menu)
             <li class="nav-item">
                 <a class="nav-link" href="{{ route($menu['route'],isset($menu['params'])?$menu['params']:[]) }}">
-                    <i class="{{ $menu['icon'] }}"></i> {{ __($menu['name']) }}
+                    <i class="{{ $menu['icon'] }}"></i>{{ __($menu['name']) }}
+                    
                 </a>
             </li>
     @endforeach
@@ -83,7 +84,7 @@
         @endif
     @endif
 
-    @if ((config('settings.is_agris_mode') || config('settings.is_whatsapp_ordering_mode')  || in_array("poscloud", config('global.modules',[]))  ||  in_array("deliveryqr", config('global.modules',[]))  ))
+    {{--@if ((config('settings.is_agris_mode') || config('settings.is_whatsapp_ordering_mode')  || in_array("poscloud", config('global.modules',[]))  ||  in_array("deliveryqr", config('global.modules',[]))  ))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.restaurant.simpledelivery.index') }}">
                 <i class="ni ni-pin-3 text-blue"></i> {{ __('Delivery areas') }}
@@ -91,13 +92,13 @@
         </li>
     @endif
 
-    {{-- @if(config('settings.enable_pricing'))
+     @if(config('settings.enable_pricing'))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('plans.current') }}">
                 <i class="ni ni-credit-card text-orange"></i> {{ __('Plan') }}
             </a>
         </li>
-    @endif --}}
+    @endif 
 
         @if(config('app.ordering')&&config('settings.enable_finances_owner'))
             <li class="nav-item">
@@ -105,7 +106,7 @@
                     <i class="ni ni-money-coins text-blue"></i> {{ __('Finances') }}
                 </a>
             </li>
-        @endif
+        @endif--}}
 
       
         @if ( in_array("coupons", config('global.modules',[]))   )

@@ -27,7 +27,7 @@ return array (
   'product' => 'Product',
   'register' => 'Register',
   'success' => 'Changed successfully.',
-  'terms_of_service' => 'Terms of Service',
+  'terms_of_service' => 'Términos de servicio',
   'testimonials_description' => 'See for your self',
   'testimonials_subtitle' => 'Think about us',
   'testimonials_title' => 'What restaurant owners',
