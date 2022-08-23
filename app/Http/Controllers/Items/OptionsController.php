@@ -12,8 +12,8 @@ class OptionsController extends Controller
     private function getFields()
     {
         return [
-            ['ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Enter option name, ex size', 'required'=>true],
-            ['ftype'=>'input', 'name'=>'Comma separated list of option values', 'id'=>'options', 'placeholder'=>'Enter comma separated list of avaliable option values, ex: small,medium,large', 'required'=>true],
+            ['ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Ingrese el nombre de la opción, Ejem: tamaño', 'required'=>true],
+            ['ftype'=>'input', 'name'=>'Lista separada por comas del valor de la opción', 'id'=>'options', 'placeholder'=>'Ingrese una lista separada por comas de valores de opciones disponibles, ejem: Pequeño, mediano, grande', 'required'=>true],
         ];
     }
 
@@ -27,7 +27,7 @@ class OptionsController extends Controller
         return view('items.options.index', ['setup' => [
             'title'=>__('Options for').' '.$item->name,
             'action_link'=>route('items.options.create', ['item'=>$item->id]),
-            'action_name'=>'Add new option',
+            'action_name'=>'Añadir Nueva Opción',
             'items'=>$item->options()->paginate(10),
             'item_names'=>'options',
             'breadcrumbs'=>[

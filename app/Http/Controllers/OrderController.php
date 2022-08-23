@@ -649,7 +649,7 @@ class OrderController extends Controller
         $orders = Order::where('created_at', '>=', Carbon::today())->orderBy('created_at', 'desc');
 
         //If owner, only from his restorant
-        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')) {
+        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')||auth()->user()->hasRole('kitchen')) {
             $resto=auth()->user()->restorant;
             
             $orders = $orders->where(['restorant_id'=>$resto->id]);

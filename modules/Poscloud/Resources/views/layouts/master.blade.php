@@ -194,7 +194,7 @@
       
         $('.select2init').select2({
           id:"-1",
-          placeholder:"Search ..."
+          placeholder:"Buscar ..."
         });
 
         $('select').on('change', function() {
@@ -325,9 +325,9 @@
     
     //If occupied or free is empty, show a message
     if(Object.keys(occupiedList).length==0){
-      js.notify("There are no active orders on tables", "warning");
+      js.notify("No hay órdenes activas en las mesas", "warning");
     }else if(Object.keys(freeList).length==0){
-      js.notify("There are no free tables", "warning");
+      js.notify("No hay mesas libres", "warning");
     }else{
 
       //Set selects
@@ -359,7 +359,7 @@
 
    function createDeliveryOrder() {
       CURRENT_TABLE_ID= 1+""+(new Date().getTime()+"").substring(6)
-      CURRENT_TABLE_NAME="New delivery order";
+      CURRENT_TABLE_NAME="Nueva orden de entrega";
       EXPEDITION=1;
       expedition.config={};
       getCartContentAndTotalPrice();
@@ -368,7 +368,7 @@
 
    function createPickupOrder() { 
       CURRENT_TABLE_ID= (new Date().getTime()+"").substring(6)
-      CURRENT_TABLE_NAME="New takeaway order";
+      CURRENT_TABLE_NAME="Nuevo pedido para llevar";
       EXPEDITION=2;
       expedition.config={};
       getCartContentAndTotalPrice();

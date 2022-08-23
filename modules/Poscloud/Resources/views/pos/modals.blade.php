@@ -224,7 +224,7 @@
 
 
                 <div class="modal-footer">
-                    <button data-bs-dismiss="modal" class="btn bg-gradient-default">{{ __('Close') }}</button>
+                    <button data-bs-dismiss="modal" class="btn bg-gradient-default">{{ __('Cerrar') }}</button>
                     <button id="printPos" class="btn bg-gradient-primary">{{ __('Print') }}</button>
                 </div>
             </div>
