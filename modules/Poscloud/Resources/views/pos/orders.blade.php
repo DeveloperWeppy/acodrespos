@@ -11,11 +11,11 @@
               <div class="col-lg-6 col-md-12 my-auto text-end">
                 <a href="#" onclick="createPickupOrder()" class="btn bg-gradient-primary active" role="button" aria-pressed="true">
                   <span class="btn-inner--icon"><i class="ni ni-pin-3"></i></span>
-                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('New takeaway order') }}</span>
+                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('Nuevo pedido para llevar') }}</span>
                 </a>
                 <a href="#" onclick="createDeliveryOrder()" class="btn bg-gradient-primary active" role="button" aria-pressed="true">
                   <span class="btn-inner--icon"><i class="ni ni-delivery-fast"></i></span>
-                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('New delivery order') }}</span>
+                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('Nueva orden de entrega') }}</span>
                 </a>
                 <a href="#" onclick="moveOrder()" class="btn bg-gradient-default active" role="button" aria-pressed="true">
                   <span class="btn-inner--icon"><i class="ni ni-ui-04"></i></span>

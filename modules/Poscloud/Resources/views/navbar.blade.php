@@ -18,7 +18,7 @@
         <span class="badge badge-md badge-circle badge-floating badge-primary border-white" id="ordersCount">@{{ totalOrders }}</span>
       </button>
     
-      <button onclick="showFloor()" type="button" class="btn bg-gradient-info my-1 mx-2 me-1">{{ __('Floor Plan') }}</button>
+      <button onclick="showFloor()" type="button" class="btn bg-gradient-info my-1 mx-2 me-1">{{ __('áreas') }}</button>
     
     </div>
 

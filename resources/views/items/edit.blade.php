@@ -127,7 +127,7 @@
                                         @else
                                             <hr />
                                                 @include('partials.toggle',['additionalInfo'=>'Plato, donde el cliente puede seleccionar diferentes opciones, e incluir extras de pago o gratuitos','id'=>'enable_plate','name'=>'Este artículo es un plato.','checked'=>($item->enable_system_variants==1)])
-                                                <a class="btn btn-success btn-sm" href="{{  route('items.options.index',$item->id)}}">{{ __('Edit Plate Options')}}</a>
+                                                <a class="btn btn-success btn-sm" href="{{  route('items.options.index',$item->id)}}">{{ __('Editar Opciones del Plato')}}</a>
                                             <hr />
                                         @endif
                                     </div>
@@ -160,7 +160,7 @@
                                         <h5 class="h3 mb-0">{{ __('Variants') }}</h5>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <a class="btn btn-secondary btn-sm" href="{{  route('items.options.index',$item->id)}}">{{ __('Edit Options')}}</a>
+                                        <a class="btn btn-secondary btn-sm" href="{{  route('items.options.index',$item->id)}}">{{ __('Opciones')}}</a>
                                         <a class="btn btn-success btn-sm" href="{{  route('items.variants.create',['item'=>$item->id])}}">{{ __('Add Variant')}}</a>
                                     </div>
 
@@ -276,7 +276,7 @@
 
                 if(element.id==id){
                     
-                    $('#modal-title-new-extras').html("Edit option")
+                    $('#modal-title-new-extras').html("Editar opción")
                     $('#extras_id').val(element.id);
                     $('#extras_name').val(element.name);
                     $('#extras_price').val(element.price);
