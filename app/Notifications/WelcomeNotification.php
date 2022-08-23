@@ -13,15 +13,17 @@ class WelcomeNotification extends Notification
     use Queueable;
 
     protected $user;
+    protected $tipo;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user,$tipo=null)
     {
         $this->user = $user;
+        $this->tipo = $tipo;
     }
 
     /**
@@ -43,7 +45,18 @@ class WelcomeNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        if($this->tipo=="client"){
+            return (new MailMessage)
+            ->greeting(__('notifications_hello', ['username' => $this->user->name]))
+            ->subject(__('notifications_thanks', ['app_name' => config('app.name')]))
+            ->action(__('notifications_visit', ['app_name' => config('app.name')]), url(config('app.url')))
+            ->line(__('notifications_username', ['email'=>$this->user->email]))
+            ->line(__('notifications_password', ['password'=>$this->user->number_identification]))
+            ->line(__('notifications_reset_pass'))
+            ->line(__('notifications_thanks_for_using_us'));
+        }
         if ($this->user->active.'' == '1') {
+
             return (new MailMessage)
             ->greeting(__('notifications_hello', ['username' => $this->user->name]))
             ->subject(__('notifications_thanks', ['app_name' => config('app.name')]))
