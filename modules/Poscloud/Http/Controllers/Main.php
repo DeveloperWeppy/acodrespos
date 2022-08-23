@@ -326,7 +326,11 @@ class Main extends Controller
                     'message' => $validatorOnMaking->errors()->first(),
                 ]);
             }
-
+            if(!isset($orderRepo->order->items)){
+                $itemss=Order::findOrFail($orderRepo->order->id);
+                $orderRepo->order->items=$itemss->items()->get();
+            }
+            
             return response()->json([
                 'status' => true,
                 'message' => __('Order finalized'),
