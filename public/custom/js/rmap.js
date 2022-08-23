@@ -136,6 +136,8 @@ function saveLocation(lat, lng){
             }, error: function (response) {
             }
         })
+    }else{
+        alert("selecciona localización");
     }
 }
 
