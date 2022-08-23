@@ -4,6 +4,9 @@ namespace Illuminate\Foundation\Auth;
 use App\Models\RestaurantClient;
 use App\Restorant;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Messages\MailMessage;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +39,9 @@ trait RegistersUsers
         if(!Auth::user()){
             $this->guard()->login($user);
         }else{
+            $restaurant=0;
             if(Auth::user()->restaurant_id!=null){
+                $restaurant=Auth::user()->restaurant_id;
                 $flight = RestaurantClient::create([
                     'user_id' => $user->id,
                     'companie_id' => Auth::user()->restaurant_id,
@@ -44,12 +49,14 @@ trait RegistersUsers
             }else{
                $restaurants=Restorant::where('user_id', Auth::user()->id)->get();
                if(count($restaurants)>0){
+                    $restaurant=$restaurants[0]->id;
                     $flight = RestaurantClient::create([
                         'user_id' => $user->id,
                         'companie_id' => $restaurants[0]->id,
                     ]);
                }
             }
+            $user->notify(new WelcomeNotification($user,"client"));
         }
         if ($response = $this->registered($request, $user)) {
             return $response;
