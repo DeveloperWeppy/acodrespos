@@ -54,9 +54,12 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $nuevafecha = strtotime ('-18 year' , strtotime(date('Y-m-d')));
+        $nuevafecha = date ('d-m-Y',$nuevafecha);
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'number_identification' => ['required', 'string', 'max:255', 'unique:users'],
+            'birth_date' => 'after:01/01/1920|before:'.$nuevafecha,
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],

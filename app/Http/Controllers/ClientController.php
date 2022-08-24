@@ -18,6 +18,7 @@ class ClientController extends Controller
         if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
             if(auth()->user()->hasRole('owner')){
                 $arrayId=[];
+                $arrayFecha=[];
                 $restaurant_id=0;
                 if(auth()->user()->restaurant_id==null){
                     $restaurants=Restorant::where('user_id', auth()->user()->id)->get();
@@ -31,9 +32,15 @@ class ClientController extends Controller
                 $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
                 foreach ($client as $key => $Item){ 
                     array_push($arrayId,$Item->user_id);
+                    array_push($arrayFecha,$Item->created_at);
                 }
-                
                 $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->paginate(15);
+                $arrayUser=$User;
+                foreach ($User as $key => $Item){ 
+                    $index =array_search($Item->id, $arrayId);
+                    $arrayUser[$key]->created_at=$arrayFecha[$index];  
+                }
+                $User=$arrayUser;
             }else{
                 $User=User::role('client')->where(['active'=>1])->paginate(15);
             }

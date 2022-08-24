@@ -59,14 +59,24 @@
                             </div>
                             <div class="form-group{{ $errors->has('phone') ? ' has-danger' : '' }}">
                                 <div class="input-group input-group-alternative mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
-                                    </div>
                                     <input class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" placeholder="{{ __('Phone') }}" type="phone" name="phone" value="{{ old('phone') }}" required>
                                 </div>
                                 @if ($errors->has('phone'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
                                         <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="form-group{{ $errors->has('birth_date') ? ' has-danger' : '' }}">
+                                <div class="input-group input-group-alternative mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <input class="form-control{{ $errors->has('birth_date') ? ' is-invalid' : '' }}" placeholder="{{ __('birth_date') }}" type="date" name="birth_date" value="{{ old('birth_date') }}" required>
+                                </div>
+                                @if ($errors->has('birth_date'))
+                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                        <strong>{{ $errors->first('birth_date') }}</strong>
                                     </span>
                                 @endif
                             </div>
