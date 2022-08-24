@@ -45,16 +45,16 @@
                         
                         <p><i class="ni ni-watch-time"></i> @if(!empty($openingTime))<span class="closed_time">{{__('Opens')}} {{ $openingTime }}</span>@endif @if(!empty($closingTime))<span class="opened_time">{{__('Opened until')}} {{ $closingTime }}</span> @endif |   @if(!empty($restorant->address))<i class="ni ni-pin-3"></i></i> <a target="_blank" href="https://www.google.com/maps/search/?api=1&query={{ urlencode($restorant->address) }}"><span class="notranslate">{{ $restorant->address }}</span></a>  | @endif @if(!empty($restorant->phone)) <i class="ni ni-mobile-button"></i> <a href="tel:{{$restorant->phone}}">{{ $restorant->phone }} </a>
                             @if ($restorant->whatsapp_phone!="")
-                            <a class="icon-red"  href="https://api.whatsapp.com/send?phone={{$restorant->whatsapp_phone}}&text=Hola{{urlencode(' '.$restorant->name)}}%20necesito%20m%C3%A1s%20informaci%C3%B3n"><i class="fa fa-whatsapp"></i></a>
+                            <a class="icon-red"  href="https://api.whatsapp.com/send?phone={{$restorant->whatsapp_phone}}&text=Hola{{urlencode(' '.$restorant->name)}}%20necesito%20m%C3%A1s%20informaci%C3%B3n" target="_blank"><i class="fa fa-whatsapp"></i></a>
                             @endif
                             @if ($restorant->facebook!="")
-                            <a class="icon-red" href="{{$restorant->facebook}}"><i class="fa fa-facebook-official"></i></a>
+                            <a class="icon-red" href="{{$restorant->facebook}}" target="_blank"><i class="fa fa-facebook-official"></i></a>
                             @endif
                             @if ($restorant->instagram!="")
-                            <a class="icon-red" href="{{$restorant->instagram}}"><i class="fa fa-instagram" ></i></a>
+                            <a class="icon-red" href="{{$restorant->instagram}}" target="_blank"><i class="fa fa-instagram" ></i></a>
                             @endif
                             @if ($restorant->youtube!="")
-                            <a class="icon-red"  href="{{$restorant->youtube}}"><i class="fa fa-youtube-play" ></i></a> @endif</p>
+                            <a class="icon-red"  href="{{$restorant->youtube}}" target="_blank"><i class="fa fa-youtube-play" ></i></a> @endif</p>
                             @endif
                             
                     </div>
