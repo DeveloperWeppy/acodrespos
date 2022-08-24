@@ -39,7 +39,7 @@
       
     @else
       @if (!auth()->user()->hasRole('kitchen'))
-        <a href="{{ url('updatestatus/'.$next_status.'/'.$order->id) }}" class="btn btn-sm {{$btnType   }}">{{ __($next_status) }}</a>
+        <a href="{{ url('updatestatus/'.$next_status.'/'.$order->id) }}" data="{{$next_status}}" class="btn btn-sm  {{$btnType   }} validateConfirmation">{{ __($next_status) }}</a>
       @else
         @if ($next_status=="accepted_by_restaurant" || $next_status=="prepared")
           <a href="{{ url('updatestatus/'.$next_status.'/'.$order->id) }}" class="btn btn-sm {{$btnType   }}">{{ __($next_status) }}</a>

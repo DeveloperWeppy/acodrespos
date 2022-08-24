@@ -150,6 +150,9 @@ class RestorantController extends Controller
         $restaurant->lng = 0;
         $restaurant->address = '';
         $restaurant->phone = $owner->phone;
+        $restaurant->facebook = strip_tags($request->facebook);
+        $restaurant->instagram = strip_tags($request->instagram);
+        $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->subdomain = $this->makeAlias(strip_tags($request->name));
         $restaurant->save();
 
@@ -363,6 +366,9 @@ class RestorantController extends Controller
         $restaurant->name = strip_tags($request->name);
         $restaurant->address = strip_tags($request->address);
         $restaurant->phone = strip_tags($request->phone);
+        $restaurant->facebook = strip_tags($request->facebook);
+        $restaurant->instagram = strip_tags($request->instagram);
+        $restaurant->youtube = strip_tags($request->youtube);
         
         $restaurant->description = strip_tags($request->description);
         $restaurant->minimum = strip_tags($request->minimum);

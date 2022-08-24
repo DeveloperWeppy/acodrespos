@@ -78,7 +78,7 @@ Coded by www.creative-tim.com
 @else
   <link type="text/css" href="{{ asset('byadmin') }}/frontmenu.css" rel="stylesheet">
 @endif
-
+<link type="text/css" href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
 
 </head>
 

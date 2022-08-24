@@ -8,6 +8,11 @@
             <h4>{{ $order->restorant->address }}</h4>
             <h4>{{ $order->restorant->phone }}</h4>
             <h4>{{ $order->restorant->user->name.", ".$order->restorant->user->email }}</h4>
+            @hasrole('client')
+            <div class="g-whatsapp">
+                 <a href="https://api.whatsapp.com/send?phone={{$order->restorant->whatsapp_phone}}&amp;text=Hola%20{{$order->restorant->name}},%20{{urlencode('orden #'.$order->id)}},%20{{urlencode('Nombre:'.$order->client->name)}}" target="_blank"><i class="fa fa-whatsapp" style="font-size:35px;color:white"></i></a>
+             </div>
+             @endhasanyrole
         </div>
         <hr class="my-4" />
     @endif

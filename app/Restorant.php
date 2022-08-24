@@ -16,7 +16,7 @@ class Restorant extends MyModel
     use HasConfig;
 
     protected $modelName="App\Restorant";
-    protected $fillable = ['name', 'subdomain', 'user_id', 'lat', 'lng', 'address', 'phone', 'logo', 'description', 'city_id'];
+    protected $fillable = ['name', 'subdomain', 'user_id', 'lat', 'lng', 'address', 'phone', 'logo', 'description', 'city_id','facebook','instagram','youtube'];
     protected $appends = ['alias', 'logom', 'icon', 'coverm'];
     protected $imagePath = '/uploads/restorants/';
     protected $table="companies";

@@ -178,8 +178,34 @@
         <script>
  
   $(document).ready(function() {
-      listnotificacion(notificacionIndes);
-      $("#from-create-client").validate({
+    var loc  = window.location;
+    $(".nav-link").each(function(){
+      if(window.location.href.indexOf($(this).attr('href')) != -1){
+        $(this).addClass("active");
+        $("i", this).removeClass("text-orange text-success text-blue text-info text-green text-black text-red text-primary");
+      }
+  	});
+    $( ".validateConfirmation" ).click(function(event) {
+        if($(this).attr('data')=='accepted_by_restaurant'){
+          event.preventDefault(); 
+          Swal.fire({
+              title: 'Estas seguro de aceptar pedido?',
+              text: "Despues de ser aceptado no podra ser modificado o cancelado!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si',
+              cancelButtonText: 'Cancelar'
+          }).then((result) => {
+          if (result.isConfirmed) {
+              location.href = $(this).attr('href');
+          }
+        });
+        }
+    });
+    listnotificacion(notificacionIndes);
+    $("#from-create-client").validate({
    rules: {
      name: {
        required: true,

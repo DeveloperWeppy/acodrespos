@@ -200,7 +200,7 @@ class Main extends Controller
 
         $parameter = [];
         $parameter[$this->parameter_name] = $id;
-
+        $all_roles = Role::whereNotIn('name', ['admin', 'owner', 'driver', 'client'])->get();
         return view('general.form', ['setup' => [
             'inrow'=>true,
             'title'=>__('crud.edit_item_name', ['item'=>__($this->title), 'name'=>$item->name]),
@@ -209,6 +209,8 @@ class Main extends Controller
             'iscontent'=>true,
             'isupdate'=>true,
             'action'=>route($this->webroute_path.'update', $parameter),
+            'roles' => $all_roles,
+            'rol' =>$item->getRoleNames()
         ],
         'fields'=>$fields, ]);
     }

@@ -9,15 +9,25 @@
             <div class="row">
         @endisset
             @include('partials.fields',['fiedls'=>$fields])
-            @if (Request::route()->getName() == 'staff.create')
+            @if (Request::route()->getName() == 'staff.create' || Request::route()->getName() == 'staff.edit')
                 <div class="col-md-6">
                     <div class="form-group" id="new_address_checkout_holder">
                         <label class="form-control-label" for="new_address_checkout">Rol</label>
-                        <select class=" form-control" id="new_address_checkout" name="rol">
-                            @if (isset($setup['roles']))
-                                @foreach ($setup['roles'] as $item)
-                                    <option value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
-                                @endforeach
+                        <select class=" form-control" id="new_address_checkout" value name="rol">
+                            @if (isset($setup['roles']) )
+                               @if (!isset($setup['rol']) )
+                                    @foreach ($setup['roles'] as $item)
+                                        <option  value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
+                                    @endforeach
+                                @else
+                                    @foreach ($setup['roles'] as $item)
+                                        @if (isset($setup['rol'][0])==$item->name)
+                                           <option selected="selected"  value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
+                                        @else
+                                           <option  value="{{$item->name}}">{{$item->name == 'staff' ? 'Mesero' : 'Cocina'}}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 
                             @endif
                             

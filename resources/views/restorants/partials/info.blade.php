@@ -11,12 +11,17 @@
             ['ftype'=>'input','name'=>"Restaurant address",'id'=>"address",'placeholder'=>"Restaurant address",'required'=>true,'value'=>$restorant->address],
             ['ftype'=>'input','name'=>"Restaurant phone",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
         ]])
+        <h6 class="heading-small text-muted mb-4">vínculos sociales</h6>
+         @include('partials.fields',['fields'=>[
+            ['ftype'=>'input','name'=>"Facebook",'id'=>"facebook",'placeholder'=>"Facebook url",'required'=>false,'value'=>$restorant->facebook],
+            ['ftype'=>'input','name'=>"Instagram",'id'=>"instagram",'placeholder'=>"Instagram url",'required'=>false,'value'=>$restorant->instagram],
+            ['ftype'=>'input','name'=>"Youtube",'id'=>"youtube",'placeholder'=>"Youtube url",'required'=>false,'value'=>$restorant->youtube],
+         ]])
         @if(config('settings.multi_city'))
             @include('partials.fields',['fields'=>[
                 ['ftype'=>'select','name'=>"Restaurant city",'id'=>"city_id",'data'=>$cities,'required'=>true,'value'=>$restorant->city_id],
             ]])
         @endif
-       
         @if(auth()->user()->hasRole('admin'))
             <br/>
             <div class="row">
