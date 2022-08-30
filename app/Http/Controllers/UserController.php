@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Restorant;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Notifications\CloseAccount;
-use App\Restorant;
-use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -126,5 +127,30 @@ class UserController extends Controller
     public function stripeOnNoardResponse(Request $request)
     {
         dd($request->all());
+    }
+
+    public function passwordfirst(Request $request)
+    {
+        $rules = [
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ];
+
+        $this->validate($request, $rules);
+
+        $id_user = $request->id_user;
+
+        $data = array(
+            'password' => Hash::make($request->password),
+            'changed_password' => Carbon::now()->format('Y-m-d'),
+        );
+
+        if (User::findOrFail($id_user)->update($data)) {
+
+            return redirect('/home');
+        }else{
+            abort(403, 'Ha Ocurrido un error, vuelve a intentarlo');
+        }
+
+
     }
 }

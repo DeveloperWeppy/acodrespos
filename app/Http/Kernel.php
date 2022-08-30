@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'isRestaurantActive' => \App\Http\Middleware\checkActiveRestaurant::class,
         'isOwnerOnPro' => \App\Http\Middleware\EnsureOwnerIsOnPROPlan::class,
         'verifiedSetup' =>  \App\Http\Middleware\EnsureSetupIsDone::class,
-        'impersonate' => \App\Http\Middleware\Impersonate::class
+        'impersonate' => \App\Http\Middleware\Impersonate::class,
+        'ChangePassword' => \App\Http\Middleware\CheckChangePassword::class,
     ];
 }

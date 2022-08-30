@@ -12,7 +12,7 @@
 */
 
 Route::group([
-    'middleware' =>[ 'web','impersonate'],
+    'middleware' =>[ 'web','impersonate','ChangePassword'],
     'namespace' => 'Modules\Staff\Http\Controllers'
 ], function () {
     Route::prefix('personal')->group(function() {
