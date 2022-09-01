@@ -9,4 +9,9 @@
             <i class="ni ni-map-big text-green"></i> {{ __('My Addresses') }}
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('home') }}">
+            <i class="fa fa-cutlery" aria-hidden="true" style="font-size:20px"></i> {{ __('Ver Menú') }}
+        </a>
+    </li>
 </ul>

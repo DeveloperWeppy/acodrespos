@@ -76,6 +76,13 @@
                     <div class=" dropdown-header noti-title">
                         <h6 class="text-overflow m-0">{{ __('Welcome!') }}</h6>
                     </div>
+                    @if (auth()->user()->hasRole('client'))
+                      <a href="{{ route('home') }}" class="dropdown-item">
+                        <i class="fa fa-cutlery"></i>
+                        <span>{{ __('Ver Menú') }}</span>
+                      </a>
+                    @endif
+                    
                     <a href="{{ route('profile.edit') }}" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
                         <span>{{ __('My profile') }}</span>
