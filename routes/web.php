@@ -184,7 +184,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         Route::get('restaurantslocations', 'RestorantController@restaurantslocations');
 
         Route::get('live', 'OrderController@live')->name('live')->middleware('isOwnerOnPro');
-        Route::get('/updatestatus/{alias}/{order}', ['as' => 'update.status', 'uses'=>'OrderController@updateStatus']);
+        Route::get('/updatestatus/{alias}/{order}/{motivo?}', ['as' => 'update.status', 'uses'=>'OrderController@updateStatus']);
 
         Route::resource('settings', 'SettingsController');
         Route::get('apps','AppsController@index')->name('apps.index');
