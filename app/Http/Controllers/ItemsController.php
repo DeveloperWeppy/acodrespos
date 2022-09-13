@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\ConfChanger;
 use Akaunting\Module\Facade as Module;
 use App\Models\Allergens;
+use App\Models\AreaKitchen;
 
 class ItemsController extends Controller
 {
@@ -31,7 +32,7 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('owner')) {
+        if (auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant')) {
 
             
             $canAdd = auth()->user()->restorant->getPlanAttribute()['canAddNewItems'];
@@ -83,6 +84,9 @@ class ItemsController extends Controller
             //Since 2.1.7 - there is sorting. 
             $categories=auth()->user()->restorant->categories;
 
+            $areas_kitchen = AreaKitchen::where('restorant_id', auth()->user()->restorant->id)->get();
+            //dd($areas_kitchen);
+
             //If first item order starts with 0
             if($categories->first()&&$categories->first()->order_index==0){
                 Categories::setNewOrder($categories->pluck('id')->toArray());
@@ -95,6 +99,7 @@ class ItemsController extends Controller
                 'hasMenuPDf'=>Module::has('menupdf'),
                 'canAdd'=>$canAdd,
                 'categories' => $categories,
+                'areas_kitchen' => $areas_kitchen,
                 'restorant_id' => auth()->user()->restorant->id,
                 'currentLanguage'=> $currentEnvLanguage,
                 'availableLanguages'=>auth()->user()->restorant->localmenus,

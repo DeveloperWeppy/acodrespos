@@ -276,7 +276,7 @@ class Controller extends BaseController
 
     public function ownerOnly()
     {
-        if (! auth()->user()->hasRole('owner')) {
+        if (! auth()->user()->hasRole('owner') || ! auth()->user()->hasRole('manager_restorant')) {
             abort(403, 'Unauthorized action.');
         }
     }

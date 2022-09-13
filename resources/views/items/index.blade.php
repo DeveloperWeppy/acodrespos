@@ -15,6 +15,9 @@
                     @if (isset($hasMenuPDf)&&$hasMenuPDf)
                         <a target="_blank" href="{{ route('menupdf.download')}}" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i> {{ __('PDF Menu') }}</a>
                     @endif
+                    <button class="btn btn-icon btn-1 btn-sm btn-info" type="button" data-toggle="modal" data-target="#modal-items-area-cocina" data-toggle="tooltip" data-placement="top" title="{{ __('Añadir área de cocina')}}">
+                        <span class="btn-inner--icon"><i class="fa fa-plus"></i> {{ __('Añadir área de cocina') }}</span>
+                    </button>
                     <button class="btn btn-icon btn-1 btn-sm btn-info" type="button" data-toggle="modal" data-target="#modal-items-category" data-toggle="tooltip" data-placement="top" title="{{ __('Add new category')}}">
                         <span class="btn-inner--icon"><i class="fa fa-plus"></i> {{ __('Add new category') }}</span>
                     </button>
@@ -83,7 +86,18 @@
                         <div class="alert alert-default">
                             <div class="row">
                                 <div class="col">
+                                    @php
+                                       $vname="";
+                                       $vcolor="";
+                                        if(isset($category->areakitchen)){
+                                            $valor= $category->areakitchen;
+                                            $vname=$valor->name;
+                                            $vcolor=$valor->colorarea;
+                                        }
+                                       
+                                    @endphp
                                     <span class="h1 font-weight-bold mb-0 text-white">{{ $category->name }}</span>
+                                    <span class="mb-0 text-white " style=" display: inline-block; margin-left: 10px; padding: .25rem .5rem; border-radius: 8px; background-color:  {{$vcolor}}">{{$vname}}</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="row">
@@ -106,7 +120,8 @@
                                                 <span class="btn-inner--icon"><i class="fa fa-plus"></i> {{ __('Menu size limit reaced') }}</span>
                                             </a>
                                         @endif
-                                        <button class="btn btn-icon btn-1 btn-sm btn-warning" type="button" id="edit" data-toggle="modal" data-target="#modal-edit-category" data-toggle="tooltip" data-placement="top" title="{{ __('Edit category') }} {{ $category->name }}" data-id="<?= $category->id ?>" data-name="<?= $category->name ?>" >
+                                        <button class="btn btn-icon btn-1 btn-sm btn-warning" type="button" id="edit" data-toggle="modal" data-target="#modal-edit-category" data-toggle="tooltip" data-placement="top" title="{{ __('Edit category') }} {{ $category->name }}" 
+                                            data-id="<?= $category->id ?>" data-name="<?= $category->name ?>" >
                                             <span class="btn-inner--icon"><i class="fa fa-edit"></i></span>
                                         </button>
 

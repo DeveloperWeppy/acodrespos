@@ -110,40 +110,60 @@
                      @php
                         $class_status = $item->pivot->item_status == 'servicio' ? 'btn-outline-success btn-sm' : 'btn-outline-warning btn-sm';
                         $text_status = $item->pivot->item_status == 'servicio' ? 'Servicio' : 'Cocina';
+
+                        $vname="";
+                            $vcolor="";
+                            if(isset($item->category->areakitchen)){
+                                $valor= $item->category->areakitchen;
+                                $vname=$valor->name;
+                                $vcolor=$valor->colorarea;
+                            }
                      @endphp
-                     @if ($order->restorant->has_kitchen == 1)
-                        @hasrole('kitchen|admin|owner')
-                            @if ($item->pivot->item_status=='cocina')
-                                <span class="small">
-                                    <button 
-                                    type="submit" id="{{$item->pivot->id}}"
-                                    class="bg-transparent change-status">
-                                        <span class="btn <?php echo $class_status; ?> ">
-                                            <?php echo $text_status; ?> <i class="fas fa-bell"></i>
-                                        </span>
-                                    </button>
-                                </span>
-                            @else
-                                <span class="small">
-                                    <button 
-                                    class="btn btn-outline-success btn-sm">
-                                        <span class="btn-inner--icon ">
-                                            {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                        </span>
-                                    </button>
-                                </span>
-                                
-                            @endif
-                        @endhasanyrole
-                     @endif
+                     @hasrole('kitchen|admin|owner')
+                        @if ($order->restorant->has_kitchen == 1)
+                                @if ($item->pivot->item_status=='cocina')
+                                    <span class="small">
+                                        <button 
+                                        type="submit" id="{{$item->pivot->id}}"
+                                        class="bg-transparent change-status">
+                                            <span class="btn <?php echo $class_status; ?> ">
+                                                <?php echo $text_status; ?> <i class="fas fa-bell"></i>
+                                            </span>
+                                        </button>
+                                    </span>
+                                @else
+                                    <span class="small">
+                                        <button 
+                                        class="btn btn-outline-success btn-sm">
+                                            <span class="btn-inner--icon ">
+                                                {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
+                                            </span>
+                                        </button>
+                                    </span>
+                                    
+                                @endif
+                        @endif
+                        
+                        @if (isset($item->category->areakitchen))
+                            <span class="small">
+                                <button 
+                                class="btn btn-sm" style="cursor: default; background-image: none; background-color: transparent; border-color: {{$vcolor}}; color: {{$vcolor}};">
+                                    <span class="btn-inner--icon ">
+                                        {{$vname}} <i class="fa fa-cutlery" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </span>
+                        @endif
+                     @endhasanyrole
                    
                 @endif
-                @if ($order->restorant->has_kitchen == 1)
-                    @hasrole('client|staff')
+                @hasrole('client|staff')
+                    @if ($order->restorant->has_kitchen == 1)
+                    
                             @if ($item->pivot->item_status=='cocina')
                                 <span class="small">
                                     <button
-                                        class="btn btn-warning btn-sm">
+                                        class="btn btn-warning btn-sm" style="cursor: default;">
                                         <span class="btn-inner--icon">
                                             En Cocina <i class="fas fa-bell"></i>
                                         </span>
@@ -152,7 +172,7 @@
                             @else
                                 <span class="small">
                                     <button 
-                                        class="btn btn-success btn-sm">
+                                        class="btn btn-success btn-sm" style="cursor: default;">
                                         <span class="btn-inner--icon">
                                             Preparado <i class="fas fa-bell"></i>
                                         </span>
@@ -160,8 +180,9 @@
                                 </span>
                                 
                             @endif
-                    @endhasanyrole
-                @endif
+                    @endif
+
+                @endhasanyrole
              </h4>
              @if ($item->pivot->item_observacion!='' && $item->pivot->item_observacion!=null)
              <h4>Observación: {{$item->pivot->item_observacion}}</h4>
@@ -204,7 +225,7 @@
                     {{ __('Removed') }}
                     <h4 class="text-muted">{{$item->name }} -  @money($theItemPrice, $currency,$convert) 
                  
-                        @if($item->pivot->vatvalue>0))
+                        @if($item->pivot->vatvalue>0)
                             <span class="small">-- {{ __('VAT ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                         @endif
                     </h4>
