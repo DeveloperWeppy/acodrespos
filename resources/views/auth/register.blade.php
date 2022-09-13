@@ -72,7 +72,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                    <input class="form-control{{ $errors->has('birth_date') ? ' is-invalid' : '' }}" placeholder="{{ __('birth_date') }}" type="date" name="birth_date" value="{{ old('birth_date') }}" required>
+                                    <input class="form-control{{ $errors->has('birth_date') ? ' is-invalid' : '' }}" placeholder="Fecha de Nacimiento" type="text" onfocus="(this.type='date')"
+                                    onblur="(this.type='text')" name="birth_date" value="{{ old('birth_date') }}" required>
                                 </div>
                                 @if ($errors->has('birth_date'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">

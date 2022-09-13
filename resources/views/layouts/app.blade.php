@@ -185,6 +185,8 @@
         $("i", this).removeClass("text-orange text-success text-blue text-info text-green text-black text-red text-primary");
       }
   	});
+    // $('#country').intlTelInput("setCountry", "co");
+
     $( ".validateConfirmation" ).click(function(event) {
         if($(this).attr('data')=='accepted_by_restaurant' ||  $(this).attr('data')=='rejected_by_restaurant'){
           var titulo="Estas seguro de aceptar pedido?";
