@@ -12,14 +12,14 @@
                 <a :href="'/pages/' + page.id" class="nav-link">@{{ page.title }}</a>
             </li>
 
-            @if (!config('settings.single_mode')&&config('settings.restaurant_link_register_position')=="footer")
+          {{-- @if (!config('settings.single_mode')&&config('settings.restaurant_link_register_position')=="footer")
             <li class="nav-item">
-              <a  target="_blank" class="button nav-link nav-link-icon" href="{{ route('newrestaurant.register') }}">{{ __(config('settings.restaurant_link_register_title')) }}</a>
+              <a  target="_blank" class="button nav-link nav-link-icon" href="{{ route('newrestaurant.register') }}">Agrega tu Restaurante</a>
             </li>
-          @endif
+          @endif --}}
           @if (config('app.isft')&&config('settings.driver_link_register_position')=="footer")
           <li class="nav-item">
-              <a target="_blank" class="button nav-link nav-link-icon" href="{{ route('driver.register') }}">{{ __(config('settings.driver_link_register_title')) }}</a>
+              <a target="_blank" class="button nav-link nav-link-icon" href="{{ route('driver.register') }}">¿Quieres conducir para nosotros?</a>
             </li>
             @endif
 
