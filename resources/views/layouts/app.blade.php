@@ -186,22 +186,48 @@
       }
   	});
     $( ".validateConfirmation" ).click(function(event) {
-        if($(this).attr('data')=='accepted_by_restaurant'){
+        if($(this).attr('data')=='accepted_by_restaurant' ||  $(this).attr('data')=='rejected_by_restaurant'){
+          var titulo="Estas seguro de aceptar pedido?";
+          var ifinput=false;
+          var ifhtml=false;
+          var text="Despues de ser aceptado no podra ser modificado o cancelado!";
+          if( $(this).attr('data')=='rejected_by_restaurant'){
+              titulo="Estas seguro de Cancelar el pedido?";
+              text='Despues de ser cancelado no podra modificar el estado del pedido!';
+              ifinput='textarea';
+              ifhtml='Motivo de cancelacion';
+          }
           event.preventDefault(); 
           Swal.fire({
-              title: 'Estas seguro de aceptar pedido?',
-              text: "Despues de ser aceptado no podra ser modificado o cancelado!",
+              title: titulo,
+              text: text,
+              html:ifhtml,
+              input: ifinput,
+              inputAttributes: {
+                autocapitalize: 'off',
+                style:'width:80%;display:none',
+                id:'textmotivocancelar'
+              },
               icon: 'warning',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
               cancelButtonColor: '#d33',
               confirmButtonText: 'Si',
-              cancelButtonText: 'Cancelar'
-          }).then((result) => {
-          if (result.isConfirmed) {
-              location.href = $(this).attr('href');
-          }
-        });
+              cancelButtonText: 'Cancelar',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              preConfirm: () => {
+                  if($(this).attr('data')=='rejected_by_restaurant'){
+                      if($('textarea#textmotivocancelar').val()!=""){
+                        location.href = $(this).attr('href')+"/"+encodeURIComponent($('textarea#textmotivocancelar').val());
+                      }else{
+                        Swal.showValidationMessage( "Completa el campo con el motivo")
+                      }
+                  }else{
+                      location.href = $(this).attr('href');
+                  }
+             }
+          });
         }
     });
     listnotificacion(notificacionIndes);

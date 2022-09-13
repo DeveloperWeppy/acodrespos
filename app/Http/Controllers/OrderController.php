@@ -833,7 +833,7 @@ class OrderController extends Controller
         }
     }
 
-    public function updateStatus($alias, Order $order)
+    public function updateStatus($alias, Order $order,$motivo="")
     {
         if (isset($_GET['driver'])) {
             $order->driver_id = $_GET['driver'];
@@ -959,10 +959,11 @@ class OrderController extends Controller
                 }
             }
         }
-
-        $order->status()->attach([$status_id_to_attach => ['comment'=>'', 'user_id' => auth()->user()->id]]);
-
-
+        $comment="";
+        if($alias=="rejected_by_restaurant" && $motivo!=""){
+           $comment=$motivo;
+        }
+        $order->status()->attach([$status_id_to_attach => ['comment'=>$comment, 'user_id' => auth()->user()->id]]);
         //Dispatch event
         if($alias=="accepted_by_restaurant"){
            //ed: 3 
