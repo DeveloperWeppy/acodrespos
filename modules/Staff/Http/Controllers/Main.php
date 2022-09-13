@@ -233,6 +233,8 @@ class Main extends Controller
         }
         $item->update();
 
+        $item->assignRole($request->rol);
+
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
 

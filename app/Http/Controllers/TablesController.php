@@ -187,7 +187,8 @@ class TablesController extends Controller
         $item->size = $request->size;
         $item->update();
 
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
+        //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
+        return redirect('/tables?do_not_redirect=true')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
 
     /**
@@ -198,9 +199,12 @@ class TablesController extends Controller
      */
     public function destroy($id)
     {
+        //dd($id)
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
         $item->delete();
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+        //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+        return redirect('/tables?do_not_redirect=true')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+
     }
 }

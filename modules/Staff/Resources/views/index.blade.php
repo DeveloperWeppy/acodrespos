@@ -6,7 +6,7 @@
             <td>{{ $item->email }}</td>
             <td>
                 @foreach ($item->roles as $value)
-                    {{$value->name == 'staff' ? 'Mesero' : 'Cocina'}}
+                    {{$value->name == 'staff' ? 'Mesero' : ($value->name == 'manager_restorant' ? 'Administrador de Restaurante' : 'Cocina')}}
                 @endforeach
             </td>
             <?php

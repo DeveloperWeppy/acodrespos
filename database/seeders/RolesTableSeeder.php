@@ -24,6 +24,7 @@ class RolesTableSeeder extends Seeder
         $client = Role::create(['name' => 'client']);
         $staff = Role::create(['name' => 'staff']);
         $kitchen = Role::create(['name' => 'kitchen']);
+        $manager_restorant = Role::create(['name' => 'manager_restorant']);
 
         //Permissions
         $admin->givePermissionTo(Permission::create(['name' => 'manage restorants']));
@@ -31,8 +32,8 @@ class RolesTableSeeder extends Seeder
         $admin->givePermissionTo(Permission::create(['name' => 'manage orders']));
         $admin->givePermissionTo(Permission::create(['name' => 'edit settings']));
 
-        $owner->givePermissionTo(Permission::create(['name' => 'view orders']));
-        $owner->givePermissionTo(Permission::create(['name' => 'edit restorant']));
+        Permission::create(['name' => 'view orders'])->syncRoles([$owner, $manager_restorant]);
+        Permission::create(['name' => 'edit restorant'])->syncRoles([$owner, $manager_restorant]);
 
         $driver->givePermissionTo(Permission::create(['name' => 'edit orders']));
 

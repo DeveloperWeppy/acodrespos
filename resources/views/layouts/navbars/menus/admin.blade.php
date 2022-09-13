@@ -20,11 +20,11 @@
                 <i class="ni ni-basket text-success"></i> {{ __('Live Orders') }}<div class="blob red"></div>
             </a>
         </li>
-        {{-- <li class="nav-item">
+       {{--  <li class="nav-item">
             <a class="nav-link" href="{{ route('drivers.index') }}">
                 <i class="ni ni-delivery-fast text-pink"></i> {{ __('Drivers') }}
             </a>
-        </li> --}}
+        </li>  --}}
         <li class="nav-item">
             <a class="nav-link" href="{{ route('clients.index') }}">
                 <i class="ni ni-single-02 text-blue"></i> {{ __('Clientes') }}
@@ -118,7 +118,7 @@
             </a>
         </li>
 
-        {{-- @if(!config('settings.hideApps'))
+        {{--  @if(!config('settings.hideApps'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('apps.index') }}">
                     <i class="ni ni-spaceship text-red"></i> {{ __('Apps') }}
@@ -131,7 +131,7 @@
             <a class="nav-link" href="{{ route('settings.cloudupdate') }}">
                 <i class="ni ni-cloud-download-95 text-blue"></i> {{ __('Updates') }}
             </a>
-        </li> --}}
+        </li>  --}}
 
         
 </ul>

@@ -14,14 +14,35 @@
                         <form role="form" method="post" action="{{ route('categories.store') }}">
                             @csrf
                             <input type="hidden" value="{{$restorant_id}}"  name="restaurant_id" />
-                            <div class="form-group{{ $errors->has('category_name') ? ' has-danger' : '' }}">
-                                <input class="form-control" name="category_name" id="category_name" placeholder="{{ __('Category name') }} ..." type="text" required>
-                                @if ($errors->has('category_name'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('category_name') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group{{ $errors->has('category_name') ? ' has-danger' : '' }}">
+                                        <input class="form-control" name="category_name" id="category_name" placeholder="{{ __('Category name') }} ..." type="text" required>
+                                        @if ($errors->has('category_name'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('category_name') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group" id="new_address_checkout_holder">
+                                        <label for="variantsSelector">Asignar un área de cocina a la categoría</label>
+                                        <select class="form-control noselecttwo" name="areakitchen_id" id="variantsSelector" style="width: 100%;" >
+                                            @if (count($areas_kitchen) == 0)
+                                                <option value="">No hay áreas creadas</option>
+                                            @else
+                                            <option selected="selected" value="">Dejar sin área de cocina</option>
+                                                @foreach ($areas_kitchen as $item)
+                                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
+                            
+                            
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary my-4">{{ __('Save') }}</button>
                             </div>
@@ -57,6 +78,20 @@
                                         <strong>{{ $errors->first('category_name') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+                            <div class="form-group">
+                                <label for="cat_areakitchenn">Seleccione área de cocina para esta categoría</label>
+                                <select class="form-control noselecttwo" name="areakitchen_idd" id="cat_areakitchenn">
+                                    @if (count($areas_kitchen) == 0)
+                                        <option value="">No hay áreas creadas</option>
+                                    @else
+                                    <option selected="selected" value="">Dejar sin área de cocina</option>
+                                        @foreach ($areas_kitchen as $item)
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+                                    @endif
+                                    
+                                </select>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary my-4">{{ __('Save') }}</button>
@@ -192,6 +227,47 @@
                             </div>
                         </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD Area de cocina -->
+<div class="modal fade" id="modal-items-area-cocina" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title-areaa">{{ __('Añadir nueva área de cocina') }}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card bg-secondary shadow border-0">
+                    <div class="card-body px-lg-5 py-lg-5">
+                        <form role="form" method="post" action="{{ route('categories.storeareakitchen') }}">
+                            @csrf
+                            <input type="hidden" value="{{$restorant_id}}"  name="restaurant_id" />
+                            <div class="form-group{{ $errors->has('area_name') ? ' has-danger' : '' }}">
+                                <label for="area_name">Nombre del área de la cocina</label>
+                                <input class="form-control" name="name" id="area_name" placeholder="{{ __('Nombre de área de cocina') }} ..." type="text" required>
+                                @if ($errors->has('area_name'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('area_name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="form-group">
+                                <label for="">Seleccione un color para el área</label>
+                                <input class="form-control" type="color" name="colorarea" id="">
+                                
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary my-4">{{ __('Save') }}</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

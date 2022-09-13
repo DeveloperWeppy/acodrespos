@@ -19,7 +19,7 @@ class Main extends Controller
 
         if(auth()->user()->hasRole('owner')&&$restoarea->restorant->user_id==auth()->user()->id){
             //Ok
-            return view('floorplan::edit',['restoarea'=>$restoarea,'title'=>__('Floor manager for').$restoarea->name]);
+            return view('floorplan::edit',['restoarea'=>$restoarea,'title'=>__('Gerente de Piso para ').$restoarea->name]);
         }else{
             abort(404);
         }

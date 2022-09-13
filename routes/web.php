@@ -228,6 +228,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         Route::delete('/{item}/extras/{extras}', 'ItemsController@deleteExtras')->name('extras.destroy');
 
         Route::resource('categories', 'CategoriesController');
+        Route::post('/areakitchen', 'CategoriesController@storeareakitchen')->name('categories.storeareakitchen');
 
         Route::resource('addresses', 'AddressControler');
         Route::get('/new/address/autocomplete', 'AddressControler@newAddressAutocomplete');

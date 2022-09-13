@@ -44,4 +44,14 @@ class Categories extends TranslateAwareModel implements Sortable
     {
         return $this->belongsTo(\App\Restorant::class);
     }
+
+    public function areas()
+    {
+        return $this->hasMany(\App\Models\AreaKitchen::class, 'areakitchen_id');
+    }
+
+    public function areakitchen()
+    {
+        return $this->belongsTo(\App\Models\AreaKitchen::class);
+    }
 }

@@ -53,13 +53,16 @@ CREATE TABLE `categories` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `restorant_id` bigint unsigned NOT NULL,
+  `areakitchen_id` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `order_index` int NOT NULL DEFAULT '0',
   `active` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `categories_restorant_id_foreign` (`restorant_id`),
+  KEY `categories_areakitchen_id_foreign` (`areakitchen_id`),
   CONSTRAINT `categories_restorant_id_foreign` FOREIGN KEY (`restorant_id`) REFERENCES `restorants` (`id`)
+  CONSTRAINT `categories_areakitchen_id_foreign` FOREIGN KEY (`areakitchen_id`) REFERENCES `area_kitchens` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `cities`;

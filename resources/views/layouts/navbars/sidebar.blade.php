@@ -84,6 +84,12 @@
                 <span></span>
             @endif
 
+            @if(auth()->user()->hasRole('manager_restorant'))
+                @include('layouts.navbars.menus.manager_restorant')
+            @else
+                <span></span>
+            @endif
+
             @if(auth()->user()->hasRole('driver'))
                 @include('layouts.navbars.menus.driver')
             @else

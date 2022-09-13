@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
+use App\Models\AreaKitchen;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
@@ -38,6 +39,7 @@ class CategoriesController extends Controller
         $category = new Categories;
         $category->name = strip_tags($request->category_name);
         $category->restorant_id = $request->restaurant_id;
+        $category->areakitchen_id = $request->areakitchen_id;
         $category->save();
 
         if (auth()->user()->hasRole('admin')) {
@@ -46,6 +48,22 @@ class CategoriesController extends Controller
         }
 
         return redirect()->route('items.index')->withStatus(__('Category successfully created.'));
+    }
+
+    public function storeareakitchen(Request $request)
+    {
+        $area = new AreaKitchen();
+        $area->name = $request->name;
+        $area->colorarea = $request->colorarea;
+        $area->restorant_id = $request->restaurant_id;
+        $area->save();
+
+        if (auth()->user()->hasRole('admin')) {
+            //Direct to that page directly
+            return redirect()->route('items.admin', ['restorant'=>$request->restaurant_id])->withStatus(__('Área de cocina creada correctamente.'));
+        }
+
+        return redirect()->route('items.index')->withStatus(__('Área de cocina creada correctamente.'));
     }
 
     /**
@@ -80,6 +98,7 @@ class CategoriesController extends Controller
     public function update(Request $request, Categories $category)
     {
         $category->name = $request->category_name;
+        $category->areakitchen_id = $request->areakitchen_idd;
         $category->update();
 
         return redirect()->back()->withStatus(__('Category name successfully updated.'));
