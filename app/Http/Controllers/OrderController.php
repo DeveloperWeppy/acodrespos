@@ -560,7 +560,15 @@ class OrderController extends Controller
             auth()->user()->hasRole('staff') && auth()->user()->restaurant_id == $order->restorant->id || 
             auth()->user()->hasRole('admin')
             ) {
-
+            if($request->has('delivery_pickup_interval')) {
+                $interEntrega=explode("_",$order->delivery_pickup_interval);
+                $aumentartiempo=intval($interEntrega[1])+$request->delivery_pickup_interval;
+                if($aumentartiempo>0 && $aumentartiempo>intval($interEntrega[0])){
+                    $order->delivery_pickup_interval=$interEntrega[0]."_".$aumentartiempo;
+                    $order->update();
+                    $order->client->notify(new OrderNotification($order,11));
+                }
+            }
                
 
                 //Don't allow all 0 qty

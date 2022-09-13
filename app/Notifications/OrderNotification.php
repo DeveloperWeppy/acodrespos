@@ -261,6 +261,11 @@ class OrderNotification extends Notification
             $greeting = __('Order rejected');
             $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
         }
+        elseif ($this->status.'' == '11') {
+            //Rejected
+            $greeting ="El tiempo de entrega fue modificado";
+            $line = __('order').' #'.$this->order->id.' Aumento el tiempo de entrega';
+        }
         elseif ($this->status.'' == 'cocina'  || $this->status.'' == 'servicio') {
             //Rejected
             $greeting = "Cambio el estado del Producto";
@@ -270,7 +275,7 @@ class OrderNotification extends Notification
             }
            
         }
-        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7){
+        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 || $this->status==11){
             event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
         }
         if($this->status.'' == 'cocina' || $this->status.'' == 'servicio' ){

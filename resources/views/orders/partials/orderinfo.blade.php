@@ -253,14 +253,20 @@
      <hr />
      @if(config('app.isft') || config('app.iswp'))
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
-         <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated])</h3>
+         <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
+              <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
+                    <span class="btn-inner--icon">
+                        <i class="ni ni-ruler-pencil"></i>
+                    </span>
+              </button>
+        </h3>
      @else
          <h4>{{ __("Dine method") }}: {{ $order->getExpeditionType() }}</h4>
          @if ($order->delivery_method!=3)
              <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated])</h3>
          @endif
      @endif
-
+     
      @if(isset($custom_data)&&count($custom_data)>0)
         <hr />
         <h3>{{ __(config('settings.label_on_custom_fields')) }}</h3>
@@ -269,7 +275,4 @@
         @endforeach
      @endif
 
-     
- 
- 
  </div>
