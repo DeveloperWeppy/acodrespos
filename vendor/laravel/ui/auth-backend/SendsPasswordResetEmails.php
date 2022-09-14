@@ -94,9 +94,12 @@ trait SendsPasswordResetEmails
             ]);
         }
 
-        return back()
+        /* return back()
                 ->withInput($request->only('email'))
-                ->withErrors(['email' => trans($response)]);
+                ->withErrors(['email' => trans($response)]); */
+                return $request->wantsJson()
+                    ? new JsonResponse(['message' => 'Este correo electrónico no existe en nuestros registros'])
+                    : back()->with('status', trans($response));
     }
 
     /**

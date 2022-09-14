@@ -62,7 +62,7 @@ class Main extends Controller
         return [
             ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Nombre y Apellido', 'required'=>true],
             ['class'=>'col-md-6', 'ftype'=>'input', 'name'=>'Email', 'id'=>'email', 'placeholder'=>'Ingrese un Correo', 'required'=>true],
-            ['class'=>'col-md-6', 'ftype'=>'input','type'=>"password", 'name'=>'Password', 'id'=>'password', 'placeholder'=>'Ingrese una contraseña', 'required'=>true],
+            ['class'=>'col-md-6', 'ftype'=>'input','type'=>"password", 'name'=>'Contraseña', 'id'=>'password', 'placeholder'=>'Ingrese una contraseña', 'required'=>true],
         ];
     }
 

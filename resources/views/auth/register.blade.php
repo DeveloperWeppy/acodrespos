@@ -36,7 +36,7 @@
                                         <span class="input-group-text"><i class="far fa-id-badge"></i></span>
                                     </div>
                                     <input class="form-control{{ $errors->has('number_identification') ? ' is-invalid' : '' }}" 
-                                    minlength="7" maxlength="10" placeholder="Número de Identificación" type="text" name="number_identification" value="{{ old('number_identification') }}" required autofocus>
+                                    minlength="7" maxlength="10" placeholder="Número de Identificación" type="number" name="number_identification" value="{{ old('number_identification') }}" required autofocus>
                                 </div>
                                 @if ($errors->has('number_identification'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
@@ -82,11 +82,14 @@
                                 @endif
                             </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                <div class="input-group input-group-alternative">
+                                <div class="input-group input-group-alternative" id="show_hide_password">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ __('Password') }}" type="password" name="password" required>
+                                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Contraseña" type="password" name="password" required>
+                                    <div class="input-group-addonn">
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </div>
                                 </div>
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
@@ -95,11 +98,14 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <div class="input-group input-group-alternative">
+                                <div class="input-group input-group-alternative" id="show_hide_passwordd">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
                                     <input class="form-control" placeholder="{{ __('Confirm Password') }}" type="password" name="password_confirmation" required>
+                                    <div class="input-group-addonn">
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -123,6 +129,16 @@
 
 
                             <div class="text-center">
+
+                                <div class="form-check"><input type="checkbox" name="termsCheckBox" id="termsCheckBox" class="h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top  "> 
+                                    <label for="terms" class="form-check-label text-gray-500">
+                                    &nbsp;&nbsp;{{__('i_agree_to')}}
+                                    <a href="{{config('settings.link_to_ts')}}" target="_blank" style="text-decoration: underline;">{{__('terms_of_service')}}</a> {{__('and')}}
+                                    <a href="{{config('settings.link_to_pr')}}" target="_blank" style="text-decoration: underline;">{{__('privacy_policy')}}</a>.
+                                    </label>
+                                </div>
+                                <br/>
+
                                 @if (strlen(config('settings.recaptcha_site_key'))>2)
                            
                                     @if ($errors->has('g-recaptcha-response'))
@@ -135,15 +151,6 @@
                                 @else
                                     <button disabled id="thesubmitbtn" type="submit" class="btn btn-primary mt-4">{{ __('Create account') }}</button>
                                 @endif
-
-                                <br /><br />
-                                <div class="form-check"><input type="checkbox" name="termsCheckBox" id="termsCheckBox" class="h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top  "> 
-                                    <label for="terms" class="form-check-label text-gray-500">
-                                    &nbsp;&nbsp;{{__('i_agree_to')}}
-                                    <a href="{{config('settings.link_to_ts')}}" target="_blank" style="text-decoration: underline;">{{__('terms_of_service')}}</a> {{__('and')}}
-                                    <a href="{{config('settings.link_to_pr')}}" target="_blank" style="text-decoration: underline;">{{__('privacy_policy')}}</a>.
-                                    </label>
-                                </div>
 
                                 <script>
                                     window.onload = function () {
@@ -182,4 +189,8 @@
             </div>
         </div>
     </div>
+
+    @section('js')
+        <script src="{{ asset('js') }}/showpassword.js"></script>
+    @endsection
 @endsection

@@ -15,14 +15,14 @@ return [
 
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
-    'after' => 'The :attribute must be a date after :date.',
-    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
+    'after' => 'La :attribute debe ser una fecha posterior :date.',
+    'after_or_equal' => 'The :attribute debe ser una fecha posterior o igual a :date.',
     'alpha' => 'The :attribute may only contain letters.',
     'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
     'alpha_num' => 'The :attribute may only contain letters and numbers.',
     'array' => 'The :attribute must be an array.',
-    'before' => 'The :attribute must be a date before :date.',
-    'before_or_equal' => 'The :attribute must be a date before or equal to :date.',
+    'before' => 'La :attribute debe ser una fecha anterior a :date.',
+    'before_or_equal' => 'La :attribute debe ser una fecha anterior o igual a :date.',
     'between' => [
         'numeric' => 'The :attribute must be between :min and :max.',
         'file' => 'The :attribute must be between :min and :max kilobytes.',
@@ -87,7 +87,7 @@ return [
     'min' => [
         'numeric' => 'The :attribute must be at least :min.',
         'file' => 'The :attribute must be at least :min kilobytes.',
-        'string' => 'The :attribute must be at least :min characters.',
+        'string' => 'La :attribute debe tener por lo menos :min carácteres.',
         'array' => 'The :attribute must have at least :min items.',
     ],
     'multiple_of' => 'The :attribute must be a multiple of :value',
@@ -114,7 +114,7 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid zone.',
-    'unique' => 'El valor ingresado de este campo ya está en uso.',
+    'unique' => 'El valor ingresado en este campo ya está en uso.',
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
@@ -163,7 +163,21 @@ return [
         ],
         'dinein_table_id'=>[
             'required'=>'Please select your table',
-        ]
+        ],
+        'birth_date' => [
+            'before' => 'La fecha de nacimiento debe ser una fecha anterior a :date.',
+            'after' => 'La fecha de nacimiento debe ser una fecha posterior :date.',
+        ],
+        'number_identification' => [
+            'required' => 'El número de identificación es requerido',
+            'min' => 'Ingrese un número de identificación válido',
+            'max' => 'Ingrese un número de identificación válido',
+        ],
+        'password' => [
+            'required' => 'La Contraseña es requerida',
+            'min' => 'La contraseña debe tener al menos 8 carácteres',
+            'confirmed' => 'La confirmación de la contraseña no coincide',
+        ],
     ],
 
     /*

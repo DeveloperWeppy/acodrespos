@@ -166,6 +166,7 @@
         @yield('js')
 
         <script src="{{ asset('custom') }}/js/rmap.js"></script>
+        
 
          <!-- Pusher -->
          @if(strlen( config('broadcasting.connections.pusher.app_id'))>2)

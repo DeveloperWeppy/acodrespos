@@ -66,7 +66,7 @@
                     <li class="nav-item">
                       <a class="nav-link active active-pro" href="{{ route('admin.restaurants.stopImpersonate') }}">
                         <i class="ni ni-button-power text-red"></i>
-                        <span class="nav-link-text">{{ __('Back to your account')}}</span>
+                        <span class="nav-link-text">{{ __('Volver a tu cuenta')}}</span>
                       </a>
                     </li>
                   </ul>

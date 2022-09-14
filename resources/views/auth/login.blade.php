@@ -100,11 +100,14 @@
                                 @endif
                             </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-danger' : '' }}">
-                                <div class="input-group input-group-alternative">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                <div class="input-group input-group-alternative" id="show_hide_password">
+                                    <div class="input-group-prepend" id="pren">
+                                        <span class="input-group-text"><i class="ni ni-lock-circle-open" ></i></span>
                                     </div>
-                                    <input id="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Password') }}" type="password" required>
+                                    <input id="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Contraseña') }}" type="password" required>
+                                    <div class="input-group-addonn">
+                                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                    </div>
                                 </div>
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
@@ -146,4 +149,8 @@
             </div>
         </div>
     </div>
+
+    @section('js')
+        <script src="{{ asset('js') }}/showpassword.js"></script>
+    @endsection
 @endsection

@@ -40,7 +40,7 @@ return [
     'preset-messages' => [
         // An example preset 'user updated' Connectify notification.
         'user-updated' => [
-            'message' => 'The user has been updated successfully.',
+            'message' => 'El usuario ha sido actualizado con éxito.',
             'type'    => 'success',
             'model'   => 'connect',
             'title'   => 'User Updated',

@@ -58,7 +58,7 @@ class RegisterController extends Controller
         $nuevafecha = date ('d-m-Y',$nuevafecha);
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'number_identification' => ['required', 'string', 'max:255', 'unique:users'],
+            'number_identification' => ['required', 'string', 'min:7', 'max:10', 'unique:users'],
             'birth_date' => 'after:01/01/1920|before:'.$nuevafecha,
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],

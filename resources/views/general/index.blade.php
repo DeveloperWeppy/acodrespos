@@ -96,4 +96,7 @@
 
         @include('layouts.footers.auth')
     </div>
+    @section('js')
+        <script src="{{ asset('js') }}/showpassword.js"></script>
+    @endsection
 @endsection
