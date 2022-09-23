@@ -83,7 +83,7 @@
                        
                         @foreach ($categories as $index => $category)
                         @if($category->active == 1)
-                        <div class="alert alert-default">
+                        <div class="alert alert-default" id="categoria-{{str_replace(' ', '-', $category->name)}}">
                             <div class="row">
                                 <div class="col">
                                     @php
@@ -214,6 +214,18 @@
 
 @section('js')
 <script>
+    //reemplazar %20 en la url por -
+    if (location.hash)
+        location.replace(location.hash.replace(/\+|%20/g, "-"));
+
+    //Asignar evento cuando se cambie el hash
+    window.addEventListener("hashchange", function(event){
+        if (location.hash)
+                location.replace(location.hash.replace(/\+|%20/g, "-"));
+
+            //Descomentar para mostrar en consola cuando se dispara
+            //console.debug("Se disparó el evento hashchange: ", event.oldURL, "-->", event.newURL);
+        });
   $("[data-target='#modal-edit-category']").on('click',function() {
     var id = $(this).attr('data-id');
     var name = $(this).attr('data-name');

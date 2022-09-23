@@ -86,7 +86,7 @@
             <li><h4>{{ $item->pivot->qty." X ".$item->name }} -  @money($theItemPrice, $currency,$convert)  =  ( @money( $item->pivot->qty*$theItemPrice, $currency,true) )
                  
                 @if($item->pivot->vatvalue>0)
-                    <span class="small">-- {{ __('VAT ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
+                    <span class="small">-- {{ __('INC ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                 @endif
                 @hasrole('admin|owner|staff|kitchen')
                     <?php $lasStatusId=$order->status->pluck('id')->last(); ?>
@@ -121,6 +121,7 @@
                      @endphp
                      @hasrole('kitchen|admin|owner')
                         @if ($order->restorant->has_kitchen == 1)
+                            @if ($lasStatusId == 3)
                                 @if ($item->pivot->item_status=='cocina')
                                     <span class="small">
                                         <button 
@@ -142,6 +143,19 @@
                                     </span>
                                     
                                 @endif
+                            @endif
+
+                            @if ($item->pivot->item_status=='servicio')
+                                <span class="small">
+                                    <button 
+                                    class="btn btn-outline-success btn-sm">
+                                        <span class="btn-inner--icon ">
+                                            {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
+                                        </span>
+                                    </button>
+                                </span>
+                            @endif
+                               
                         @endif
                         
                         @if (isset($item->category->areakitchen))
@@ -226,7 +240,7 @@
                     <h4 class="text-muted">{{$item->name }} -  @money($theItemPrice, $currency,$convert) 
                  
                         @if($item->pivot->vatvalue>0)
-                            <span class="small">-- {{ __('VAT ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
+                            <span class="small">-- {{ __('INC').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                         @endif
                     </h4>
                     <br />
@@ -253,8 +267,8 @@
      <h4>{{ __('Time to prepare') }}: {{ $order->time_to_prepare ." " .__('minutes')}}</h4>
      <br/>
      @endif
-     <h5>{{ __("NET") }}: @money( $order->order_price-$order->vatvalue, $currency ,true)</h5>
-     <h5>{{ __("VAT") }}: @money( $order->vatvalue, $currency,$convert)</h5>
+     <h5>{{ __("PRECIO SIN INC") }}: @money( $order->order_price-$order->vatvalue, $currency ,true)</h5>
+     <h5>{{ __("IMPOCONSUMO(INC)") }}: @money( $order->vatvalue, $currency,$convert)</h5>
      <h4>{{ __("Sub Total") }}: @money( $order->order_price, $currency,$convert)</h4>
      @if($order->delivery_method==1)
      <h4>{{ __("Delivery") }}: @money( $order->delivery_price, $currency,$convert)</h4>
@@ -266,7 +280,7 @@
      <hr />
      <h3>{{ __("TOTAL") }}: @money( $order->delivery_price+$order->order_price_with_discount, $currency,true)</h3>
      <hr />
-     <h4>{{ __("Payment method") }}: {{ __(strtoupper($order->payment_method)) }}</h4>
+     <h4>{{ __("Payment method") }}: {{ __(strtoupper($order->payment_method) == 'CASH' ? 'Efectivo' : (strtoupper($order->payment_method) == 'COD' ? 'Contraentrega' : 'Otro')) }}</h4>
      <h4>{{ __("Payment status") }}: {{ __(ucfirst($order->payment_status)) }}</h4>
      @if ($order->payment_status=="unpaid"&&strlen($order->payment_link)>5)
          <button onclick="location.href='{{$order->payment_link}}'" class="btn btn-success">{{ __('Pay now') }}</button>

@@ -220,6 +220,7 @@
 @endsection
 @section('js')
     <script>
+        $('.input-group-addon').hide();
         $('#settings').submit(function() {
             $('form textarea').each(function(){
                 this.value = this.value.replace(/script/g, 'tagscript');

@@ -15,6 +15,7 @@ use App\Services\ConfChanger;
 use Akaunting\Module\Facade as Module;
 use App\Models\Allergens;
 use App\Models\AreaKitchen;
+use PayPal\Api\RedirectUrls;
 
 class ItemsController extends Controller
 {
@@ -162,8 +163,9 @@ class ItemsController extends Controller
             );
         }
         $item->save();
-
-        return redirect()->route('items.index')->withStatus(__('Item successfully updated.'));
+        //return redirect()->route('items.index')->withStatus(__('Item successfully updated.'));
+        //return redirect()->back()->with("retorno", true)->withStatus(__('Item successfully updated.'));
+        return redirect('/items#categoria-'.$item->category->name);
     }
 
     /**

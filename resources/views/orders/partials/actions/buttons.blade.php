@@ -1,10 +1,11 @@
-@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver'))
+@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('kitchen'))
 <?php
 $lastStatusAlisas=$order->status->pluck('alias')->last();
 ?>
 <div class="card-footer py-4">
     <h6 class="heading-small text-muted mb-4">{{ __('Actions') }}</h6   >
     <nav class="justify-content-end" aria-label="...">
+        <!---- actions for admin ---->
     @if(auth()->user()->hasRole('admin'))
         <script>
             function setSelectedOrderId(id){
@@ -25,8 +26,20 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
             <p>{{ __('No actions for you right now!') }}</p>
        @endif
     @endif
+    <!---- actions for owner or driver ---->
     @if(auth()->user()->hasRole('owner')||auth()->user()->hasRole('driver'))
         @include('orders.partials.actions.actions')
+    @endif
+
+    <!---- actions for kitchen ---->
+    @if(auth()->user()->hasRole('kitchen') && $lastStatusAlisas == "accepted_by_admin")
+        <p>{{ __('Esperando que restaurante acepte el pedido!') }}</p>
+    @elseif(auth()->user()->hasRole('kitchen') && $lastStatusAlisas == "accepted_by_restaurant")
+        @include('orders.partials.actions.actions')
+    @elseif(auth()->user()->hasRole('kitchen') && $lastStatusAlisas == "prepared")
+        <button type="button" class="btn btn-primary" style="cursor: default">El pedido ha sido preparado</button>
+        @elseif(auth()->user()->hasRole('kitchen'))
+        <p>{{ __('No actions for you right now!') }}</p>
     @endif
     </nav>
 </div>

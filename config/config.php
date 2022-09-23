@@ -95,22 +95,22 @@ return [
             'icon'=>'ni ni-money-coins',
             'fields'=>[
                 ['separator'=>'General', 'title'=>'Tool used for subscriptions', 'key'=>'SUBSCRIPTION_PROCESSOR', 'value'=>'Stripe', 'ftype'=>'select', 'data'=>[]],
-                ['title'=>'Enable Pricing','key'=>'ENABLE_PRICING', 'value'=>'true', 'ftype'=>'bool'],
-                ['title'=>'The free plan ID','title'=>'', 'key'=>'FREE_PRICING_ID', 'value'=>'1'],
+                ['title'=>'Habilitar precios','key'=>'ENABLE_PRICING', 'value'=>'true', 'ftype'=>'bool'],
+                ['title'=>'The free plan ID','title'=>'', 'key'=>'ID DE PRECIO GRATIS', 'value'=>'1'],
                 ['title'=>'Force users to use paid plan','title'=>'', 'key'=>'FORCE_USERS_TO_PAY', 'value'=>'false','ftype'=>'bool'],
 
                 
-                ['title'=>'Enable Finance dashboard for owner', 'help'=>'More advance, finance related reports for owner', 'key'=>'ENABLE_FINANCES_OWNER', 'value'=>'true', 'ftype'=>'bool'],
-                ['title'=>'Enable Finance dashboard for admin', 'key'=>'ENABLE_FINANCES_ADMIN', 'help'=>'More advance, finance related reports for admin', 'value'=>'true', 'ftype'=>'bool'],
+                ['title'=>'Habilitar el panel de finanzas para el propietario', 'help'=>'More advance, finance related reports for owner', 'key'=>'ENABLE_FINANCES_OWNER', 'value'=>'true', 'ftype'=>'bool'],
+                ['title'=>'Habilitar el panel de finanzas para el Administrador', 'key'=>'ENABLE_FINANCES_ADMIN', 'help'=>'More advance, finance related reports for admin', 'value'=>'true', 'ftype'=>'bool'],
 
 
                 ['separator'=>'Stripe', 'title'=>'Enable stripe for payments when ordering', 'key'=>'ENABLE_STRIPE', 'value'=>'true', 'ftype'=>'bool'],
                 ['title'=>'Stripe API key', 'key'=>'STRIPE_KEY', 'value'=>'pk_test_XXXXXXXXXXXXXX'],
                 ['title'=>'Stripe API Secret', 'key'=>'STRIPE_SECRET', 'value'=>'sk_test_XXXXXXXXXXXXXXX'],
-                ['title'=>'Enable Stripe connect', 'help'=>'If enabled, vendors will be able to connect, and money to be send directly to them', 'key'=>'ENABLE_STRIPE_CONNECT', 'value'=>'true', 'ftype'=>'bool'],
+                ['title'=>'Enable Stripe connect', 'help'=>'Si se habilita, los proveedores podrán conectarse y el dinero se enviará directamente a ellos.', 'key'=>'ENABLE_STRIPE_CONNECT', 'value'=>'true', 'ftype'=>'bool'],
                 ["title"=> "System will use", "key" => "VENDORS_OR_ADMIN_STRIPE", "ftype" => "select", "onlyin"=>"qrsaas", "value"=>"admin","data"=>[ "admin"=>"Admin defined Stripe", "vendor"=>"Vendor defined Stripe"]],
 
-                ['separator'=>'Local bank transfer', 'title'=>'Local bank transfer explanation', 'key'=>'LOCAL_TRANSFER_INFO', 'value'=>'Wire us the plan amout on the following bank accoun. And inform us about the wire.'],
+                ['separator'=>'Local bank transfer', 'title'=>'Local bank transfer explanation', 'key'=>'LOCAL_TRANSFER_INFO', 'value'=>'Envíanos el monto del plan a la siguiente cuenta bancaria. E infórmenos sobre el pago(wire).'],
                 ['title'=>'Bank Account', 'key'=>'LOCAL_TRANSFER_ACCOUNT', 'value'=>'IBAN: 12112121212121'],
                 
                 ],

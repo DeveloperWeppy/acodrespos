@@ -246,13 +246,30 @@ class Main extends Controller
      */
     public function destroy($id)
     {
-        $this->authChecker();
+        /* $this->authChecker();
         $item = $this->provider::findOrFail($id);
         if (!$this->getRestaurant()->id==$item->restaurant_id) {
             abort(403, 'Unauthorized action.');
         }
         $item->delete();
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)])); */
+
+        $error = false;
+        $mensaje = '';
+
+        $this->authChecker();
+        $item = $this->provider::findOrFail($id);
+
+        if (!$this->getRestaurant()->id==$item->restaurant_id) {
+            $error = true;
+            $mensaje = 'Error! Acción no autorizada';
+            abort(403, 'Unauthorized action.');
+        }else{
+            $item->delete();
+            $error = false;
+        }
+
+        echo json_encode(array('error' => $error, 'mensaje' => $mensaje));
     }
 }
 

@@ -109,13 +109,13 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Precio de Descuento'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number'])
+                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Precio Descontado'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number'])
 
                                         @if ($restorant->getConfig('hide_tax_input',"false")!="false")
                                             <!-- Hidden -->
-                                            @include('partials.input',['id'=>'vat','name'=>__('VAT percentage( calculated into item price )'),'placeholder'=>__('Item VAT percentage'),'value'=>$item->vat==""?$restorant->getConfig('default_tax_value',0):$item->vat,'required'=>false,'type'=>'hidden'])
+                                            @include('partials.input',['id'=>'vat','name'=>__('Porcentaje de IMPOCONSUMO(calculado en el precio del artículo)'),'placeholder'=>__('Porcentaje DE IMPOCONSUMO'),'value'=>$item->vat==""?$restorant->getConfig('default_tax_value',0):$item->vat,'required'=>false,'type'=>'hidden'])
                                         @else
-                                            @include('partials.input',['id'=>'vat','name'=>__('VAT percentage( calculated into item price )'),'placeholder'=>__('Item VAT percentage'),'value'=>$item->vat==""?$restorant->getConfig('default_tax_value',0):$item->vat,'required'=>false,'type'=>'number'])
+                                            @include('partials.input',['id'=>'vat','name'=>__('Porcentaje de IMPOCONSUMO(calculado en el precio del artículo)'),'placeholder'=>__('Porcentaje DE IMPOCONSUMO'),'value'=>$item->vat==""?$restorant->getConfig('default_tax_value',0):$item->vat,'required'=>false,'type'=>'number'])
                                         @endif
                                         
                                         <?php $image=['name'=>'item_image','label'=>__('Item Image'),'value'=> $item->logom,'style'=>'width: 290px; height:200']; ?>
@@ -260,6 +260,7 @@
 
 @section('js')
     <script type="text/javascript">
+        $('.input-group-addon').hide();
         "use strict";
         function setExtrasId(id){
 

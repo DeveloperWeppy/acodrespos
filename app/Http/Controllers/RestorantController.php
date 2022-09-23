@@ -2,40 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Categories;
-use App\City;
-use App\Events\CallWaiter;
-use App\Extras;
-use App\Hours;
-use App\Imports\RestoImport;
-use App\Items;
-use App\Models\LocalMenu;
-use App\Models\Options;
-use App\Notifications\RestaurantCreated;
-use App\Notifications\WelcomeNotification;
-use App\Plans;
-use App\Restorant;
-use App\Tables;
-use App\User;
-use App\Traits\Fields;
-use App\Traits\Modules;
-use Artisan;
-use Carbon\Carbon;
 use DB;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Akaunting\Module\Facade as Module;
-use App\Events\NewVendor;
-use Illuminate\Support\Facades\Session;
 use Image;
-use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
+use Artisan;
+use App\City;
+use App\User;
+use DateTime;
+use App\Hours;
+use App\Items;
+use App\Plans;
+use App\Extras;
+use App\Tables;
+use App\Restorant;
+use Carbon\Carbon;
+use App\Categories;
+use App\Traits\Fields;
+use App\Models\Options;
+use App\Traits\Modules;
+use App\Events\NewVendor;
+use App\Models\LocalMenu;
+use App\Events\CallWaiter;
+use Illuminate\Support\Str;
+use App\Imports\RestoImport;
+use Illuminate\Http\Request;
 use Spatie\Geocoder\Geocoder;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
+use Akaunting\Module\Facade as Module;
+use Illuminate\Support\Facades\Session;
+use App\Notifications\RestaurantCreated;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\WelcomeNotification;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
 class RestorantController extends Controller
 {
@@ -625,7 +626,7 @@ $restaurant=Restorant::findOrFail($restaurantid);
 
         $shift="_shift".$request->shift_id;
         
-        $hours->{'0_from'} = $request->{'0_from'.$shift} ?? null;
+        /* $hours->{'0_from'} = $request->{'0_from'.$shift} ?? null;
         $hours->{'0_to'} = $request->{'0_to'.$shift} ?? null;
         $hours->{'1_from'} = $request->{'1_from'.$shift} ?? null;
         $hours->{'1_to'} = $request->{'1_to'.$shift} ?? null;
@@ -638,10 +639,84 @@ $restaurant=Restorant::findOrFail($restaurantid);
         $hours->{'5_from'} = $request->{'5_from'.$shift} ?? null;
         $hours->{'5_to'} = $request->{'5_to'.$shift} ?? null;
         $hours->{'6_from'} = $request->{'6_from'.$shift} ?? null;
-        $hours->{'6_to'} = $request->{'6_to'.$shift} ?? null;
-        $hours->update();
+        $hours->{'6_to'} = $request->{'6_to'.$shift} ?? null; */
+        $lunes_to =date("H:i", strtotime($request->{'0_to'.$shift}));
+        $lunes_from =date("H:i", strtotime($request->{'0_from'.$shift}));
+        $martes_to =date("H:i", strtotime($request->{'1_to'.$shift}));
+        $martes_from =date("H:i", strtotime($request->{'1_from'.$shift}));
+        $miercoles_to =date("H:i", strtotime($request->{'2_to'.$shift}));
+        $miercoles_from =date("H:i", strtotime($request->{'2_from'.$shift}));
+        $jueves_to =date("H:i", strtotime($request->{'3_to'.$shift}));
+        $jueves_from =date("H:i", strtotime($request->{'3_from'.$shift}));
+        $viernes_to =date("H:i", strtotime($request->{'4_to'.$shift}));
+        $viernes_from =date("H:i", strtotime($request->{'4_from'.$shift}));
+        $sabado_to =date("H:i", strtotime($request->{'5_to'.$shift}));
+        $sabado_from =date("H:i", strtotime($request->{'5_from'.$shift}));
+        $domingo_to =date("H:i", strtotime($request->{'6_to'.$shift}));
+        $domingo_from =date("H:i", strtotime($request->{'6_from'.$shift}));
+        
+        //lunes
+        if ($lunes_from > $lunes_to) {
+            session()->flash('error', 'La hora de apertura del día Lunes es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'0_from'} = $request->{'0_from'.$shift} ?? null;
+            $hours->{'0_to'} = $request->{'0_to'.$shift} ?? null;
+        }
+        //martes
+        if ($martes_from > $martes_to) {
+            session()->flash('error', 'La hora de apertura del día Martes es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'1_from'} = $request->{'1_from'.$shift} ?? null;
+            $hours->{'1_to'} = $request->{'1_to'.$shift} ?? null;
+        }
+        //miercoles
+        if ($miercoles_from > $miercoles_to) {
+            session()->flash('error', 'La hora de apertura del día Miércoles es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'2_from'} = $request->{'2_from'.$shift} ?? null;
+            $hours->{'2_to'} = $request->{'2_to'.$shift} ?? null;
+        }
+        //jueves
+        if ($jueves_from > $jueves_to) {
+            session()->flash('error', 'La hora de apertura del día Jueves es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'3_from'} = $request->{'3_from'.$shift} ?? null;
+            $hours->{'3_to'} = $request->{'3_to'.$shift} ?? null;
+        }
+        //viernes
+        if ($viernes_from > $viernes_to) {
+            session()->flash('error', 'La hora de apertura del día Viernes es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'4_from'} = $request->{'4_from'.$shift} ?? null;
+            $hours->{'4_to'} = $request->{'4_to'.$shift} ?? null;
+        }
+        //sabado
+        if ($sabado_from > $sabado_to) {
+            session()->flash('error', 'La hora de apertura del día Sábado es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'5_from'} = $request->{'5_from'.$shift} ?? null;
+            $hours->{'5_to'} = $request->{'5_to'.$shift} ?? null;
+        }
+        //domingo
+        if ($domingo_from > $domingo_to) {
+            session()->flash('error', 'La hora de apertura del día Domingo es mayor a la de cerrada');
+            return redirect()->route('admin.restaurants.edit',  $request->rid);
+        } else {
+            $hours->{'6_from'} = $request->{'6_from'.$shift} ?? null;
+            $hours->{'6_to'} = $request->{'6_to'.$shift} ?? null;
+        }
+        
+        if ($hours->update()) {
+            return redirect()->route('admin.restaurants.edit',  $request->rid)->withStatus(__('Working hours successfully updated!'));
+        } 
 
-        return redirect()->route('admin.restaurants.edit',  $request->rid)->withStatus(__('Working hours successfully updated!'));
+        
     }
 
     public function showRegisterRestaurant()

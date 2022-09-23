@@ -45,8 +45,11 @@ $arryabuscar=array_search('accepted_by_restaurant', $order->actions['buttons']);
       
         <a href="{{ url('updatestatus/'.$next_status.'/'.$order->id) }}" data="{{$next_status}}" class="btn btn-sm  {{$btnType   }} validateConfirmation">{{ $next_status=="rejected_by_restaurant"? ($arryabuscar==false?'Cancelar':__($next_status)):__($next_status)}}</a>
       @else
-        @if ($next_status=="accepted_by_restaurant" || $next_status=="prepared")
+        @if ($next_status=="accepted_by_restaurant")
+          <p><small class="text-muted">{{ __('¡Esperando que restaurante acepte el pedido!') }}</small><p>
+        @elseif ($next_status=="prepared")
           <a href="{{ url('updatestatus/'.$next_status.'/'.$order->id) }}" class="btn btn-sm {{$btnType   }}">{{ __($next_status) }}</a>
+          
           @elseif ($next_status=="assigned_to_driver")
         @endif
       @endif

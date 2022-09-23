@@ -36,18 +36,31 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $category = new Categories;
-        $category->name = strip_tags($request->category_name);
-        $category->restorant_id = $request->restaurant_id;
-        $category->areakitchen_id = $request->areakitchen_id;
-        $category->save();
+        $name_count = Categories::where('name', $request->category_name)->where('restorant_id', $request->restaurant_id)->count();
 
-        if (auth()->user()->hasRole('admin')) {
-            //Direct to that page directly
-            return redirect()->route('items.admin', ['restorant'=>$request->restaurant_id])->withStatus(__('Category successfully created.'));
+        if ($name_count > 0) {
+            
+            if (auth()->user()->hasRole('admin')) {
+                //Direct to that page directly
+                return redirect()->route('items.admin', ['restorant'=>$request->restaurant_id])->with('error', 'La categoría que intenta registrar ya existe.');
+            }
+
+            return redirect()->route('items.index')->with('error', 'La categoría que intenta registrar ya existe.');
+
+        } else {
+            $category = new Categories;
+            $category->name = strip_tags($request->category_name);
+            $category->restorant_id = $request->restaurant_id;
+            $category->areakitchen_id = $request->areakitchen_id;
+            $category->save();
+
+            if (auth()->user()->hasRole('admin')) {
+                //Direct to that page directly
+                return redirect()->route('items.admin', ['restorant'=>$request->restaurant_id])->withStatus(__('Category successfully created.'));
+            }
+
+            return redirect()->route('items.index')->withStatus(__('Category successfully created.'));
         }
-
-        return redirect()->route('items.index')->withStatus(__('Category successfully created.'));
     }
 
     public function storeareakitchen(Request $request)

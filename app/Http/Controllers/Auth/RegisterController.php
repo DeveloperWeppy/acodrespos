@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\ClientRegistered;
 use App\Notifications\WelcomeNotification;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -94,7 +95,7 @@ class RegisterController extends Controller
         ]);
 
         $user->assignRole('client');
-
+            
         //Send welcome email
         return $user;
     }
