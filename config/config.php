@@ -96,7 +96,7 @@ return [
             'fields'=>[
                 ['separator'=>'General', 'title'=>'Tool used for subscriptions', 'key'=>'SUBSCRIPTION_PROCESSOR', 'value'=>'Stripe', 'ftype'=>'select', 'data'=>[]],
                 ['title'=>'Habilitar precios','key'=>'ENABLE_PRICING', 'value'=>'true', 'ftype'=>'bool'],
-                ['title'=>'The free plan ID','title'=>'', 'key'=>'ID DE PRECIO GRATIS', 'value'=>'1'],
+                ['title'=>'The free plan ID','title'=>'', 'key'=>'FREE_PRICING_ID', 'value'=>'1'],
                 ['title'=>'Force users to use paid plan','title'=>'', 'key'=>'FORCE_USERS_TO_PAY', 'value'=>'false','ftype'=>'bool'],
 
                 

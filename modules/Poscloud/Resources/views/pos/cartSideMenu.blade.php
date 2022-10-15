@@ -5,7 +5,7 @@
                     <span id="orderNumber"></span>
                     <span id="orderId"></span>
                     <h4 id="tableName"></h4>
-
+                    <input type="hidden" id="mesaid">
                 </div>
             
             
@@ -22,6 +22,7 @@
                               <span class="mb-2 text-xs">{{ __('Price') }}: <span class="text-dark font-weight-bold ms-2">@{{ item.attributes.friendly_price }}</span></span>
                               <span class="mb-2 text-xs">{{ __('QTY') }}: <span class="text-dark ms-2 font-weight-bold">@{{ item.quantity }}</span></span>
                               <span class="mb-2 text-xs">Observacion: <span class="text-dark ms-2 font-weight-bold">@{{ item.observacion }}</span></span>
+                              <span class="mb-2 text-xs" id="" class="personitem">Persona: <span class="text-dark ms-2 font-weight-bold">@{{ item.personaccount }}</span></span>
                             </div>
                             <div class="ms-auto" v-show="item.status_id<3 || item.status_id == null">
                                 <button v-if="item.quantity==1" type="button" v-on:click="remove(item.id)"  :value="item.id" class="btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius">
@@ -60,6 +61,26 @@
                 </div>  
             </div>
             <br />
+
+            <!-- mostrando división de cuentas -->
+            <div class="card card-stats shadow mb-3" id="card_division_personas">
+                <div class="card-body">
+                    <div id="cartListPerson">
+                        <ul class="list-group items" >
+                            <li v-cloak  v-for="item in items" id="itemspersonas">
+                                <div class="d-flex flex-column">
+                                <span class="mb-2 text-xs" id="" class="personitem">Persona: 
+                                    <span class="text-dark ms-2 font-weight-bold">@{{ item.nombre }}
+                                        <span class="d-flex justify-content-end font-weight-bold">$@{{ item.saldo }}</span>
+                                    </span>
+                                    
+                                </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
             <div id="totalPrices" v-cloak>
                 <div  class="card card-stats mb-4 mb-xl-0">

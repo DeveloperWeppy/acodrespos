@@ -1,4 +1,4 @@
-<div class="modal fade" id="productModal" z-index="9999" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+<div class="modal fade" id="productModal" z-index="9999" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-" role="document" id="modalDialogItem">
         <div class="modal-content">
             <div class="modal-header">
@@ -48,6 +48,10 @@
                                                     required 
                                                     autofocus
                                             >
+                                    </div>
+                                    <div class="form-group" id="group_personasdivision" style="display: none;">
+                                        <label class="form-control-label" for="personasdivision">{{ __('Seleccionar Persona') }}</label>
+                                        <select name="personaccount" id="personasdivision" class="form-control personasdivision" style="width: 100%;" tabindex="-1" aria-hidden="true"></select>
                                     </div>
                                     <div class="quantity-btn">
                                         <div id="addToCart1">

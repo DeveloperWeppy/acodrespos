@@ -61,10 +61,12 @@
     <!-- Exrta menus -->
     @foreach (auth()->user()->getExtraMenus() as $menu)
             <li class="nav-item">
+                @if ($menu['name'] != "Expenses")<!----ocultando menú de gastos --------->
                 <a class="nav-link" href="{{ route($menu['route'],isset($menu['params'])?$menu['params']:[]) }}">
                     <i class="{{ $menu['icon'] }}"></i>{{ __($menu['name']) }}
-                    
                 </a>
+                @endif
+                
             </li>
     @endforeach
     
@@ -99,14 +101,14 @@
             </a>
         </li>
     @endif 
-
+--}}
         @if(config('app.ordering')&&config('settings.enable_finances_owner'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('finances.owner') }}">
                     <i class="ni ni-money-coins text-blue"></i> {{ __('Finances') }}
                 </a>
             </li>
-        @endif --}}
+        @endif 
 
       
         @if ( in_array("coupons", config('global.modules',[]))   )

@@ -13,6 +13,8 @@ var footerPages=null;
 var total=null;
 var expedition=null;
 var modalPayment=null;
+var carro=null;
+var cartContentPersons=null;
 
 $('#localorder_phone').hide();
 /**
@@ -31,7 +33,7 @@ function updatePrices(net,delivery,expedition){
   });
   
   var deduct=parseFloat(cartTotal.deduct);
-  console.log("Deduct is "+deduct);
+  //console.log("Deduct is "+deduct);
 
   //totalPrice -- Subtotal
   //withDelivery -- Total with delivery
@@ -118,6 +120,7 @@ function addToCartVUE(){
     axios.post(addCartEndpoint, {
         id: $('#modalID').text(),
         quantity: $('#quantity').val(),
+        personaccount: $('#personasdivision').find(":selected").text(),
         extras:extrasSelected,
         variantID:variantID
       })
@@ -214,7 +217,9 @@ function getCartContentAndTotalPrice(){
     cartSessionId=response.data.id;
     cartContent.items=response.data.data;
     //cartTotal.deduct=0;
-
+    carro=response.data.id;
+    $("#mesaid").val(carro);
+    //console.log(response.data);
 
     var obj=response.data.config;
     
@@ -232,6 +237,51 @@ function getCartContentAndTotalPrice(){
         $('#timeslot').trigger('change');
       }
     }
+    /*** script que permite generar la división de cuentas ***/
+    var formatter = new Intl.NumberFormat(LOCALE, {
+      style: 'currency',
+      currency:  CASHIER_CURRENCY,
+    });
+    var nuevovalor = [];
+    var objperso = response.data.data;
+    console.log(objperso);
+    var clave = Object.values(objperso);
+    if( clave.length != 0 ){
+      Object.entries(objperso).forEach(([key, value]) => {
+        var persons = value.personaccount;
+        var saldounit = value.price;
+        var quantity = value.quantity;
+
+        if (persons != null) {
+          $('#card_division_personas').show();
+        }
+
+        var saldo = saldounit*quantity;
+        var array = {'nombre':persons, 'saldo':saldo};
+        nuevovalor.push(array);
+      });
+      const miCarritoSinDuplicados = nuevovalor.reduce((acumulador, valorActual) => {
+        const elementoYaExiste = acumulador.find(elemento => elemento.nombre === valorActual.nombre);
+        if (elementoYaExiste) {
+          return acumulador.map((elemento) => {
+            if (elemento.nombre === valorActual.nombre) {
+              return {
+                ...elemento,
+                saldo: formatter.format(elemento.saldo + valorActual.saldo)
+              }
+            }
+      
+            return elemento;
+          });
+        }
+      
+        return [...acumulador, valorActual];
+      }, []);
+      cartContentPersons.items=miCarritoSinDuplicados;
+      //console.log(miCarritoSinDuplicados);
+      
+       
+    } 
     updateSubTotalPrice(response.data.total,EXPEDITION);
     $(".listItemCart").each(function(){
       if($(this).attr("data")=="0"){
@@ -324,6 +374,7 @@ function updateExpeditionPOS(){
 
 function submitOrderPOS(tipo=0){
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
+  localStorage.removeItem(CURRENT_TABLE_ID);
   $('#submitOrderPOS').hide();
   $('#indicator').show();
   var dataToSubmit={
@@ -428,6 +479,7 @@ function decCart(product_id){
     
   });
 }
+//add extras to cart
 function updataObser(){
   $("#modalObservacion").modal('hide');
   Swal.fire({
@@ -639,6 +691,14 @@ window.onload = function () {
       },
     }
   })
+
+    //VUE COMPLETE ORDER TOTAL PRICE
+    cartContentPersons = new Vue({
+      el: '#cartListPerson',
+      data: {
+        items: [],
+      }
+    })
 
   orderContent = new Vue({
     el: '#orderList',

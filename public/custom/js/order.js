@@ -247,6 +247,13 @@ function setCurrentItem(id){
     $('#modalPrice').html(item.price);
     $('#modalID').text(item.id);
     $('#quantity').val(1);
+    
+    var mesa = $('#mesaid').val();
+    var getlocal = JSON.parse(localStorage.getItem(mesa));
+    var selectpersonas = $('.personasdivision');
+    selectpersonas.select2({
+        dropdownParent: $("#productModal")
+      });
 
     if(item.image != "/default/restaurant_large.jpg"){
         $("#modalImg").attr("src",item.image);
@@ -262,6 +269,17 @@ function setCurrentItem(id){
 
         $("#modalDialogItem").removeClass("modal-lg");
         $("#modalDialogItem").addClass("col-sm-6 col-md-6 col-lg-6 offset-3");
+    }
+    if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
+        $("#group_personasdivision").show();
+        //parslocal = JSON.parse(getlocal);
+        selectpersonas.empty();
+
+        $.each(getlocal, function(index, value){
+            //add options to select of account divide
+            selectpersonas.append("<option value='" + (index+1) + "' >" + value.nombre + "</option>");            
+        }); 
+        
     }
 
     $('#modalDescription').html(item.description);

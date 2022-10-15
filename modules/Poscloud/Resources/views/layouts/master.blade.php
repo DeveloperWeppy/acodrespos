@@ -86,6 +86,7 @@
 
   <!-- printThis -->
   <script src="{{ asset('vendor') }}/printthis/printThis.js"></script> 
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <link type="text/css" href="{{ asset('css/dashboard.css') }}/" rel="stylesheet">
 
 
@@ -114,6 +115,7 @@
       var datalistPhone=@json($selectTelefono);
       var selectClientId=0;
       var selectClientText="";
+      var mesaocupada = false;
    </script>
    <script src="{{ asset('custom') }}/js/cartPOSFunctions.js"></script>
    
@@ -401,7 +403,29 @@
         CURRENT_TABLE_NAME="Delivery order";
         EXPEDITION=1;
       }
-     
+      $("#row_names").hide();
+      var getlocal = JSON.parse(localStorage.getItem(CURRENT_TABLE_ID));
+      //console.log(mesaocupada);
+      if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
+        $("#modal-add-consumidor").modal("hide");
+        $('.personitem').show();
+        $('#card_division_personas').show();
+      }else{
+        $('.personitem').text("");
+        $("#modal-add-consumidor").modal("show");
+        $('#card_division_personas').hide();
+        $('#ask_divide_check').change(function() {
+                if (this.checked) {
+                    $("#span_dividir").text("Cuenta Dividida");
+                    $("#row_names").show();
+                    $("#btncontinuar").hide();
+                } else {
+                    $("#span_dividir").text("Sin cuenta dividida");
+                    $("#row_names").hide();
+                    $("#btncontinuar").show();
+                }
+            });
+      }
       getCartContentAndTotalPrice();
       showOrderDetail(id);
     }

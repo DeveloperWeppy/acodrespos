@@ -139,7 +139,7 @@
 
          <!-- Cart custom sidemenu -->
         <script src="{{ asset('custom') }}/js/cartSideMenu.js"></script>
-
+        
 
         <script>
             var ONESIGNAL_APP_ID = "{{ config('settings.onesignal_app_id') }}";

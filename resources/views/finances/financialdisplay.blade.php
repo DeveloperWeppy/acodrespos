@@ -7,11 +7,11 @@
         <th class="table-web" scope="col">{{ __('Created') }}</th>
         <th class="table-web" scope="col">{{ __('Method') }}</th>
 
-        <th class="table-web" scope="col">{{ __('Platform fee') }}</th>
-        <th class="table-web" scope="col">{{ __('Processor fee') }}</th>
+        {{-- <th class="table-web" scope="col">{{ __('Platform fee') }}</th>
+        <th class="table-web" scope="col">{{ __('Processor fee') }}</th> --}}
         <th class="table-web" scope="col">{{ __('Delivery') }}</th>
-        <th class="table-web" scope="col">{{ __('Net Price + VAT') }}</th>
-        <th class="table-web" scope="col">{{ __('VAT') }}</th>
+        {{-- <th class="table-web" scope="col">{{ __('Net Price + VAT') }}</th>
+        <th class="table-web" scope="col">{{ __('VAT') }}</th> --}}
         <th class="table-web" scope="col">{{ __('Net Price') }}</th>
         
         
@@ -43,28 +43,36 @@
         {{ $order->created_at->format(config('settings.datetime_display_format')) }}
     </td>
     <td class="table-web">
+        @php
+            $type_payment = '';
+            if($order->payment_method == 'cod'){
+                $type_payment = 'Contraentrega';
+            }else if($order->payment_method == 'cash'){
+                $type_payment = 'Efectivo';
+            }
+        @endphp
         @if(config('app.isft') || config('app.iswp'))
-            <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }} | {{ __($order->payment_method) }} </span>
+            <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }} | {{ __($type_payment) }} </span>
         @else
-            <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }} | {{ __($order->payment_method) }} </span>
+            <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }} | {{ __($type_payment) }} </span>
         @endif
     </td>
     
-    <td class="table-web">
+    {{-- <td class="table-web">
         @money( $order->fee_value+$order->static_fee, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
     <td class="table-web">
         @money( $order->payment_processor_fee, config('settings.cashier_currency'),config('settings.do_convertion'))
-    </td>
+    </td> --}}
     <td class="table-web">
         @money( $order->delivery_price, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
-    <td class="table-web">
+    {{-- <td class="table-web">
         @money( $order->order_price_with_discount-($order->fee_value+$order->static_fee), config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
     <td class="table-web">
         @money( $order->vatvalue, config('settings.cashier_currency'),config('settings.do_convertion'))
-    </td>
+    </td> --}}
     <td class="table-web">
         @money( $order->order_price_with_discount-($order->fee_value+$order->static_fee)-$order->vatvalue, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
