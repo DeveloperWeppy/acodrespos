@@ -27,11 +27,15 @@ use App\Events\OrderAcceptedByAdmin;
 use App\Events\OrderAcceptedByVendor;
 use App\Models\Orderitems;
 use App\Models\SimpleDelivery;
-
+use App\Models\CartStorageModel;
 class OrderController extends Controller
 {
 
-   
+    private function setSessionID($session_id){
+        //We have session ID only from POS. So then use the CartDBStorageRepository
+        config(['shopping_cart.storage' => \App\Repositories\CartDBStorageRepository::class]); 
+        Cart::session($session_id);
+    }
     public function migrateStatuses()
     {
         if (Status::count() < 13) {
@@ -970,6 +974,13 @@ class OrderController extends Controller
         $comment="";
         if($alias=="rejected_by_restaurant" && $motivo!=""){
            $comment=$motivo;
+           $sessiocart= explode("_", $order->cart_storage_id);
+           if($order->cart_storage_id!=""){
+                if(count($sessiocart)>1){
+                    $this->setSessionID($sessiocart[0]);
+                    Cart::clear();
+                }
+           }       
         }
         $order->status()->attach([$status_id_to_attach => ['comment'=>$comment, 'user_id' => auth()->user()->id]]);
         //Dispatch event
@@ -987,7 +998,7 @@ class OrderController extends Controller
         }
 
 
-        return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
+      return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
     }
 
     public function rateOrder(Request $request, Order $order)
