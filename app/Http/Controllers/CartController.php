@@ -128,7 +128,7 @@ class CartController extends Controller
         
 
         $cs=CartStorageModel::where('id',$_GET['session_id']."_cart_items")->first();
-        $orderCart=Order::where(['cart_storage_id'=>$_GET['session_id']."_cart_items","payment_status"=>"unpaid"])->first();
+        $orderCart=Order::where(['cart_storage_id'=>$_GET['session_id']."_cart_items","payment_status"=>"unpaid"])->orderBy('id', 'DESC')->first();
         $arrayItem=array();
         $order_id=0;
         $comment="";
@@ -139,10 +139,12 @@ class CartController extends Controller
             $order = Order::findOrFail($orderCart->id);
             $orderStatus= $order->stakeholders("DESC")->get();
             $order=$order->items()->get();
-            if($orderStatus[0]->pivot->status_id==9){
-                 $order_id=0;
+            if(count($orderStatus)>0){
+                if($orderStatus[0]->pivot->status_id==9){
+                    $order_id=0;
+                }
             }
-            if(count($order)>0){
+            if(count($order)>0 && $order_id>0){
                 $cartObj=json_decode(json_encode(Cart::getContent()),true);
                 $cartKey=array_keys($cartObj);
                 foreach ($cartKey as $key => $item) {
