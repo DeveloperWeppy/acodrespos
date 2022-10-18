@@ -116,7 +116,7 @@ class FinanceController extends Controller
         $cards = [
             ['title'=>'Orders', 'value'=>0],
             ['title'=>'Total', 'value'=>0, 'isMoney'=>true],
-            ['title'=>'Platform Fee', 'value'=>0, 'isMoney'=>true],
+            // ['title'=>'Platform Fee', 'value'=>0, 'isMoney'=>true],
             ['title'=>'Net', 'value'=>0, 'isMoney'=>true],
 
             ['title'=>'Processor fee', 'value'=>0, 'isMoney'=>true],
@@ -127,13 +127,13 @@ class FinanceController extends Controller
         foreach ($resources['orders']->get() as $key => $order) {
             $cards[0]['value'] += 1;
             $cards[1]['value'] += $order->delivery_price + $order->order_price_with_discount;
-            $cards[2]['value'] += $order->fee_value + $order->static_fee;
-            $cards[3]['value'] += $order->order_price_with_discount - $order->fee_value - $order->static_fee;
+            // $cards[2]['value'] += $order->fee_value + $order->static_fee;
+            $cards[2]['value'] += $order->order_price_with_discount - $order->fee_value - $order->static_fee;
 
-            $cards[4]['value'] += $order->payment_processor_fee;
-            $cards[5]['value'] += $order->delivery_method.'' == '1' ? 1 : 0;
-            $cards[6]['value'] += $order->delivery_price;
-            $cards[7]['value'] += $order->fee_value + $order->static_fee + $order->delivery_price - $order->payment_processor_fee;
+            $cards[3]['value'] += $order->payment_processor_fee;
+            $cards[4]['value'] += $order->delivery_method.'' == '1' ? 1 : 0;
+            $cards[5]['value'] += $order->delivery_price;
+            $cards[6]['value'] += $order->fee_value + $order->static_fee + $order->delivery_price - $order->payment_processor_fee;
         }
 
         $displayParam = [
@@ -216,24 +216,24 @@ class FinanceController extends Controller
         $cards = [
             ['title'=>'Orders', 'value'=>0],
             ['title'=>'Total', 'value'=>0, 'isMoney'=>true],
-            ['title'=>'Platform Fee', 'value'=>0, 'isMoney'=>true],
+            // ['title'=>'Platform Fee', 'value'=>0, 'isMoney'=>true],
             ['title'=>'Net inc. Vat', 'value'=>0, 'isMoney'=>true],
 
-            ['title'=>'VAT', 'value'=>0, 'isMoney'=>true],
+            ['title'=>'ICO', 'value'=>0, 'isMoney'=>true],
             ['title'=>'Net', 'value'=>0, 'isMoney'=>true],
             ['title'=>'Deliveries', 'value'=>0],
-            ['title'=>'Delivery cost', 'value'=>0, 'isMoney'=>true],
+            ['title'=>'Costo Domicilio', 'value'=>0, 'isMoney'=>true],
         ];
         foreach ($resources['orders']->get() as $key => $order) {
             $cards[0]['value'] += 1;
             $cards[1]['value'] += $order->delivery_price + $order->order_price_with_discount;
-            $cards[2]['value'] += $order->fee_value + $order->static_fee;
-            $cards[3]['value'] += $order->order_price_with_discount - $order->fee_value - $order->static_fee;
+            //$cards[2]['value'] += $order->fee_value + $order->static_fee;
+            $cards[2]['value'] += $order->order_price_with_discount - $order->fee_value - $order->static_fee;
 
-            $cards[4]['value'] += $order->vatvalue;
-            $cards[5]['value'] += $order->order_price_with_discount - $order->vatvalue - $order->fee_value - $order->static_fee;
-            $cards[6]['value'] += $order->delivery_method.'' == '1' ? 1 : 0;
-            $cards[7]['value'] += $order->delivery_price;
+            $cards[3]['value'] += $order->vatvalue;
+            $cards[4]['value'] += $order->order_price_with_discount - $order->vatvalue - $order->fee_value - $order->static_fee;
+            $cards[5]['value'] += $order->delivery_method.'' == '1' ? 1 : 0;
+            $cards[6]['value'] += $order->delivery_price;
         }
 
         $displayParam = [

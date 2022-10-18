@@ -1,5 +1,5 @@
 <!-- Fee Info -->
-<div class="col-5">
+{{-- <div class="col-5">
     <div class="card  bg-secondary shadow">
         <div class="card-header border-0">
             <div class="row align-items-center">
@@ -19,4 +19,4 @@
             </p>
         </div>
     </div>
-</div>
+</div> --}}

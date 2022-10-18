@@ -244,7 +244,7 @@ function getCartContentAndTotalPrice(){
     });
     var nuevovalor = [];
     var objperso = response.data.data;
-    console.log(objperso);
+    //console.log(objperso);
     var clave = Object.values(objperso);
     if( clave.length != 0 ){
       Object.entries(objperso).forEach(([key, value]) => {
@@ -267,7 +267,7 @@ function getCartContentAndTotalPrice(){
             if (elemento.nombre === valorActual.nombre) {
               return {
                 ...elemento,
-                saldo: formatter.format(elemento.saldo + valorActual.saldo)
+                saldo: elemento.saldo + valorActual.saldo
               }
             }
       
@@ -277,8 +277,12 @@ function getCartContentAndTotalPrice(){
       
         return [...acumulador, valorActual];
       }, []);
-      cartContentPersons.items=miCarritoSinDuplicados;
-      //console.log(miCarritoSinDuplicados);
+      var data_array = [];
+      Object.entries(miCarritoSinDuplicados).forEach(([key, value]) => {
+         value.saldo= formatter.format(value.saldo);
+         data_array[key] = value;
+      });
+      cartContentPersons.items=data_array;
       
        
     } 
