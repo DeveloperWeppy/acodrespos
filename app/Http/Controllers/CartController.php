@@ -139,6 +139,9 @@ class CartController extends Controller
             $order = Order::findOrFail($orderCart->id);
             $orderStatus= $order->stakeholders("DESC")->get();
             $order=$order->items()->get();
+            if($orderStatus[0]->pivot->status_id==9){
+                 $order_id=0;
+            }
             if(count($order)>0){
                 $cartObj=json_decode(json_encode(Cart::getContent()),true);
                 $cartKey=array_keys($cartObj);
