@@ -15,6 +15,7 @@ var expedition=null;
 var modalPayment=null;
 var carro=null;
 var cartContentPersons=null;
+var valor_propi = 0;
 
 $('#localorder_phone').hide();
 /**
@@ -24,6 +25,11 @@ $('#localorder_phone').hide();
  * @param {String} expedition 1 - Delivery 2 - Pickup 3 - Dine in
  */
 function updatePrices(net,delivery,expedition){
+
+  var porcentaj_propina = $('#porcentaje_propina').val();
+  $('#spanporcentaje_propina').hide();
+  var span_propi_porcen = $('#spanporcentaje_propina').text(porcentaj_propina+"%");
+  
 
   net=parseFloat(net);
   delivery=parseFloat(delivery);
@@ -73,7 +79,29 @@ function updatePrices(net,delivery,expedition){
      //modalPayment updated
     modalPayment.totalPrice=net-deduct;
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
+    modalPayment.totalPropinaFormat=formatter.format(0);
     modalPayment.received=0;
+
+    $('#ask_propina_check').change(function() {
+      if (this.checked) {
+        valor_propi = ((net-deduct)*porcentaj_propina)/100;
+        modalPayment.totalPropinaFormat=formatter.format(valor_propi);
+
+        //modalPayment updated
+        modalPayment.totalPrice=net-deduct+valor_propi;
+        modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+        $('#spanporcentaje_propina').show();
+
+        
+      } else {
+        modalPayment.totalPrice=net-deduct;
+        modalPayment.totalPriceFormat=formatter.format(net-deduct);
+        modalPayment.totalPropinaFormat=formatter.format(0);
+        $('#spanporcentaje_propina').hide();
+
+      }
+    });
+   
   }
  
   setTimeout(() => {
@@ -428,6 +456,13 @@ function submitOrderPOS(tipo=0){
       if(tipo==0){
         js.notify(response.data.message, "success");
         $('#modalPOSInvoice').modal('show');
+        if ($('#ask_propina_check').is(":checked")) {
+          //facturapos
+          receiptPOS.totalPropina = valor_propi;
+        } else {
+          receiptPOS.totalPropina = 0;
+        }
+        $("#ask_propina_check").prop("checked", false);
       }else{
         if(tipo==2){
           js.notify('Orden Actualizada', "success");
@@ -775,6 +810,7 @@ window.onload = function () {
       totalPrice:0,
       minimalOrder:0,
       totalPriceFormat:"",
+      totalPropinaFormat:"",
       deliveryPriceFormated:"",
       delivery:true,
       valid:false,
@@ -795,7 +831,8 @@ window.onload = function () {
   receiptPOS=new Vue({
     el:"#modalPOSInvoice",
     data:{
-      order:null
+      order:null,
+      totalPropina:0
     },
 
     methods: {

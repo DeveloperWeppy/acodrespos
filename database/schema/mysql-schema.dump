@@ -532,6 +532,7 @@ CREATE TABLE `restorants` (
   `facebook` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `instagram` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `youtube` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `propina` float(8,2) NULL DEFAULT '0.00',
   `fb_username` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `do_covertion` int NOT NULL DEFAULT '1',
   `currency` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,

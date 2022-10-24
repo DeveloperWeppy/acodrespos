@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         @endif
-                        @hasrole('admin|owner')
+                        {{-- @hasrole('admin|owner')
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="form-control-label" for="driver">{{ __('Filter by Driver') }}</label>
@@ -99,7 +99,7 @@
                                 </select>
                             </div>
                         </div>
-                        @endif    
+                        @endif    --}} 
                         @else
                         @endif
                         

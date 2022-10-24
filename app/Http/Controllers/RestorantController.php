@@ -373,6 +373,7 @@ class RestorantController extends Controller
         
         $restaurant->description = strip_tags($request->description);
         $restaurant->minimum = strip_tags($request->minimum);
+        $restaurant->propina = $request->propina;
 
         if($request->has('fee')){
             $restaurant->fee = $request->fee;

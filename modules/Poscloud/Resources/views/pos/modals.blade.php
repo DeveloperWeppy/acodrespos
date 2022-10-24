@@ -21,6 +21,17 @@
                                     <option value="onlinepayments">{{ __('Online payments') }}</option>
                                 </select>
                             </div>
+                            <div class="row">
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
+                                    <label class="custom-control-label" for="ask_propina_check">
+                                        <span class="text-muted" id="span_propina">Agregar Propina</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label>{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
+                            <p class="h2">@{{ totalPropinaFormat }} </p>
+
                             <label>{{ __('Total') }}</label>
                             <p class="h2">@{{ totalPriceFormat }} </p>
 
@@ -32,6 +43,10 @@
                             <label>{{ __('Received ammount')}}</label>
                             <div class="input-group mb-3">
                                 <input type="text" v-model="received" class="form-control" placeholder="0" aria-label="o" autofocus>
+                            </div>
+                            <label>{{ __('Nº de Personas en la mesa')}}</label>
+                            <div class="input-group mb-3">
+                                <input type="text"  class="form-control" placeholder="0" aria-label="o" autofocus>
                             </div>
                             <label>{{ __('Change') }}</label>
                             <p class="h2 text-success">@{{ received-totalPrice>0?(received-totalPrice).toFixed(2):0 }}
@@ -203,8 +218,12 @@
                     <table id="totalInModal" class="mt-2 w-100">
                         <tbody>
                             <tr>
+                                <th class="p-1 w-70">{{ __('Propina') }}</th>
+                                <th class="p-1 w-30">@{{ totalPropina?formatPrice((totalPropina).toFixed(2)):"0,00" }}</th>
+                            </tr>
+                            <tr>
                                 <th class="p-1 w-70">{{ __('Total') }}</th>
-                                <th class="p-1 w-30">@{{ order?formatPrice((order.order_price_with_discount+order.delivery_price).toFixed(2)):"" }}</th>
+                                <th class="p-1 w-30">@{{ order?formatPrice((order.order_price_with_discount+order.delivery_price+totalPropina).toFixed(2)):"" }}</th>
                             </tr>
                         </tbody>
                     </table>
