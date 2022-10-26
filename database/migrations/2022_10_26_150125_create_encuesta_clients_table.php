@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEncuestaOrdensTable extends Migration
+class CreateEncuestaClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateEncuestaOrdensTable extends Migration
      */
     public function up()
     {
-        Schema::create('encuesta_ordens', function (Blueprint $table) {
+        Schema::create('encuesta_clients', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_question')->references('id')->on('encuesta_ordens');
+            $table->string('answer', 250);
+            $table->foreignId('id_ratings')->references('id')->on('ratings');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateEncuestaOrdensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('encuesta_ordens');
+        Schema::dropIfExists('encuesta_clients');
     }
 }

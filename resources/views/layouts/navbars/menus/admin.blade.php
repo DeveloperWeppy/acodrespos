@@ -32,7 +32,7 @@
         </li>
         @endif
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.restaurants.index') }}">
+            <a class="nav-link" href="{{ route('admin.encuesta.index') }}">
                 <i class="fa fa-question-circle text-pink"></i> {{ __('Encuesta Satisfacción') }}
             </a>
         </li>

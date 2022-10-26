@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EncuestaOrden extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['question', 'deleted_at'];
+    protected $table = 'encuesta_ordens';
 }

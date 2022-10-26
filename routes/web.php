@@ -37,6 +37,10 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
 
         Route::name('admin.')->group(function () {
             Route::get('syncV1UsersToAuth0', 'SettingsController@syncV1UsersToAuth0')->name('syncV1UsersToAuth0');
+            Route::get('encuesta', 'EncuestaOrdenController@index')->name('encuesta.index');
+            Route::post('encuesta/crear', 'EncuestaOrdenController@store')->name('encuesta.store');
+            Route::post('encuesta/actualizar', 'EncuestaOrdenController@update')->name('encuesta.update');
+            Route::get('encuesta/delete/{id}', 'EncuestaOrdenController@destroy')->name('encuesta.destroy');
             Route::get('dontsyncV1UsersToAuth0', 'SettingsController@dontsyncV1UsersToAuth0')->name('dontsyncV1UsersToAuth0');
             Route::resource(config('settings.url_route_plural'), 'RestorantController',[
                 'names' => [
