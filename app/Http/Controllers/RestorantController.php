@@ -155,6 +155,9 @@ class RestorantController extends Controller
         $restaurant->instagram = strip_tags($request->instagram);
         $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->subdomain = $this->makeAlias(strip_tags($request->name));
+        $restaurant->nit= strip_tags($request->nit.'');
+        $restaurant->invoice_size= strip_tags($request->invoice_size.'');
+        $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
         $restaurant->save();
 
        //default hours
@@ -370,7 +373,10 @@ class RestorantController extends Controller
         $restaurant->facebook = strip_tags($request->facebook);
         $restaurant->instagram = strip_tags($request->instagram);
         $restaurant->youtube = strip_tags($request->youtube);
-        
+        $restaurant->nit= strip_tags($request->nit.'');
+        $restaurant->invoice_size= strip_tags($request->invoice_size.'');
+        $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
+
         $restaurant->description = strip_tags($request->description);
         $restaurant->minimum = strip_tags($request->minimum);
 
