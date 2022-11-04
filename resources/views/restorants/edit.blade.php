@@ -135,6 +135,8 @@
         var defaultHourTo = "17:00";
 
         var timeFormat = '{{ config('settings.time_format') }}';
+        $('.input-group-addon').hide();
+        $("#show_hide_password").removeClass("input-group");
 
         function formatAMPM(date) {
             var hours = date.split(':')[0];

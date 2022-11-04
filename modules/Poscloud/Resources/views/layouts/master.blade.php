@@ -64,6 +64,7 @@
       @yield('orderDetails')  
     </div>
   </div>
+  <input type="hidden" name="propina" id="porcentaje_propina" value="{{$vendor->propina}}">
   <!--   Core JS Files   -->
   <script src="{{ asset('softd') }}/js/core/popper.min.js"></script>
   <script src="{{ asset('softd') }}/js/core/bootstrap.min.js"></script>

@@ -2,32 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Orders\OrderRepoGenerator;
-use App\Exports\OrdersExport;
-use App\Notifications\OrderNotification;
-use App\Order;
-use App\Restorant;
-use App\Status;
-use App\User;
-use Carbon\Carbon;
 use Cart;
-use App\Events\NewOrder as PusherNewOrder;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
-use willvincent\Rateable\Rating;
-use App\Services\ConfChanger;
-use Akaunting\Module\Facade as Module;
+use App\User;
+use App\Order;
+use App\Status;
 use App\Coupons;
-use App\Events\OrderAcceptedByAdmin;
-use App\Events\OrderAcceptedByVendor;
+use App\Restorant;
+use Carbon\Carbon;
 use App\Models\Orderitems;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Exports\OrdersExport;
+use App\Models\EncuestaOrden;
+use App\Services\ConfChanger;
 use App\Models\SimpleDelivery;
 use App\Models\CartStorageModel;
+use willvincent\Rateable\Rating;
+use Illuminate\Support\Facades\DB;
+use App\Events\OrderAcceptedByAdmin;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Events\OrderAcceptedByVendor;
+use Akaunting\Module\Facade as Module;
+use Illuminate\Support\Facades\Cookie;
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
+use App\Events\NewOrder as PusherNewOrder;
+use App\Models\EncuestaClient;
+use App\Repositories\Orders\OrderRepoGenerator;
+
 class OrderController extends Controller
 {
 
@@ -498,6 +501,8 @@ class OrderController extends Controller
         //Do we have pdf invoice
         $pdFInvoice=Module::has('pdf-invoice');
 
+        //load questions of poll
+        $questions = EncuestaOrden::whereNull('deleted_at')->get();
         //Change currency
         ConfChanger::switchCurrency($order->restorant);
 
@@ -534,6 +539,7 @@ class OrderController extends Controller
 
             return view('orders.show', [
                 'order'=>$order,
+                'questions' => $questions,
                 'pdFInvoice'=>$pdFInvoice,
                 'custom_data'=>$order->getAllConfigs(),
                 'statuses'=>Status::pluck('name', 'id'), 
@@ -1003,6 +1009,7 @@ class OrderController extends Controller
 
     public function rateOrder(Request $request, Order $order)
     {
+        //dd($request->all());
         $restorant = $order->restorant;
 
         $rating = new Rating;
@@ -1013,7 +1020,30 @@ class OrderController extends Controller
 
         $restorant->ratings()->save($rating);
 
-        return redirect()->route('orders.show', ['order'=>$order])->withStatus(__('Order succesfully rated!'));
+        $id_rating = $rating->id;
+
+        $id_ask = $request->id_ask;
+        $var = 'optionsRadios';
+        for ($i = 0; $i < sizeof($id_ask); ++$i) {
+            $obj = $id_ask[$i];
+            $name = $var . $obj;
+            // if (isset($request->$name)) {
+            $register_encuesta = EncuestaClient::create([
+
+                'id_question' => $id_ask[$i],
+                'answer'  => $request->$name,
+                'id_ratings'  => $id_rating,
+            ]);
+            // }
+        }
+        if ($register_encuesta->save()) {
+            return redirect()->route('orders.show', ['order'=>$order])->withStatus(__('Order succesfully rated!'));
+        } else {
+            session()->flash('error', "Ha ocurrido un error al registrar la Encuesta");
+            return redirect()->route('orders.show', ['order'=>$order]);
+        }
+
+        
     }
 
     public function checkOrderRating(Order $order)

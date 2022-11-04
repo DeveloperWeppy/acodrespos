@@ -7,6 +7,7 @@
         @csrf
         <input type="hidden" id="order_id" value="{{ $order->id }}"/>
         <input type="hidden" id="rating_value" name="ratingValue">
+        <p>¿Cómo calificas en general al restaurante?</p>
         <section class='rating-widget'>
             <!-- Rating Stars Box -->
             <div class='rating-stars text-center'>
@@ -34,6 +35,37 @@
                     <div class='text-message'></div>
                 <div class='clearfix'></div>
             </div>
+
+            @foreach ($questions as $key => $val)
+                <div class="form-group">
+                    <p >¿{{$val->question}}?</p>
+                    <input type="hidden" name="id_ask[]" value="{{$val->id}}">
+                    <div class="col-md-6 offset-md-3 ">
+                        <div class="form-group row">
+                            <div class="col-sm-6 ">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios{{$val->id}}" id="optionsRadios1{{$key+1}}" value="si" required>
+                                        Si
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios{{$val->id}}" id="optionsRadios2{{$key+2}}" value="no" required>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            @endforeach
             <div id="order_comment" class="form-group{{ $errors->has('comment') ? ' has-danger' : '' }}">
                 <label class="form-control-label" for="name">{{ __('Order comment') }}</label>
                 <textarea name="comment" id="comment" class="form-control{{ $errors->has('comment') ? ' is-invalid' : '' }}" placeholder="{{ __( 'Order comment here' ) }} ..." required></textarea>

@@ -75,7 +75,7 @@
         @endhasanyrole
     @endif
      @if(count($order->items)>0)
-     <h6 class="heading-small text-muted mb-4">{{ __('Order') }}</h6>
+     <h6 class="heading-small text-muted mb-4">{{ __('Orden') }}</h6>
      
      <ul id="order-items">
          @foreach($order->items as $item)
@@ -264,7 +264,7 @@
      <br />
      @if(!empty($order->time_to_prepare))
      <br/>
-     <h4>{{ __('Time to prepare') }}: {{ $order->time_to_prepare ." " .__('minutes')}}</h4>
+     <h4>{{ __('Tiempo de Preparación') }}: {{ $order->time_to_prepare ." " .__('minutes')}}</h4>
      <br/>
      @endif
      <h5>{{ __("PRECIO SIN INC") }}: @money( $order->order_price-$order->vatvalue, $currency ,true)</h5>
@@ -288,13 +288,15 @@
      <hr />
      @if(config('app.isft') || config('app.iswp'))
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
-         <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
-              <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
-                    <span class="btn-inner--icon">
-                        <i class="ni ni-ruler-pencil"></i>
-                    </span>
-              </button>
-        </h3>
+         @hasrole('owner')
+            <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
+                <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
+                        <span class="btn-inner--icon">
+                            <i class="ni ni-ruler-pencil"></i>
+                        </span>
+                </button>
+            </h3>
+        @endif
      @else
          <h4>{{ __("Dine method") }}: {{ $order->getExpeditionType() }}</h4>
          @if ($order->delivery_method!=3)
