@@ -103,7 +103,7 @@ function updatePrices(net,delivery,expedition){
     });
    
   }
- 
+
   setTimeout(() => {
     if ($(".cardAdd").length > 0 ) {
       $('#actualizarPedido').show();
@@ -403,6 +403,15 @@ function updateExpeditionPOS(){
   });
 
 }
+function ocultarbtn(){
+  if(EXPEDITION!=3){
+    $('.ckpropina').hide();
+    $('.input-persona').hide();
+  }else{
+    $('.ckpropina').show();
+    $('.input-persona').show();
+  }
+}
 
 function submitOrderPOS(tipo=0){
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
@@ -416,6 +425,8 @@ function submitOrderPOS(tipo=0){
     tipo:tipo,
     order_id:ordenId,
     cart_id:cartSessionId,
+    propina:valor_propi,
+    number_people:$('#form_number_people').val(),
     order_comment:$('textarea#order_comment').val()
   };
   if(EXPEDITION==1||EXPEDITION==2){
@@ -456,6 +467,8 @@ function submitOrderPOS(tipo=0){
       if(tipo==0){
         js.notify(response.data.message, "success");
         $('#modalPOSInvoice').modal('show');
+        $('#modalPOSInvoice').attr('data-id',response.data.order.id);
+             
         if ($('#ask_propina_check').is(":checked")) {
           //facturapos
           receiptPOS.totalPropina = valor_propi;

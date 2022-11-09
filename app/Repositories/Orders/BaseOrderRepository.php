@@ -141,7 +141,7 @@ class BaseOrderRepository extends Controller
             $this->order->comment="";
             $this->order->payment_method=$this->request->payment_method;
             $this->order->payment_status="unpaid";
-
+            
             $expeditionsTypes=['delivery'=>1,'pickup'=>2,'dinein'=>3]; //1- delivery 2 - pickup 3-dinein
             $this->order->delivery_method=$expeditionsTypes[$this->expedition];  
 
