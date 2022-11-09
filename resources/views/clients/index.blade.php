@@ -30,7 +30,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">{{ __('Name') }}</th>
-                                    <th scope="col">{{ __('Owner') }}</th>
+                                   
                                     <th scope="col">{{ __('Owner email') }}</th>
                                     <th scope="col">{{ __('Creation Date') }}</th>
                                     @if(config('settings.enable_birth_date_on_register'))
@@ -43,7 +43,7 @@
                                 @foreach ($clients as $client)
                                     <tr>
                                         <td><a href="{{ route('clients.edit', $client) }}">{{ $client->name }}</a></td>
-                                        <td>{{ $client->name }}</td>
+                                       
                                         <td>
                                             <a href="mailto:{{ $client->email }}">{{ $client->email }}</a>
                                         </td>
