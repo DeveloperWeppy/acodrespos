@@ -172,6 +172,9 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         Route::resource('drivers', 'DriverController');
         Route::get('/driver/{driver}/activate', 'DriverController@activateDriver')->name('driver.activate');
         Route::get('/nearest_driver/','DriverController@getNearestDrivers')->name('drivers.nearest');
+        Route::get('/driver/eloquent', 'DriverController@eloquent')->name('driver.eloquent');
+
+
 
         Route::resource('clients', 'ClientController');
         Route::resource('orders', 'OrderController');

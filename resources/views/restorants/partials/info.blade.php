@@ -10,7 +10,12 @@
             ['ftype'=>'input','name'=>"Restaurant description",'id'=>"description",'placeholder'=>"Restaurant description",'required'=>true,'value'=>$restorant->description],
             ['ftype'=>'input','name'=>"Restaurant address",'id'=>"address",'placeholder'=>"Restaurant address",'required'=>true,'value'=>$restorant->address],
             ['ftype'=>'input','name'=>"Restaurant phone",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
+            ['ftype'=>'input','name'=>"Nit",'id'=>"nit",'placeholder'=>"Nit",'required'=>true,'value'=>$restorant->nit],
+            ['ftype'=>'select','name'=>"Tamaño de factura",'id'=>"invoice_size",'data'=>['58 mm','80 mm'],'required'=>true,'value'=>$restorant->invoice_size],
+            ['ftype'=>'textarea','name'=>"footer factura",'id'=>"invoice_footer",'placeholder'=>"footer factura",'required'=>true,'value'=>$restorant->invoice_footer],
+
             ['ftype'=>'input','type'=>'number','name'=>"Porcentaje de Propina (%)",'id'=>"propina",'placeholder'=>"Porcentaje de Propina",'required'=>true,'value'=>$restorant->propina],
+
         ]])
         <h6 class="heading-small text-muted mb-4">vínculos sociales</h6>
          @include('partials.fields',['fields'=>[

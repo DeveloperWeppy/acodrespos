@@ -27,6 +27,9 @@
             <i class="ni ni-shop text-info"></i> {{ __('Restaurant') }}
         </a>
     </li>
+
+    
+
     @if(!config('app.issd'))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('items.index') }}">

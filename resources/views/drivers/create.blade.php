@@ -23,7 +23,27 @@
                             <form method="post" action="{{ route('drivers.store') }}" autocomplete="off">
                                 @csrf
                                 </div>
+
+
                                 <div class="pl-lg-4">
+                                @if (auth()->user()->hasRole('admin'))
+                                    <div class="form-group{{ $errors->has('name_driver') ? ' has-danger' : '' }}">
+                                 
+                                        <label class="form-control-label" for="name_driver">{{ __('customers_by_restaurant') }}</label>
+                                        <br>
+                                        <select class=" form-control" id="new_address_checkout" value name="restaurant_driver" >
+                                        <option  value="">Seleccionar</option>
+                                        @foreach($companies as $key)
+                                            <option  value="{{$key->id}}">{{$key->name}}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+                                @if (auth()->user()->hasRole('owner'))
+                                <input type="text" name="restaurant_driver" id="restaurant_driver" require value="{{ auth()->user()->restorant->id }}" hidden required>
+
+                                @endif
+
                                     <div class="form-group{{ $errors->has('name_driver') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_driver">{{ __('Driver Name') }}</label>
                                         <input type="text" name="name_driver" id="name_driver" class="form-control form-control-alternative{{ $errors->has('name_driver') ? ' is-invalid' : '' }}" placeholder="{{ __('Driver Name') }}" value="" required>
