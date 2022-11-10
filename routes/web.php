@@ -2,7 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
 Route::get('/', 'FrontEndController@index')->name('front');
 Route::get('/'.config('settings.url_route').'/{alias}', 'FrontEndController@restorant')->name('vendor');
@@ -13,7 +22,7 @@ Route::post('/search/location', 'FrontEndController@getCurrentLocation')->name('
 
 Auth::routes(['register' => config('app.isft')]);
 
-Route::get('/pdf/{id?}', 'PdfController@get')->name('pdf');
+
 
 Route::get('/selectpay/{order}', 'PaymentController@selectPaymentGateway')->name('selectpay');
 Route::get('/selectedpaymentt/{order}/{payment}', 'PaymentController@selectedPaymentGateway')->name('selectedpaymentt');
@@ -163,6 +172,9 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         Route::resource('drivers', 'DriverController');
         Route::get('/driver/{driver}/activate', 'DriverController@activateDriver')->name('driver.activate');
         Route::get('/nearest_driver/','DriverController@getNearestDrivers')->name('drivers.nearest');
+        Route::get('/driver/eloquent', 'DriverController@eloquent')->name('driver.eloquent');
+
+
 
         Route::resource('clients', 'ClientController');
         Route::resource('orders', 'OrderController');

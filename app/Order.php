@@ -27,7 +27,7 @@ class Order extends Model
 
     protected $appends = ['order_price_with_discount','time_created','time_formated','last_status','is_prepared','actions','configs','tableassigned'];
 
-    protected $fillable = ['coupon','discount','fee', 'fee_value', 'static_fee', 'vatvalue','payment_info','mollie_payment_key','whatsapp_address','md','cart_storage_id','propina','number_people'];
+    protected $fillable = ['coupon','discount','fee', 'fee_value', 'static_fee', 'vatvalue','payment_info','mollie_payment_key','whatsapp_address','md','cart_storage_id'];
 
     public function restorant()
     {

@@ -54,17 +54,22 @@ class DriverController extends Controller
      */
     public function index()
     {
+        
         if (auth()->user()->hasRole('admin')) {
-            return view('drivers.index', ['drivers' =>User::role('driver')->whereNull('restaurant_id')->paginate(15)]);
-        }else if(auth()->user()->hasRole('owner')&&in_array("drivers", config('global.modules',[]))){
-            return view('drivers.index', ['drivers' =>User::role('driver')->where('restaurant_id',auth()->user()->restorant->id)->paginate(15)]);
+            return view('drivers.index', ['drivers' =>User::role('driver')->select('users.*')->addSelect('companies.name as res')->leftJoin('companies', 'users.restaurant_id', '=', 'companies.id')->paginate(15)]);
+        }else if(auth()->user()->hasRole('owner') ){
+            //&&in_array("drivers", config('global.modules',[]))
+            //return view('drivers.index', ['drivers' =>User::role('driver')->where('restaurant_id',auth()->user()->restorant->id)->paginate(15)]);
+            return view('drivers.index', ['drivers' =>User::role('driver')->select('users.*')->addSelect('companies.name as res')->leftJoin('companies', 'users.restaurant_id', '=', 'companies.id')->where('restaurant_id',auth()->user()->restorant->id)->paginate(15)]);
+
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access'));
         }
     }
 
     private function hasAccessToDrivers(){
-        return (auth()->user()->hasRole('admin') || (auth()->user()->hasRole('owner') && in_array("drivers", config('global.modules',[]))));
+        // && in_array("drivers", config('global.modules',[]))
+        return (auth()->user()->hasRole('admin') || (auth()->user()->hasRole('owner')));
     }
 
     /**
@@ -75,7 +80,8 @@ class DriverController extends Controller
     public function create()
     {
         if ($this->hasAccessToDrivers()) {
-            return view('drivers.create');
+            $companies = DB::table('companies')->where('active','=','1')->get();
+            return view('drivers.create',compact('companies'));
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access'));
         }
@@ -91,6 +97,7 @@ class DriverController extends Controller
     {
         //Validate
         $request->validate([
+            'restaurant_driver' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
             'name_driver' => ['required', 'string', 'max:255'],
             'email_driver' => ['required', 'string', 'email', 'unique:users,email', 'max:255'],
             'phone_driver' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/'],
@@ -107,6 +114,7 @@ class DriverController extends Controller
         }
 
         $driver = new User;
+        $driver->restaurant_id = strip_tags($request->restaurant_driver);
         $driver->name = strip_tags($request->name_driver);
         $driver->email = strip_tags($request->email_driver);
         $driver->phone = strip_tags($request->phone_driver);
@@ -190,9 +198,9 @@ class DriverController extends Controller
 
         if (auth()->user()->hasRole('admin') || (
                 auth()->user()->hasRole('owner')
-                &&in_array("drivers", config('global.modules',[]))
                 &&$driver->restaurant_id==auth()->user()->restorant->id
         )) {
+            //   &&in_array("drivers", config('global.modules',[]))
 
             return view('drivers.edit', [
                 'driver' => $driver,

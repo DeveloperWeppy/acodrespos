@@ -29,6 +29,7 @@
                                 <tr>
                                     <th scope="col">{{ __('Name') }}</th>
                                     <th scope="col">{{ __('Email') }}</th>
+                                    <th scope="col">{{ __('customers_by_restaurant') }}</th>
                                     <th scope="col">{{ __('Acceptance rating') }}</th>
                                     <th scope="col">{{ __('Creation Date') }}</th>
                                     <th scope="col">{{ __('Active') }}</th>
@@ -41,6 +42,9 @@
                                         <td><a href="{{ route('drivers.edit', $driver) }}">{{ $driver->name }}</a></td>
                                         <td>
                                             <a href="mailto:{{ $driver->email }}">{{ $driver->email }}</a>
+                                        </td>
+                                        <td>
+                                            {{ $driver->res }}
                                         </td>
                                         <td>
                                             {{ $driver->acceptancerating }}

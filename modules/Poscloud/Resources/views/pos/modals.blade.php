@@ -22,15 +22,15 @@
                                 </select>
                             </div>
                             <div class="row">
-                                <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
+                                <div class="custom-control custom-control-alternative custom-checkbox">
                                     <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
                                     <label class="custom-control-label" for="ask_propina_check">
                                         <span class="text-muted" id="span_propina">Agregar Propina</span>
                                     </label>
                                 </div>
                             </div>
-                            <label class=" ckpropina" >{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
-                            <p class="h2  ckpropina">@{{ totalPropinaFormat }} </p>
+                            <label>{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
+                            <p class="h2">@{{ totalPropinaFormat }} </p>
 
                             <label>{{ __('Total') }}</label>
                             <p class="h2">@{{ totalPriceFormat }} </p>
@@ -44,9 +44,9 @@
                             <div class="input-group mb-3">
                                 <input type="text" v-model="received" class="form-control" placeholder="0" aria-label="o" autofocus>
                             </div>
-                            <label class="input-persona">{{ __('Nº de Personas en la mesa')}}</label>
-                            <div class="input-group mb-3 input-persona">
-                                <input type="number" id="form_number_people"  class="form-control" placeholder="0" aria-label="o" value="1" autofocus>
+                            <label>{{ __('Nº de Personas en la mesa')}}</label>
+                            <div class="input-group mb-3">
+                                <input type="text"  class="form-control" placeholder="0" aria-label="o" autofocus>
                             </div>
                             <label>{{ __('Change') }}</label>
                             <p class="h2 text-success">@{{ received-totalPrice>0?(received-totalPrice).toFixed(2):0 }}

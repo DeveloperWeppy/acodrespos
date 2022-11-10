@@ -142,7 +142,7 @@
                         <div  class="row" style="display:flex;justify-content: space-around;">
                             <button id='createOrder' onclick="submitOrderPOS(1)" type="button" style="padding:10px;display:none" class="col-5 btn btn-lg  btn-primary text-white ocultarBtn">Crear Pedido</button>
                             <button id='actualizarPedido' onclick="submitOrderPOS(2)" type="button" style="padding:10px;display:none" class="col-5 btn btn-lg  btn-primary text-white ">Actualizar pedido</button>
-                            <button id='dineincheckout' onclick="ocultarbtn()" type="button" style="padding:10px"   class="col-5 btn btn-lg btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">Pagar</button>
+                            <button id='dineincheckout' type="button" style="padding:10px"   class="col-5 btn btn-lg btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalPayment">Pagar</button>
    
                         </div>
                     </div>

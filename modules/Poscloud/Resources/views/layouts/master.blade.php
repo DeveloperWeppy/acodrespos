@@ -89,9 +89,7 @@
   <script src="{{ asset('vendor') }}/printthis/printThis.js"></script> 
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <link type="text/css" href="{{ asset('css/dashboard.css') }}/" rel="stylesheet">
-  <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
 
    <!-- Add to Cart   -->
    <script>
@@ -171,12 +169,11 @@
      }
    
   }
-  var urlbasse="{{url('/pdf');}}";
+ 
       $(function() {
 
         $('#printPos').on("click", function () {
-          //$("#posRecipt").printThis(); 
-            printJS(urlbasse+"/"+$('#modalPOSInvoice').attr('data-id'));
+          $("#posRecipt").printThis(); 
         });
 
         //INterval getting orders
