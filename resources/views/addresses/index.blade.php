@@ -85,6 +85,11 @@
             map = new google.maps.Map(document.getElementById('map2'), {center: {lat: -34.397, lng: 150.644}, zoom: 15 });
             marker = new google.maps.Marker({ position: {lat: -34.397, lng: 150.644}, map: map, title: 'Click to zoom'});
             infoWindow = new google.maps.InfoWindow;
+            const locationButton = document.createElement("button");
+
+            locationButton.textContent = "Pan to Current Location";
+            locationButton.classList.add("custom-map-control-button");
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {

@@ -106,12 +106,12 @@
 
 
                                             
-                                            <h6 class="heading-small text-muted mb-4">{{ __('Mobile App') }}</h6>
+                                            {{-- <h6 class="heading-small text-muted mb-4">{{ __('Mobile App') }}</h6>
                                             @include('partials.input',['id'=>'mobile_info_title','name'=>'Info Title','placeholder'=>'Info Title text here ...','value'=>$settings->mobile_info_title, 'required'=>false])
                                             @include('partials.input',['id'=>'mobile_info_subtitle','name'=>'Info Subtitle','placeholder'=>'Info Subtitle text here ...','value'=>$settings->mobile_info_subtitle, 'required'=>false])
                                             <br/>
                                             @include('partials.input',['id'=>'playstore','name'=>'Play Store','placeholder'=>'Play Store link here ...','value'=>$settings->playstore, 'required'=>false])
-                                            @include('partials.input',['id'=>'appstore','name'=>'App Store','placeholder'=>'App Store link here ...','value'=>$settings->appstore, 'required'=>false])
+                                            @include('partials.input',['id'=>'appstore','name'=>'App Store','placeholder'=>'App Store link here ...','value'=>$settings->appstore, 'required'=>false]) --}}
 
                                         @endif()
 
@@ -196,8 +196,8 @@
                                                 @include('partials.fields',['fields'=>$groupConfig['fields']])
                                                 @if ($groupConfig['slug']=="setup")
                                                     @include('partials.fields',['fields'=>[
-                                                    ['separator'=>"Custom fields on order", 'additionalInfo'=>'Please check docs on how to define the custom fields on order.', 'name'=>'Custom fileds in JSON format','required'=>false,'placeholder'=>'', 'id'=>'order_fields', 'ftype'=>'textarea','type'=>"textarea",'value'=>$settings->order_fields]
-                                                    ]
+                                                        // ['separator'=>"Custom fields on order", 'additionalInfo'=>'Please check docs on how to define the custom fields on order.', 'name'=>'Custom fileds in JSON format','required'=>false,'placeholder'=>'', 'id'=>'order_fields', 'ftype'=>'textarea','type'=>"textarea",'value'=>$settings->order_fields]
+                                                        ]
                                                     ])
                                                 @endif
                                             </div>
@@ -226,5 +226,33 @@
                 this.value = this.value.replace(/script/g, 'tagscript');
             });
         });
+        $( document ).ready(function() {
+            //elementos a ocultar de toda la página de la configuración principal
+            //SETTINGS
+            $(".input-group").removeClass( "input-group" );
+            $("input[name='env[DRIVER_SEARCH_RADIUS]']").parent().parent().hide();
+            $("input[name='env[LABEL_ON_CUSTOM_FIELDS]']").parent().parent().hide();
+            $("input[name='env[APP_SECRET]']").parent().parent().hide();
+            $("input[name='env[RESTAURANT_LINK_REGISTER_TITLE]']").parent().parent().hide();
+            $("input[name='env[DRIVER_LINK_REGISTER_TITLE]']").parent().parent().hide();
+            $("input[name='env[VENDOR_ENTITY_NAME]']").parent().parent().hide();
+            $("input[name='env[VENDOR_ENTITY_NAME_PLURAL]']").parent().parent().hide();
+            $("input[name='env[DRIVER_PERCENT_FROM_DELIVERY_FEE]']").parent().parent().hide();
+            $("input[name='env[ENABLE_MILTILANGUAGE_MENUS]']").parent().parent().hide();
+            $("input[name='env[SINGLE_MODE]']").parent().parent().hide();
+            $("input[name='env[MULTI_CITY]']").parent().parent().hide();
+            $("input[name='env[LOCATION_SEARCH_RADIUS]']").parent().parent().hide();
+            $("input[name='env[WILDCARD_DOMAIN_READY]']").parent().parent().hide();
+            $("input[name='env[APP_ORDER_APPROVE_DIRECTLY]']").parent().parent().hide();
+            $("input[name='env[ALLOW_AUTOMATED_ASSIGN_TO_DRIVER]']").parent().parent().hide();
+            $("input[name='env[SINGLE_MODE_ID]']").parent().parent().hide();
+            $("input[name='env[URL_ROUTE]']").parent().parent().hide();
+            $("input[name='env[URL_ROUTE_PLURAL]']").parent().parent().hide();
+            //FINANCES
+            $("input[name='env[FORCE_USERS_TO_PAY]']").parent().parent().hide();
+            $("input[name='env[FREE_PRICING_ID]']").parent().parent().hide();
+        });
+        
+
     </script>
 @endsection

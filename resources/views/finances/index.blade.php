@@ -8,7 +8,7 @@
     <div class="container-fluid mt--9">
         
         <div class="row">
-            @isset($showFeeTerms))
+            @isset($showFeeTerms)
                 @include('finances.feeterms')
             @endisset
             @if(config('settings.enable_stripe_connect')&&isset($showStripeConnect)?$showStripeConnect:false)

@@ -10,9 +10,11 @@ use Carbon\Carbon;
 use DB;
 use Spatie\Permission\Models\Role;
 use Akaunting\Module\Facade as Module;
+use App\Models\RestaurantClient;
 use Modules\Expenses\Models\Expenses;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
+use Stripe\OrderItem;
 
 class HomeController extends Controller
 {
@@ -191,6 +193,7 @@ class HomeController extends Controller
         ];
         
         $last30daysOrders = Order::where('created_at', '>', $last30days)->count();
+        $last30daysClientsRestaurant = RestaurantClient::where('companie_id',auth()->user()->restorant->id)->where('created_at', '>', $last30days)->count();
         $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
         ->where('payment_status','paid')
         ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
@@ -227,7 +230,7 @@ class HomeController extends Controller
                     $salesValue[$monthKey]['costValue']=$cost['costValue'];
                 }
             }
-
+            
 
             //Cost per group
             $last30daysCostPerGroup = Expenses::where([['created_at', '>', $last30days]])
@@ -282,14 +285,57 @@ class HomeController extends Controller
             if(auth()->user()->restorant&&auth()->user()->restorant->categories){
                 $countItems=Items::whereIn('category_id', auth()->user()->restorant->categories->pluck('id')->toArray())->whereNull('deleted_at')->count();
             }
-        }
+            $data=[];
+            $last7days=Carbon::now()->subDays(7);
+            //---------------------------los 10 productos más vendidos de los últimos 30 días del restaurante logueado
+            $orders30days=DB::table('order_has_items')
+                ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product'))
+                ->join('orders', function ($join) use ($last30days){
+                    $join->on('order_has_items.order_id','=','orders.id')
+                        ->where('orders.created_at', '>', $last30days)
+                        ->where('orders.restorant_id', auth()->user()->restorant->id);
+                })
+                ->groupBy('order_has_items.item_id')
+                ->orderBy('cantidad', 'desc')
+                ->limit(10)->get();
 
+            //recorrer las ordenes
+            foreach ($orders30days as $key => $value) {
+                $id_product = $value->id_product;
+                $cantidad= $value->cantidad;
+                $item = Items::find($id_product);
+                $name_product = $item->name;
+                $array = array(
+                    'name_product'=>$name_product,
+                    'cantidad'=>$cantidad
+                );
+
+                $data[] = array(
+                    'datos'=>$array,
+                );
+            }
+
+            //-------------------------------------total de ventas de los 7 días de la semana
+            /* $data3 = DB::table('orders')
+            ->select(DB::raw("extract(day from created_at) as dias"))
+            ->where('created_at', '>', $last7days)
+            ->where('restorant_id', auth()->user()->restorant->id)
+            ->groupBy('dias')
+            ->orderBy('dias', 'desc')
+            ->get();
+
+            dd($data3); */
+
+            $expenses['data']=$data;
+        }
+        //dd($expenses);
         $dataToDisplay=[
             'availableLanguages'=>$availableLanguages,
             'locale'=>$locale,
             'expenses'=>$expenses,
             'doWeHaveExpensesApp'=>$doWeHaveExpensesApp,
             'last30daysOrders' => $last30daysOrders,
+            'last30daysClientsRestaurant' => $last30daysClientsRestaurant,
             'last30daysOrdersValue'=> $last30daysOrdersValue,
             'allViews' => auth()->user()->hasRole('owner')?auth()->user()->restorant->views:Restorant::sum('views'),
             'salesValue' => $salesValue,

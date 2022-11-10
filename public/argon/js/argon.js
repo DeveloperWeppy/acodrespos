@@ -965,7 +965,7 @@ var OrdersChart = (function() {
 			data: {
 				labels: monthLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{
-					label: js.trans('Sales'),
+					label: js.trans('Ventas'),
 					data: totalOrders//[25, 20, 30, 22, 17, 29]
 				}]
 			}
@@ -1017,7 +1017,7 @@ var SalesChart = (function() {
 							callback: function(value) {
 								if (!(value % 10)) {
                                     //return '$' + value + 'k';
-                                    return value;
+                                    return Number(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');  
 								}
 							}
 						}
@@ -1027,7 +1027,7 @@ var SalesChart = (function() {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
+							var yLabel = item.yLabel.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 							var content = '';
 
 							if (data.datasets.length > 1) {
@@ -1044,7 +1044,7 @@ var SalesChart = (function() {
 			data: {
 				labels: monthLabels,// ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{
-					label: js.trans('Sales')+" ",
+					label: js.trans('Ventas')+" ",
 					data: salesValues //[0, 20, 10, 30, 15, 40, 20, 60, 60]
 				},{
 					label: js.trans('Expenses')+" ",
@@ -1100,7 +1100,7 @@ var ExpensesChart = (function() {
 				labels: theLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{
 					label: 'Expenses',
-					backgroundColor: ["#172b4d","#5e72e4","#11cdef","#2dce89","#f5365c","#fb6340"],
+					backgroundColor: ["#172b4d","#5e72e4","#11cdef","#2dce89","#f5365c","#fb6340","#4e6342", ,"#1D8348", "#943126", "#283747"],
 					data: theValues//[25, 20, 30, 22, 17, 29]
 				}]
 			},
@@ -1125,7 +1125,7 @@ var ExpensesChart = (function() {
 
 	// Init chart
 	if ($chartByCategory.length) {
-		initChart($chartByCategory,categoriesLabels,categoriesValues);
+		initChart($chartByCategory,nameproducts,cantidadproducts);
 	}
 	if ($chartByVendor.length) {
 		initChart($chartByVendor,vendorsLabels,vendorsValues);

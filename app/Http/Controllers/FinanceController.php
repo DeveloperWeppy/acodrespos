@@ -179,31 +179,53 @@ class FinanceController extends Controller
         //With downloaod
         if (isset($_GET['report'])) {
             $items = [];
+            $name_status ='';
             foreach ($resources['orders']->get() as $key => $order) {
+                if($order->status->pluck('alias')->last() == 'delivered'){
+                    $name_status ='Entregado';
+                }else if($order->status->pluck('alias')->last()== 'just_created'){
+                    $name_status ='Recien Creado';
+                }else if($order->status->pluck('alias')->last()== 'accepted_by_admin'){
+                    $name_status ='Aceptado por el Administrador';
+                }else if($order->status->pluck('alias')->last()== 'accepted_by_restaurant'){
+                    $name_status ='Aceptado por el Restaurante';
+                }else if($order->status->pluck('alias')->last()== 'prepared'){
+                    $name_status ='Preparado';
+                }else if($order->status->pluck('alias')->last()== 'picked_up'){
+                    $name_status ='Recogido';
+                }else if($order->status->pluck('alias')->last()== 'rejected_by_restaurant'){
+                    $name_status ='Rechazado por el restaurante';
+                }else if($order->status->pluck('alias')->last()== 'rejected_by_admin'){
+                    $name_status ='Rechazado por el Administrador';
+                }else if($order->status->pluck('alias')->last()== 'updated'){
+                    $name_status ='Actualizado';
+                }else if($order->status->pluck('alias')->last()== 'closed'){
+                    $name_status ='Cancelado';
+                }
                 $item = [
-                    'order_id'=>$order->id,
-                    'restaurant_name'=>$order->restorant->name,
-                    'restaurant_id'=>$order->restorant_id,
-                    'created'=>$order->created_at,
-                    'last_status'=>$order->status->pluck('alias')->last(),
-                    'client_name'=>$order->client ? $order->client->name : '',
-                    'client_id'=>$order->client_id,
-                    'address'=>$order->address ? $order->address->address : '',
-                    'address_id'=>$order->address_id,
-                    'driver_name'=>$order->driver ? $order->driver->name : '',
-                    'driver_id'=>$order->driver_id,
-                    'payment_method'=>$order->payment_method,
-                    'srtipe_payment_id'=>$order->srtipe_payment_id,
-                    'restaurant_fee'=>$order->fee,
-                    'order_fee'=>$order->fee_value,
-                    'restaurant_static_fee'=>$order->static_fee,
-                    'platform_fee'=>$order->fee_value + $order->static_fee,
-                    'processor_fee'=>$order->payment_processor_fee,
-                    'delivery'=>$order->delivery_price,
-                    'net_price_with_vat'=>$order->order_price_with_discount,
-                    'vat'=>$order->vatvalue,
-                    'net_price'=>$order->order_price_with_discount - $order->vatvalue,
-                    'order_total'=>$order->delivery_price + $order->order_price_with_discount,
+                    'Nº de Orden'=>$order->id,
+                    'Nombre del Restaurante'=>$order->restorant->name,
+                    //'restaurant_id'=>$order->restorant_id,
+                    'Fecha de la Orden'=>$order->created_at,
+                    'Último estado del Pedido'=>$name_status,
+                    'Nombre del Cliente'=>$order->client ? $order->client->name : '',
+                    //'client_id'=>$order->client_id,
+                    'Dirección'=>$order->address ? $order->address->address : '',
+                    //'address_id'=>$order->address_id,
+                    'Nombre del Domiciliario'=>$order->driver ? $order->driver->name : '',
+                    //'driver_id'=>$order->driver_id,
+                    'Metodo de Pago'=>$order->payment_method,
+                    //'srtipe_payment_id'=>$order->srtipe_payment_id,
+                    //'restaurant_fee'=>$order->fee,
+                    //'order_fee'=>$order->fee_value,
+                    //'restaurant_static_fee'=>$order->static_fee,
+                    //'platform_fee'=>$order->fee_value + $order->static_fee,
+                    //'processor_fee'=>$order->payment_processor_fee,
+                    'Costo de Domicilio'=>$order->delivery_price,
+                    'Valor Neto con Impoconsumo'=>$order->order_price_with_discount,
+                    'Valor de Impoconsumo'=>$order->vatvalue,
+                    'Valor Neto'=>$order->order_price_with_discount - $order->vatvalue,
+                    'Total de la Orden'=>$order->delivery_price + $order->order_price_with_discount,
                     'discount'=>$order->discount
                   ];
                 array_push($items, $item);
@@ -217,10 +239,10 @@ class FinanceController extends Controller
             ['title'=>'Orders', 'value'=>0],
             ['title'=>'Total', 'value'=>0, 'isMoney'=>true],
             // ['title'=>'Platform Fee', 'value'=>0, 'isMoney'=>true],
-            ['title'=>'Net inc. Vat', 'value'=>0, 'isMoney'=>true],
+            ['title'=>'Total Neto Con ICO', 'value'=>0, 'isMoney'=>true],
 
-            ['title'=>'ICO', 'value'=>0, 'isMoney'=>true],
-            ['title'=>'Net', 'value'=>0, 'isMoney'=>true],
+            ['title'=>'Impoconsumo (ICO)', 'value'=>0, 'isMoney'=>true],
+            ['title'=>'Total Neto', 'value'=>0, 'isMoney'=>true],
             ['title'=>'Deliveries', 'value'=>0],
             ['title'=>'Costo Domicilio', 'value'=>0, 'isMoney'=>true],
         ];

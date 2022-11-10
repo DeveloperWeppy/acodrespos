@@ -86,14 +86,14 @@
         @endif
     @endif
 
-   {{--  @if ((config('settings.is_agris_mode') || config('settings.is_whatsapp_ordering_mode')  || in_array("poscloud", config('global.modules',[]))  ||  in_array("deliveryqr", config('global.modules',[]))  ))
+     @if ((config('settings.is_agris_mode') || config('settings.is_whatsapp_ordering_mode')  || in_array("poscloud", config('global.modules',[]))  ||  in_array("deliveryqr", config('global.modules',[]))  ))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.restaurant.simpledelivery.index') }}">
                 <i class="ni ni-pin-3 text-blue"></i> {{ __('Delivery areas') }}
             </a>
         </li>
     @endif
-
+{{--
      @if(config('settings.enable_pricing'))
         <li class="nav-item">
             <a class="nav-link" href="{{ route('plans.current') }}">

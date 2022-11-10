@@ -50,11 +50,11 @@
 
                             totalOrders.push(salesValue[key].totalPerMonth);
                             salesValues.push(salesValue[key].sumValue);
-                            if(salesValue[key].costValue){
+                            /* if(salesValue[key].costValue){
                                 costValues.push(salesValue[key].costValue);
                             }else{
                                 costValues.push(0);
-                            }
+                            } */
                             }
                         
                         
@@ -79,8 +79,8 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Performance') }}</h6>
-                                <h2 class="mb-0">{{ __('Pedidos totales') }}</h2>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking por Meses') }}</h6>
+                                <h2 class="mb-0">{{ __('Pedidos Totales') }}</h2>
                             </div>
                         </div>
                     </div>
@@ -99,13 +99,22 @@
         </div>
         @if ($doWeHaveExpensesApp)
         <script>
-           
+            var nameproducts = [];
+            var cantidadproducts = [];
             var categoriesLabels = {!! json_encode($expenses['last30daysCostPerGroupLabels']) !!};
             var categoriesValues = {!! json_encode($expenses['last30daysCostPerGroupValues']) !!};
 
             var vendorsLabels = {!! json_encode($expenses['last30daysCostPerVendorLabels']) !!};
             var vendorsValues = {!! json_encode($expenses['last30daysCostPerVendorValues']) !!};
             
+            var datos = {!! json_encode($expenses['data']) !!};
+
+            datos.forEach(function(value, index) {
+                nameproducts.push(value.datos.name_product);
+            });
+            datos.forEach(function(value, index) {
+                cantidadproducts.push(value.datos.cantidad);
+            });
         </script>
         <div class="row mt-5">
             <div class="col-xl-6">
@@ -113,8 +122,8 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Expenses') }} ( 30 {{ __('days') }} )</h6>
-                                <h2 class="mb-0">{{ __('By category') }}</h2>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de los últimos') }} ( 30 {{ __('days') }} )</h6>
+                                <h2 class="mb-0">{{ __('Productos más Vendidos') }}</h2>
                             </div>
                         </div>
                     </div>
@@ -135,7 +144,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Expenses') }} ( 30 {{ __('days') }} )</h6>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de los últimos') }} ( 30 {{ __('days') }} )</h6>
                                 <h2 class="mb-0">{{ __('By vendor') }}</h2>
                             </div>
                         </div>
@@ -156,10 +165,10 @@
         </div>
         @endif
 
-        @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))
+        {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))
             <br /><br />
             @include("plans.info",['planAttribute'=> auth()->user()->restorant->getPlanAttribute(),'showLinkToPlans'=>true])
-        @endif
+        @endif --}}
         
         @include('layouts.footers.auth')
     </div>
