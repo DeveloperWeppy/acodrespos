@@ -1,6 +1,7 @@
 @php
 $arryabuscar=array_search('accepted_by_restaurant', $order->actions['buttons']);
 @endphp
+
 @foreach ($order->actions['buttons'] as $next_status)
     <?php
       $btnType="btn-primary";
@@ -28,9 +29,9 @@ $arryabuscar=array_search('accepted_by_restaurant', $order->actions['buttons']);
             $("#form-assing-driver").attr("action", "/updatestatus/assigned_to_driver/"+id);
         }
       </script>
+
       @if (!auth()->user()->hasRole('kitchen'))
       <button type="button" class="btn btn-primary btn-sm" onClick=(setSelectedOrderId({{ $order->id }}))  data-toggle="modal" data-target="#modal-asign-driver">{{ __('Assign to driver') }}</button>
-        
       @endif
 
       @if (auth()->user()->hasRole('kitchen'))

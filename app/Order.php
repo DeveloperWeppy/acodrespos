@@ -297,7 +297,12 @@ class Order extends Model
             }else if(in_array($lastStatusAlias,["accepted_by_admin"])){
                 return ["buttons"=>['rejected_by_restaurant','accepted_by_restaurant'],'message'=>""];
             }else if(in_array($lastStatusAlias,["assigned_to_driver","accepted_by_restaurant","accepted_by_driver","rejected_by_driver"])){
+                if(in_array($lastStatusAlias,["assigned_to_driver"])){
+                    //In this case we can re-assign or deliver it
+                    return ["buttons"=>['rejected_by_restaurant','delivered','assigned_to_driver'],'message'=>""];
+                }
                 return ["buttons"=>['rejected_by_restaurant','prepared'],'message'=>""];
+
             }else if(in_array($lastStatusAlias,["prepared"])&&(config('app.allow_self_deliver')||$this->restorant->self_deliver.""=="1")/*&&$this->delivery_method.""=="2"*/){
                 return ["buttons"=>['rejected_by_restaurant','delivered','assigned_to_driver'],'message'=>""];
             }else if(in_array($lastStatusAlias,["prepared"])&&$this->delivery_method.""=="2"){

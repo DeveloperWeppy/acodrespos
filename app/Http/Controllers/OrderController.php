@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Events\NewOrder as PusherNewOrder;
 use App\Models\EncuestaClient;
 use App\Repositories\Orders\OrderRepoGenerator;
+use App\Models\usersDriver;
 
 class OrderController extends Controller
 {
@@ -59,19 +60,24 @@ class OrderController extends Controller
         $this->migrateStatuses();
 
         $restorants = Restorant::where(['active'=>1])->get();
-        $drivers = auth()->user()->myDrivers();
+        
         $clients = User::role('client')->where(['active'=>1])->get();
 
+        /*
+        $drivers = auth()->user()->myDrivers();
         $driversData = [];
         foreach ($drivers as $key => $driver) {
             $driversData[$driver->id] = $driver->name;
         }
+        */
 
         $orders = Order::orderBy('created_at', 'desc')->whereNotNull('restorant_id');
 
         //Get client's orders
         if (auth()->user()->hasRole('client')) {
             $orders = $orders->where(['client_id'=>auth()->user()->id]);
+            
+
         } elseif (auth()->user()->hasRole('driver')) {
             $orders = $orders->where(['driver_id'=>auth()->user()->id]);
         } elseif (auth()->user()->hasRole('owner')) {
@@ -80,6 +86,7 @@ class OrderController extends Controller
             ConfChanger::switchCurrency(auth()->user()->restorant);
 
             $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
+
         }elseif (auth()->user()->hasRole('staff')) {
              
             //Change currency
@@ -189,12 +196,15 @@ class OrderController extends Controller
             'statuses'=>Status::pluck('name','id')->toArray(),
             'orders' => $orders,
             'restorants'=>$restorants,
-            'drivers'=>$drivers,
-            'fields'=>[['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Driver', 'id'=>'driver', 'placeholder'=>'Assign Driver', 'data'=>$driversData, 'required'=>true]],
+            'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true]],
             'clients'=>$clients,
             'parameters'=>count($_GET) != 0,
         ]);
+        // 'drivers'=>$drivers,
     }
+
+    // 'fields'=>[['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Driver', 'id'=>'driver', 'placeholder'=>'Assign Driver', 'data'=>$driversData, 'required'=>true]],
+
 
     /**
      * Show the form for creating a new resource.
@@ -498,6 +508,14 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+
+        $driver = usersDriver::where('order_id','=',$order->id)->get();
+
+    
+            
+        
+        
+
         //Do we have pdf invoice
         $pdFInvoice=Module::has('pdf-invoice');
 
@@ -514,13 +532,13 @@ class OrderController extends Controller
             config(['app.timezone' => $order->restorant->getConfig('time_zone',config('app.timezone'))]);
         }
 
-       
-        $drivers =auth()->user()->myDrivers();
-     
         $driversData = [];
+        /*
+        $drivers =auth()->user()->myDrivers();
         foreach ($drivers as $key => $driver) {
             $driversData[$driver->id] = $driver->name;
         }
+        */
 
         if (auth()->user()->hasRole('client') && auth()->user()->id == $order->client_id ||
             auth()->user()->hasRole('owner') && auth()->user()->id == $order->restorant->user->id ||
@@ -543,13 +561,16 @@ class OrderController extends Controller
                 'pdFInvoice'=>$pdFInvoice,
                 'custom_data'=>$order->getAllConfigs(),
                 'statuses'=>Status::pluck('name', 'id'), 
-                'drivers'=>$drivers,
+                'drivers'=>$driver,
                 'orderModules'=>$orderModules,
                 'fields'=>[['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Driver', 'id'=>'driver', 'placeholder'=>'Assign Driver', 'data'=>$driversData, 'required'=>true]],
+
             ]);
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access.'));
         }
+
+
     }
 
     /**
@@ -853,6 +874,9 @@ class OrderController extends Controller
 
     public function updateStatus($alias, Order $order,$motivo="")
     {
+
+        //-- asignar conductor con id desde la tabla de users
+        /*
         if (isset($_GET['driver'])) {
             $order->driver_id = $_GET['driver'];
             $order->update();
@@ -861,6 +885,16 @@ class OrderController extends Controller
             $theDriver = User::findOrFail($order->driver_id);
             $theDriver->numorders = $theDriver->numorders + 1;
             $theDriver->update();
+        }
+        */
+        
+        //asignar conductor con campo abierto
+        if(isset($_GET['nom'],$_GET['tel'])){
+            $usersDriver = new usersDriver;
+            $usersDriver->order_id = $order->id;
+            $usersDriver->name = strip_tags($_GET['nom']);
+            $usersDriver->phone = strip_tags($_GET['tel']);
+            $usersDriver->save();
         }
 
         if (isset($_GET['time_to_prepare'])) {
@@ -900,7 +934,7 @@ class OrderController extends Controller
             'picked_up'=>['driver', 'owner', 'staff'],
             'delivered'=>['driver', 'owner', 'staff'],
             'c'=>['owner', 'staff'],
-            'accepted_by_driver'=>['driver'],
+            'accepted_by_driver'=>['driver','owner'],
             'rejected_by_driver'=>['driver']
         ];
 
@@ -938,6 +972,7 @@ class OrderController extends Controller
          * Rejected - 9.
          */
 
+        
         if (config('app.isft')&&$order->client) {
             if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7') {
                 
@@ -947,16 +982,19 @@ class OrderController extends Controller
             }
 
             if ($status_id_to_attach.'' == '4') {
-                $order->driver->notify(new OrderNotification($order, $status_id_to_attach));
+               //$order->driver->notify(new OrderNotification($order, $status_id_to_attach));
             }
         }
+        
 
         //Picked up - start tracing
+        /*
         if ($status_id_to_attach.'' == '6') {
             $order->lat = $order->restorant->lat;
             $order->lng = $order->restorant->lng;
             $order->update();
         }
+        */
 
         if (config('app.isft') && $alias.'' == 'delivered') {
             $order->payment_status = 'paid';
@@ -968,6 +1006,7 @@ class OrderController extends Controller
             $order->update();
         }
 
+        /*
         if (config('app.isft')) {
             //When orders is accepted by restaurant, auto assign to driver
             if ($status_id_to_attach.'' == '3') {
@@ -977,6 +1016,7 @@ class OrderController extends Controller
                 }
             }
         }
+        */
         $comment="";
         if($alias=="rejected_by_restaurant" && $motivo!=""){
            $comment=$motivo;

@@ -28,11 +28,14 @@
         </a>
     </li>
 
+    {{--
     <li class="nav-item">
         <a class="nav-link" href="{{ route('drivers.index') }}">
             <i class="ni ni-delivery-fast text-pink"></i> {{ __('Drivers') }}
         </a>
     </li> 
+    --}}
+    
 
     
     @if(!config('app.issd'))

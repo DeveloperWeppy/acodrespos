@@ -9,7 +9,7 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
     @if(auth()->user()->hasRole('admin'))
         <script>
             function setSelectedOrderId(id){
-                $("#form-assing-driver").attr("action", "/updatestatus/assigned_to_driver/"+id);
+                $("#form-assing-driver").attr("action", "/updatestatus/delivered/"+id);
             }
         </script>
         @if($lastStatusAlisas == "just_created")

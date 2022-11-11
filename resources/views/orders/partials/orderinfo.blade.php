@@ -61,19 +61,24 @@
      @endif
      
  
- 
     <?php 
         $currency=config('settings.cashier_currency');
         $convert=config('settings.do_convertion');
     ?>
 
-    @if ($order->driver)
-        @hasrole('admin|owner|staff')
+    @if (isset($drivers[0]->name))
+        @hasrole('admin|owner|client|staff')
             <h6 class="heading-small text-muted mb-4">{{ __('Driver') }}</h6>
-            <p><a href="/drivers/{{ $order->driver->id}}/edit">{{ $order->driver->name }}</a></p>
+            <div class="pl-lg-4">
+            <h4>{{ $drivers[0]->name }}</h4>
+            <h4>Contacto: {{ $drivers[0]->phone }}</h4>
             <hr class="my-4" />
+            </div>
         @endhasanyrole
     @endif
+
+
+
      @if(count($order->items)>0)
      <h6 class="heading-small text-muted mb-4">{{ __('Orden') }}</h6>
      
