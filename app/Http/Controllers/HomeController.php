@@ -145,6 +145,61 @@ class HomeController extends Controller
             $last30daysTotalFee = 0;
         }
 
+        if (auth()->user()->hasRole('owner')) {
+
+            $misMesas = DB::table('restoareas')
+            ->where('restaurant_id', auth()->user()->restorant->id)
+            ->get();
+
+            $are = $misMesas[0]->id;
+            if(isset($_GET['area'])){
+                $are = $_GET['area'];
+            }
+            $ini = date('Y-m-d', strtotime('-30 day'));
+            if(isset($_GET['inicio']) && $_GET['inicio']!=""){
+                $ini = $_GET['inicio'];
+            }
+            $fin = date('Y-m-d');
+            if(isset($_GET['fin']) && $_GET['fin']!=""){
+                $fin = $_GET['fin'];
+            }
+
+
+            $mesas = DB::table('orders')
+            ->select('tables.restoarea_id','tables.name',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
+            ->join('tables', 'tables.id', '=', 'orders.table_id')
+            ->where('orders.restorant_id', auth()->user()->restorant->id)
+            ->where('tables.restoarea_id',$are)
+            ->whereDate('orders.created_at',">=","$ini")
+            ->whereDate('orders.created_at',"<=","$fin")
+            ->groupBy('tables.restoarea_id','orders.table_id')
+            ->get();
+            
+            $mesaMasCaliente = DB::table('orders')
+            ->select('tables.restoarea_id','tables.name as nomt',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
+            ->join('tables', 'tables.id', '=', 'orders.table_id')
+            ->where('orders.restorant_id', auth()->user()->restorant->id)
+            ->where('tables.restoarea_id',$are)
+            ->whereDate('orders.created_at',">=","$ini")
+            ->whereDate('orders.created_at',"<=","$fin")
+            ->groupBy('tables.restoarea_id','orders.table_id')
+            ->orderBy('nump','desc')
+            ->first();
+
+            $tablesLabels=[];
+            $tablesPeoples=[];
+            foreach ($mesas as $key => $mesa) {
+                array_push($tablesLabels,$mesa->name);
+                array_push($tablesPeoples,$mesa->nump);
+            }
+
+
+            /*
+            print_r("<pre>");
+            print_r($mesaMasCaliente);
+            */
+        }
+        
         
 
         $doWeHaveExpensesApp=false; // Be default for other don't enable expenses
@@ -344,7 +399,11 @@ class HomeController extends Controller
             'last30daysDeliveryFee' =>  $last30daysDeliveryFee,
             'last30daysStaticFee' =>  $last30daysStaticFee,
             'last30daysDynamicFee' =>  $last30daysDynamicFee,
-            'last30daysTotalFee' =>  $last30daysTotalFee
+            'last30daysTotalFee' =>  $last30daysTotalFee,
+            'tablesLabels' => $tablesLabels,
+            'tablesPeoples' =>  $tablesPeoples,
+            'misMesas'=>$misMesas,
+            'mesaMasCaliente'=>$mesaMasCaliente,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));

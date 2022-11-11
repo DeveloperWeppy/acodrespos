@@ -47,7 +47,6 @@
                         salesValues=[];
                         costValues=[];
                         for (const key in salesValue) {
-
                             totalOrders.push(salesValue[key].totalPerMonth);
                             salesValues.push(salesValue[key].sumValue);
                             /* if(salesValue[key].costValue){
@@ -55,10 +54,7 @@
                             }else{
                                 costValues.push(0);
                             } */
-                            }
-                        
-                        
-                        
+                        }
                     </script>
 
                     <div class="card-body">
@@ -97,6 +93,9 @@
                 </div>
             </div>
         </div>
+
+      
+
         @if ($doWeHaveExpensesApp)
         <script>
             var nameproducts = [];
@@ -162,6 +161,81 @@
                 </div>
             </div>
 
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('owner'))
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Mesas más Ocupadas</h6>
+                                <h2 class="mb-0">Ranking de Ocupación de mesas</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                
+
+                            <form action="{{route('home')}}" method="GET">
+                                <div class="row mt-5">
+                                    <div class="col-3">
+                                        <select name="area" class="form-control form-control-sm">
+                                            @foreach($misMesas as $key)
+                                            <option value="{{$key->id}}">{{$key->name}}</option>
+                                            @endforeach
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <input name="inicio" class="form-control form-control" type="date" value=""/>
+                                    </div>
+                                    <div class="col-3">
+                                        <input name="fin" class="form-control form-control" type="date"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="submit" class="btn btn-primary btn">Filtrar</button>
+                                    </div>
+                                <div>
+                            </form>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var tablesLables = @json($tablesLabels);
+                        var tablesPeoples= @json($tablesPeoples);
+                        
+                        
+                        totalTablesLabels=[];
+                        totalTablesPeoples=[];
+                        
+                        for (const key in tablesLables) {
+                            totalTablesLabels.push(tablesLables[key]);
+                            totalTablesPeoples.push(tablesPeoples[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        @if(isset($mesaMasCaliente->nomt))
+                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente->nomt }}</b> con {{$mesaMasCaliente->nump }} personas</span>
+                       @endif
+                    <!-- Chart -->
+                        @if(count($salesValue)>0)
+                            <div class="chart">
+                                <canvas id="chart-tables" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay ventas en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
         @endif
 
