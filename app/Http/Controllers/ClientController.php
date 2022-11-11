@@ -6,6 +6,10 @@ use App\User;
 use App\Models\RestaurantClient;
 use Illuminate\Http\Request;
 use App\Restorant;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ClientsExport;
+
 class ClientController extends Controller
 {
     /**
@@ -44,6 +48,26 @@ class ClientController extends Controller
             }else{
                 $User=User::role('client')->where(['active'=>1])->paginate(15);
             }
+
+
+            //With downloaod
+            if (isset($_GET['report'])) {
+
+                $itemsForExport = [];
+                foreach ($User as $key => $item) {
+                    $item = [
+                        'id'=>$item->id,
+                        'name'=>$item->name,
+                        'email'=>$item->email,
+                        'created'=>$item->created_at,
+                    ];
+                    array_push($itemsForExport, $item);
+                }
+
+                return Excel::download(new ClientsExport($itemsForExport), 'clients_'.time().'.xlsx');
+            }
+
+
             return view('clients.index', [
                     'clients' =>$User,
                 ]

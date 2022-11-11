@@ -177,6 +177,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
 
 
         Route::resource('clients', 'ClientController');
+
         Route::resource('orders', 'OrderController');
         Route::get('/listclients/{tipo?}', 'ClientController@listclients')->name('clients.list');
         Route::get('/notificacion/{index?}', 'OrderController@notificacion')->name('order.notificacion');

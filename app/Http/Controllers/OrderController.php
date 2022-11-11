@@ -154,9 +154,11 @@ class OrderController extends Controller
             $orders = $orders->where('payment_status', $_GET['payment_status']);
         }
 
+     
         //With downloaod
         if (isset($_GET['report'])) {
             $items = [];
+
             foreach ($orders->get() as $key => $order) {
                 $item = [
                     'order_id'=>$order->id,
