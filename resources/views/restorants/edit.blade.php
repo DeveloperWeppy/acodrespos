@@ -11,6 +11,10 @@
                     <a class="nav-link mb-sm-3 mb-md-0 active " id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>{{ __('Restaurant Management')}}</a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#accountbanks" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="fas fa-money-check"></i> {{ __('Cuentas Bancarias')}}</a>
+                </li>
+
                 @if(count($appFields)>0)
                     <li class="nav-item">
                         <a class="nav-link mb-sm-3 mb-md-0 " id="tabs-menagment-main" data-toggle="tab" href="#apps" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-spaceship mr-2"></i>{{ __('Apps')}}</a>
@@ -89,6 +93,59 @@
                             @include('restorants.partials.info')
                             <hr />
                             @include('restorants.partials.owner')
+                        </div>
+                    </div>
+                </div>
+
+                <!---  tabs de configuración de cuentas --->
+                <div class="tab-pane fade show active" id="accountbanks" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                    <div class="card bg-secondary shadow">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h3 class="mb-0">{{ __('Configuración de Datos de Cuentas Bancarias') }}</h3>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-register-account">
+                                        Agregar Cuenta
+                                    </button>
+                                    @include('restorants.partials.configaccountbanks')
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="heading-small text-muted mb-4">{{ __('Datos de Cuentas') }}</h6>
+
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-flush">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">{{ __('Nombre Banco') }}</th>
+                                                <th scope="col">{{ __('Tipo de Cuenta') }}</th>
+                                                <th scope="col">{{ __('Nº Cuenta') }}</th>
+                                                <th scope="col">{{ __('Acciones') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (count($config_account_banks)>0)
+                                                @foreach ($config_account_banks as $account)
+                                                    <tr>
+                                                        <td>{{$account->name_bank}}</td>
+                                                        <td>{{$account->type_account}}</td>
+                                                        <td>{{$account->number_account}}</td>
+                                                        <td>{{$account->number_account}}</td> 
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                
+                                            @endif
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

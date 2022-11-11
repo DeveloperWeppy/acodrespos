@@ -286,7 +286,9 @@ class HomeController extends Controller
                 $countItems=Items::whereIn('category_id', auth()->user()->restorant->categories->pluck('id')->toArray())->whereNull('deleted_at')->count();
             }
             $data=[];
-            $last7days=Carbon::now()->subDays(7);
+            $datadias=[];
+            $last7days = date("Y-m-d", strtotime(Carbon::now('America/Bogota')->format('Y-m-d') . "- 7 days"));
+            $now=Carbon::now()->format('Y-m-d');
             //---------------------------los 10 productos más vendidos de los últimos 30 días del restaurante logueado
             $orders30days=DB::table('order_has_items')
                 ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product'))
@@ -316,16 +318,54 @@ class HomeController extends Controller
             }
 
             //-------------------------------------total de ventas de los 7 días de la semana
-            /* $data3 = DB::table('orders')
-            ->select(DB::raw("extract(day from created_at) as dias"))
-            ->where('created_at', '>', $last7days)
+            $lastorders7days = DB::table('orders')
+            ->select(DB::raw("created_at as fecha, DAYOFWEEK(created_at) as dias, sum(order_price) as total_orden"))
+            ->whereBetween('created_at', [$last7days . ' 00:00:00', $now . ' 23:59:59'])
             ->where('restorant_id', auth()->user()->restorant->id)
             ->groupBy('dias')
-            ->orderBy('dias', 'desc')
-            ->get();
+            ->orderBy('dias', 'asc')
+            ->get(); 
 
-            dd($data3); */
+            if (!empty($lastorders7days)) {
+                foreach ($lastorders7days as $key => $value) {
+                    $day = $value->dias;
+                    $total_orden = $value->total_orden;
+                    $nombre_dia ='';
+                    switch ($day) {
+                        case 1:
+                            $nombre_dia = 'Domingo';
+                            break;
+                        case 2:
+                            $nombre_dia = 'Lunes';
+                            break;
+                        case 3:
+                            $nombre_dia = 'Martes';
+                            break;
+                        case 4:
+                            $nombre_dia = 'Miércoles';
+                            break;
+                        case 5:
+                            $nombre_dia = 'Jueves';
+                            break;
+                        case 6:
+                            $nombre_dia = 'Viernes';
+                            break;
+                        case 7:
+                            $nombre_dia = 'Sábado';
+                            break;
+                    }
+                    $datos = array(
+                        'day'=>$nombre_dia,
+                        'total_ordenes'=>$total_orden,
+                    );
+                    $datadias[] = array(
+                        'datos'=>$datos,
+                    );
 
+                }
+                $expenses['laste7days']=$datadias;
+            }
+            
             $expenses['data']=$data;
         }
         //dd($expenses);

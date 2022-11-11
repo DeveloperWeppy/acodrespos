@@ -1113,6 +1113,7 @@ class ComposerStaticInitfcf63e3f856a2ab45654b2f0214a9500
         'App\\Models\\AreaKitchen' => __DIR__ . '/../..' . '/app/Models/AreaKitchen.php',
         'App\\Models\\CartStorageModel' => __DIR__ . '/../..' . '/app/Models/CartStorageModel.php',
         'App\\Models\\Config' => __DIR__ . '/../..' . '/app/Models/Config.php',
+        'App\\Models\\ConfigCuentasBancarias' => __DIR__ . '/../..' . '/app/Models/ConfigCuentasBancarias.php',
         'App\\Models\\EncuestaClient' => __DIR__ . '/../..' . '/app/Models/EncuestaClient.php',
         'App\\Models\\EncuestaOrden' => __DIR__ . '/../..' . '/app/Models/EncuestaOrden.php',
         'App\\Models\\Features' => __DIR__ . '/../..' . '/app/Models/Features.php',

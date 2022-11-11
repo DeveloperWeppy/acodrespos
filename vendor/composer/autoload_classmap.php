@@ -196,6 +196,7 @@ return array(
     'App\\Models\\AreaKitchen' => $baseDir . '/app/Models/AreaKitchen.php',
     'App\\Models\\CartStorageModel' => $baseDir . '/app/Models/CartStorageModel.php',
     'App\\Models\\Config' => $baseDir . '/app/Models/Config.php',
+    'App\\Models\\ConfigCuentasBancarias' => $baseDir . '/app/Models/ConfigCuentasBancarias.php',
     'App\\Models\\EncuestaClient' => $baseDir . '/app/Models/EncuestaClient.php',
     'App\\Models\\EncuestaOrden' => $baseDir . '/app/Models/EncuestaOrden.php',
     'App\\Models\\Features' => $baseDir . '/app/Models/Features.php',
