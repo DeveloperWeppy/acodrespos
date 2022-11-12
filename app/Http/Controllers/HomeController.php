@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Stripe\OrderItem;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TimeOrderExport;
+
 class HomeController extends Controller
 {
     /**
@@ -145,6 +148,9 @@ class HomeController extends Controller
             $last30daysTotalFee = 0;
         }
 
+
+
+        //--- by deiby  grafico de mesa caliente
         if (auth()->user()->hasRole('owner')) {
 
             $misMesas = DB::table('restoareas')
@@ -194,10 +200,85 @@ class HomeController extends Controller
             }
 
 
+            $orders = Order::orderBy('delivery_method', 'desc')->whereNotNull('restorant_id');
+            $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
+            $orders = $orders->whereHas('laststatus', function($q){
+                $q->where('status_id', [7]);
+            });
+
+            $periodLabels=[];
+            $periodTime=[];
+            $nomT = "";
+            $timT = 0;
+            $k=0;
+            foreach ($orders->get() as $key => $orde) {
+                
+                $to_time = strtotime($orde->updated_at);
+                $from_time = strtotime($orde->created_at);
+                $diff =  round(abs($to_time - $from_time) / 60,2);
+                $timT=$timT+$diff;
+                
+                
+                if($nomT!=$orde->delivery_method){
+                    $nomT=$orde->delivery_method;
+                    print_r($orde->delivery_method);
+                    print_r($orde->getExpeditionType());
+                }
+
+                /*
+                
+                if($nomT!=$orde->getExpeditionType()){
+                    $nomT==$orde->delivery_method;
+                    print_r($orde->delivery_method);
+                    $k++;
+                    array_push($periodLabels,$orde->getExpeditionType());
+                    array_push($periodTime,$timT);
+                    
+                }else{
+                    $periodLabels[$k]=$orde->getExpeditionType();
+                    $periodTime[$k]=$timT;
+                }
+                */
+
+                
+            }
+            
+            //print_r($periodLabels);
+    
+
+           
             /*
             print_r("<pre>");
-            print_r($mesaMasCaliente);
+            print_r($orders->get());
             */
+            
+
+            //excel tiempos por pedido
+            if (isset($_GET['report'])) {
+                $items = [];
+
+                
+                foreach ($orders->get() as $key => $order) {
+
+                    $to_time = strtotime($order->updated_at);
+                    $from_time = strtotime($order->created_at);
+                    $diff=  round(abs($to_time - $from_time) / 60,2). " minute";
+
+                    $item = [
+                        'order_id'=>$order->id,
+                        'last_status'=>$order->status->pluck('alias')->last(),
+                        'client_name'=>$order->client ? $order->client->name : '',
+                        'method'=>$order->getExpeditionType(),
+                        'date-initial'=>$order->created_at,
+                        'date-end'=>$order->updated_at,
+                        'time'=>$diff
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new TimeOrderExport($items), 'orders_'.time().'.xlsx');
+            }
+
         }
         
         
@@ -404,6 +485,7 @@ class HomeController extends Controller
             'tablesPeoples' =>  $tablesPeoples,
             'misMesas'=>$misMesas,
             'mesaMasCaliente'=>$mesaMasCaliente,
+            'parameters'=>count($_GET) != 0,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));

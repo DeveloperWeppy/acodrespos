@@ -218,17 +218,87 @@
                             totalTablesLabels.push(tablesLables[key]);
                             totalTablesPeoples.push(tablesPeoples[key]);
                         }
+                    </script>
+                    
+                    <div class="card-body">
+                        @if(isset($mesaMasCaliente->nomt))
+                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente->nomt }}</b> con {{$mesaMasCaliente->nump }} numero de personas</span>
+                       @endif
+                    <!-- Chart -->
+                        @if(count($tablesLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-tables" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay ventas en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('owner'))
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card bg-gradient-default shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-light ls-1 mb-1">Tiempos por pedido</h6>
+                                <h2 class="mb-0 text-white">Tiempo promedio por pedidos</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                
+
+                            <form action="{{route('home')}}" method="GET">
+                                <div class="row mt-5">
+                                    <div class="col-3">
+                                        <input name="inicio" class="form-control form-control" type="date" value=""/>
+                                    </div>
+                                    <div class="col-3">
+                                        <input name="fin" class="form-control form-control" type="date"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="submit" class="btn btn-primary btn">Filtrar</button>
+                                        @if ($parameters)
+                                        <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
+                                        @else
+                                        <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
+                                        @endif
+                                    </div>
+                                <div>
+                            </form>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var tablesLables = @json($tablesLabels);
+                        var tablesPeoples= @json($tablesPeoples);
+                        
+                        
+                        totalTablesLabels=[];
+                        totalTablesPeoples=[];
+                        
+                        for (const key in tablesLables) {
+                            totalTablesLabels.push(tablesLables[key]);
+                            totalTablesPeoples.push(tablesPeoples[key]);
+                        }
 
                     </script>
                     
                     <div class="card-body">
                         @if(isset($mesaMasCaliente->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente->nomt }}</b> con {{$mesaMasCaliente->nump }} personas</span>
-                       @endif
-                    <!-- Chart -->
-                        @if(count($salesValue)>0)
+                        @endif
+                        <!-- Chart -->
+                        @if(count($tablesLabels)>0)
                             <div class="chart">
-                                <canvas id="chart-tables" class="chart-canvas"></canvas>
+                                <canvas id="chart-timeorder" class="chart-canvas"></canvas>
                             </div>
                         @else
                             <p>{{ __('No hay ventas en este momento!') }}</p>
