@@ -278,16 +278,18 @@
                     </div>
 
                     <script>
-                        var tablesLables = @json($tablesLabels);
-                        var tablesPeoples= @json($tablesPeoples);
+                        var periodLabels = @json($periodLabels);
+                        var periodTime= @json($periodTime);
                         
                         
-                        totalTablesLabels=[];
-                        totalTablesPeoples=[];
+                        totalPeriodLabels=[];
+                        totalPeriodTime=[];
                         
-                        for (const key in tablesLables) {
-                            totalTablesLabels.push(tablesLables[key]);
-                            totalTablesPeoples.push(tablesPeoples[key]);
+                        for (const key in periodLabels) {
+                            totalPeriodLabels.push(periodLabels[key]);
+                        }
+                        for (const key in periodTime) {
+                            totalPeriodTime.push(periodTime[key]);
                         }
 
                     </script>

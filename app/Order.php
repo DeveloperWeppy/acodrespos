@@ -89,6 +89,7 @@ class Order extends Model
         $delivery="";
         if(config('app.isft')){
             $delivery=$this->delivery_method==1?__('Delivery'):__('Pickup');
+            $delivery=$this->delivery_method==1?__('Delivery'):($this->delivery_method==2?__('Pickup'):($this->delivery_method==3?"En la mesa":"Digiturno"));
         }
         //QR or WP
         if(config('app.isqrsaas')){

@@ -208,9 +208,9 @@ class HomeController extends Controller
 
             $periodLabels=[];
             $periodTime=[];
-            $nomT = "";
+            $nomT = 0;
             $timT = 0;
-            $k=0;
+            $k=-1;
             foreach ($orders->get() as $key => $orde) {
                 
                 $to_time = strtotime($orde->updated_at);
@@ -218,33 +218,17 @@ class HomeController extends Controller
                 $diff =  round(abs($to_time - $from_time) / 60,2);
                 $timT=$timT+$diff;
                 
-                
                 if($nomT!=$orde->delivery_method){
                     $nomT=$orde->delivery_method;
-                    print_r($orde->delivery_method);
-                    print_r($orde->getExpeditionType());
-                }
-
-                /*
-                
-                if($nomT!=$orde->getExpeditionType()){
-                    $nomT==$orde->delivery_method;
-                    print_r($orde->delivery_method);
-                    $k++;
                     array_push($periodLabels,$orde->getExpeditionType());
                     array_push($periodTime,$timT);
-                    
+                    $k++;
+                    $timT=$diff;
                 }else{
-                    $periodLabels[$k]=$orde->getExpeditionType();
                     $periodTime[$k]=$timT;
                 }
-                */
 
-                
             }
-            
-            //print_r($periodLabels);
-    
 
            
             /*
@@ -485,6 +469,8 @@ class HomeController extends Controller
             'tablesPeoples' =>  $tablesPeoples,
             'misMesas'=>$misMesas,
             'mesaMasCaliente'=>$mesaMasCaliente,
+            'periodLabels' => $periodLabels,
+            'periodTime' =>  $periodTime,
             'parameters'=>count($_GET) != 0,
         ];
         

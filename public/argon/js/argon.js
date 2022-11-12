@@ -1118,10 +1118,10 @@ var TimeOrderChart = (function() {
 				}
 			},
 			data: {
-				labels: ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				labels: totalPeriodLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
 				datasets: [{
 					label: js.trans('Ventas'),
-					data: [25, 20, 30, 22]
+					data: totalPeriodTime,//[25, 20, 30, 22]
 				}]
 			}
 		});
