@@ -13,6 +13,33 @@ class OrdersExport implements FromArray, WithHeadings
     public function headings(): array
     {
         return [
+            'Nº de Orden',
+            'Nombre del Restaurante',
+            'Restaurante id',
+            'Fecha de la Orden',
+            'Último estado del Pedido',
+            'Nombre del Cliente',
+            'Cliente',
+            'Dirección',
+            'Direccion id',
+            'Nombre del Domiciliario',
+            'Conductor id',
+            'Metodo de Pago',
+            'Metodo Pago id',
+            'restaurant_fee_percent',
+            'order_fee',
+            'restaurant_static_fee',
+            'platform_fee',
+            'processor_fee',
+            'Costo de Domicilio',
+            'Valor Neto con Impoconsumo',
+            'Valor de Impoconsumo',
+            'Valor Neto',
+            'Total de la Orden',
+            'Descuento'
+        ];
+        /*
+        return [
             'order_id',
             'restaurant_name',
             'restaurant_id',
@@ -38,6 +65,7 @@ class OrdersExport implements FromArray, WithHeadings
             'restaurant_static_fee',
             'vat',
         ];
+        */
     }
 
     public function __construct(array $orders)

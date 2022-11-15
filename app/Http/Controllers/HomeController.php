@@ -18,6 +18,7 @@ use Stripe\OrderItem;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TimeOrderExport;
+use App\Exports\HourOrderExport;
 
 class HomeController extends Controller
 {
@@ -269,14 +270,6 @@ class HomeController extends Controller
                 }
 
             }
-
-           
-            /*
-            print_r("<pre>");
-            print_r($orders->get());
-            */
-            
-
             
             if (isset($_GET['report'])) {
                 $items = [];
@@ -301,6 +294,90 @@ class HomeController extends Controller
     
                 return Excel::download(new TimeOrderExport($items), 'timeOrders_'.time().'.xlsx');
             }
+
+            
+            $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->groupBy('dia')->orderBy('dia','asc');
+            $ordenesHorario = $ordenesHorario->whereHas('laststatus', function($q){
+                $q->where('status_id', [7]);
+            });
+
+            //FILTER BY end date
+            if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
+                $ini = $_GET['hinicio'];
+                $ordenesHorario->whereDate('created_at',"=","$ini");
+            }
+            $fin = date('Y-m-d');
+            if(isset($_GET['hinicio'],$_GET['hfin']) && $_GET['hinicio']!="" && $_GET['hfin']!=""){
+                $ini = $_GET['hinicio'];
+                $fin = $_GET['hfin'];
+                $ordenesHorario->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+            //FILTER BY hour
+            if(isset($_GET['hhde'],$_GET['hhha']) && $_GET['hhde']!="" && $_GET['hhha']!=""){
+                $hini = $_GET['hhde'];
+                $hfin = $_GET['hhha'];
+                $ordenesHorario->where(DB::raw('hour(created_at)'),">=","$hini")->where(DB::raw('hour(created_at)'),"<=","$hfin");
+            }
+
+
+            $horarioLabels=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+            $horarioOrders=[0,0,0,0,0,0,0];
+            foreach ($ordenesHorario->get() as $key => $hora) {
+                $k=$hora->dia-2;
+                $horarioOrders[$k]=$hora->numo;
+            }
+        
+
+            if (isset($_GET['reportweekofday'])) {
+
+                $ordenesHorarior = Order::where(['restorant_id'=>auth()->user()->restorant->id])->orderBy('created_at','asc');
+                $ordenesHorarior = $ordenesHorarior->whereHas('laststatus', function($q){
+                    $q->where('status_id', [7]);
+                });
+
+
+                if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
+                    $ini = $_GET['hinicio'];
+                    $ordenesHorarior->whereDate('created_at',"=","$ini");
+                }
+                //FILTER BY end date
+                $fin = date('Y-m-d');
+                if(isset($_GET['hinicio'],$_GET['hfin']) && $_GET['hinicio']!="" && $_GET['hfin']!=""){
+                    $ini = $_GET['hinicio'];
+                    $fin = $_GET['hfin'];
+                    $ordenesHorarior->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+                }
+                //FILTER BY hour
+                if(isset($_GET['hhde'],$_GET['hhha']) && $_GET['hhde']!="" && $_GET['hhha']!=""){
+                    $hini = $_GET['hhde'];
+                    $hfin = $_GET['hhha'];
+                    $ordenesHorarior->where(DB::raw('hour(created_at)'),">=","$hini")->where(DB::raw('hour(created_at)'),"<=","$hfin");
+                }
+
+                $items = [];
+
+                foreach ($ordenesHorarior->get() as $key => $order) {
+
+                    $to_time = strtotime($order->updated_at);
+                    $from_time = strtotime($order->created_at);
+                    $diff=  round(abs($to_time - $from_time) / 60,2). " minute";
+
+                    $item = [
+                        'order_id'=>$order->id,
+                        'last_status'=>$order->status->pluck('alias')->last(),
+                        'client_name'=>$order->client ? $order->client->name : '',
+                        'method'=>$order->getExpeditionType(),
+                        'date-initial'=>$order->created_at,
+                        'date-end'=>$order->updated_at,
+                        'time'=>$diff
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new HourOrderExport($items), 'hourOrders_'.time().'.xlsx');
+            }
+            
+
 
         }
         
@@ -510,6 +587,8 @@ class HomeController extends Controller
             'mesaMasCaliente'=>$mesaMasCaliente->get(),
             'periodLabels' => $periodLabels,
             'periodTime' =>  $periodTime,
+            'horarioLabels' => $horarioLabels,
+            'horarioOrders' =>  $horarioOrders,
             'parameters'=>count($_GET) != 0,
         ];
         

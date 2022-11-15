@@ -1138,6 +1138,83 @@ var TimeOrderChart = (function() {
 
 })();
 
+
+
+// 
+//	table chart
+//
+var HourOrderChart = (function() {
+
+	//
+	// Variables
+	//
+
+	var $chart = $('#chart-hourorder');
+	var $ordersSelect = $('[name="ordersSelect"]');
+
+
+	//
+	// Methods
+	//
+
+	// Init chart
+	function initChart($chart) {
+
+		// Create chart
+		var tablesChart = new Chart($chart, {
+			type: 'line',
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							callback: function(value) {
+								if (!(value % 10)) {
+									//return '$' + value + 'k'
+									return value
+								}
+							}
+						}
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							var yLabel = item.yLabel;
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+
+							content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: totalhorarioLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: totalhorarioOrders,//[25, 20, 30, 22]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', tablesChart);
+	}
+
+
+	// Init chart
+	if ($chart.length) {
+		initChart($chart);
+	}
+
+})();
+
 //
 // Charts
 //

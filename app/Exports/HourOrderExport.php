@@ -6,14 +6,14 @@ use App\Order;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class TimeOrderExport implements FromArray, WithHeadings
+class HourOrderExport implements FromArray, WithHeadings
 {
     protected $orders;
 
     public function headings(): array
     {
         return [
-            'N° de orden',
+            'N°  de orden',
             'Estado',
             'Nombre Cliente',
             'Metodo',
@@ -44,4 +44,5 @@ class TimeOrderExport implements FromArray, WithHeadings
         return $this->orders;
     }
 }
+
 

@@ -178,14 +178,14 @@
                             <div class="col-12">
                             
                             <form action="{{route('home')}}" method="GET">
-                                <div class="row mt-5">
+                                <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Area</label>
                                             <div class="input-group">
                                                 <select name="tarea" class="form-control form-control-sm">
                                                     @foreach($misMesas as $key)
-                                                    <option value="{{$key->id}}">{{$key->name}}</option>
+                                                    <option value="{{$key->id}}"  <?php if(isset($_GET['tarea']) && $_GET['tarea']==$key->id){ echo "selected"; } ?> >{{$key->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -200,7 +200,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                 </div>
-                                                <input name="tinicio" class="form-control form-control" type="date" value=""/>
+                                                <input name="tinicio" class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['tinicio'])){echo 'value="'.$_GET['tinicio'].'"';} ?>/>
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +211,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                 </div>
-                                                <input name="tfin" class="form-control form-control" type="date"/>
+                                                <input name="tfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['tfin'])){echo 'value="'.$_GET['tfin'].'"';} ?> />
                                             </div>
                                         </div>
                                         
@@ -282,7 +282,7 @@
                                 
 
                             <form action="{{route('home')}}" method="GET">
-                                <div class="row mt-5">
+                                <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
@@ -290,7 +290,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                 </div>
-                                                <input name="pinicio" class="form-control form-control" type="date" value=""/>
+                                                <input name="pinicio" class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['pinicio'])){echo 'value="'.$_GET['pinicio'].'"';} ?> />
                                             </div>
                                         </div>
                                     </div>
@@ -301,12 +301,12 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                 </div>
-                                                <input name="pfin" class="form-control form-control" type="date"/>
+                                                <input name="pfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['pfin'])){echo 'value="'.$_GET['pfin'].'"';} ?>/>
                                             </div>
                                         </div>
                                         
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
@@ -354,6 +354,164 @@
                         @if(count($tablesLabels)>0)
                             <div class="chart">
                                 <canvas id="chart-timeorder" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay ventas en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+
+
+        @if(auth()->user()->hasRole('owner'))
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por Horario</h6>
+                                <h2 class="mb-0">Ordenes por horario</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                
+
+                            <form action="{{route('home')}}" method="GET">
+                                <div class="row mt-5 input-daterange datepicker">
+
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha de</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="hinicio" class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['hinicio'])){echo 'value="'.$_GET['hinicio'].'"';} ?> />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha hasta</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="hfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['hfin'])){echo 'value="'.$_GET['hfin'].'"';} ?>/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Hora de</label>
+                                            <div class="">
+
+                                                <select name="hhde" class="form-control" required>
+                                                    <?php 
+                                                        $k=0;
+                                                        for($i=1;$i<25;$i++){
+                                                            $selected = "";
+
+                                                             $k++;  if($k==13){$k=1;}  
+                                                           
+
+                                                            $form = "AM"; if($i>=12 && $i<24){$form="PM";}
+                                                            if(isset($_GET['hhde']) && $_GET['hhde']==$i){
+                                                                $selected = "selected";
+                                                            }
+                                                            if(!isset($_GET['hhde']) && $i==7){
+                                                                $selected = "selected";
+                                                            }
+                                                            echo '<option value="'.$i.'" '.$selected.' >'.$k.':00 '.$form.'</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Hora hasta</label>
+                                            <div class="">
+
+                                                <select name="hhha" class="form-control" required>
+                                                    <?php 
+                                                        $k=0;
+                                                        for($i=1;$i<25;$i++){
+                                                            $selected = "";
+
+                                                             $k++;  if($k==13){$k=1;}  
+                                                           
+
+                                                            $form = "AM"; if($i>=12 && $i<24){$form="PM";}
+                                                            if(isset($_GET['hhha']) && $_GET['hhha']==$i){
+                                                                $selected = "selected";
+                                                            }
+                                                            if(!isset($_GET['hhha']) && $i==19){
+                                                                $selected = "selected";
+                                                            }
+                                                            echo '<option value="'.$i.'" '.$selected.' >'.$k.':00 '.$form.'</option>';
+                                                        }
+                                                    ?>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label"></label>
+                                            <div class="input-group">
+                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                @if ($parameters)
+                                                <a href="{{Request::fullUrl().'&reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                @else
+                                                <a href="{{Request::fullUrl().'?reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+                                <div>
+                            </form>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var horarioLabels = @json($horarioLabels);
+                        var horarioOrders= @json($horarioOrders);
+                        
+                        
+                        totalhorarioLabels=[];
+                        totalhorarioOrders=[];
+                        
+                        for (const key in horarioLabels) {
+                            totalhorarioLabels.push(horarioLabels[key]);
+                        }
+                        for (const key in horarioOrders) {
+                            totalhorarioOrders.push(horarioOrders[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        @if(isset($mesaMasCaliente->nomt))
+                        @endif
+                        <!-- Chart -->
+                        @if(count($tablesLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-hourorder" class="chart-canvas"></canvas>
                             </div>
                         @else
                             <p>{{ __('No hay ventas en este momento!') }}</p>

@@ -240,7 +240,6 @@ class CartController extends Controller
 
             //Create all the time slots
             $timeSlots = $this->getTimieSlots($restaurant);
-
            
             //user addresses
             $addresses = [];

@@ -22,11 +22,20 @@ class ClientsExport implements FromArray, WithHeadings
     {
         return [
             'id',
+            'Nombre',
+            'Correo electrónico',
+            'teléfono',
+            'Fecha de creación',
+        ];
+        /*
+        return [
+            'id',
             'name',
             'email',
             'phone',
             'created',
         ];
+        */
     }
 
     public function __construct(array $clients)
