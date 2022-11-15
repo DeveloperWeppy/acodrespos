@@ -17,6 +17,8 @@ use App\Models\Allergens;
 use App\Models\AreaKitchen;
 use PayPal\Api\RedirectUrls;
 
+use App\Exports\ItemsExport;
+
 class ItemsController extends Controller
 {
     private $imagePath = 'uploads/restorants/';
@@ -96,6 +98,35 @@ class ItemsController extends Controller
                 $categories=auth()->user()->restorant->categories;
             }
 
+
+            
+
+            
+            //reporte excel de items
+            if (isset($_GET['report'])) {
+
+
+                $items = [];
+
+                foreach ($categories as $index => $category){
+                    foreach ( $category->items as $item){
+                        $item = [
+                            'item_id'=>$item->id,
+                            'name'=>$item->name,
+                            'category'=>$category->name,
+                            'price'=>$item->price,
+                            'date-created'=>$item->created_at,
+                        ];
+
+                        array_push($items, $item);
+                    }
+                }
+    
+                return Excel::download(new ItemsExport($items), 'items_'.time().'.xlsx');
+            }
+
+
+            
             return view('items.index', [
                 'hasMenuPDf'=>Module::has('menupdf'),
                 'canAdd'=>$canAdd,
@@ -106,6 +137,7 @@ class ItemsController extends Controller
                 'availableLanguages'=>auth()->user()->restorant->localmenus,
                 'defaultLanguage'=>$defaultLng?$defaultLng->language:""
                 ]);
+                
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access'));
         }

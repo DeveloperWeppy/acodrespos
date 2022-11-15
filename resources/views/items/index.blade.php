@@ -12,6 +12,10 @@
                 <!--<div class="col-lg-6 col-7">
                 </div>-->
                 <div class="col-lg-12 col-12 text-right">
+
+                    <a href="{{ route('items.index')}}?report=true" class="btn btn-sm btn-success"><i class="fas fa-file-xlsx"></i> Descargar Informe</a>
+
+
                     @if (isset($hasMenuPDf)&&$hasMenuPDf)
                         <a target="_blank" href="{{ route('menupdf.download')}}" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i> {{ __('PDF Menu') }}</a>
                     @endif
