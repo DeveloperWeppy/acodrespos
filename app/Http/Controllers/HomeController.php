@@ -158,59 +158,93 @@ class HomeController extends Controller
             ->get();
 
             $are = $misMesas[0]->id;
-            if(isset($_GET['area'])){
-                $are = $_GET['area'];
-            }
-            $ini = date('Y-m-d', strtotime('-30 day'));
-            if(isset($_GET['inicio']) && $_GET['inicio']!=""){
-                $ini = $_GET['inicio'];
-            }
-            $fin = date('Y-m-d');
-            if(isset($_GET['fin']) && $_GET['fin']!=""){
-                $fin = $_GET['fin'];
-            }
 
 
+            //FILTER BY area
+            if(isset($_GET['tarea'])){
+                $are = $_GET['tarea'];
+            }
+
+            //consulta todas las mesas por area
             $mesas = DB::table('orders')
             ->select('tables.restoarea_id','tables.name',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
             ->join('tables', 'tables.id', '=', 'orders.table_id')
-            ->where('orders.restorant_id', auth()->user()->restorant->id)
             ->where('tables.restoarea_id',$are)
-            ->whereDate('orders.created_at',">=","$ini")
-            ->whereDate('orders.created_at',"<=","$fin")
-            ->groupBy('tables.restoarea_id','orders.table_id')
-            ->get();
+            ->where('orders.restorant_id', auth()->user()->restorant->id)
+            ->groupBy('tables.restoarea_id','orders.table_id');
             
+
+            //FILTER BY initial date
+            if(isset($_GET['tinicio']) && $_GET['tinicio']!="" && $_GET['tfin']==""){
+                $ini = $_GET['tinicio'];
+                $mesas->whereDate('orders.created_at',"=","$ini");
+            }
+            //FILTER BY end date
+            $fin = date('Y-m-d');
+            if(isset($_GET['tinicio'],$_GET['tfin']) && $_GET['tinicio']!="" && $_GET['tfin']!=""){
+                $ini = $_GET['tinicio'];
+                $fin = $_GET['tfin'];
+                $mesas->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin");
+            }
+            
+            //consulta la mesa mas ocupada 
             $mesaMasCaliente = DB::table('orders')
             ->select('tables.restoarea_id','tables.name as nomt',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
             ->join('tables', 'tables.id', '=', 'orders.table_id')
             ->where('orders.restorant_id', auth()->user()->restorant->id)
             ->where('tables.restoarea_id',$are)
-            ->whereDate('orders.created_at',">=","$ini")
-            ->whereDate('orders.created_at',"<=","$fin")
             ->groupBy('tables.restoarea_id','orders.table_id')
-            ->orderBy('nump','desc')
-            ->first();
+            ->orderBy('nump','desc');
+
+            if(isset($_GET['tinicio']) && $_GET['tinicio']!="" && $_GET['tfin']==""){
+                $ini = $_GET['tinicio'];
+                $mesaMasCaliente->whereDate('orders.created_at',"=","$ini")->first();
+            }
+            //FILTER BY end date
+            $fin = date('Y-m-d');
+            if(isset($_GET['tinicio'],$_GET['tfin']) && $_GET['tinicio']!="" && $_GET['tfin']!=""){
+                $ini = $_GET['tinicio'];
+                $fin = $_GET['tfin'];
+                $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first();
+            }
 
             $tablesLabels=[];
             $tablesPeoples=[];
-            foreach ($mesas as $key => $mesa) {
+            foreach ($mesas->get() as $key => $mesa) {
                 array_push($tablesLabels,$mesa->name);
                 array_push($tablesPeoples,$mesa->nump);
             }
 
 
+
+
+
+            //excel tiempos por pedido
             $orders = Order::orderBy('delivery_method', 'desc')->whereNotNull('restorant_id');
             $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
             $orders = $orders->whereHas('laststatus', function($q){
                 $q->where('status_id', [7]);
             });
 
+            if(isset($_GET['pinicio']) && $_GET['pinicio']!="" && $_GET['pfin']==""){
+                $ini = $_GET['pinicio'];
+                $orders->whereDate('created_at',"=","$ini")->first();
+            }
+            //FILTER BY end date
+            $fin = date('Y-m-d');
+            if(isset($_GET['pinicio'],$_GET['pfin']) && $_GET['pinicio']!="" && $_GET['pfin']!=""){
+                $ini = $_GET['pinicio'];
+                $fin = $_GET['pfin'];
+                $orders->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin")->first();
+            }
+
             $periodLabels=[];
             $periodTime=[];
             $nomT = 0;
             $timT = 0;
             $k=-1;
+            $numP = 0;
+
             foreach ($orders->get() as $key => $orde) {
                 
                 $to_time = strtotime($orde->updated_at);
@@ -219,13 +253,19 @@ class HomeController extends Controller
                 $timT=$timT+$diff;
                 
                 if($nomT!=$orde->delivery_method){
+                    $numP=1;
+                    $prom = $timT/$numP;
                     $nomT=$orde->delivery_method;
                     array_push($periodLabels,$orde->getExpeditionType());
-                    array_push($periodTime,$timT);
+                    array_push($periodTime,$prom);
                     $k++;
                     $timT=$diff;
+                    
                 }else{
-                    $periodTime[$k]=$timT;
+                    $numP++;
+                    $prom = $timT/$numP;
+                    $periodTime[$k]=$prom;
+                    
                 }
 
             }
@@ -237,11 +277,10 @@ class HomeController extends Controller
             */
             
 
-            //excel tiempos por pedido
+            
             if (isset($_GET['report'])) {
                 $items = [];
 
-                
                 foreach ($orders->get() as $key => $order) {
 
                     $to_time = strtotime($order->updated_at);
@@ -260,7 +299,7 @@ class HomeController extends Controller
                     array_push($items, $item);
                 }
     
-                return Excel::download(new TimeOrderExport($items), 'orders_'.time().'.xlsx');
+                return Excel::download(new TimeOrderExport($items), 'timeOrders_'.time().'.xlsx');
             }
 
         }
@@ -468,7 +507,7 @@ class HomeController extends Controller
             'tablesLabels' => $tablesLabels,
             'tablesPeoples' =>  $tablesPeoples,
             'misMesas'=>$misMesas,
-            'mesaMasCaliente'=>$mesaMasCaliente,
+            'mesaMasCaliente'=>$mesaMasCaliente->get(),
             'periodLabels' => $periodLabels,
             'periodTime' =>  $periodTime,
             'parameters'=>count($_GET) != 0,

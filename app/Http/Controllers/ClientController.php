@@ -59,6 +59,7 @@ class ClientController extends Controller
                         'id'=>$item->id,
                         'name'=>$item->name,
                         'email'=>$item->email,
+                        'phone'=>$item->phone,
                         'created'=>$item->created_at,
                     ];
                     array_push($itemsForExport, $item);

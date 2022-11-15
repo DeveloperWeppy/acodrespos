@@ -177,26 +177,54 @@
                             </div>
                             <div class="col-12">
                             
-                                
-
                             <form action="{{route('home')}}" method="GET">
                                 <div class="row mt-5">
-                                    <div class="col-3">
-                                        <select name="area" class="form-control form-control-sm">
-                                            @foreach($misMesas as $key)
-                                            <option value="{{$key->id}}">{{$key->name}}</option>
-                                            @endforeach
-                                            
-                                        </select>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Area</label>
+                                            <div class="input-group">
+                                                <select name="tarea" class="form-control form-control-sm">
+                                                    @foreach($misMesas as $key)
+                                                    <option value="{{$key->id}}">{{$key->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        
                                     </div>
-                                    <div class="col-3">
-                                        <input name="inicio" class="form-control form-control" type="date" value=""/>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha de</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="tinicio" class="form-control form-control" type="date" value=""/>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-3">
-                                        <input name="fin" class="form-control form-control" type="date"/>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha hasta</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="tfin" class="form-control form-control" type="date"/>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
-                                    <div class="col-3">
-                                        <button type="submit" class="btn btn-primary btn">Filtrar</button>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label"></label>
+                                            <div class="input-group">
+                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                            </div>
+                                        </div>
+
+                                        
                                     </div>
                                 <div>
                             </form>
@@ -221,8 +249,8 @@
                     </script>
                     
                     <div class="card-body">
-                        @if(isset($mesaMasCaliente->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente->nomt }}</b> con {{$mesaMasCaliente->nump }} numero de personas</span>
+                        @if(isset($mesaMasCaliente[0]->nomt))
+                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} numero de personas</span>
                        @endif
                     <!-- Chart -->
                         @if(count($tablesLabels)>0)
@@ -255,19 +283,44 @@
 
                             <form action="{{route('home')}}" method="GET">
                                 <div class="row mt-5">
-                                    <div class="col-3">
-                                        <input name="inicio" class="form-control form-control" type="date" value=""/>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha de</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="pinicio" class="form-control form-control" type="date" value=""/>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-3">
-                                        <input name="fin" class="form-control form-control" type="date"/>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha hasta</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="pfin" class="form-control form-control" type="date"/>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
-                                    <div class="col-6">
-                                        <button type="submit" class="btn btn-primary btn">Filtrar</button>
-                                        @if ($parameters)
-                                        <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
-                                        @else
-                                        <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
-                                        @endif
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label"></label>
+                                            <div class="input-group">
+                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                @if ($parameters)
+                                                <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                @else
+                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                @endif
+                                                
+                                            </div>
+                                        </div>
+
+                                        
                                     </div>
                                 <div>
                             </form>
