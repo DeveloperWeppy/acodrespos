@@ -20,9 +20,14 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <h3 class="mb-0">{{ __($title) }}</h3>
+                                
                             </div>
                             
                                 <div class="col-4 text-right">
+
+                                    <a type="button" href="{{ route('clients.index') }}?reportstaff=true" class="btnFormClient btn btn-sm btn-success" style="color:#ffffff" >{{ __('Download report') }}</a>
+
+                                    
                                     @isset($action_link)
                                         <a href="{{ $action_link }}" class="btn btn-sm btn-primary">{{ __($action_name) }}</a>
                                         {{-- <a href="{{ $action_link }}" class="btn btn-sm btn-primary">Agregar Nuevo Personal</a> --}}
@@ -41,6 +46,8 @@
                                             <span class="btn-inner--icon"><i id="button-filters" class="ni ni-bold-down"></i></span>
                                         </button>
                                     @endisset
+
+                                    
                                 </div>
                         </div>
                         @isset($usefilter)

@@ -7,6 +7,7 @@
 
         <div class="col-md-6 offset-md-6">
             <div class="row">
+                
                 @if ($parameters)
                     <div class="col-md-4">
                         <a href="{{ Request::url() }}" class="btn btn-md btn-block">{{ __('crud.clear_filters') }}</a>
