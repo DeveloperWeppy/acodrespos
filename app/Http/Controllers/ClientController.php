@@ -50,11 +50,18 @@ class ClientController extends Controller
             }
 
 
+            
+
+
             //With downloaod
-            if (isset($_GET['report'])) {
+            if (isset($_GET['reportstaff'])) {
+
+                $staff = $this->getRestaurant()->staff()->with('roles')->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'owner');
+                })->paginate(config('settings.paginate'));
 
                 $itemsForExport = [];
-                foreach ($User as $key => $item) {
+                foreach ($staff as $key => $item) {
                     $item = [
                         'id'=>$item->id,
                         'name'=>$item->name,
@@ -65,7 +72,7 @@ class ClientController extends Controller
                     array_push($itemsForExport, $item);
                 }
 
-                return Excel::download(new ClientsExport($itemsForExport), 'clients_'.time().'.xlsx');
+                return Excel::download(new ClientsExport($itemsForExport), 'staff_'.time().'.xlsx');
             }
 
 

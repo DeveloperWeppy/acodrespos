@@ -124,9 +124,47 @@
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de los últimos') }} ( 30 {{ __('days') }} )</h6>
                                 <h2 class="mb-0">{{ __('Productos más Vendidos') }}</h2>
                             </div>
+
+                            <div class="col-12">
+                            
+                                <form action="{{route('home')}}" method="GET">
+                                    <div class="row mt-5 input-daterange datepicker">
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Filtrar por mes</label>
+                                                <div class="input-group">
+                                                    <select name="fmes" class="form-control form-control-sm noselecttwo">
+
+                                                        <?php 
+                                                            $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+                                                            for($i=1;$i<13;$i++){
+                                                                $selc = "";
+                                                                if(isset($_GET['fmes']) && $_GET['fmes']==$i){ $selc= "selected"; } 
+                                                                echo '<option value="'.$i.'" '.$selc.'>'.$meses[$i-1].'</option>';
+                                                            }
+                                                        
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label"></label>
+                                                <div class="input-group">
+                                                    <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 8px;">Filtrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
                     <div class="card-body">
+
+                        
                         <!-- Chart -->
                         @if(count($salesValue)>0)
                             <div class="chart">
@@ -190,9 +228,8 @@
                                                 </select>
                                             </div>
                                         </div>
-
-                                        
                                     </div>
+
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>

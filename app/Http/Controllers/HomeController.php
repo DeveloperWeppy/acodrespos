@@ -524,6 +524,7 @@ class HomeController extends Controller
             $data=[];
             $last7days=Carbon::now()->subDays(7);
             //---------------------------los 10 productos más vendidos de los últimos 30 días del restaurante logueado
+
             $orders30days=DB::table('order_has_items')
                 ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product'))
                 ->join('orders', function ($join) use ($last30days){
@@ -533,10 +534,24 @@ class HomeController extends Controller
                 })
                 ->groupBy('order_has_items.item_id')
                 ->orderBy('cantidad', 'desc')
-                ->limit(10)->get();
+                ->limit(10);
+
+            if(isset($_GET['fmes'])){
+                $orders30days=DB::table('order_has_items')
+                ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product'))
+                ->join('orders', function ($join) use ($last30days){
+                    $join->on('order_has_items.order_id','=','orders.id')
+                    ->where(DB::raw('month(orders.created_at)'), '=', $_GET['fmes'])
+                        ->where('orders.restorant_id', auth()->user()->restorant->id);
+                })
+                ->groupBy('order_has_items.item_id')
+                ->orderBy('cantidad', 'desc')
+                ->limit(10);
+            }
+            
 
             //recorrer las ordenes
-            foreach ($orders30days as $key => $value) {
+            foreach ($orders30days->get() as $key => $value) {
                 $id_product = $value->id_product;
                 $cantidad= $value->cantidad;
                 $item = Items::find($id_product);
@@ -550,6 +565,11 @@ class HomeController extends Controller
                     'datos'=>$array,
                 );
             }
+
+            /*
+            print_r("<pre>");
+            print_r($data);
+            */
 
             //-------------------------------------total de ventas de los 7 días de la semana
             /* $data3 = DB::table('orders')
