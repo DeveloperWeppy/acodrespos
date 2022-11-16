@@ -231,7 +231,7 @@
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Area</label>
-                                            <div class="input-group">
+                                            <div class="">
                                                 <select name="tarea" class="form-control form-control-sm">
                                                     @foreach($misMesas as $key)
                                                     <option value="{{$key->id}}"  <?php if(isset($_GET['tarea']) && $_GET['tarea']==$key->id){ echo "selected"; } ?> >{{$key->name}}</option>
@@ -560,6 +560,107 @@
                         @if(count($tablesLabels)>0)
                             <div class="chart">
                                 <canvas id="chart-hourorder" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay ventas en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('owner'))
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por Dias</h6>
+                                <h2 class="mb-0">Cantidad de ventas por día</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                
+
+                            <form action="{{route('home')}}" method="GET">
+                                <div class="row mt-5 input-daterange datepicker">
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Mesero</label>
+                                            <div class="">
+                                                <select name="mmes" class="form-control form-control-sm">
+                                                    <option value="0"  >Seleccionar mesero</option>
+                                                    @foreach($misMeseros as $key)
+                                                    <option value="{{$key->id}}" <?php if(isset($_GET['mmes']) && $_GET['mmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha de</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="minicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['minicio'])){echo 'value="'.$_GET['minicio'].'"';} ?> />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Fecha hasta</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                </div>
+                                                <input name="mfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['mfin'])){echo 'value="'.$_GET['mfin'].'"';} ?>/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label"></label>
+                                            <div class="input-group">
+                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                               
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+                                <div>
+                            </form>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var ordenespordiaLabels = @json($ordenespordiaLabels);
+                        var ordenespordiaValues= @json($ordenespordiaValues);
+                        
+                        
+                        totalorderbydayLabels=[];
+                        totalorderbydayValues=[];
+                        
+                        for (const key in ordenespordiaLabels) {
+                            totalorderbydayLabels.push(ordenespordiaLabels[key]);
+                            totalorderbydayValues.push(ordenespordiaValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($ordenespordiaLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
                             </div>
                         @else
                             <p>{{ __('No hay ventas en este momento!') }}</p>

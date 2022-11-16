@@ -19,6 +19,7 @@
         <br />
     
         <!-- Info cards -->
+
         @isset($cards)
             @include('partials.infoboxes.index') 
         @endisset

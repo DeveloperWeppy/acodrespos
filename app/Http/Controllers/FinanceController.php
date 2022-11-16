@@ -64,6 +64,16 @@ class FinanceController extends Controller
             $orders = $orders->whereDate('created_at', '<=', $_GET['toDate']);
         }
 
+        if (isset($_GET['payment_status'])) {
+            $orders = $orders->where('payment_status',$_GET['payment_status']);
+        }
+
+        if (isset($_GET['status_id'])) {
+            $orders = $orders->whereHas('laststatus', function($q){
+                $q->where('status_id', [$_GET['status_id']]);
+            });
+        }
+
         return ['orders' => $orders, 'restorants'=>$restorants, 'drivers'=>$drivers, 'clients'=>$clients];
     }
 
@@ -258,6 +268,10 @@ class FinanceController extends Controller
             $cards[6]['value'] += $order->delivery_price;
         }
 
+        
+        //$estados = ['Accepted by admin','Accepted by restaurant','Assigned to driver','Closed','Delivered','Just created'];  
+
+        
         $displayParam = [
             'cards'=> $cards,
             'orders' => $resources['orders']->paginate(10),
@@ -272,7 +286,7 @@ class FinanceController extends Controller
             'weHaveStripeConnect'=>env('ENABLE_STRIPE_CONNECT', false),
             'statuses'=>Status::pluck('name','id')->toArray()
         ];
-
+        //Status::pluck('name','id')->toArray()
         return view('finances.index', $displayParam);
     }
 

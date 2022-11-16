@@ -612,6 +612,40 @@ class HomeController extends Controller
             }
 
         
+
+            //grafico de ventas por dia
+            $meseros=User::role('staff')
+            ->where(['active'=>1])
+            ->where('restaurant_id',auth()->user()->restorant->id)->get();
+
+
+            $ordenesprodia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,COUNT(id) as cantidad'))
+            ->where('delivery_method','3')
+            ->where('restorant_id',auth()->user()->restorant->id)
+            ->where('created_at', '>', $last30days)
+            ->where('payment_status', 'paid')
+            ->groupBy('dia')
+            ->orderBy('dia');
+
+            //filter by mesero
+            if(isset($_GET['mmes']) && $_GET['mmes']!=0){
+                $ordenesprodia = $ordenesprodia->where('employee_id', $_GET['mmes']);
+            }
+            //filter by fecha inicial
+            if(isset($_GET['minicio']) && $_GET['minicio']!=""){
+                $ini = $_GET['minicio'];
+                $fin = $_GET['mfin'];
+                $ordenesprodia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+
+            $ordenespordiaLabels=[];
+            $ordenespordiaValues=[];
+            foreach ($ordenesprodia->get() as $key => $orden) {
+                array_push($ordenespordiaLabels,$orden->dia);
+                array_push($ordenespordiaValues,$orden->cantidad);
+            }
+
+            
         
 
             //-------------------------------------total de ventas de los 7 días de la semana
@@ -653,6 +687,9 @@ class HomeController extends Controller
             'horarioLabels' => $horarioLabels,
             'horarioOrders' =>  $horarioOrders,
             'parameters'=>count($_GET) != 0,
+            'misMeseros'=>$meseros,
+            'ordenespordiaLabels' => $ordenespordiaLabels,
+            'ordenespordiaValues' =>  $ordenespordiaValues,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));

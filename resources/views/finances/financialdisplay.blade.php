@@ -6,6 +6,7 @@
         @endif
         <th class="table-web" scope="col">{{ __('Created') }}</th>
         <th class="table-web" scope="col">{{ __('Method') }}</th>
+        <th class="table-web" scope="col">{{ __('Last status') }}</th>
 
         {{-- <th class="table-web" scope="col">{{ __('Platform fee') }}</th>
         <th class="table-web" scope="col">{{ __('Processor fee') }}</th> --}}
@@ -56,6 +57,9 @@
         @else
             <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }} | {{ __($type_payment) }} </span>
         @endif
+    </td>
+    <td>
+        @include('orders.partials.laststatus')
     </td>
     
     {{-- <td class="table-web">
