@@ -270,8 +270,21 @@ class FinanceController extends Controller
 
         
         //$estados = ['Accepted by admin','Accepted by restaurant','Assigned to driver','Closed','Delivered','Just created'];  
+        $estados =  [
+            2 => "Accepted by admin",
+            3 => "Accepted by restaurant",
+            4 => "Assigned to driver",
+            11 => "Closed",
+            7 => "Delivered",
+            1 => "Just created",
+            6 => "Picked up",
+            5 => "Prepared",
+            8 => "Rejected by admin",
+            9 => "Rejected by restaurant",
+            10 => "Updated",
+        ];
+    
 
-        
         $displayParam = [
             'cards'=> $cards,
             'orders' => $resources['orders']->paginate(10),
@@ -284,7 +297,7 @@ class FinanceController extends Controller
             'showStripeConnect'=>true,
             'restaurant'=>$restaurant,
             'weHaveStripeConnect'=>env('ENABLE_STRIPE_CONNECT', false),
-            'statuses'=>Status::pluck('name','id')->toArray()
+            'statuses'=>$estados
         ];
         //Status::pluck('name','id')->toArray()
         return view('finances.index', $displayParam);
