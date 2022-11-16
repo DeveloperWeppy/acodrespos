@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Items;
+use App\Categories;
 use App\Order;
 use App\Restorant;
 use App\User;
@@ -536,19 +537,56 @@ class HomeController extends Controller
                 ->orderBy('cantidad', 'desc')
                 ->limit(10);
 
-            if(isset($_GET['fmes'])){
+
+            if(isset($_GET['fmes']) && $_GET['fmes']!=0){
+
+                $year =  date("Y");
                 $orders30days=DB::table('order_has_items')
                 ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product'))
-                ->join('orders', function ($join) use ($last30days){
+                ->join('orders', function ($join) use ($year){
                     $join->on('order_has_items.order_id','=','orders.id')
                     ->where(DB::raw('month(orders.created_at)'), '=', $_GET['fmes'])
-                        ->where('orders.restorant_id', auth()->user()->restorant->id);
+                    ->where(DB::raw('year(orders.created_at)'), '=', "$year")
+                    ->where('orders.restorant_id', auth()->user()->restorant->id);
+
                 })
                 ->groupBy('order_has_items.item_id')
                 ->orderBy('cantidad', 'desc')
                 ->limit(10);
             }
+
+            if(isset($_GET['fcat']) && $_GET['fcat']==2){
+                $orders30days=DB::table('order_has_items')
+                ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product,items.category_id as catt'))
+                ->join('orders', function ($join) use ($last30days){
+                    $join->on('order_has_items.order_id','=','orders.id')
+                        ->where('orders.created_at', '>', $last30days)
+                        ->where('orders.restorant_id', auth()->user()->restorant->id);
+                })
+                ->join('items','order_has_items.item_id','=','items.id')
+                ->groupBy('items.category_id')
+                ->orderBy('category_id', 'desc')
+                ->limit(10);
+
+
+                if(isset($_GET['fmes']) && $_GET['fmes']!=0){
+                    $year = date("Y");
+                    $orders30days=DB::table('order_has_items')
+                    ->select(DB::raw('count(order_has_items.item_id) as cantidad, order_has_items.item_id as id_product,items.category_id as catt'))
+                    ->join('orders', function ($join) use ($year){
+                        $join->on('order_has_items.order_id','=','orders.id')
+                        ->where(DB::raw('month(orders.created_at)'), '=', $_GET['fmes'])
+                        ->where(DB::raw('year(orders.created_at)'), '=', "$year")
+                        ->where('orders.restorant_id', auth()->user()->restorant->id);
+                    })
+                    ->join('items','order_has_items.item_id','=','items.id')
+                    ->groupBy('items.category_id')
+                    ->orderBy('cantidad', 'desc')
+                    ->limit(10);
+                }
+            }
             
+        
 
             //recorrer las ordenes
             foreach ($orders30days->get() as $key => $value) {
@@ -556,6 +594,13 @@ class HomeController extends Controller
                 $cantidad= $value->cantidad;
                 $item = Items::find($id_product);
                 $name_product = $item->name;
+
+                
+                if(isset($_GET['fcat']) && $_GET['fcat']==2){
+                    $id_category = $value->catt;
+                    $cat = Categories::find($id_category);
+                    $name_product = $cat->name;
+                }
                 $array = array(
                     'name_product'=>$name_product,
                     'cantidad'=>$cantidad
@@ -566,10 +611,8 @@ class HomeController extends Controller
                 );
             }
 
-            /*
-            print_r("<pre>");
-            print_r($data);
-            */
+        
+        
 
             //-------------------------------------total de ventas de los 7 días de la semana
             /* $data3 = DB::table('orders')

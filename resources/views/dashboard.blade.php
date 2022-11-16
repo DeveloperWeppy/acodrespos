@@ -131,10 +131,21 @@
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
+                                                <label class="form-control-label">Mostrar</label>
+                                                <div class="input-group">
+                                                    <select name="fcat" class="form-control form-control-sm noselecttwo">
+                                                        <option value="1" <?php if(isset($_GET['fcat']) && $_GET['fcat']==1){echo "selected";} ?> >Items</option>
+                                                        <option value="2" <?php if(isset($_GET['fcat']) && $_GET['fcat']==2){echo "selected";} ?> >Categorias</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
                                                 <label class="form-control-label">Filtrar por mes</label>
                                                 <div class="input-group">
                                                     <select name="fmes" class="form-control form-control-sm noselecttwo">
-
+                                                        <option value="0">Ultimos 30 dias</option>
                                                         <?php 
                                                             $meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
                                                             for($i=1;$i<13;$i++){
