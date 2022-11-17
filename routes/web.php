@@ -20,6 +20,13 @@ Route::get('/lang', 'FrontEndController@langswitch')->name('lang.switch');
 
 Route::post('/search/location', 'FrontEndController@getCurrentLocation')->name('search.location');
 
+Route::post('/geozonedelivery/store', 'GeoZoneDeliveryController@store')->name('geozone.store');
+Route::post('/geozonedelivery/updated/{id?}', 'GeoZoneDeliveryController@updated')->name('geozone.updated');
+
+Route::get('/geozonedelivery/destroy/{id?}', 'GeoZoneDeliveryController@destroy')->name('geozone.destroy');
+Route::get('/geozonedelivery/get', 'GeoZoneDeliveryController@get')->name('geozone.get');
+Route::get('/geozonedelivery/getgeo', 'GeoZoneDeliveryController@getgeo')->name('geozone.getgeo');
+
 Auth::routes(['register' => config('app.isft')]);
 
 

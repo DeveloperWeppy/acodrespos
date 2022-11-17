@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\Services\ConfChanger;
 use Akaunting\Module\Facade as Module;
 use App\Models\CartStorageModel;
+use App\Models\GeoZoneDelivery;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -245,7 +246,14 @@ class CartController extends Controller
             //user addresses
             $addresses = [];
             if (config('app.isft')) {
-                $addresses = $this->getAccessibleAddresses($restaurant, auth()->user()->addresses->reverse());
+                //$addresses = $this->getAccessibleAddresses($restaurant, auth()->user()->addresses->reverse());
+                $restaurantzona=GeoZoneDelivery::where('restorant_id',$restaurant->id)->get();
+               
+                if(count($restaurantzona)>0){
+                    $addresses =$this->getAccessibleAddresses2($restaurantzona,auth()->user()->addresses->reverse());
+                  
+                }
+                
             }
 
             $tables = Tables::where('restaurant_id', $restaurant->id)->get();
