@@ -176,6 +176,23 @@
           $("#posRecipt").printThis(); 
         });
 
+        $("#paymentType").on('change', function() {
+          
+          if ($(this).val()=='transferencia') {
+            $('#selecuenta').show()
+            $('#loadarchivo').show()
+            $('#seletipocuenta').hide()
+          }else if ($(this).val()=='cardterminal') {
+            $('#selecuenta').hide()
+            $('#seletipocuenta').show()
+            $('#loadarchivo').show()
+          }else {
+            $('#selecuenta').hide()
+            $('#seletipocuenta').hide()
+            $('#loadarchivo').hide()
+          }
+        });
+
         //INterval getting orders
         setInterval(() => {
           getAllOrders();

@@ -77,9 +77,46 @@
                                 @include($extraPayment.'::selector')
                             @endforeach
 
-
+                            <div class="custom-control custom-radio mb-3">
+                                <input name="paymentType" class="custom-control-input" id="paymentStripe" type="radio" value="transferencia" >
+                                <label class="custom-control-label" for="paymentStripe">{{ __('Pago en Transferencia') }}</label>
+                            </div>
                         @endif
 
+                        @endif
+                        <div class="alert alert-info infobanco" role="alert">
+                            <strong>Nota!</strong> Por favor seleccione la cuenta a la que transferirá para que vea los detalles de la cuenta, una vez cancelado el pedido adjunte la evidencia de pago.
+                        </div>
+                        @if (!empty($configaccountsbanks))
+                            <div class="row">
+                                <div class="col-sm-12 infobanco">
+                                    <label for="">Seleccione la cuenta</label>
+                                    <div class="input-group mb-3">
+                                        <select class="form-control noselecttwo" id="typeaccount" >
+                                            <option value="seleccione">Seleccionar Cuenta</option>
+                                            @foreach ($configaccountsbanks as $item)
+                                                <option value="{{ $item->id}}" data-id="{{ $item->id}}">{{ $item->name_bank}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>                   
+                            </div>
+                                @include('restorants.partials.infoconfigcuenta')
+                            <div class="row">
+                                <div class="col-sm-12 infobanco">
+                                    <div class="form-group{{ $errors->has('img_evidencia') ? ' has-danger' : '' }}">
+                                    <label>{{ __('Cargar evidencia de pago') }}</label>
+                                    <input class="form-control{{ $errors->has('img_evidencia') ? ' is-invalid' : '' }}" type="file" name="img_evidencia" id="img_evidencia" accept="image/*" placeholder="Cargar recibo" required>    
+                                </div> 
+                                @if ($errors->has('img_evidencia'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('img_evidencia') }}</strong>
+                                    </span>
+                                @endif
+                                </div>
+                            </div>
+                        @else
+                            <p>No hay cuentas de bancos para transferir...</p>
                         @endif
                     </div>
                 </div>
@@ -99,7 +136,14 @@
                 </label>
             </div>
         </div><br />
-
+        <div class="text-center" id="totalSubmitCOD"  style="" >
+            <button
+                v-if="totalPrice"
+                type="button"
+                class="btn btn-success mt-4 paymentbutton"
+                onclick="document.getElementById('order-form').submit();    "
+            >{{ __('Place order') }}</button>
+        </div>
         <!-- Payment Actions -->
         @if(!config('settings.social_mode'))
 
@@ -110,7 +154,7 @@
             @foreach ($extraPayments as $extraPayment)
                 @include($extraPayment.'::button')
             @endforeach
-
+            
             </form>
 
             <!-- Stripe -->

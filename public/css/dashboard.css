@@ -89,3 +89,35 @@
     border: 0;
     box-shadow: 0 0 0 rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%);
 }
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+
+/* Tamaño del scroll */
+#listNotif::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+   /* Estilos barra (thumb) de scroll */
+  #listNotif::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 20px;
+  }
+  
+  #listNotif::-webkit-scrollbar-thumb:active {
+    background-color: #999999;
+  }
+  
+  #listNotif::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+  }
+  
+   /* Estilos track de scroll */
+  #listNotif::-webkit-scrollbar-track {
+    background: #e1e1e1;
+    border-radius: 4px;
+  }
+  
+  #listNotif::-webkit-scrollbar-track:hover, 
+  #listNotif::-webkit-scrollbar-track:active {
+    background: #d4d4d4;
+  }

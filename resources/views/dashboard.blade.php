@@ -100,6 +100,10 @@
         <script>
             var nameproducts = [];
             var cantidadproducts = [];
+
+            var namedias = [];
+            var totalventas7dias = [];
+            
             var categoriesLabels = {!! json_encode($expenses['last30daysCostPerGroupLabels']) !!};
             var categoriesValues = {!! json_encode($expenses['last30daysCostPerGroupValues']) !!};
 
@@ -108,11 +112,21 @@
             
             var datos = {!! json_encode($expenses['data']) !!};
 
+            var datos7dias = {!! json_encode($expenses['laste7days']) !!};
+            
             datos.forEach(function(value, index) {
                 nameproducts.push(value.datos.name_product);
             });
             datos.forEach(function(value, index) {
                 cantidadproducts.push(value.datos.cantidad);
+            });
+
+            datos7dias.forEach(function(value, index) {
+                namedias.push(value.datos.day);
+                //console.log(value.datos.day);
+            });
+            datos7dias.forEach(function(value, index) {
+                totalventas7dias.push(value.datos.total_ordenes);
             });
         </script>
 
@@ -194,8 +208,8 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de los últimos') }} ( 30 {{ __('days') }} )</h6>
-                                <h2 class="mb-0">{{ __('By vendor') }}</h2>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de ventas de los últimos') }} ( 7 {{ __('days') }} )</h6>
+                                <h2 class="mb-0">{{ __('Ventas por Días de la Semana') }}</h2>
                             </div>
                         </div>
                     </div>

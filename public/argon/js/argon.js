@@ -1488,7 +1488,7 @@ var ExpensesChart = (function() {
 				labels: theLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{
 					label: 'Expenses',
-					backgroundColor: ["#172b4d","#5e72e4","#11cdef","#2dce89","#f5365c","#fb6340","#4e6342", ,"#1D8348", "#943126", "#283747"],
+					backgroundColor: ["#172b4d","#5e72e4","#11cdef","#2dce89","#f5365c","#fb6340","#4e6342", "#1D8348", "#943126", "#283747"],
 					data: theValues//[25, 20, 30, 22, 17, 29]
 				}]
 			},
@@ -1510,13 +1510,62 @@ var ExpensesChart = (function() {
 		$chart.data('chart', ordersChart);
 	}
 
+	function initChartt($chart,theLabels,theValues) {
+
+		// Create chart
+		var ordersChart = new Chart($chart, {
+			type: 'bar',
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							callback: function(value) {
+								if (!(value % 10)) {
+									//return '$' + value + 'k'
+									return Number(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+								}
+							}
+						}
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+
+							content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: theLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: theValues//[25, 20, 30, 22, 17, 29]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', ordersChart);
+	}
+
 
 	// Init chart
 	if ($chartByCategory.length) {
 		initChart($chartByCategory,nameproducts,cantidadproducts);
 	}
 	if ($chartByVendor.length) {
-		initChart($chartByVendor,vendorsLabels,vendorsValues);
+		initChartt($chartByVendor,namedias,totalventas7dias);
 	}
 
 })();

@@ -17,9 +17,30 @@
                             <div class="input-group mb-3">
                                 <select @change="onChange($event)" class="form-control noselecttwo" id="paymentType" >
                                     <option value="cash">{{ __('Cash') }}</option>
-                                    <option value="cardterminal">{{ __('Card terminal') }}</option>
-                                    <option value="onlinepayments">{{ __('Online payments') }}</option>
+                                    {{-- <option value="cardterminal">{{ __('Card terminal') }}</option>
+                                    <option value="onlinepayments">{{ __('Online payments') }}</option> --}}
+                                    <option value="cardterminal">{{ __('Datáfono') }}</option>
+                                    <option value="transferencia">{{ __('Transferencia') }}</option>
                                 </select>
+                            </div>
+                            <div id="selecuenta" style="display: none;">
+                                <label for="">Seleccione la cuenta</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo" >
+                                        @foreach ($configaccountsbanks as $item)
+                                            <option value="cash">{{ $item->name_bank . " - ". $item->number_account}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="seletipocuenta" style="display: none;">
+                                <label for="">Seleccione el tipo de Cuenta</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo" >
+                                        <option value="ahorros">{{ __('Ahorros') }}</option>
+                                        <option value="corriente">{{ __('Corriente') }}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="custom-control custom-control-alternative custom-checkbox">
@@ -57,6 +78,12 @@
                             </p>
                         </form>
 
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="loadarchivo" style="display: none;" class="col">
+                        <label>{{ __('Cargar evidencia de pago') }}</label>
+                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" required>
                     </div>
                 </div>
 

@@ -372,7 +372,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request){
-       // dd($request);
+        //dd($request);
         //Convert web request to mobile like request
         if(config('app.issd',false)||$request->has('issd')){
             //Web ride
@@ -383,7 +383,7 @@ class OrderController extends Controller
         }
 
         
-        
+        //dd($mobileLikeRequest->delivery_method);
 
         //Data
         $vendor_id =  $mobileLikeRequest->vendor_id;

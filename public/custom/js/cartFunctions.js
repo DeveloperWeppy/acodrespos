@@ -342,7 +342,7 @@ function chageDeliveryCost(deliveryCost){
 
   function paymentTypeSwitcher(){
     $('input:radio[name="paymentType"]').change(
-
+      
       function(){
           //HIDE ALL
           $('#totalSubmitCOD').hide()
@@ -356,8 +356,9 @@ function chageDeliveryCost(deliveryCost){
           if($(this).val()=="cod"){
               //SHOW COD
               $('#totalSubmitCOD').show();
-          }else if($(this).val()=="stripe"){
+          }else if($(this).val()=="transferencia"){
               //SHOW STRIPE
+              $('#totalSubmitCOD').show();
               $('#totalSubmitStripe').show();
               $('#stripe-payment-form').show()
           }else{

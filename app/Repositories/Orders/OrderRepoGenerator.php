@@ -50,7 +50,9 @@ class OrderRepoGenerator extends BaseOrderRepository
         if($hasPayment){
             if($isStripe){
                 $paymentType="Stripe";
-            }else {
+            }else if($request->payment_method=="transferencia"){
+                $paymentType="Transferencia";
+            }else{
                 $paymentType="LinkPayment";
             }
         }

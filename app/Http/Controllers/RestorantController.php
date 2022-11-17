@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use Akaunting\Module\Facade as Module;
+use App\Models\ConfigCuentasBancarias;
 use Illuminate\Support\Facades\Session;
 use App\Notifications\RestaurantCreated;
 use Illuminate\Support\Facades\Validator;
@@ -325,6 +326,7 @@ class RestorantController extends Controller
             unset($workingHours['id']);
             $shifts[$shiftId]=$workingHours;
         }
+        $config_account_banks = ConfigCuentasBancarias::get();
 
         if ($this->verifyAccess($restaurant)) {
             $cities=[];
@@ -342,7 +344,8 @@ class RestorantController extends Controller
                 'available_languages'=> $available_languages,
                 'default_language'=>$default_language,
                 'currency'=>$currency,
-                'appFields'=>$appFields
+                'appFields'=>$appFields,
+                'config_account_banks'=>$config_account_banks,
                 ]);
         }
 
