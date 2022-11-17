@@ -214,9 +214,9 @@ class HomeController extends Controller
             if(isset($_GET['tinicio'],$_GET['tfin']) && $_GET['tinicio']!="" && $_GET['tfin']!=""){
                 $ini = $_GET['tinicio'];
                 $fin = $_GET['tfin'];
-                $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first()->get();
+                $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first();
             }
-
+            $mesaMasCaliente=$mesaMasCaliente->get();
             
             foreach ($mesas->get() as $key => $mesa) {
                 array_push($tablesLabels,$mesa->name);
