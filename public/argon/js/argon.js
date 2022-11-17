@@ -1258,8 +1258,12 @@ var DayOrderChart = (function() {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
+
+							
 							var yLabel = item.yLabel;
 							var content = '';
+
+						
 
 							if (data.datasets.length > 1) {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
@@ -1336,12 +1340,13 @@ var DayTotalOrderChart = (function() {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
+							var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');  
 							var content = '';
 
 							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+								content += '<span class="popover-body-label mr-auto">' + label + 'dddd</span>';
 							}
+
 
 							content += '<span class="popover-body-value">' + yLabel + '</span>';
 

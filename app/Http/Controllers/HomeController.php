@@ -490,6 +490,12 @@ class HomeController extends Controller
                 array_push($ordenestotalpordiaValues,$orden->total);
             }
         }
+
+
+        if (auth()->user()->hasRole('admin')) {
+
+            
+        }
         
         
 
@@ -534,12 +540,14 @@ class HomeController extends Controller
 
         $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
         ->where('payment_status','paid')
-        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
+        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price,SUM(delivery_price + static_fee + fee_value) AS total_fee,SUM(delivery_price) AS total_delivery,SUM(static_fee) AS total_static_fee,SUM(fee_value) AS total_fee_value'))
         ->first()->toArray();
 
         $last30daysClientsRestaurant = RestaurantClient::where('created_at', '>', $last30days)->count();
 
-        if(auth()->user()->hasRole('owner')){
+    
+    
+    if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('admin')){
        
         $months = [
             1 => __('Jan'),

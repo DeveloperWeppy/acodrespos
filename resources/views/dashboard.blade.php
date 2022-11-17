@@ -744,7 +744,7 @@
                                                         <option value="0"  >Seleccionar</option>
                                                         <option value="cod" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cod"){ echo "selected"; } ?> >Contraentrega</option>
                                                         <option value="cash" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cash"){ echo "selected"; } ?> >Efectivo</option>
-                                                        <option value="cardterminal" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cardterminal"){ echo "selected"; } ?>  >Datafono</option>
+                                                        <option value="cardterminal" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cardterminal"){ echo "selected"; } ?>  >Datáfono</option>
                                                         <option value="transferencia" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="transferencia"){ echo "selected"; } ?>  >transferencia</option>
                                                     </select>
                                                 </div>
