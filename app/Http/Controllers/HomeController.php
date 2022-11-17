@@ -152,7 +152,7 @@ class HomeController extends Controller
 
 
 
-        //--- by deiby  grafico de mesa caliente
+        //--- grafico de mesa caliente
         if (auth()->user()->hasRole('owner')) {
 
             $misMesas = DB::table('restoareas')
@@ -292,6 +292,8 @@ class HomeController extends Controller
             }
 
             
+
+            //graficos ventas por horario
             $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->groupBy('dia')->orderBy('dia','asc');
             $ordenesHorario = $ordenesHorario->whereHas('laststatus', function($q){
                 $q->where('status_id', [7]);
@@ -314,7 +316,6 @@ class HomeController extends Controller
                 $hfin = $_GET['hhha'];
                 $ordenesHorario->where(DB::raw('hour(created_at)'),">=","$hini")->where(DB::raw('hour(created_at)'),"<=","$hfin");
             }
-
 
             $horarioLabels=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
             $horarioOrders=[0,0,0,0,0,0,0];
@@ -374,7 +375,20 @@ class HomeController extends Controller
             }
             
 
+            //excel ventas por dia
+            $ordenestotalpordia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,sum(order_price) as total'))
+            ->where('restorant_id',auth()->user()->restorant->id)
+            ->where('created_at', '>', $last30days)
+            ->where('payment_status', 'paid')
+            ->groupBy('dia')
+            ->orderBy('dia');
 
+            $ordenestotalpordiaLabels=[];
+            $ordenestotalpordiaValues=[];
+            foreach ($ordenestotalpordia->get() as $key => $orden) {
+                array_push($ordenestotalpordiaLabels,$orden->dia);
+                array_push($ordenestotalpordiaValues,$orden->total);
+            }
         }
         
         
@@ -685,6 +699,8 @@ class HomeController extends Controller
             'misMeseros'=>$meseros,
             'ordenespordiaLabels' => $ordenespordiaLabels,
             'ordenespordiaValues' =>  $ordenespordiaValues,
+            'ordenestotalpordiaLabels' => $ordenestotalpordiaLabels,
+            'ordenestotalpordiaValues' =>  $ordenestotalpordiaValues,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));

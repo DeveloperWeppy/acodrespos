@@ -580,12 +580,12 @@
         <div id="g7"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
-                <div class="card shadow">
+                <div class="card bg-gradient-default shadow">
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por Dias</h6>
-                                <h2 class="mb-0">Cantidad de ventas por día</h2>
+                                <h6 class="text-uppercase text-light ls-1 mb-1">Informe por Dias</h6>
+                                <h2 class="mb-0 text-white">Cantidad de ventas por día</h2>
                             </div>
                             <div class="col-12">
                             
@@ -606,6 +606,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
@@ -667,6 +668,152 @@
                         @if(count($ordenespordiaLabels)>0)
                             <div class="chart">
                                 <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay ventas en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+
+        @if(auth()->user()->hasRole('owner'))
+        <div id="g7"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por ventas</h6>
+                                <h2 class="mb-0">Ventas por día</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                
+
+                                <form action="{{route('home')}}#g7" method="GET">
+                                    <div class="row mt-5 input-daterange datepicker">
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Mesero</label>
+                                                <div class="">
+                                                    <select name="vmes" class="form-control form-control-sm">
+                                                        <option value="0"  >Seleccionar mesero</option>
+                                                        @foreach($misMeseros as $key)
+                                                        <option value="{{$key->id}}" <?php if(isset($_GET['mmes']) && $_GET['mmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Mostrar</label>
+                                                <div class="">
+                                                    <select name="vmos" class="form-control form-control-sm">
+                                                        <option value="0"  >Seleccionar</option>
+                                                        <option value="1"  >Total venta</option>
+                                                        <option value="2"  >Total propina</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Metodo de pago</label>
+                                                <div class="">
+                                                    <select name="vmos" class="form-control form-control-sm">
+                                                        <option value="0"  >Seleccionar</option>
+                                                        <option value="cod"  >Contraentrega</option>
+                                                        <option value="cash"  >Efectivo</option>
+                                                        <option value="cardterminal"  >Datafono</option>
+                                                        <option value="transferencia"  >transferencia</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Tipo de pedido</label>
+                                                <div class="">
+                                                    <select name="vmos" class="form-control form-control-sm">
+                                                        <option value="0" >Seleccionar</option>
+                                                        <option value="3" >En la mesa</option>
+                                                        <option value="1" >Domicilio</option>
+                                                        <option value="4" >Digituno</option>
+                                                        <option value="2" >Recogida</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha de</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="vinicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['minicio'])){echo 'value="'.$_GET['minicio'].'"';} ?> />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha hasta</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="vfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['mfin'])){echo 'value="'.$_GET['mfin'].'"';} ?>/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label"></label>
+                                                <div class="input-group">
+                                                    <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    @if ($parameters)
+                                                    <a href="{{Request::fullUrl().'&reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                    @else
+                                                    <a href="{{Request::fullUrl().'?reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                    @endif
+                                                </div>
+                                            </div>
+    
+                                            
+                                        </div>
+                                    <div>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var ordenestotalpordiaLabels = @json($ordenestotalpordiaLabels);
+                        var ordenestotalpordiaValues= @json($ordenestotalpordiaValues);
+                        
+                        
+                        totalpordiaLabels=[];
+                        totalpordiaValues=[];
+                        
+                        for (const key in ordenestotalpordiaLabels) {
+                            totalpordiaLabels.push(ordenestotalpordiaLabels[key]);
+                            totalpordiaValues.push(ordenestotalpordiaValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($ordenespordiaLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-ordertotalbyday" class="chart-canvas"></canvas>
                             </div>
                         @else
                             <p>{{ __('No hay ventas en este momento!') }}</p>
