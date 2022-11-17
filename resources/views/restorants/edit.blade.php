@@ -195,7 +195,7 @@
         "use strict";
         var defaultHourFrom = "09:00";
         var defaultHourTo = "17:00";
-
+        var datazone=[];
         var timeFormat = '{{ config('settings.time_format') }}';
         $('.input-group-addon').hide();
         $("#show_hide_password").removeClass("input-group");
@@ -259,6 +259,7 @@
         });
 
         $("#clear_area").on("click",function() {
+            //borra 1
             //remove markers
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setMap(null);
@@ -267,7 +268,7 @@
             //remove polygon
             poly.setMap(null);
             poly.setPath([]);
-
+           
             poly = new google.maps.Polyline({ map: map_area, path: [], strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2 });
 
             path = poly.getPath();
@@ -372,6 +373,7 @@
         }
 
         function initializeMap(lat, lng){
+            // en 1
             var map_options = {
                 zoom: 13,
                 center: new google.maps.LatLng(lat, lng),
@@ -381,9 +383,59 @@
 
             map_location = new google.maps.Map( document.getElementById("map_location"), map_options );
             map_area = new google.maps.Map( document.getElementById("map_area"), map_options );
+            map_area2 = new google.maps.Map( document.getElementById("map_area2"), map_options );
+            arraypoly[0]=new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
+            arraypoly[0].setMap(map_area2)
+           // poly2 = new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
+            //poly2.setMap(map_area2);
+            map_area2.addListener('click', function(event) {
+                addLatLng(event.latLng);
+            });
+            for(var i = 0; i < datazone.length; i++) {
+                initialize_existing_area2(datazone[i].radius,i,datazone[i].color);
+            }
+            indexpoly=datazone.length;
+            arraypoly[indexpoly] =  new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
+            arraypoly[indexpoly].setMap(map_area2);
+            cargarzona();
         }
+        function addLatLng(latLng) {
+            if (isClosed2) return;
+            markerIndex2 = arraypoly[indexpoly].getPath().length;
+            var ifcrear=0;
+            if(markerIndex2==0){
+                $( "#btnerase" ).show();
+            }
+           // markerIndex2 = poly2.getPath().length;
+            var isFirstMarker = markerIndex2 === 0;
+            markerArea2 = new google.maps.Marker({ map: map_area2, position: latLng, draggable: false, icon: area });
 
+            //push markers
+            markers2.push(markerArea2);
+
+            if(isFirstMarker) {
+                google.maps.event.addListener(markerArea2, 'click', function () {
+                    if (isClosed2) return;
+                    path2f = arraypoly[indexpoly].getPath();
+                    arraypoly[indexpoly].setMap(null);
+                    //al crear 2 encerr
+                    arraypoly[indexpoly] = new google.maps.Polygon({ map: map_area2, path: path2f, strokeColor: "yellow", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "green", fillOpacity: 0.35, editable: false });   
+                    isClosed2 = true;
+                    indexpoly++;
+                    arraypoly[indexpoly] =  new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
+                    arraypoly[indexpoly].setMap(map_area2);
+                    $( "#btnsave" ).show();
+                    modalZone();
+                });
+            }
+            google.maps.event.addListener(markerArea2, 'drag', function (dragEvent) {
+                arraypoly[indexpoly].getPath().setAt(markerIndex2, dragEvent.latLng);
+            });
+            arraypoly[indexpoly].getPath().push(latLng);
+           
+        }
         function initializeMarker(lat, lng){
+            // en 2
             var markerData = new google.maps.LatLng(lat, lng);
             marker = new google.maps.Marker({
                 position: markerData,
@@ -391,8 +443,28 @@
                 icon: start
             });
         }
-
+function borrarmarkply(index,tipo=0){
+    for (var i = 0; i < markers2.length; i++) {
+        markers2[i].setMap(null);
+    }
+    if(isClosed2 && tipo==1){
+        index--;
+    }
+    arraypoly[index] .setMap(null);
+    arraypoly[index] .setPath([]);
+    arraypoly[index]  = new google.maps.Polyline({ map: map_area2, path: [], strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2 });
+    path2f = arraypoly[index].getPath();
+    
+    isClosed2 = false;
+    $("#btnerase").hide();
+    $( "#btnsave" ).hide();
+}
+$( "#btnerase" ).click(function() {
+    var index=indexpoly;
+    borrarmarkply(index,1);
+});
         function getLatLngFromPoly(path){
+            //borra 2
             //get lat long from polygon
             var polygonBounds = path;
             var bounds = [];
@@ -407,8 +479,9 @@
 
             return bounds;
         }
-
+         // if lleno solo 1 ? 2
         function new_delivery_area(latLng){
+            // al crear 1
             if (isClosed) return;
             markerIndex = poly.getPath().length;
             var isFirstMarker = markerIndex === 0;
@@ -422,6 +495,7 @@
                     if (isClosed) return;
                     path = poly.getPath();
                     poly.setMap(null);
+                    //al crear 2 encerr
                     poly = new google.maps.Polygon({ map: map_area, path: path, strokeColor: "#FF0000", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "#FF0000", fillOpacity: 0.35, editable: false });
                     isClosed = true;
 
@@ -439,8 +513,19 @@
             });
             poly.getPath().push(latLng);
         }
+        function initialize_existing_area2(area_positions,index,color){
+            for(var i=0; i<area_positions.length; i++){
+                var markerAreaData = new google.maps.LatLng(area_positions[i].lat, area_positions[i].lng);
+                markerArea2 = new google.maps.Marker({ map: map_area2, position: markerAreaData, draggable: false, icon: area });
+                markers2.push(markerArea2);
 
+            }
+            arraypoly[index]=new google.maps.Polygon({ map: map_area2, paths: area_positions, strokeColor: color, strokeOpacity: 0.8, strokeWeight: 2, fillColor: color, fillOpacity: 0.35, editable: false });
+        }
         function initialize_existing_area(area_positions){
+            // en 3
+
+             //if basio 2
             for(var i=0; i<area_positions.length; i++){
                 var markerAreaData = new google.maps.LatLng(area_positions[i].lat, area_positions[i].lng);
                 markerArea = new google.maps.Marker({ map: map_area, position: markerAreaData, draggable: false, icon: area });
@@ -453,7 +538,7 @@
 
                 poly.setMap(null);
                 poly = new google.maps.Polygon({ map: map_area, path: path, strokeColor: "#FF0000", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "#FF0000", fillOpacity: 0.35, editable: false });
-
+              //  poly2 = new google.maps.Polygon({ map: map_area2, path: path, strokeColor: "#FF0000", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "#FF0000", fillOpacity: 0.35, editable: false });
                 //show clear area
                 isClosed = true;
                 $("#clear_area").show();
@@ -466,18 +551,27 @@
         var area = "/images/green_pin.png"
         var map_location = null;
         var map_area = null;
+        var map_area2 = null;
         var marker = null;
         var infoWindow = null;
         var lat = null;
         var lng = null;
         var circle = null;
         var isClosed = false;
+        var isClosed2 = true;
         var poly = null;
+        var poly2 = null;
+        var arraypoly=[];
+        var indexpoly=0;
         var markers = [];
         var markerArea = null;
         var markerIndex = null;
+        var markerIndex2 = null;
+        var markerArea2 = null;
+        var markers2 = [];
         var path = null;
-
+        var  path2f=null;
+        var  path2f2=null;
         window.onload = function () {
           
 
@@ -494,11 +588,13 @@
 
                         //initialize marker
                         initializeMarker(currPost.lat, currPost.lng)
-
-                   
+                        //if basio 1
+                        
 
                         poly = new google.maps.Polyline({ map: map_area, path: currPost.area ? currPost.area : [], strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2 });
+                       
 
+  // Add a listener for the click event
                         if(currPost.area != null){
                             initialize_existing_area(currPost.area)
                         }
@@ -508,10 +604,11 @@
 
                             changeLocation(event.latLng.lat(), event.latLng.lng());
                         });
-
+                      
                         map_area.addListener('click', function(event) {
                             new_delivery_area(event.latLng)
                         });
+                       
                     }else{
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(function(position) {
@@ -531,7 +628,7 @@
 
                                     changeLocation(event.latLng.lat(), event.latLng.lng());
                                 });
-
+                              
                                 map_area.addListener('click', function(event) {
                                     new_delivery_area(event.latLng)
                                 });
@@ -549,7 +646,7 @@
 
                                     changeLocation(event.latLng.lat(), event.latLng.lng());
                                 });
-
+                                
                                 map_area.addListener('click', function(event) {
                                     new_delivery_area(event.latLng)
                                 });
@@ -602,6 +699,7 @@
 
             form.submit();
         });*/
+<<<<<<< HEAD
         function eliminarAccount(id){
             
             var url = document.getElementById(id).getAttribute('value');
@@ -661,5 +759,157 @@
                     }
                 })
         }
+=======
+     var typeFormZone=0;
+     function cargarzona(){
+        for(var i = 0; i < datazone.length; i++) {
+            borrarmarkply(i);
+        }
+
+       $.ajax({method: "get", url: "{{route('geozone.get')}}", dataType: "json" })
+        .done(function( resp ) {
+            $("#tgeozone").html(resp.table);
+            $("#btnsave").hide();
+            $("#btnerase").hide(); 
+            $( "#btncancel" ).hide();
+            for(var i = 0; i < resp.data.length; i++) {
+                initialize_existing_area2(resp.data[i].radius,i,resp.data[i].color);
+            }
+            datazone=resp.data;
+            indexpoly=resp.data.length;
+            arraypoly[indexpoly] =  new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
+            arraypoly[indexpoly].setMap(map_area2);
+            eventosgepzone();
+           
+        });
+     }
+     function modalZone(data=0){
+        if(data!=0){
+            typeFormZone=data[0];
+            $('#fzone-name').val(data[1]);
+            $('#fzone-color').val(data[2]);
+            $('#fzone-status').val(data[3]);
+            $('#fzone-valor').val(data[4]);
+            $('#ftitle').html("Editar zona");
+            
+        }else{
+            typeFormZone=0;
+            $('#ftitle').html("Crear Zona");
+            $('#fzone-name').val("");
+            $('#fzone-color').val("");
+            $('#fzone-status').val(1);
+        }
+        $('#modal-edit-zone').modal('show');
+     }
+     $( "#btnsave" ).click(function() {
+            modalZone();
+     });
+     $( "#btnaddzone" ).click(function() {
+         isClosed2=false;
+         
+         $( "#btncancel" ).show();
+       
+     });
+     $("#btncancel").click(function() {
+         isClosed2=true;
+         $( "#btnerase" ).hide();
+         $( "#btncancel" ).hide();
+         $( "#btnsave" ).hide();
+       
+     });
+     
+     function eventosgepzone(){
+        $( ".geoedit" ).click(function() {
+            modalZone(JSON.parse($(this).attr("data")));
+        }); 
+        $(".geodelet").on( "click", function() {
+            Swal.fire({
+                title: 'Deseas eliminar esta zona?',
+                icon: 'warning',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: "Cancelar",
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({method: "get", url: "{{route('geozone.destroy')}}/"+$(this).attr("data-id") })
+                    .done(function( msg ) {
+                        Swal.fire('Elimicanado!', '', 'success');
+                        cargarzona();
+                    });
+                
+                }
+            });
+        });
+     }
+     eventosgepzone();
+     $( "#fzone" ).submit(function( event ) {
+        event.preventDefault();
+        var radiusform="";
+        if(path2f==null && typeFormZone==0){
+            Swal.fire({
+                icon: 'info',
+                title: 'Selecciona zona ',
+                html: 'Para poder guardar.',
+                timer: 1500,   
+            });
+            return true;
+        }
+        Swal.fire({
+            title: 'Validando datos',
+            html: 'Por favor espere.',
+            timer: 2000,
+            timerProgressBar: true
+        });
+        $('#modal-edit-zone').modal('hide');
+        var urlf="{{route('geozone.store')}}";
+        if(typeFormZone!=0){
+            urlf="{{route('geozone.updated')}}/"+typeFormZone;
+        }else{
+            radiusform=JSON.stringify(path2f);
+        }
+        $.ajax({
+            type:"POST",
+            url: urlf,
+            data:{ name:$('#fzone-name').val(),radius:radiusform,price:$('#fzone-valor').val(),colorarea:$('#fzone-color').val(),active: $('#fzone-status').val()} ,
+            dataType: "json",
+            success: function (data) {
+                 if(data.mensaje){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Guardado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $("#btnsave").hide();
+                    $("#btnerase").hide(); 
+                    $( "#btncancel" ).hide();
+                    eventosgepzone();
+                    cargarzona();
+                    path2f=null;
+
+                 }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $('#modal-edit-zone').modal('show');
+                 }
+            },
+            error: function (data) {
+                Swal.fire({
+                        icon: 'error',
+                        title: 'Error Proceso',
+                        showConfirmButton: false,
+                        timer: 1500
+                 });
+               
+                console.log(data);
+            },
+        });
+    });    
+>>>>>>> developer
     </script>
 @endsection
