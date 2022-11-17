@@ -98,7 +98,7 @@
                 </div>
 
                 <!---  tabs de configuración de cuentas --->
-                <div class="tab-pane fade show active" id="accountbanks" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                <div class="tab-pane fade " id="accountbanks" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
@@ -699,7 +699,6 @@ $( "#btnerase" ).click(function() {
 
             form.submit();
         });*/
-<<<<<<< HEAD
         function eliminarAccount(id){
             
             var url = document.getElementById(id).getAttribute('value');
@@ -759,7 +758,6 @@ $( "#btnerase" ).click(function() {
                     }
                 })
         }
-=======
      var typeFormZone=0;
      function cargarzona(){
         for(var i = 0; i < datazone.length; i++) {
@@ -910,6 +908,5 @@ $( "#btnerase" ).click(function() {
             },
         });
     });    
->>>>>>> developer
     </script>
 @endsection
