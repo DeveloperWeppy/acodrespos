@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Traits\Expedition;
-use App\Models\GeoZoneDelivery;
+
 use App\Address;
 
 trait HasDelivery
@@ -19,10 +19,8 @@ trait HasDelivery
 
             //Calculate delivery cost
             $addresss = Address::findOrFail($this->request->address_id);
-          
-            $restaurantzona=GeoZoneDelivery::where('restorant_id',$this->vendor->id)->get();
-            $addressesWithFees =$this->getAccessibleAddresses2($restaurantzona, [$addresss]);
-            //$addressesWithFees = $this->getAccessibleAddresses($this->vendor, [$addresss]);
+            $addressesWithFees = $this->getAccessibleAddresses($this->vendor, [$addresss]);
+            
             $cost_total=0;
             foreach ($addressesWithFees as $key => $addressWithFee) {
                 $cost_total=$addressWithFee->cost_total;

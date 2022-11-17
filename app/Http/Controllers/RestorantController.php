@@ -21,7 +21,6 @@ use App\Models\Options;
 use App\Traits\Modules;
 use App\Events\NewVendor;
 use App\Models\LocalMenu;
-use App\Models\GeoZoneDelivery;
 use App\Events\CallWaiter;
 use Illuminate\Support\Str;
 use App\Imports\RestoImport;
