@@ -194,8 +194,24 @@ class OrderController extends Controller
 
         $orders = $orders->paginate(10);
 
+        $estados =  [
+            2 => "Accepted by admin",
+            3 => "Accepted by restaurant",
+            4 => "Assigned to driver",
+            11 => "Closed",
+            7 => "Delivered",
+            1 => "Just created",
+            6 => "Picked up",
+            5 => "Prepared",
+            8 => "Rejected by admin",
+            9 => "Rejected by restaurant",
+            10 => "Updated",
+        ];
+    
+
+        //Status::pluck('name','id')->toArray()
         return view('orders.index', [
-            'statuses'=>Status::pluck('name','id')->toArray(),
+            'statuses'=>$estados,
             'orders' => $orders,
             'restorants'=>$restorants,
             'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true]],

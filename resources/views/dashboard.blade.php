@@ -115,6 +115,8 @@
                 cantidadproducts.push(value.datos.cantidad);
             });
         </script>
+
+        <div id="g3"> </div>
         <div class="row mt-5">
             <div class="col-xl-6">
                 <div class="card shadow">
@@ -127,7 +129,7 @@
 
                             <div class="col-12">
                             
-                                <form action="{{route('home')}}" method="GET">
+                                <form action="{{route('home')}}#g3" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -215,6 +217,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
+        <div id="g4"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -226,7 +229,7 @@
                             </div>
                             <div class="col-12">
                             
-                            <form action="{{route('home')}}" method="GET">
+                            <form action="{{route('home')}}#g4" method="GET">
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
@@ -316,6 +319,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
+        <div id="g5"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card bg-gradient-default shadow">
@@ -329,7 +333,7 @@
                             
                                 
 
-                            <form action="{{route('home')}}" method="GET">
+                            <form action="{{route('home')}}#g5" method="GET">
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
@@ -416,6 +420,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
+        <div id="g6"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -429,7 +434,7 @@
                             
                                 
 
-                            <form action="{{route('home')}}" method="GET">
+                            <form action="{{route('home')}}#g6" method="GET">
                                 <div class="row mt-5 input-daterange datepicker">
 
                                     <div class="col-12 col-md-3">
@@ -572,6 +577,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
+        <div id="g7"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -585,7 +591,7 @@
                             
                                 
 
-                            <form action="{{route('home')}}" method="GET">
+                            <form action="{{route('home')}}#g7" method="GET">
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">

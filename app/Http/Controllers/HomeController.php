@@ -228,16 +228,11 @@ class HomeController extends Controller
                 $q->where('status_id', [7]);
             });
 
-            if(isset($_GET['pinicio']) && $_GET['pinicio']!="" && $_GET['pfin']==""){
-                $ini = $_GET['pinicio'];
-                $orders->whereDate('created_at',"=","$ini")->first();
-            }
-            //FILTER BY end date
             $fin = date('Y-m-d');
             if(isset($_GET['pinicio'],$_GET['pfin']) && $_GET['pinicio']!="" && $_GET['pfin']!=""){
                 $ini = $_GET['pinicio'];
                 $fin = $_GET['pfin'];
-                $orders->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin")->first();
+                $orders->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
             }
 
             $periodLabels=[];
