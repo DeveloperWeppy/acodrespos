@@ -20,7 +20,7 @@
                                     {{-- <option value="cardterminal">{{ __('Card terminal') }}</option>
                                     <option value="onlinepayments">{{ __('Online payments') }}</option> --}}
                                     <option value="cardterminal">{{ __('Datáfono') }}</option>
-                                    <option value="onlinepayments">{{ __('Transferencia') }}</option>
+                                    <option value="transferencia">{{ __('Transferencia') }}</option>
                                 </select>
                             </div>
                             <div id="selecuenta" style="display: none;">

@@ -178,7 +178,7 @@
 
         $("#paymentType").on('change', function() {
           
-          if ($(this).val()=='onlinepayments') {
+          if ($(this).val()=='transferencia') {
             $('#selecuenta').show()
             $('#loadarchivo').show()
             $('#seletipocuenta').hide()
