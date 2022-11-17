@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersDriver extends Migration
+class CreateEncuestaOrdensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateUsersDriver extends Migration
      */
     public function up()
     {
-        Schema::create('users_driver', function (Blueprint $table) {
+        Schema::create('encuesta_ordens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->references('id')->on('companies');
-            $table->string('name', 250);
-            $table->string('phone', 250);
+            $table->string('question', 250);
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateUsersDriver extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_driver');
+        Schema::dropIfExists('encuesta_ordens');
     }
 }
