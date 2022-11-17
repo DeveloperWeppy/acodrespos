@@ -125,7 +125,7 @@
                                                 <th scope="col">{{ __('Nombre Banco') }}</th>
                                                 <th scope="col">{{ __('Tipo de Cuenta') }}</th>
                                                 <th scope="col">{{ __('Nº Cuenta') }}</th>
-                                                <th scope="col">{{ __('Acciones') }}</th>
+                                                <th scope="col">{{ __('Eliminar') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,11 +135,16 @@
                                                         <td>{{$account->name_bank}}</td>
                                                         <td>{{$account->type_account}}</td>
                                                         <td>{{$account->number_account}}</td>
-                                                        <td>{{$account->number_account}}</td> 
+                                                        <td>
+                                                            <input type="hidden" id="{{$account->id}}" value="{{ route('configuracioncuenta.delete', $account->id) }}">
+                                                            <button class="btn btn-danger btn-sm" onclick="eliminarAccount({{$account->id}})"><span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span> {{ __('crud.delete') }}</button>    
+                                                        </td> 
                                                     </tr>
                                                 @endforeach
                                             @else
-                                                
+                                                <tr>
+                                                    <td>No hay datos disponibles...</td>
+                                                </tr>
                                             @endif
                                             
                                         </tbody>
@@ -597,5 +602,64 @@
 
             form.submit();
         });*/
+        function eliminarAccount(id){
+            
+            var url = document.getElementById(id).getAttribute('value');
+            //console.log("soy id"+urll);
+                Swal.fire({
+                    title: 'Eliminar Cuenta de Banco',
+                    text: "¿Estas seguro de eliminar esta cuenta?",
+                    icon: 'question',
+                    showCancelButton: "Cancelar",
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            type: "GET",
+                            encoding:"UTF-8",
+                            url: url,
+                            dataType:'json',
+                            beforeSend:function(){
+                                Swal.fire({
+                                    text: 'Eliminando, espere...',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                });
+                            }
+                        }).done(function(respuesta){
+                            //console.log(respuesta);
+                            if (!respuesta.error) {
+                                Swal.fire({
+                                    title: 'Cuenta Eliminada!',
+                                    icon: 'success',
+                                    showConfirmButton: true,
+                                    timer: 2000
+                                });
+                                setTimeout(function(){
+                                location.reload();
+                                },2000);
+                            } else {
+                                setTimeout(function(){
+                                    Swal.fire({
+                                        title: respuesta.mensaje,
+                                        icon: 'error',
+                                        showConfirmButton: true,
+                                        timer: 4000
+                                    });
+                                },2000);
+                            }
+                        }).fail(function(resp){
+                            console.log(resp);
+                        });
+                    }
+                })
+        }
     </script>
 @endsection

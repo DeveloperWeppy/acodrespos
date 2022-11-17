@@ -148,6 +148,8 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         #routes for settings banks account
         Route::prefix('configuracioncuenta')->name('configuracioncuenta.')->group(function () {
             Route::post('guardar', 'ConfigCuentasBancariasController@store')->name('store');
+            Route::get('/del/{id}', 'ConfigCuentasBancariasController@destroy')->name('delete');
+            Route::post('obtener', 'ConfigCuentasBancariasController@geInfoCuentas')->name('obtener');
         });
 
         Route::resource('cities', 'CitiesController');

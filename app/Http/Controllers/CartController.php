@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\Fields;
+use Cart;
 use App\Items;
+use App\Order;
+use App\Plans;
+use App\Tables;
+use App\Restorant;
+use Carbon\Carbon;
+use App\Traits\Fields;
 use App\Models\Variants;
 use App\Models\Orderitems;
-use App\Order;
-use App\Restorant;
-use App\Tables;
-use App\Plans;
-use Carbon\Carbon;
-use Cart;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 use App\Services\ConfChanger;
-use Akaunting\Module\Facade as Module;
 use App\Models\CartStorageModel;
 use Illuminate\Support\Facades\Auth;
+use Akaunting\Module\Facade as Module;
+use App\Models\ConfigCuentasBancarias;
+use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
@@ -205,7 +206,7 @@ class CartController extends Controller
             }
 
             
-
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$restorantID)->get();
             //The restaurant
             $restaurant = Restorant::findOrFail($restorantID);
 
@@ -285,6 +286,8 @@ class CartController extends Controller
                 $timeSlots=[null];
             }
             $params = [
+                'configaccountsbanks'=>$configaccountsbanks,
+                'type'=>'seleccione',
                 'enablePayments'=>$enablePayments,
                 'title' => 'Shopping Cart Checkout',
                 'tables' =>  $tables,

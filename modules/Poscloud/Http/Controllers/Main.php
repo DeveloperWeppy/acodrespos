@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Cart;
 use App\Order;
 use Akaunting\Module\Facade as Module;
+use App\Models\ConfigCuentasBancarias;
 use PDO;
 
 class Main extends Controller
@@ -77,7 +78,8 @@ class Main extends Controller
                         $selectTelefono[$item->id]=$item->phone;
                     }
             }
-            return view('poscloud::index',['deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono]);
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
+            return view('poscloud::index',['configaccountsbanks'=>$configaccountsbanks,'deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono]);
         }else{
             return redirect(route('login'));
         }

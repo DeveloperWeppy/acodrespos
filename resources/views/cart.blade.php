@@ -166,6 +166,7 @@
 @section('js')
 
   <script async defer src= "https://maps.googleapis.com/maps/api/js?key=<?php echo config('settings.google_maps_api_key'); ?>&callback=initAddressMap"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
   <script>
@@ -181,6 +182,64 @@
     }else if(RESTORANT.can_deliver == 0 && RESTORANT.can_pickup == 1){
         initialOrderType = 'pickup';
     }
+    $(function () {
+      $(".infobanco").hide();
+      $("#div_cargar_infocuenta").hide();
+      $("input[name='paymentType']").on('change', function() {
+        var namecheck = $(this).val();
+        if (namecheck=='transferencia') {
+            $(".infobanco").show();
+            $("#div_cargar_infocuenta").show();
+        } else {
+          $(".infobanco").hide();
+          $("#div_cargar_infocuenta").hide();
+        }
+      });
+        $("#typeaccount").on('change', function() {
+          var ids_type_account = $(this).val();
+
+          if (ids_type_account=='seleccione') {
+            consultarcuenta(ids_type_account);
+          }else{
+            consultarcuenta(ids_type_account);
+          }
+        });
+
+        function consultarcuenta(ids_type_account)
+         {
+          var url = "{{ route('configuracioncuenta.obtener') }}";
+            $.ajax({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              encoding:"UTF-8",
+              url: url,
+              method: "POST",
+              cache: false,
+              datatype: 'html',
+              data: {
+                  type: ids_type_account,
+              },
+              beforeSend:function(){
+                  Swal.fire({
+                      text: "Cargando datos, espere por favor...",
+                      timerProgressBar: true,
+                      didOpen: () => {
+                          Swal.showLoading();
+                      },
+                  });
+              }
+            }).done(function(respuesta){
+
+                $('#div_cargar_infocuenta').html(respuesta);
+                Swal.close();
+
+            }).fail(function(resp){
+                console.log(resp);
+            });
+         }
+    });
+    
   </script>
   <script src="{{ asset('custom') }}/js/checkout.js"></script>
 @endsection

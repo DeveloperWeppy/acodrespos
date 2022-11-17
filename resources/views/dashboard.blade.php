@@ -124,7 +124,7 @@
 
             datos7dias.forEach(function(value, index) {
                 namedias.push(value.datos.day);
-                console.log(value.datos.day);
+                //console.log(value.datos.day);
             });
             datos7dias.forEach(function(value, index) {
                 totalventas7dias.push(value.datos.total_ordenes);

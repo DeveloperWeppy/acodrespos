@@ -57,7 +57,19 @@ class ConfigCuentasBancariasController extends Controller
             }
             
         }
-        
+    }
+
+    public function geInfoCuentas(Request $request)
+    {
+        $type = $request->type;
+
+        if ($type=='seleccione') {
+            return view('restorants.partials.infoconfigcuenta', compact('type'))->render();
+        } else {
+            $respuesconfigaccountsbanks = ConfigCuentasBancarias::find($type);
+
+            return view('restorants.partials.infoconfigcuenta', compact('type', 'respuesconfigaccountsbanks'))->render();
+        }
     }
 
     /**
@@ -100,8 +112,18 @@ class ConfigCuentasBancariasController extends Controller
      * @param  \App\Models\ConfigCuentasBancarias  $configCuentasBancarias
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ConfigCuentasBancarias $configCuentasBancarias)
+    public function destroy($id)
     {
-        //
+        $error = false;
+        $mensaje = '';
+
+        if (ConfigCuentasBancarias::findOrFail($id)->delete()) {
+            $error = false;
+        } else {
+            $error = true;
+            $mensaje = 'Error! Se presento un problema al eliminar, intenta de nuevo.';
+        }
+
+        echo json_encode(array('error' => $error, 'mensaje' => $mensaje));
     }
 }
