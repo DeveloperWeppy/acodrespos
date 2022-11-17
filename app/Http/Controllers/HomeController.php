@@ -34,7 +34,7 @@ class HomeController extends Controller
     }
 
     private  function driverInfo(){
-        $driver = auth()->user();
+            $driver = auth()->user();
 
              //Today paid orders
             $today=Order::where(['driver_id'=>$driver->id])->where('payment_status','paid')->where('created_at', '>=', Carbon::today());
@@ -106,6 +106,7 @@ class HomeController extends Controller
      */
     public function index($lang=null)
     {
+
         if (config('settings.makePureSaaS',false)) {
             return $this->pureSaaSIndex($lang);
         }
@@ -113,9 +114,9 @@ class HomeController extends Controller
         $locale = Cookie::get('lang') ? Cookie::get('lang') : config('settings.app_locale');
         if ($lang!=null) {
             //this is language route
-            $locale = $lang;
-            
+            $locale = $lang;  
         }
+
         if($locale!="android-chrome-256x256.png"){
             App::setLocale(strtolower($locale));
             session(['applocale_change' => strtolower($locale)]);
@@ -125,7 +126,6 @@ class HomeController extends Controller
             \App\Services\ConfChanger::switchCurrency(auth()->user()->restorant);
         }
         
-
         $last30days=Carbon::now()->subDays(30);
 
         //Driver
@@ -153,6 +153,17 @@ class HomeController extends Controller
 
 
         //--- grafico de mesa caliente
+
+        $tablesLabels=[];
+        $tablesPeoples=[];
+        $misMesas = [];
+        $mesaMasCaliente = [];
+
+        $ordenespordiaLabels = [];
+        $ordenespordiaValues = [];
+
+        
+
         if (auth()->user()->hasRole('owner')) {
 
             $misMesas = DB::table('restoareas')
@@ -198,20 +209,15 @@ class HomeController extends Controller
             ->groupBy('tables.restoarea_id','orders.table_id')
             ->orderBy('nump','desc');
 
-            if(isset($_GET['tinicio']) && $_GET['tinicio']!="" && $_GET['tfin']==""){
-                $ini = $_GET['tinicio'];
-                $mesaMasCaliente->whereDate('orders.created_at',"=","$ini")->first();
-            }
             //FILTER BY end date
             $fin = date('Y-m-d');
             if(isset($_GET['tinicio'],$_GET['tfin']) && $_GET['tinicio']!="" && $_GET['tfin']!=""){
                 $ini = $_GET['tinicio'];
                 $fin = $_GET['tfin'];
-                $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first();
+                $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first()->get();
             }
 
-            $tablesLabels=[];
-            $tablesPeoples=[];
+            
             foreach ($mesas->get() as $key => $mesa) {
                 array_push($tablesLabels,$mesa->name);
                 array_push($tablesPeoples,$mesa->nump);
@@ -219,8 +225,12 @@ class HomeController extends Controller
 
 
 
+        }
 
 
+        $periodLabels=[];
+        $periodTime=[];
+        if (auth()->user()->hasRole('owner')) {
             //excel tiempos por pedido
             $orders = Order::orderBy('delivery_method', 'desc')->whereNotNull('restorant_id');
             $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
@@ -235,8 +245,7 @@ class HomeController extends Controller
                 $orders->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
             }
 
-            $periodLabels=[];
-            $periodTime=[];
+            
             $nomT = 0;
             $timT = 0;
             $k=-1;
@@ -291,7 +300,12 @@ class HomeController extends Controller
                 return Excel::download(new TimeOrderExport($items), 'timeOrders_'.time().'.xlsx');
             }
 
-            
+        }
+
+        $horarioLabels=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+        $horarioOrders=[0,0,0,0,0,0,0];
+        $meseros = [];
+        if (auth()->user()->hasRole('owner')) {
 
             //graficos ventas por horario
             $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->groupBy('dia')->orderBy('dia','asc');
@@ -317,8 +331,7 @@ class HomeController extends Controller
                 $ordenesHorario->where(DB::raw('hour(created_at)'),">=","$hini")->where(DB::raw('hour(created_at)'),"<=","$hfin");
             }
 
-            $horarioLabels=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-            $horarioOrders=[0,0,0,0,0,0,0];
+            
             foreach ($ordenesHorario->get() as $key => $hora) {
                 $k=$hora->dia-2;
                 $horarioOrders[$k]=$hora->numo;
@@ -375,6 +388,12 @@ class HomeController extends Controller
             }
             
 
+        }
+
+        $ordenestotalpordiaLabels=[];
+        $ordenestotalpordiaValues=[];
+
+        if (auth()->user()->hasRole('owner')) {
             //excel ventas por dia
             $ordenestotalpordia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,sum(order_price) as total'))
             ->where('restorant_id',auth()->user()->restorant->id)
@@ -383,8 +402,7 @@ class HomeController extends Controller
             ->groupBy('dia')
             ->orderBy('dia');
 
-            $ordenestotalpordiaLabels=[];
-            $ordenestotalpordiaValues=[];
+            
             foreach ($ordenestotalpordia->get() as $key => $orden) {
                 array_push($ordenestotalpordiaLabels,$orden->dia);
                 array_push($ordenestotalpordiaValues,$orden->total);
@@ -423,6 +441,24 @@ class HomeController extends Controller
             'costValue'=>[]
         ];
 
+
+        //grafico ventas por 
+        $last30daysOrders = 0;
+        $last30daysClientsRestaurant=[];
+        $last30daysOrdersValue=[];
+        $salesValue=[];
+        $monthList=[];
+
+
+        $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
+        ->where('payment_status','paid')
+        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
+        ->first()->toArray();
+
+        $last30daysClientsRestaurant = RestaurantClient::where('created_at', '>', $last30days)->count();
+
+        if(auth()->user()->hasRole('owner')){
+       
         $months = [
             1 => __('Jan'),
             2 => __('Feb'),
@@ -439,7 +475,6 @@ class HomeController extends Controller
         ];
         
         $last30daysOrders = Order::where('created_at', '>', $last30days)->count();
-        $last30daysClientsRestaurant = RestaurantClient::where('companie_id',auth()->user()->restorant->id)->where('created_at', '>', $last30days)->count();
         $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
         ->where('payment_status','paid')
         ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
@@ -457,6 +492,13 @@ class HomeController extends Controller
         foreach ($salesValue as $key => &$sale) {
             $sale['monthName']=$months[$key];
         }
+
+        $monthList=[];
+        foreach ($salesValue as $key => $salerecord) {
+           array_push($monthList,$salerecord['monthName']);
+        }
+
+    }
 
         //Expenses  - Owner only
         if (auth()->user()->hasRole('owner')&&Module::has('expenses')) {
@@ -511,11 +553,7 @@ class HomeController extends Controller
             ];   
         }
 
-        $monthList=[];
-        foreach ($salesValue as $key => $salerecord) {
-           array_push($monthList,$salerecord['monthName']);
-        }
-
+      
         $availableLanguagesENV = config('settings.front_languages');
         $exploded = explode(',', $availableLanguagesENV);
         $availableLanguages = [];
@@ -623,7 +661,7 @@ class HomeController extends Controller
             }
 
         
-
+            
             //grafico de ventas por dia
             $meseros=User::role('staff')
             ->where(['active'=>1])
@@ -730,7 +768,7 @@ class HomeController extends Controller
             'tablesLabels' => $tablesLabels,
             'tablesPeoples' =>  $tablesPeoples,
             'misMesas'=>$misMesas,
-            'mesaMasCaliente'=>$mesaMasCaliente->get(),
+            'mesaMasCaliente'=>$mesaMasCaliente,
             'periodLabels' => $periodLabels,
             'periodTime' =>  $periodTime,
             'horarioLabels' => $horarioLabels,
