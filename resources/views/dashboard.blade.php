@@ -695,7 +695,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
-        <div id="g7"> </div>
+        <div id="g8"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -709,7 +709,7 @@
                             
                                 
 
-                                <form action="{{route('home')}}#g7" method="GET">
+                                <form action="{{route('home')}}#g8" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -718,7 +718,7 @@
                                                     <select name="vmes" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar mesero</option>
                                                         @foreach($misMeseros as $key)
-                                                        <option value="{{$key->id}}" <?php if(isset($_GET['mmes']) && $_GET['mmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
+                                                        <option value="{{$key->id}}" <?php if(isset($_GET['vmes']) && $_GET['vmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -730,8 +730,8 @@
                                                 <div class="">
                                                     <select name="vmos" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
-                                                        <option value="1"  >Total venta</option>
-                                                        <option value="2"  >Total propina</option>
+                                                        <option value="1" <?php if(isset($_GET['vmos']) && $_GET['vmos']==1){ echo "selected"; } ?>  >Total venta</option>
+                                                        <option value="2" <?php if(isset($_GET['vmos']) && $_GET['vmos']==2){ echo "selected"; } ?>  >Total propina</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -740,12 +740,12 @@
                                             <div class="form-group">
                                                 <label class="form-control-label">Metodo de pago</label>
                                                 <div class="">
-                                                    <select name="vmos" class="form-control form-control-sm">
+                                                    <select name="vpag" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
-                                                        <option value="cod"  >Contraentrega</option>
-                                                        <option value="cash"  >Efectivo</option>
-                                                        <option value="cardterminal"  >Datafono</option>
-                                                        <option value="transferencia"  >transferencia</option>
+                                                        <option value="cod" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cod"){ echo "selected"; } ?> >Contraentrega</option>
+                                                        <option value="cash" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cash"){ echo "selected"; } ?> >Efectivo</option>
+                                                        <option value="cardterminal" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cardterminal"){ echo "selected"; } ?>  >Datafono</option>
+                                                        <option value="transferencia" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="transferencia"){ echo "selected"; } ?>  >transferencia</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -754,12 +754,12 @@
                                             <div class="form-group">
                                                 <label class="form-control-label">Tipo de pedido</label>
                                                 <div class="">
-                                                    <select name="vmos" class="form-control form-control-sm">
+                                                    <select name="vtip" class="form-control form-control-sm">
                                                         <option value="0" >Seleccionar</option>
-                                                        <option value="3" >En la mesa</option>
-                                                        <option value="1" >Domicilio</option>
-                                                        <option value="4" >Digituno</option>
-                                                        <option value="2" >Recogida</option>
+                                                        <option value="3" <?php if(isset($_GET['vtip']) && $_GET['vtip']==3){ echo "selected"; } ?> >En la mesa</option>
+                                                        <option value="1" <?php if(isset($_GET['vtip']) && $_GET['vtip']==1){ echo "selected"; } ?> >Domicilio</option>
+                                                        <option value="4" <?php if(isset($_GET['vtip']) && $_GET['vtip']==4){ echo "selected"; } ?> >Digituno</option>
+                                                        <option value="2" <?php if(isset($_GET['vtip']) && $_GET['vtip']==2){ echo "selected"; } ?> >Recogida</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -771,7 +771,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                     </div>
-                                                    <input name="vinicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['minicio'])){echo 'value="'.$_GET['minicio'].'"';} ?> />
+                                                    <input name="vinicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['vinicio'])){echo 'value="'.$_GET['vinicio'].'"';} ?> />
                                                 </div>
                                             </div>
                                         </div>
@@ -782,7 +782,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                     </div>
-                                                    <input name="vfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['mfin'])){echo 'value="'.$_GET['mfin'].'"';} ?>/>
+                                                    <input name="vfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['vfin'])){echo 'value="'.$_GET['vfin'].'"';} ?>/>
                                                 </div>
                                             </div>
                                         </div>
@@ -812,7 +812,6 @@
                         var ordenestotalpordiaLabels = @json($ordenestotalpordiaLabels);
                         var ordenestotalpordiaValues= @json($ordenestotalpordiaValues);
                         
-                        
                         totalpordiaLabels=[];
                         totalpordiaValues=[];
                         
@@ -820,7 +819,6 @@
                             totalpordiaLabels.push(ordenestotalpordiaLabels[key]);
                             totalpordiaValues.push(ordenestotalpordiaValues[key]);
                         }
-
                     </script>
                     
                     <div class="card-body">

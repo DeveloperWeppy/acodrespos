@@ -20,6 +20,8 @@ use Stripe\OrderItem;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TimeOrderExport;
 use App\Exports\HourOrderExport;
+use App\Exports\OrderByDayExport;
+
 
 class HomeController extends Controller
 {
@@ -401,6 +403,86 @@ class HomeController extends Controller
             ->where('payment_status', 'paid')
             ->groupBy('dia')
             ->orderBy('dia');
+
+            
+            if(isset($_GET['vmos']) && $_GET['vmos']==2 ){
+                $ordenestotalpordia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,sum(propina) as total'))
+                ->where('restorant_id',auth()->user()->restorant->id)
+                ->where('created_at', '>', $last30days)
+                ->where('payment_status', 'paid')
+                ->groupBy('dia')
+                ->orderBy('dia');
+            }
+            if(isset($_GET['vmes']) && $_GET['vmes']!=0){
+                $ordenestotalpordia->where('employee_id', $_GET['vmes']);
+            }
+            if(isset($_GET['vpag']) && $_GET['vpag']!=0 ){
+                $ordenestotalpordia->where('payment_method', $_GET['vpag']);
+            }
+            if(isset($_GET['vtip']) && $_GET['vtip']!=0 ){
+                $ordenestotalpordia->where('delivery_method', $_GET['vtip']);
+            }
+            if(isset($_GET['vinicio'],$_GET['vfin']) && $_GET['vinicio']!="" && $_GET['vfin']!=""){
+                $ini = $_GET['vinicio'];
+                $fin = $_GET['vfin'];
+                $ordenestotalpordia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+
+            if(isset($_GET['reportbyday'])){
+                $ordenestotalpordia=Order::select("*")
+                ->where('restorant_id',auth()->user()->restorant->id)
+                ->where('created_at', '>', $last30days)
+                ->where('payment_status', 'paid')
+                ->orderBy('created_at','desc');
+
+                if(isset($_GET['vmes']) && $_GET['vmes']!=0){
+                    $ordenestotalpordia->where('employee_id', $_GET['vmes']);
+                }
+                
+                if(isset($_GET['vpag']) && $_GET['vpag']!=0 ){
+                    $ordenestotalpordia->where('payment_method', $_GET['vpag']);
+                }
+               
+                if(isset($_GET['vtip']) && $_GET['vtip']!=0 ){
+                    $ordenestotalpordia->where('delivery_method', $_GET['vtip']);
+                }
+                if(isset($_GET['vinicio'],$_GET['vfin']) && $_GET['vinicio']!="" && $_GET['vfin']!=""){
+                    $ini = $_GET['vinicio'];
+                    $fin = $_GET['vfin'];
+                    $ordenestotalpordia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+                }
+
+
+                $items = [];
+
+                foreach ($ordenestotalpordia->get() as $key => $order) {
+
+                    $name_employee = "";
+                    if($order->employee_id!=""){
+                        $user = User::find($order->employee_id);
+                        $name_employee = $user->name;
+                    }
+                    
+                    $to_time = strtotime($order->updated_at);
+                    $from_time = strtotime($order->created_at);
+                    $diff=  round(abs($to_time - $from_time) / 60,2). " minute";
+
+                    $item = [
+                        'order_id'=>$order->id,
+                        'created_at'=>$order->created_at,
+                        'employee'=>$name_employee,
+                        'order_price'=>$order->order_price,
+                        'propina'=>$order->propina,
+                        'payment_method'=>$order->payment_method,
+                        'delivery_method'=>$order->getExpeditionType(),
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new OrderByDayExport($items), 'ordersByDay_'.time().'.xlsx');
+
+            }
+        
 
             
             foreach ($ordenestotalpordia->get() as $key => $orden) {
