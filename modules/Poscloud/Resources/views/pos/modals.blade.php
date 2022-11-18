@@ -85,7 +85,7 @@
                 <div class="row">
                     <div id="loadarchivo" style="display: none;" class="col">
                         <label>{{ __('Cargar evidencia de pago') }}</label>
-                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" name="img_payment" id="img_payment">
+                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" name="img_payment" id="img_payment" required>
                     </div>
                 </div>
             </form>

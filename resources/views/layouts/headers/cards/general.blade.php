@@ -4,7 +4,7 @@
             <!-- Card stats -->
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-0" style="min-height:103px">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-0" style="min-height:103px">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -42,7 +42,7 @@
                
 
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-0" style="min-height:103px">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card card-stats mb-4 mb-xl-0" style="min-height:103px">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -85,7 +85,7 @@
                 @if(config('app.isft'))
                 <div class="row">
                     <div class="col-xl-3 col-lg-6">
-                        <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card card-stats mb-4 mb-xl-0" style="min-height:133px">
                             <div class="card-body">
                                 @if(auth()->user()->hasRole('admin'))
                                     <div class="row">
@@ -131,7 +131,7 @@
                         </div>
                     </div> 
                     <div class="col-xl-3 col-lg-6">
-                        <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card card-stats mb-4 mb-xl-0" style="min-height:133px">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
@@ -140,7 +140,7 @@
                                     </div>
                                     <div class="col-auto">
                                         <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                            <i class="fas fa-truck"></i>
+                                            <i class="fas fa-motorcycle"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-6">
-                        <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card card-stats mb-4 mb-xl-0" style="min-height:133px">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
@@ -167,7 +167,7 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-6">
-                        <div class="card card-stats mb-4 mb-xl-0">
+                        <div class="card card-stats mb-4 mb-xl-0" style="min-height:133px">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">

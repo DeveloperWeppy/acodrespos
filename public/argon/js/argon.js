@@ -1282,7 +1282,7 @@ var DayOrderChart = (function() {
 					label: js.trans('Ventas'),
 					data: totalorderbydayValues,//[25, 20, 30, 22]
 				}]
-			}
+			},
 		});
 
 		// Save to jQuery object
@@ -1402,6 +1402,12 @@ var SalesChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						position: "left",
+						scaleLabel: {
+							display: true,
+							labelString: "Ventas en pesos",
+							fontColor: "white",
+						},
 						gridLines: {
 							color: Charts.colors.gray[900],
 							zeroLineColor: Charts.colors.gray[900]
@@ -1414,9 +1420,9 @@ var SalesChart = (function() {
 								}
 							}
 						}
-					}]
+					}],
 				},
-				tooltipss: {
+				tooltips: {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
@@ -1437,7 +1443,6 @@ var SalesChart = (function() {
 			data: {
 				labels: monthLabels,// ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{
-					label: js.trans('Ventas')+" ",
 					data: salesValues //[0, 20, 10, 30, 15, 40, 20, 60, 60]
 				},{
 					label: js.trans('Expenses')+" ",

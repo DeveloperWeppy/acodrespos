@@ -408,6 +408,13 @@ function updateExpeditionPOS(){
 
 function submitOrderPOS(tipo=0){
 
+
+    if($('#paymentType').val()=="transferencia" && $('#img_payment')[0].files.length === 0 ){
+      $("#img_payment").addClass('is-invalid');
+      return false;
+    }
+
+  
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
 
   localStorage.removeItem(CURRENT_TABLE_ID);
@@ -426,6 +433,8 @@ function submitOrderPOS(tipo=0){
     order_comment:$('textarea#order_comment').val()
   };
   if(EXPEDITION==1||EXPEDITION==2){
+
+    
     //Pickup OR deliver
     dataToSubmit.custom={
       client_id:selectClientId,
@@ -435,6 +444,7 @@ function submitOrderPOS(tipo=0){
     dataToSubmit.phone=$('#client_phone').val();
     dataToSubmit.timeslot=$('#timeslot').val();
     if(EXPEDITION==1){
+      
       dataToSubmit.addressID=$('#client_address').val();
       dataToSubmit.custom.deliveryFee=cartTotal.deliveryPrice;
     }
@@ -443,7 +453,8 @@ function submitOrderPOS(tipo=0){
   if(cartTotal.deduct>0){
     dataToSubmit.coupon_code=$('#coupon_code').val();
   }
-  
+
+
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
 
     //subir imagen factura
