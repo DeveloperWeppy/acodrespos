@@ -260,6 +260,23 @@ class Main extends Controller
      */
     public function store(Request $request)
     {
+
+        //Guarda la imagen de la orden
+        if ($request->hasFile('img_payment')) {
+            $orderId=$request->orderid;
+            $path = 'uploads/payments/';
+            $nom = $orderId.'.png';
+            $order=Order::findOrFail($orderId);
+            $order->url_payment = $path.$nom;
+            $order->save();
+
+            $request->img_payment->move(public_path($path), $nom);
+
+            return $order->id;
+            die();
+        }
+       
+
         if(auth()->user()){
             config(['shopping_cart.storage' => \App\Repositories\CartDBStorageRepository::class]); 
            
@@ -302,6 +319,8 @@ class Main extends Controller
             //Repo Holder
             $orderRepo=OrderRepoGenerator::makeOrderRepo($vendor_id,$mobileLikeRequest,$expedition,$hasPayment,$isStripe,true, $vendorHasOwnPayment,"POS");
 
+            
+            
              //Proceed with validating the data
             $validator=$orderRepo->validateData();
             if ($validator->fails()) { 
@@ -320,7 +339,7 @@ class Main extends Controller
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id);
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->paymentId);
             }
             if ($validatorOnMaking->fails()) { 
                 return response()->json([
@@ -332,6 +351,8 @@ class Main extends Controller
                 $itemss=Order::findOrFail($orderRepo->order->id);
                 $orderRepo->order->items=$itemss->items()->get();
             }
+
+            
             
             return response()->json([
                 'status' => true,

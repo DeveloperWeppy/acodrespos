@@ -26,9 +26,9 @@
                             <div id="selecuenta" style="display: none;">
                                 <label for="">Seleccione la cuenta</label>
                                 <div class="input-group mb-3">
-                                    <select class="form-control noselecttwo" >
+                                    <select class="form-control noselecttwo"  id="paymentId" >
                                         @foreach ($configaccountsbanks as $item)
-                                            <option value="cash">{{ $item->name_bank . " - ". $item->number_account}}</option>
+                                            <option value="{{$item->id}}">{{ $item->name_bank . " - ". $item->number_account}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -80,12 +80,15 @@
 
                     </div>
                 </div>
+            <form id="formImgPayment" >
+                @csrf
                 <div class="row">
                     <div id="loadarchivo" style="display: none;" class="col">
                         <label>{{ __('Cargar evidencia de pago') }}</label>
-                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" required>
+                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" name="img_payment" id="img_payment">
                     </div>
                 </div>
+            </form>
 
             </div>
             <div class="modal-footer" v-if="received-totalPrice>=0" v-cloak>

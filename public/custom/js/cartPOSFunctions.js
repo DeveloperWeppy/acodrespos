@@ -404,14 +404,21 @@ function updateExpeditionPOS(){
 
 }
 
+
+
 function submitOrderPOS(tipo=0){
+
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
+
   localStorage.removeItem(CURRENT_TABLE_ID);
+  
   $('#submitOrderPOS').hide();
   $('#indicator').show();
+
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
+    paymentId:$('#paymentId').val(),
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,
@@ -434,13 +441,15 @@ function submitOrderPOS(tipo=0){
   }
  
   if(cartTotal.deduct>0){
-    
     dataToSubmit.coupon_code=$('#coupon_code').val();
   }
+  
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
+
+    //subir imagen factura
+    submitImage(response.data.id);
+
    
-    
-    
     $('#submitOrderPOS').show();
     $('#indicator').hide();
 
@@ -483,6 +492,25 @@ function submitOrderPOS(tipo=0){
     $('#indicator').hide();
     js.notify(error, "warning");
   });
+}
+
+
+function submitImage(orderid){
+
+    var formData = new FormData($('#formImgPayment')[0]);
+    formData.append('orderid',orderid)
+    $.ajax({
+        url: withSession('/poscloud/order'),
+        type: 'POST',
+        success: function (data) {
+            $('#img_payment').val(null);
+        },
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
 }
 
 /**

@@ -447,7 +447,6 @@ class RestorantController extends Controller
         }
 
         if ($request->hasFile('resto_wide_logo')) {
-       
             $uuid = Str::uuid()->toString();
             $request->resto_wide_logo->move(public_path($this->imagePath), $uuid.'_original.'.'png');
             $restaurant->setConfig('resto_wide_logo',$uuid);
