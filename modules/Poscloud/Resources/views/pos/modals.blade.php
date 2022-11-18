@@ -1,4 +1,5 @@
 <!-- Payment Modal -->
+
 <div class="modal  fade " id="modalPayment" tabindex="-1" role="dialog" aria-labelledby="modal-default"
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-" role="document">

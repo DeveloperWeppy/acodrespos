@@ -1,3 +1,4 @@
+
 <div class="pl-lg-4">
     <form id="restorant-form" method="post" action="{{ route('admin.restaurants.update', $restorant) }}" autocomplete="off" enctype="multipart/form-data">
         @csrf

@@ -1,3 +1,4 @@
+
 <?php 
   $convert=config('settings.do_convertion');
   $currency=config('settings.cashier_currency');

@@ -13,6 +13,7 @@ use Cart;
 use App\Order;
 use Illuminate\Support\Facades\Cookie;
 
+
 class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterface
 {
     private $listOfOrders=null; //The list of order to go in the cookie

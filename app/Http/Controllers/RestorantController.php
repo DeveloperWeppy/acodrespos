@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use DB;
 use Image;
 use Artisan;

@@ -304,6 +304,7 @@ Route::post('phone/verify', 'PhoneVerificationController@verify')->name('phoneve
 Route::get('/get/rlocation/{restorant}', 'RestorantController@getLocation');
 Route::get('/items/variants/{variant}/extras', 'Items\VariantsController@extras')->name('items.variants.extras');
 
+
 //Languages routes
 $availableLanguagesENV = ENV('FRONT_LANGUAGES', 'EN,English,IT,Italian,FR,French,DE,German,ES,Spanish,RU,Russian,PT,Portuguese,TR,Turkish,ar,Arabic');
 $exploded = explode(',', $availableLanguagesENV);

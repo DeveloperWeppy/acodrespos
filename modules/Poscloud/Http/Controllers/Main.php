@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Modules\Poscloud\Http\Controllers;
 
 use Akaunting\Money\Money;

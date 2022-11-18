@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use App\Scopes\RestorantScope;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
