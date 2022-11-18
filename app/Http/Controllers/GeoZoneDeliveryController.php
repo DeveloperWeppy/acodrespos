@@ -11,10 +11,18 @@ class GeoZoneDeliveryController extends Controller
     {
         $data=GeoZoneDelivery::where('restorant_id',auth()->user()->restorant->id)->get();
         $tabla="";
+        $geoZone="";
         $arrayzonep=array();
         foreach ($data as $clave => $zona) {
               $jzone=json_decode($zona->radius);
-               array_push($arrayzonep,array("color"=>$zona->colorarea,"radius"=>$jzone->cd));
+                if(isset($jzone->cd)){
+                    $geoZone=$jzone->cd;
+                }else{
+                    $arraykey= array_keys((array) $jzone);
+                    $geoZone=$arraykey[0];
+                    $geoZone= $jzone->$geoZone;
+                }
+               array_push($arrayzonep,array("color"=>$zona->colorarea,"radius"=>$geoZone));
                $estado=$zona->active==1?'Habilitado':'Deshabilitado';
                $tabla.='<tr>
                 <td>'.$zona->name.'</td>

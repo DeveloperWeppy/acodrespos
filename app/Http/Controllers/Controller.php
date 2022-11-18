@@ -276,10 +276,17 @@ class Controller extends BaseController
     {
         $arrayzonep=array();
         $arrayaddress=array();
+        $geoZone=array();
         foreach ($restaurant as $clave => $zona) {
-          
             $jzone=json_decode($zona->radius);
-            array_push($arrayzonep,$jzone->cd);
+            if(isset($jzone->cd)){
+                $geoZone=$jzone->cd;
+            }else{
+                $arraykey= array_keys((array) $jzone);
+                $geoZone=$arraykey[0];
+                $geoZone= $jzone->$geoZone;
+            }
+            array_push($arrayzonep,$geoZone);
         }
         $addresses = [];
         $ifzone=false;
