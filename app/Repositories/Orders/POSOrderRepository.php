@@ -23,7 +23,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         if($validator->fails()){$this->status=false;}
         return $validator;
     }
-    public function makeOrder($client_id=null,$comment=null,$tipo=0,$orderId=0,$cart_id=0,$propina=0,$number_people=0){
+    public function makeOrder($client_id=null,$comment=null,$tipo=0,$orderId=0,$cart_id=0,$propina=0,$number_people=0,$payment_id=0,$paymentType2=null){
 
         //From Parent - Construct the order
         if($orderId==0){
@@ -45,6 +45,8 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         $this->order->number_people=$number_people;
         $this->order->comment=$comment;
         $this->order->client_id=$client_id;
+        $this->order->id_account_bank=$payment_id;
+        $this->order->type_card=$paymentType2;
         //In POS - currently logged in user is not the client
        
 
