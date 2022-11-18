@@ -27,10 +27,21 @@
                             <div id="selecuenta" style="display: none;">
                                 <label for="">Seleccione la cuenta</label>
                                 <div class="input-group mb-3">
-                                    <select class="form-control noselecttwo" >
+                                    <select class="form-control noselecttwo"  id="paymentId" >
+                                        <option value="">Seleccionar</option>
                                         @foreach ($configaccountsbanks as $item)
-                                            <option value="cash">{{ $item->name_bank . " - ". $item->number_account}}</option>
+                                            <option value="{{$item->id}}">{{ $item->name_bank . " - ". $item->number_account}}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="selecuenta2" style="display: none;">
+                                <label for="">Seleccione tipo de tarjeta</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo"  id="paymentType2" >
+                                        <option value="">Seleccionar</option>
+                                        <option value="Credito">Credito</option>
+                                        <option value="Debito">Debito</option>
                                     </select>
                                 </div>
                             </div>
@@ -44,15 +55,15 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="custom-control custom-control-alternative custom-checkbox">
+                            <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
                                     <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
                                     <label class="custom-control-label" for="ask_propina_check">
                                         <span class="text-muted" id="span_propina">Agregar Propina</span>
                                     </label>
                                 </div>
                             </div>
-                            <label>{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
-                            <p class="h2">@{{ totalPropinaFormat }} </p>
+                            <label class=" ckpropina" >{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
+                            <p class="h2  ckpropina">@{{ totalPropinaFormat }} </p>
 
                             <label>{{ __('Total') }}</label>
                             <p class="h2">@{{ totalPriceFormat }} </p>
@@ -66,9 +77,9 @@
                             <div class="input-group mb-3">
                                 <input type="text" v-model="received" class="form-control" placeholder="0" aria-label="o" autofocus>
                             </div>
-                            <label>{{ __('Nº de Personas en la mesa')}}</label>
-                            <div class="input-group mb-3">
-                                <input type="text"  class="form-control" placeholder="0" aria-label="o" autofocus>
+                            <label class="input-persona">{{ __('Nº de Personas en la mesa')}}</label>
+                            <div class="input-group mb-3 input-persona">
+                                <input type="number" id="form_number_people"  class="form-control" placeholder="0" aria-label="o" value="1" autofocus>
                             </div>
                             <label>{{ __('Change') }}</label>
                             <p class="h2 text-success">@{{ received-totalPrice>0?(received-totalPrice).toFixed(2):0 }}
@@ -81,12 +92,15 @@
 
                     </div>
                 </div>
+            <form id="formImgPayment" >
+                @csrf
                 <div class="row">
                     <div id="loadarchivo" style="display: none;" class="col">
                         <label>{{ __('Cargar evidencia de pago') }}</label>
-                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" required>
+                        <input class="form-control" type="file" accept="image/*" placeholder="Cargar recibo" name="img_payment" id="img_payment" required>
                     </div>
                 </div>
+            </form>
 
             </div>
             <div class="modal-footer" v-if="received-totalPrice>=0" v-cloak>

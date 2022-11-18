@@ -238,7 +238,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Mesas más Ocupadas</h6>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">MESAS MÁS OCUPADAS DE LOS ÚLTIMOS ( 30 DÍAS ) </h6>
                                 <h2 class="mb-0">Ranking de Ocupación de mesas</h2>
                             </div>
                             <div class="col-12">
@@ -315,7 +315,7 @@
                     
                     <div class="card-body">
                         @if(isset($mesaMasCaliente[0]->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} numero de personas</span>
+                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} personas</span>
                        @endif
                     <!-- Chart -->
                         @if(count($tablesLabels)>0)
@@ -340,7 +340,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h6 class="text-uppercase text-light ls-1 mb-1">Tiempos por pedido</h6>
+                                <h6 class="text-uppercase text-light ls-1 mb-1">TIEMPOS POR PEDIDO DE LOS ÚLTIMOS ( 30 DÍAS )</h6>
                                 <h2 class="mb-0 text-white">Tiempo promedio por pedidos</h2>
                             </div>
                             <div class="col-12">
@@ -695,7 +695,7 @@
 
 
         @if(auth()->user()->hasRole('owner'))
-        <div id="g7"> </div>
+        <div id="g8"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -709,7 +709,7 @@
                             
                                 
 
-                                <form action="{{route('home')}}#g7" method="GET">
+                                <form action="{{route('home')}}#g8" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -718,7 +718,7 @@
                                                     <select name="vmes" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar mesero</option>
                                                         @foreach($misMeseros as $key)
-                                                        <option value="{{$key->id}}" <?php if(isset($_GET['mmes']) && $_GET['mmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
+                                                        <option value="{{$key->id}}" <?php if(isset($_GET['vmes']) && $_GET['vmes']==$key->id){ echo "selected"; } ?>  >{{$key->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -730,8 +730,8 @@
                                                 <div class="">
                                                     <select name="vmos" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
-                                                        <option value="1"  >Total venta</option>
-                                                        <option value="2"  >Total propina</option>
+                                                        <option value="1" <?php if(isset($_GET['vmos']) && $_GET['vmos']==1){ echo "selected"; } ?>  >Total venta</option>
+                                                        <option value="2" <?php if(isset($_GET['vmos']) && $_GET['vmos']==2){ echo "selected"; } ?>  >Total propina</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -740,12 +740,12 @@
                                             <div class="form-group">
                                                 <label class="form-control-label">Metodo de pago</label>
                                                 <div class="">
-                                                    <select name="vmos" class="form-control form-control-sm">
+                                                    <select name="vpag" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
-                                                        <option value="cod"  >Contraentrega</option>
-                                                        <option value="cash"  >Efectivo</option>
-                                                        <option value="cardterminal"  >Datafono</option>
-                                                        <option value="transferencia"  >transferencia</option>
+                                                        <option value="cod" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cod"){ echo "selected"; } ?> >Contraentrega</option>
+                                                        <option value="cash" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cash"){ echo "selected"; } ?> >Efectivo</option>
+                                                        <option value="cardterminal" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="cardterminal"){ echo "selected"; } ?>  >Datáfono</option>
+                                                        <option value="transferencia" <?php if(isset($_GET['vpag']) && $_GET['vpag']=="transferencia"){ echo "selected"; } ?>  >transferencia</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -754,12 +754,12 @@
                                             <div class="form-group">
                                                 <label class="form-control-label">Tipo de pedido</label>
                                                 <div class="">
-                                                    <select name="vmos" class="form-control form-control-sm">
+                                                    <select name="vtip" class="form-control form-control-sm">
                                                         <option value="0" >Seleccionar</option>
-                                                        <option value="3" >En la mesa</option>
-                                                        <option value="1" >Domicilio</option>
-                                                        <option value="4" >Digituno</option>
-                                                        <option value="2" >Recogida</option>
+                                                        <option value="3" <?php if(isset($_GET['vtip']) && $_GET['vtip']==3){ echo "selected"; } ?> >En la mesa</option>
+                                                        <option value="1" <?php if(isset($_GET['vtip']) && $_GET['vtip']==1){ echo "selected"; } ?> >Domicilio</option>
+                                                        <option value="4" <?php if(isset($_GET['vtip']) && $_GET['vtip']==4){ echo "selected"; } ?> >Digituno</option>
+                                                        <option value="2" <?php if(isset($_GET['vtip']) && $_GET['vtip']==2){ echo "selected"; } ?> >Recogida</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -771,7 +771,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                     </div>
-                                                    <input name="vinicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['minicio'])){echo 'value="'.$_GET['minicio'].'"';} ?> />
+                                                    <input name="vinicio"   class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['vinicio'])){echo 'value="'.$_GET['vinicio'].'"';} ?> />
                                                 </div>
                                             </div>
                                         </div>
@@ -782,7 +782,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                     </div>
-                                                    <input name="vfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['mfin'])){echo 'value="'.$_GET['mfin'].'"';} ?>/>
+                                                    <input name="vfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['vfin'])){echo 'value="'.$_GET['vfin'].'"';} ?>/>
                                                 </div>
                                             </div>
                                         </div>
@@ -812,7 +812,6 @@
                         var ordenestotalpordiaLabels = @json($ordenestotalpordiaLabels);
                         var ordenestotalpordiaValues= @json($ordenestotalpordiaValues);
                         
-                        
                         totalpordiaLabels=[];
                         totalpordiaValues=[];
                         
@@ -820,7 +819,6 @@
                             totalpordiaLabels.push(ordenestotalpordiaLabels[key]);
                             totalpordiaValues.push(ordenestotalpordiaValues[key]);
                         }
-
                     </script>
                     
                     <div class="card-body">
@@ -837,6 +835,99 @@
             </div>
         </div>
         @endif
+
+
+
+
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g9"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
+                                <h2 class="mb-0">TOP 10 RESTAURANTES CON MÁS VENTAS</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var nameResLabels = @json($nameResLabels);
+                        var orderResValues= @json($orderResValues);
+                        
+                        
+                        totalnameResLabels=[];
+                        totalorderResValues=[];
+                        
+                        for (const key in nameResLabels) {
+                            totalnameResLabels.push(nameResLabels[key]);
+                            totalorderResValues.push(orderResValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($nameResLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-contres" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay registros en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g9"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
+                                <h2 class="mb-0">VENTAS POR RESTAURANTES</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var daysResLabels = @json($daysResLabels);
+                        var totalOrderResValues= @json($totalOrderResValues);
+                        
+                        
+                        totaldaysResLabels=[];
+                        totaltotalOrderResValues=[];
+                        
+                        for (const key in daysResLabels) {
+                            totaldaysResLabels.push(daysResLabels[key]);
+                            totaltotalOrderResValues.push(totalOrderResValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($daysResLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-totres" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay registros en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
 
         {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))
             <br /><br />

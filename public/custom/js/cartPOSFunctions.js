@@ -403,22 +403,50 @@ function updateExpeditionPOS(){
   });
 
 }
+function ocultarbtn(){
+  if(EXPEDITION!=3){
+    $('.ckpropina').hide();
+    $('.input-persona').hide();
+  }else{
+    $('.ckpropina').show();
+    $('.input-persona').show();
+  }
+}
+
+
 
 function submitOrderPOS(tipo=0){
+
+
+    if($('#paymentType').val()=="transferencia" && $('#img_payment')[0].files.length === 0 ){
+      $("#img_payment").addClass('is-invalid');
+      return false;
+    }
+
+  
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
+
   localStorage.removeItem(CURRENT_TABLE_ID);
+  
   $('#submitOrderPOS').hide();
   $('#indicator').show();
+
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
+    paymentId:$('#paymentId').val(),
+    paymentType2:$('#paymentType2').val(),
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,
     cart_id:cartSessionId,
+    propina:valor_propi,
+    number_people:$('#form_number_people').val(),
     order_comment:$('textarea#order_comment').val()
   };
   if(EXPEDITION==1||EXPEDITION==2){
+
+    
     //Pickup OR deliver
     dataToSubmit.custom={
       client_id:selectClientId,
@@ -428,19 +456,23 @@ function submitOrderPOS(tipo=0){
     dataToSubmit.phone=$('#client_phone').val();
     dataToSubmit.timeslot=$('#timeslot').val();
     if(EXPEDITION==1){
+      
       dataToSubmit.addressID=$('#client_address').val();
       dataToSubmit.custom.deliveryFee=cartTotal.deliveryPrice;
     }
   }
  
   if(cartTotal.deduct>0){
-    
     dataToSubmit.coupon_code=$('#coupon_code').val();
   }
+
+
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
+
+    //subir imagen factura
+    submitImage(response.data.id);
+
    
-    
-    
     $('#submitOrderPOS').show();
     $('#indicator').hide();
 
@@ -456,6 +488,7 @@ function submitOrderPOS(tipo=0){
       if(tipo==0){
         js.notify(response.data.message, "success");
         $('#modalPOSInvoice').modal('show');
+        $('#modalPOSInvoice').attr('data-id',response.data.order.id);
         if ($('#ask_propina_check').is(":checked")) {
           //facturapos
           receiptPOS.totalPropina = valor_propi;
@@ -483,6 +516,25 @@ function submitOrderPOS(tipo=0){
     $('#indicator').hide();
     js.notify(error, "warning");
   });
+}
+
+
+function submitImage(orderid){
+
+    var formData = new FormData($('#formImgPayment')[0]);
+    formData.append('orderid',orderid)
+    $.ajax({
+        url: withSession('/poscloud/order'),
+        type: 'POST',
+        success: function (data) {
+            $('#img_payment').val(null);
+        },
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
 }
 
 /**

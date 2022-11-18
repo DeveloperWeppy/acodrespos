@@ -20,6 +20,8 @@ use Stripe\OrderItem;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TimeOrderExport;
 use App\Exports\HourOrderExport;
+use App\Exports\OrderByDayExport;
+
 
 class HomeController extends Controller
 {
@@ -128,6 +130,8 @@ class HomeController extends Controller
         
         $last30days=Carbon::now()->subDays(30);
 
+
+
         //Driver
         if (auth()->user()->hasRole('driver')) {
             return $this->driverInfo();            
@@ -135,9 +139,10 @@ class HomeController extends Controller
             return redirect()->route('front');
         }else if (auth()->user()->hasRole('admin')&&config('app.isft')){
             //Admin in FT
-            $last30daysDeliveryFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('delivery_price');
-            $last30daysStaticFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('static_fee');
-            $last30daysDynamicFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('fee_value');
+
+            $last30daysDeliveryFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->where('delivery_method',1)->sum('order_price');
+            $last30daysStaticFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('propina');
+            $last30daysDynamicFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('vatvalue');
             $last30daysTotalFee = DB::table('orders')
                                 ->select(DB::raw('SUM(delivery_price + static_fee + fee_value) AS sumValue'))
                                 ->where('created_at', '>', $last30days)
@@ -150,28 +155,76 @@ class HomeController extends Controller
             $last30daysTotalFee = 0;
         }
 
+        //grafico top 10 restaurantes con mas ventas
+        $nameResLabels=[];
+        $orderResValues=[];
+        if(auth()->user()->hasRole('admin')){
+            $ordersByRestourant=Order::select(DB::raw('COUNT(orders.id) as can,companies.name as nom'))
+            ->join('companies', 'companies.id', '=', 'orders.restorant_id')
+            ->where('orders.payment_status', 'paid')
+            ->where('orders.created_at', '>', $last30days)
+            ->groupBy('orders.restorant_id')
+            ->orderBy('can','desc')
+            ->limit(10);
+            foreach ($ordersByRestourant->get() as $key => $res) {
+                array_push($nameResLabels,$res->nom);
+                array_push($orderResValues,$res->can);
+            } 
+        }
 
+
+        //grafico total ventas pro restaurante y rango de fechas
+        $daysResLabels=[];
+        $totalOrderResValues=[];
+        $companies=[];
+        if(auth()->user()->hasRole('admin')){
+
+            $companies = DB::table('companies')->where('active','1')->get();
+            
+            $totalOrderByRestourant=Order::select(DB::raw('sum(order_price) as tot,DATE_FORMAT(created_at, "%Y-%m-%d") as dia'))
+            ->where('payment_status', 'paid')
+            ->where('created_at', '>', $last30days)
+            ->groupBy('dia')
+            ->orderBy('dia','asc');
+
+            /*
+            //filter by mesero
+            if(isset($_GET['mmes']) && $_GET['mmes']!=0){
+                $ordenesprodia = $ordenesprodia->where('employee_id', $_GET['mmes']);
+            }
+            //filter by fecha inicial
+            if(isset($_GET['minicio']) && $_GET['minicio']!=""){
+                $ini = $_GET['minicio'];
+                $fin = $_GET['mfin'];
+                $ordenesprodia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+
+             */
+            foreach ($totalOrderByRestourant->get() as $key => $res) {
+                array_push($daysResLabels,$res->dia);
+                array_push($totalOrderResValues,$res->tot);
+            }
+           
+        }
+
+        
 
         //--- grafico de mesa caliente
-
         $tablesLabels=[];
         $tablesPeoples=[];
         $misMesas = [];
         $mesaMasCaliente = [];
-
-        $ordenespordiaLabels = [];
-        $ordenespordiaValues = [];
-
-        
-
         if (auth()->user()->hasRole('owner')) {
 
             $misMesas = DB::table('restoareas')
             ->where('restaurant_id', auth()->user()->restorant->id)
             ->get();
 
-            $are = $misMesas[0]->id;
-
+            $are = 0;
+            if(count($misMesas)>0){
+                $are = $misMesas[0]->id;    
+            }
+            
 
             //FILTER BY area
             if(isset($_GET['tarea'])){
@@ -184,6 +237,8 @@ class HomeController extends Controller
             ->join('tables', 'tables.id', '=', 'orders.table_id')
             ->where('tables.restoarea_id',$are)
             ->where('orders.restorant_id', auth()->user()->restorant->id)
+            ->where('orders.created_at', '>', $last30days)
+            ->where('orders.payment_status', 'paid')
             ->groupBy('tables.restoarea_id','orders.table_id');
             
 
@@ -206,6 +261,7 @@ class HomeController extends Controller
             ->join('tables', 'tables.id', '=', 'orders.table_id')
             ->where('orders.restorant_id', auth()->user()->restorant->id)
             ->where('tables.restoarea_id',$are)
+            ->where('orders.payment_status', 'paid')
             ->groupBy('tables.restoarea_id','orders.table_id')
             ->orderBy('nump','desc');
 
@@ -222,21 +278,14 @@ class HomeController extends Controller
                 array_push($tablesLabels,$mesa->name);
                 array_push($tablesPeoples,$mesa->nump);
             }
-
-
-
         }
 
-
+        //Grafica tiempos por pedido
         $periodLabels=[];
         $periodTime=[];
         if (auth()->user()->hasRole('owner')) {
-            //excel tiempos por pedido
             $orders = Order::orderBy('delivery_method', 'desc')->whereNotNull('restorant_id');
-            $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
-            $orders = $orders->whereHas('laststatus', function($q){
-                $q->where('status_id', [7]);
-            });
+            $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id])->where('orders.created_at', '>', $last30days)->where('payment_status', 'paid');
 
             $fin = date('Y-m-d');
             if(isset($_GET['pinicio'],$_GET['pfin']) && $_GET['pinicio']!="" && $_GET['pfin']!=""){
@@ -261,6 +310,7 @@ class HomeController extends Controller
                 if($nomT!=$orde->delivery_method){
                     $numP=1;
                     $prom = $timT/$numP;
+                    $prom = round($prom,2);
                     $nomT=$orde->delivery_method;
                     array_push($periodLabels,$orde->getExpeditionType());
                     array_push($periodTime,$prom);
@@ -270,6 +320,7 @@ class HomeController extends Controller
                 }else{
                     $numP++;
                     $prom = $timT/$numP;
+                    $prom = round($prom,2);
                     $periodTime[$k]=$prom;
                     
                 }
@@ -302,16 +353,17 @@ class HomeController extends Controller
 
         }
 
+
+
+        //graficos ventas por horario
         $horarioLabels=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
         $horarioOrders=[0,0,0,0,0,0,0];
         $meseros = [];
         if (auth()->user()->hasRole('owner')) {
 
-            //graficos ventas por horario
-            $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->groupBy('dia')->orderBy('dia','asc');
-            $ordenesHorario = $ordenesHorario->whereHas('laststatus', function($q){
-                $q->where('status_id', [7]);
-            });
+            
+            $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->where('created_at', '>', $last30days)->where('payment_status', 'paid')->groupBy('dia')->orderBy('dia','asc');
+         
 
             //FILTER BY end date
             if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
@@ -340,11 +392,7 @@ class HomeController extends Controller
 
             if (isset($_GET['reportweekofday'])) {
 
-                $ordenesHorarior = Order::where(['restorant_id'=>auth()->user()->restorant->id])->orderBy('created_at','asc');
-                $ordenesHorarior = $ordenesHorarior->whereHas('laststatus', function($q){
-                    $q->where('status_id', [7]);
-                });
-
+                $ordenesHorarior = Order::where(['restorant_id'=>auth()->user()->restorant->id])->where('payment_status', 'paid')->orderBy('created_at','asc');
 
                 if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
                     $ini = $_GET['hinicio'];
@@ -390,11 +438,49 @@ class HomeController extends Controller
 
         }
 
+
+        $ordenespordiaLabels=[];
+        $ordenespordiaValues=[];
+        if(auth()->user()->hasRole('owner')){
+            //grafico de ventas por dia
+            $meseros=User::role('staff')
+            ->where(['active'=>1])
+            ->where('restaurant_id',auth()->user()->restorant->id)->get();
+
+
+            $ordenesprodia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,COUNT(id) as cantidad'))
+            ->where('delivery_method','3')
+            ->where('restorant_id',auth()->user()->restorant->id)
+            ->where('created_at', '>', $last30days)
+            ->where('payment_status', 'paid')
+            ->groupBy('dia')
+            ->orderBy('dia');
+
+            //filter by mesero
+            if(isset($_GET['mmes']) && $_GET['mmes']!=0){
+                $ordenesprodia = $ordenesprodia->where('employee_id', $_GET['mmes']);
+            }
+            //filter by fecha inicial
+            if(isset($_GET['minicio']) && $_GET['minicio']!=""){
+                $ini = $_GET['minicio'];
+                $fin = $_GET['mfin'];
+                $ordenesprodia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+
+            
+            foreach ($ordenesprodia->get() as $key => $orden) {
+                array_push($ordenespordiaLabels,$orden->dia);
+                array_push($ordenespordiaValues,$orden->cantidad);
+            }
+
+        }
+
+
+        //graficos ventas por dia
         $ordenestotalpordiaLabels=[];
         $ordenestotalpordiaValues=[];
-
         if (auth()->user()->hasRole('owner')) {
-            //excel ventas por dia
+            
             $ordenestotalpordia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,sum(order_price) as total'))
             ->where('restorant_id',auth()->user()->restorant->id)
             ->where('created_at', '>', $last30days)
@@ -403,12 +489,93 @@ class HomeController extends Controller
             ->orderBy('dia');
 
             
+            if(isset($_GET['vmos']) && $_GET['vmos']==2 ){
+                $ordenestotalpordia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,sum(propina) as total'))
+                ->where('restorant_id',auth()->user()->restorant->id)
+                ->where('created_at', '>', $last30days)
+                ->where('payment_status', 'paid')
+                ->groupBy('dia')
+                ->orderBy('dia');
+            }
+            if(isset($_GET['vmes']) && $_GET['vmes']!=0){
+                $ordenestotalpordia->where('employee_id', $_GET['vmes']);
+            }
+            if(isset($_GET['vpag']) && $_GET['vpag']!=0 ){
+                $ordenestotalpordia->where('payment_method', $_GET['vpag']);
+            }
+            if(isset($_GET['vtip']) && $_GET['vtip']!=0 ){
+                $ordenestotalpordia->where('delivery_method', $_GET['vtip']);
+            }
+            if(isset($_GET['vinicio'],$_GET['vfin']) && $_GET['vinicio']!="" && $_GET['vfin']!=""){
+                $ini = $_GET['vinicio'];
+                $fin = $_GET['vfin'];
+                $ordenestotalpordia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            }
+
+            if(isset($_GET['reportbyday'])){
+                $ordenestotalpordia=Order::select("*")
+                ->where('restorant_id',auth()->user()->restorant->id)
+                ->where('created_at', '>', $last30days)
+                ->where('payment_status', 'paid')
+                ->orderBy('created_at','desc');
+
+                if(isset($_GET['vmes']) && $_GET['vmes']!=0){
+                    $ordenestotalpordia->where('employee_id', $_GET['vmes']);
+                }
+                
+                if(isset($_GET['vpag']) && $_GET['vpag']!=0 ){
+                    $ordenestotalpordia->where('payment_method', $_GET['vpag']);
+                }
+               
+                if(isset($_GET['vtip']) && $_GET['vtip']!=0 ){
+                    $ordenestotalpordia->where('delivery_method', $_GET['vtip']);
+                }
+                if(isset($_GET['vinicio'],$_GET['vfin']) && $_GET['vinicio']!="" && $_GET['vfin']!=""){
+                    $ini = $_GET['vinicio'];
+                    $fin = $_GET['vfin'];
+                    $ordenestotalpordia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+                }
+
+
+                $items = [];
+
+                foreach ($ordenestotalpordia->get() as $key => $order) {
+
+                    $name_employee = "";
+                    if($order->employee_id!=""){
+                        $user = User::find($order->employee_id);
+                        $name_employee = $user->name;
+                    }
+                    
+                    $to_time = strtotime($order->updated_at);
+                    $from_time = strtotime($order->created_at);
+                    $diff=  round(abs($to_time - $from_time) / 60,2). " minute";
+
+                    $item = [
+                        'order_id'=>$order->id,
+                        'created_at'=>$order->created_at,
+                        'employee'=>$name_employee,
+                        'order_price'=>$order->order_price,
+                        'propina'=>$order->propina,
+                        'payment_method'=>$order->payment_method,
+                        'delivery_method'=>$order->getExpeditionType(),
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new OrderByDayExport($items), 'ordersByDay_'.time().'.xlsx');
+
+            }
+        
+
+            
             foreach ($ordenestotalpordia->get() as $key => $orden) {
                 array_push($ordenestotalpordiaLabels,$orden->dia);
                 array_push($ordenestotalpordiaValues,$orden->total);
             }
         }
-        
+
+
         
 
         $doWeHaveExpensesApp=false; // Be default for other don't enable expenses
@@ -452,53 +619,55 @@ class HomeController extends Controller
 
         $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
         ->where('payment_status','paid')
-        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
+        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price,SUM(delivery_price + static_fee + fee_value) AS total_fee,SUM(delivery_price) AS total_delivery,SUM(static_fee) AS total_static_fee,SUM(fee_value) AS total_fee_value'))
         ->first()->toArray();
 
         $last30daysClientsRestaurant = RestaurantClient::where('created_at', '>', $last30days)->count();
 
-        if(auth()->user()->hasRole('owner')){
-       
-        $months = [
-            1 => __('Jan'),
-            2 => __('Feb'),
-            3 => __('Mar'),
-            4 => __('Apr'),
-            5 => __('May'),
-            6 => __('Jun'),
-            7 => __('Jul'),
-            8 => __('Aug'),
-            9 => __('Sep'),
-            10 => __('Oct'),
-            11 => __('Nov'),
-            12 => __('Dec'),
-        ];
+    
+    
+        if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('admin')){
         
-        $last30daysOrders = Order::where('created_at', '>', $last30days)->count();
-        $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
-        ->where('payment_status','paid')
-        ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
-        ->first()->toArray();
+            $months = [
+                1 => __('Jan'),
+                2 => __('Feb'),
+                3 => __('Mar'),
+                4 => __('Apr'),
+                5 => __('May'),
+                6 => __('Jun'),
+                7 => __('Jul'),
+                8 => __('Aug'),
+                9 => __('Sep'),
+                10 => __('Oct'),
+                11 => __('Nov'),
+                12 => __('Dec'),
+            ];
+            
+            $last30daysOrders = Order::where('created_at', '>', $last30days)->count();
+            $last30daysOrdersValue = Order::where('created_at', '>', $last30days)
+            ->where('payment_status','paid')
+            ->select(DB::raw('ROUND(SUM(order_price+delivery_price),2) as order_price'),DB::raw('SUM(delivery_price + static_fee + fee_value) AS total_fee'),DB::raw('SUM(delivery_price) AS total_delivery'),DB::raw('SUM(static_fee) AS total_static_fee'),DB::raw('SUM(fee_value) AS total_fee_value'))
+            ->first()->toArray();
 
-        $sevenMonthsDate = Carbon::now()->subMonths(6)->startOfMonth();
-        $salesValueRaw=Order::where('created_at', '>', $sevenMonthsDate)
-                ->where('payment_status','paid')
-                ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
-                ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'), 'asc')
-                ->select(DB::raw('count(id) as totalPerMonth'),DB::raw('ROUND(SUM(order_price + delivery_price),2) AS sumValue'),DB::raw('MONTH(created_at) month'))
-                ->get()->toArray();
-        $monthsIds = array_map(function($o) { return $o['month'];}, $salesValueRaw);
-        $salesValue = array_combine($monthsIds, $salesValueRaw);
-        foreach ($salesValue as $key => &$sale) {
-            $sale['monthName']=$months[$key];
+            $sevenMonthsDate = Carbon::now()->subMonths(6)->startOfMonth();
+            $salesValueRaw=Order::where('created_at', '>', $sevenMonthsDate)
+                    ->where('payment_status','paid')
+                    ->groupBy(DB::raw('YEAR(created_at), MONTH(created_at)'))
+                    ->orderBy(DB::raw('YEAR(created_at), MONTH(created_at)'), 'asc')
+                    ->select(DB::raw('count(id) as totalPerMonth'),DB::raw('ROUND(SUM(order_price + delivery_price),2) AS sumValue'),DB::raw('MONTH(created_at) month'))
+                    ->get()->toArray();
+            $monthsIds = array_map(function($o) { return $o['month'];}, $salesValueRaw);
+            $salesValue = array_combine($monthsIds, $salesValueRaw);
+            foreach ($salesValue as $key => &$sale) {
+                $sale['monthName']=$months[$key];
+            }
+
+            $monthList=[];
+            foreach ($salesValue as $key => $salerecord) {
+            array_push($monthList,$salerecord['monthName']);
+            }
+
         }
-
-        $monthList=[];
-        foreach ($salesValue as $key => $salerecord) {
-           array_push($monthList,$salerecord['monthName']);
-        }
-
-    }
 
         //Expenses  - Owner only
         if (auth()->user()->hasRole('owner')&&Module::has('expenses')) {
@@ -565,6 +734,8 @@ class HomeController extends Controller
         if(auth()->user()->hasRole('admin')){
             $countItems=Restorant::count();
         }
+
+
         if(auth()->user()->hasRole('owner')){
             if(auth()->user()->restorant&&auth()->user()->restorant->categories){
                 $countItems=Items::whereIn('category_id', auth()->user()->restorant->categories->pluck('id')->toArray())->whereNull('deleted_at')->count();
@@ -635,8 +806,6 @@ class HomeController extends Controller
                 }
             }
             
-        
-
             //recorrer las ordenes
             foreach ($orders30days->get() as $key => $value) {
                 $id_product = $value->id_product;
@@ -659,44 +828,10 @@ class HomeController extends Controller
                     'datos'=>$array,
                 );
             }
+        }
 
         
-            
-            //grafico de ventas por dia
-            $meseros=User::role('staff')
-            ->where(['active'=>1])
-            ->where('restaurant_id',auth()->user()->restorant->id)->get();
-
-
-            $ordenesprodia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,COUNT(id) as cantidad'))
-            ->where('delivery_method','3')
-            ->where('restorant_id',auth()->user()->restorant->id)
-            ->where('created_at', '>', $last30days)
-            ->where('payment_status', 'paid')
-            ->groupBy('dia')
-            ->orderBy('dia');
-
-            //filter by mesero
-            if(isset($_GET['mmes']) && $_GET['mmes']!=0){
-                $ordenesprodia = $ordenesprodia->where('employee_id', $_GET['mmes']);
-            }
-            //filter by fecha inicial
-            if(isset($_GET['minicio']) && $_GET['minicio']!=""){
-                $ini = $_GET['minicio'];
-                $fin = $_GET['mfin'];
-                $ordenesprodia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
-            }
-
-            $ordenespordiaLabels=[];
-            $ordenespordiaValues=[];
-            foreach ($ordenesprodia->get() as $key => $orden) {
-                array_push($ordenespordiaLabels,$orden->dia);
-                array_push($ordenespordiaValues,$orden->cantidad);
-            }
-
-            
-        
-
+        if(auth()->user()->hasRole('owner')){
             //-------------------------------------total de ventas de los 7 días de la semana
             $lastorders7days = DB::table('orders')
             ->select(DB::raw("created_at as fecha, DAYOFWEEK(created_at) as dias, sum(order_price) as total_orden"))
@@ -748,6 +883,8 @@ class HomeController extends Controller
             
             $expenses['data']=$data;
         }
+
+
         //dd($expenses);
         $dataToDisplay=[
             'availableLanguages'=>$availableLanguages,
@@ -779,6 +916,11 @@ class HomeController extends Controller
             'ordenespordiaValues' =>  $ordenespordiaValues,
             'ordenestotalpordiaLabels' => $ordenestotalpordiaLabels,
             'ordenestotalpordiaValues' =>  $ordenestotalpordiaValues,
+            'nameResLabels' => $nameResLabels,
+            'orderResValues' =>  $orderResValues,
+            'daysResLabels' => $daysResLabels,
+            'totalOrderResValues' =>  $totalOrderResValues,
+            'companies'=>$companies,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));
