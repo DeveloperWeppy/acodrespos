@@ -27,9 +27,20 @@
                                 <label for="">Seleccione la cuenta</label>
                                 <div class="input-group mb-3">
                                     <select class="form-control noselecttwo"  id="paymentId" >
+                                        <option value="">Seleccionar</option>
                                         @foreach ($configaccountsbanks as $item)
                                             <option value="{{$item->id}}">{{ $item->name_bank . " - ". $item->number_account}}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="selecuenta2" style="display: none;">
+                                <label for="">Seleccione tipo de tarjeta</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo"  id="paymentType2" >
+                                        <option value="">Seleccionar</option>
+                                        <option value="Credito">Credito</option>
+                                        <option value="Debito">Debito</option>
                                     </select>
                                 </div>
                             </div>

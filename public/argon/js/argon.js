@@ -1010,6 +1010,12 @@ var TablesChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						position: "left",
+						scaleLabel: {
+							display: true,
+							labelString: "N° de personas",
+							fontColor: "#525f7f",
+						},
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
@@ -1018,6 +1024,13 @@ var TablesChart = (function() {
 								}
 							}
 						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Mesas",
+							fontColor: "#525f7f",
+						},
 					}]
 				},
 				tooltips: {
@@ -1089,6 +1102,11 @@ var TimeOrderChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Tiempo en minutos",
+							fontColor: "#ffffff",
+						},
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
@@ -1097,6 +1115,13 @@ var TimeOrderChart = (function() {
 								}
 							}
 						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Tipo de pedido",
+							fontColor: "#ffffff",
+						},
 					}]
 				},
 				tooltips: {
@@ -1110,7 +1135,7 @@ var TimeOrderChart = (function() {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 							}
 
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
+							content += '<span class="popover-body-value">' + yLabel + ' min</span>';
 
 							return content;
 						}
@@ -1166,6 +1191,11 @@ var HourOrderChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Número de ordenes",
+							fontColor: "#525f7f",
+						},
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
@@ -1244,6 +1274,11 @@ var DayOrderChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Número de ordenes",
+							fontColor: "#ffffff",
+						},
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
@@ -1326,6 +1361,11 @@ var DayTotalOrderChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Total",
+							fontColor: "#525f7f",
+						},
 						ticks: {
 							callback: function(value) {
 								if (!(value % 10)) {
@@ -1402,12 +1442,6 @@ var SalesChart = (function() {
 			options: {
 				scales: {
 					yAxes: [{
-						position: "left",
-						scaleLabel: {
-							display: true,
-							labelString: "Ventas en pesos",
-							fontColor: "white",
-						},
 						gridLines: {
 							color: Charts.colors.gray[900],
 							zeroLineColor: Charts.colors.gray[900]

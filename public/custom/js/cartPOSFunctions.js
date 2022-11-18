@@ -426,6 +426,7 @@ function submitOrderPOS(tipo=0){
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
     paymentId:$('#paymentId').val(),
+    paymentType2:$('#paymentType2').val(),
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,

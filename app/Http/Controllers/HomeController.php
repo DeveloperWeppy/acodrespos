@@ -187,6 +187,8 @@ class HomeController extends Controller
             ->join('tables', 'tables.id', '=', 'orders.table_id')
             ->where('tables.restoarea_id',$are)
             ->where('orders.restorant_id', auth()->user()->restorant->id)
+            ->where('orders.created_at', '>', $last30days)
+            ->where('orders.payment_status', 'paid')
             ->groupBy('tables.restoarea_id','orders.table_id');
             
 
@@ -209,6 +211,7 @@ class HomeController extends Controller
             ->join('tables', 'tables.id', '=', 'orders.table_id')
             ->where('orders.restorant_id', auth()->user()->restorant->id)
             ->where('tables.restoarea_id',$are)
+            ->where('orders.payment_status', 'paid')
             ->groupBy('tables.restoarea_id','orders.table_id')
             ->orderBy('nump','desc');
 
@@ -236,10 +239,7 @@ class HomeController extends Controller
         if (auth()->user()->hasRole('owner')) {
             //excel tiempos por pedido
             $orders = Order::orderBy('delivery_method', 'desc')->whereNotNull('restorant_id');
-            $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id]);
-            $orders = $orders->whereHas('laststatus', function($q){
-                $q->where('status_id', [7]);
-            });
+            $orders = $orders->where(['restorant_id'=>auth()->user()->restorant->id])->where('orders.created_at', '>', $last30days)->where('payment_status', 'paid');
 
             $fin = date('Y-m-d');
             if(isset($_GET['pinicio'],$_GET['pfin']) && $_GET['pinicio']!="" && $_GET['pfin']!=""){
@@ -264,6 +264,7 @@ class HomeController extends Controller
                 if($nomT!=$orde->delivery_method){
                     $numP=1;
                     $prom = $timT/$numP;
+                    $prom = round($prom,2);
                     $nomT=$orde->delivery_method;
                     array_push($periodLabels,$orde->getExpeditionType());
                     array_push($periodTime,$prom);
@@ -273,6 +274,7 @@ class HomeController extends Controller
                 }else{
                     $numP++;
                     $prom = $timT/$numP;
+                    $prom = round($prom,2);
                     $periodTime[$k]=$prom;
                     
                 }
@@ -311,10 +313,8 @@ class HomeController extends Controller
         if (auth()->user()->hasRole('owner')) {
 
             //graficos ventas por horario
-            $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->groupBy('dia')->orderBy('dia','asc');
-            $ordenesHorario = $ordenesHorario->whereHas('laststatus', function($q){
-                $q->where('status_id', [7]);
-            });
+            $ordenesHorario = Order::select('*',DB::raw('DAYOFWEEK(created_at) as dia'),DB::raw('count(id) as numo'),DB::raw('hour(created_at) as hor'))->where(['restorant_id'=>auth()->user()->restorant->id])->where('created_at', '>', $last30days)->where('payment_status', 'paid')->groupBy('dia')->orderBy('dia','asc');
+         
 
             //FILTER BY end date
             if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
@@ -343,11 +343,7 @@ class HomeController extends Controller
 
             if (isset($_GET['reportweekofday'])) {
 
-                $ordenesHorarior = Order::where(['restorant_id'=>auth()->user()->restorant->id])->orderBy('created_at','asc');
-                $ordenesHorarior = $ordenesHorarior->whereHas('laststatus', function($q){
-                    $q->where('status_id', [7]);
-                });
-
+                $ordenesHorarior = Order::where(['restorant_id'=>auth()->user()->restorant->id])->where('payment_status', 'paid')->orderBy('created_at','asc');
 
                 if(isset($_GET['hinicio']) && $_GET['hinicio']!="" && $_GET['hfin']==""){
                     $ini = $_GET['hinicio'];

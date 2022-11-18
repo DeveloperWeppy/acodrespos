@@ -238,7 +238,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h6 class="text-uppercase text-muted ls-1 mb-1">Mesas más Ocupadas</h6>
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">MESAS MÁS OCUPADAS DE LOS ÚLTIMOS ( 30 DÍAS ) </h6>
                                 <h2 class="mb-0">Ranking de Ocupación de mesas</h2>
                             </div>
                             <div class="col-12">
@@ -315,7 +315,7 @@
                     
                     <div class="card-body">
                         @if(isset($mesaMasCaliente[0]->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} numero de personas</span>
+                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} personas</span>
                        @endif
                     <!-- Chart -->
                         @if(count($tablesLabels)>0)
@@ -340,7 +340,7 @@
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h6 class="text-uppercase text-light ls-1 mb-1">Tiempos por pedido</h6>
+                                <h6 class="text-uppercase text-light ls-1 mb-1">TIEMPOS POR PEDIDO DE LOS ÚLTIMOS ( 30 DÍAS )</h6>
                                 <h2 class="mb-0 text-white">Tiempo promedio por pedidos</h2>
                             </div>
                             <div class="col-12">

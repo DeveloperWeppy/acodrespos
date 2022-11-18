@@ -339,7 +339,7 @@ class Main extends Controller
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->paymentId);
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->paymentId,$request->paymentType2);
             }
             if ($validatorOnMaking->fails()) { 
                 return response()->json([
