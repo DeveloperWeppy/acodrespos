@@ -836,6 +836,99 @@
         </div>
         @endif
 
+
+
+
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g9"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
+                                <h2 class="mb-0">TOP 10 RESTAURANTES CON MÁS VENTAS</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var nameResLabels = @json($nameResLabels);
+                        var orderResValues= @json($orderResValues);
+                        
+                        
+                        totalnameResLabels=[];
+                        totalorderResValues=[];
+                        
+                        for (const key in nameResLabels) {
+                            totalnameResLabels.push(nameResLabels[key]);
+                            totalorderResValues.push(orderResValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($nameResLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-contres" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay registros en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g9"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
+                                <h2 class="mb-0">VENTAS POR RESTAURANTES</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var daysResLabels = @json($daysResLabels);
+                        var totalOrderResValues= @json($totalOrderResValues);
+                        
+                        
+                        totaldaysResLabels=[];
+                        totaltotalOrderResValues=[];
+                        
+                        for (const key in daysResLabels) {
+                            totaldaysResLabels.push(daysResLabels[key]);
+                            totaltotalOrderResValues.push(totalOrderResValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($daysResLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-totres" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay registros en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
         {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))
             <br /><br />
             @include("plans.info",['planAttribute'=> auth()->user()->restorant->getPlanAttribute(),'showLinkToPlans'=>true])
