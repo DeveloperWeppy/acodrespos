@@ -5,7 +5,7 @@
         @if ($field['ftype']=="multiselect")
         @include('partials.multiselect',$field)
         @endif
-        @if ($field['ftype']=="select"  && $field['title']=!"Plantilla de front-end")
+        @if ($field['ftype']=="select")
         @include('partials.select',$field)
         @endif
         @if ($field['ftype']=="image")
