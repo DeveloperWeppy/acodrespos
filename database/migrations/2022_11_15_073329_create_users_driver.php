@@ -15,7 +15,7 @@ class CreateUsersDriver extends Migration
     {
         Schema::create('users_driver', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->references('id')->on('companies');
+            $table->foreignId('order_id')->references('id')->on('orders');
             $table->string('name', 250);
             $table->string('phone', 250);
             $table->timestamps();
