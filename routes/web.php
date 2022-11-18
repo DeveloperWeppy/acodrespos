@@ -29,7 +29,7 @@ Route::get('/geozonedelivery/getgeo', 'GeoZoneDeliveryController@getgeo')->name(
 
 Auth::routes(['register' => config('app.isft')]);
 
-
+Route::get('/pdf/{id?}', 'PdfController@get')->name('pdf');
 
 Route::get('/selectpay/{order}', 'PaymentController@selectPaymentGateway')->name('selectpay');
 Route::get('/selectedpaymentt/{order}/{payment}', 'PaymentController@selectedPaymentGateway')->name('selectedpaymentt');
