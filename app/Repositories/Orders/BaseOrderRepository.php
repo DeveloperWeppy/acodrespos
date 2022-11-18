@@ -15,6 +15,7 @@ use App\Notifications\OrderNotification;
 use App\Events\NewOrder as PusherNewOrder;
 use App\Events\OrderAcceptedByAdmin;
 
+
 class BaseOrderRepository extends Controller
 {
 
