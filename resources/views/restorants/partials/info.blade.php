@@ -1,3 +1,4 @@
+
 <div class="pl-lg-4">
     <form id="restorant-form" method="post" action="{{ route('admin.restaurants.update', $restorant) }}" autocomplete="off" enctype="multipart/form-data">
         @csrf
@@ -11,7 +12,7 @@
             ['ftype'=>'input','name'=>"Restaurant address",'id'=>"address",'placeholder'=>"Restaurant address",'required'=>true,'value'=>$restorant->address],
             ['ftype'=>'input','name'=>"Restaurant phone",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
             ['ftype'=>'input','name'=>"Nit",'id'=>"nit",'placeholder'=>"Nit",'required'=>true,'value'=>$restorant->nit],
-            ['ftype'=>'select','name'=>"Tamaño de factura",'id'=>"invoice_size",'data'=>['58 mm','80 mm'],'required'=>true,'value'=>$restorant->invoice_size],
+            ['ftype'=>'select','name'=>"Tamaño de factura",'id'=>"invoice_size",'data'=>['58mm'=>'58 mm','80mm'=>'80 mm'],'required'=>true,'value'=>$restorant->invoice_size],
             ['ftype'=>'textarea','name'=>"footer factura",'id'=>"invoice_footer",'placeholder'=>"footer factura",'required'=>true,'value'=>$restorant->invoice_footer],
 
             ['ftype'=>'input','type'=>'number','name'=>"Porcentaje de Propina (%)",'id'=>"propina",'placeholder'=>"Porcentaje de Propina",'required'=>true,'value'=>$restorant->propina],

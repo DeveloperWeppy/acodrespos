@@ -20,9 +20,16 @@ Route::get('/lang', 'FrontEndController@langswitch')->name('lang.switch');
 
 Route::post('/search/location', 'FrontEndController@getCurrentLocation')->name('search.location');
 
+Route::post('/geozonedelivery/store', 'GeoZoneDeliveryController@store')->name('geozone.store');
+Route::post('/geozonedelivery/updated/{id?}', 'GeoZoneDeliveryController@updated')->name('geozone.updated');
+
+Route::get('/geozonedelivery/destroy/{id?}', 'GeoZoneDeliveryController@destroy')->name('geozone.destroy');
+Route::get('/geozonedelivery/get', 'GeoZoneDeliveryController@get')->name('geozone.get');
+Route::get('/geozonedelivery/getgeo', 'GeoZoneDeliveryController@getgeo')->name('geozone.getgeo');
+
 Auth::routes(['register' => config('app.isft')]);
 
-
+Route::get('/pdf/{id?}', 'PdfController@get')->name('pdf');
 
 Route::get('/selectpay/{order}', 'PaymentController@selectPaymentGateway')->name('selectpay');
 Route::get('/selectedpaymentt/{order}/{payment}', 'PaymentController@selectedPaymentGateway')->name('selectedpaymentt');
@@ -323,6 +330,7 @@ Route::post('phone/verify', 'PhoneVerificationController@verify')->name('phoneve
 
 Route::get('/get/rlocation/{restorant}', 'RestorantController@getLocation');
 Route::get('/items/variants/{variant}/extras', 'Items\VariantsController@extras')->name('items.variants.extras');
+
 
 //Languages routes
 $availableLanguagesENV = ENV('FRONT_LANGUAGES', 'EN,English,IT,Italian,FR,French,DE,German,ES,Spanish,RU,Russian,PT,Portuguese,TR,Turkish,ar,Arabic');

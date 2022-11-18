@@ -144,7 +144,29 @@ class Controller extends BaseController
 
         return $oddNodes;
     }
-
+    
+     function withinArea2($point, $polygon, $n)
+    {
+        if ($polygon[0] != $polygon[$n - 1]) {
+            $polygon[$n] = $polygon[0];
+        }
+        $j = 0;
+        $oddNodes = false;
+        $x = $point->lng;
+        $y = $point->lat;
+        for ($i = 0; $i < $n; $i++) {
+            $j++;
+            if ($j == $n) {
+                $j = 0;
+            }
+            if ((($polygon[$i]->lat < $y) && ($polygon[$j]->lat >= $y)) || (($polygon[$j]->lat < $y) && ($polygon[$i]->lat >= $y))) {
+                if ($polygon[$i]->lng + ($y - $polygon[$i]->lat) / ($polygon[$j]->lat - $polygon[$i]->lat) * ($polygon[$j]->lng - $polygon[$i]->lng) < $x) {
+                    $oddNodes = ! $oddNodes;
+                }
+            }
+        }
+        return $oddNodes;
+    }
     public function calculateDistance($latitude1, $longitude1, $latitude2, $longitude2, $unit)
     {
         $theta = $longitude1 - $longitude2;
@@ -250,7 +272,67 @@ class Controller extends BaseController
         }
         return $addresses;
     }
+    public function getAccessibleAddresses2($restaurant, $addressesRaw)
+    {
+        $arrayzonep=array();
+        $arrayaddress=array();
+        $geoZone=array();
+        foreach ($restaurant as $clave => $zona) {
+            $jzone=json_decode($zona->radius);
+            if(isset($jzone->cd)){
+                $geoZone=$jzone->cd;
+            }else{
+                $arraykey= array_keys((array) $jzone);
+                $geoZone=$arraykey[0];
+                $geoZone= $jzone->$geoZone;
+            }
+            array_push($arrayzonep,$geoZone);
+        }
+        $addresses = [];
+        $ifzone=false;
+        if ($addressesRaw) {
+            foreach ($addressesRaw as $address) {   
+                $point = json_decode('{"lat": '.$address->lat.', "lng":'.$address->lng.'}');
+                $valorEnvio=0;
+                $nameZone="";
+                $indexMasCercano=0;
+                $valorm=100000000000;
+                $ifzone = false;
+                if (! array_key_exists($address->id, $addresses)) {
+                    for ($i = 0; $i < count($arrayzonep); $i++) {
+                        $polygon=$arrayzonep[$i];
+                        $numItems = count($arrayzonep[$i]);
+                        if (isset($polygon[0]) && $this->withinArea2($point, $polygon, $numItems)) {
+                            $ifzone = true;
+                            $valorEnvio= $restaurant[$i]->price;
+                            $nameZone=$restaurant[$i]->name;
+                          
+                        }else{
+                            if(!$ifzone){
+                                for ($i2 = 0; $i2 < count($polygon); $i2++) {
+                                    $distance = floatval(round($this->calculateDistance($address->lat, $address->lng, $polygon[$i2]->lat,$polygon[$i2]->lng,config('settings.unit','K'))));
+                                    if($distance<$valorm){
+                                       $valorm=$distance;
+                                       $indexMasCercano=$i;
+                                       $valorEnvio= $restaurant[$i]->price;
+                                       $nameZone=$restaurant[$i]->name;
+                                    }
+                               }
+                            }
+                        }
+                      
+                    }
+                    if($ifzone){
+                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>true,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>0));
+                    }else{
+                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>true,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>1));
+                    }
+                }
 
+            }
+        } 
+        return $arrayaddress;
+    }
     public function getRestaurant()
     {
         if (!auth()->user()->hasRole('owner')&&!auth()->user()->hasRole('staff')) {

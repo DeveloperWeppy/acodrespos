@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use App\Scopes\RestorantScope;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,7 +28,7 @@ class Order extends Model
 
     protected $appends = ['order_price_with_discount','time_created','time_formated','last_status','is_prepared','actions','configs','tableassigned'];
 
-    protected $fillable = ['coupon','discount','fee', 'fee_value', 'static_fee', 'vatvalue','payment_info','mollie_payment_key','whatsapp_address','md','cart_storage_id'];
+    protected $fillable = ['coupon','discount','fee', 'fee_value', 'static_fee', 'vatvalue','payment_info','mollie_payment_key','whatsapp_address','md','cart_storage_id','propina','number_people'];
 
     public function restorant()
     {
