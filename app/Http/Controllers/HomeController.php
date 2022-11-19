@@ -205,12 +205,13 @@ class HomeController extends Controller
                 array_push($totalOrderResValues,$res->tot);
             }
 
+
             if(isset($_GET['reportsalesbyrestaurant'])){
-                $totalOrderByRestourant=Order::select(DB::raw('sum(order_price) as tot,DATE_FORMAT(created_at, "%Y-%m-%d") as dia'))
+
+                $totalOrderByRestourant=Order::select('*')
                 ->where('payment_status', 'paid')
                 ->where('created_at', '>', $last30days)
-                ->groupBy('dia')
-                ->orderBy('dia','asc');
+                ->orderBy('created_at','asc');
 
                 
                 //filter by mesero
