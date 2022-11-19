@@ -390,7 +390,12 @@ class OrderController extends Controller
         $expedition= $mobileLikeRequest->delivery_method;
         $hasPayment= $mobileLikeRequest->payment_method!="cod";
         $isStripe= $mobileLikeRequest->payment_method=="stripe";
-
+        if ($request->hasFile('img_evidencia')) {
+            $mobileLikeRequest->img_evidencia=$request->img_evidencia;
+        }
+        if($request->has('type_card')) {
+            $mobileLikeRequest->type_card=$request->type_card;
+        }
         $vendorHasOwnPayment=null;
         if(config('settings.social_mode')||config('app.issd',false)){
             //Find the vendor, and check if he has payment

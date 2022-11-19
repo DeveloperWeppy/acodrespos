@@ -261,6 +261,22 @@ class Main extends Controller
      */
     public function store(Request $request)
     {
+
+        //Guarda la imagen de la orden
+        if ($request->hasFile('img_payment')) {
+            $orderId=$request->orderid;
+            $path = 'uploads/payments/';
+            $nom = $orderId.'.png';
+            $order=Order::findOrFail($orderId);
+            $order->url_payment = $path.$nom;
+            $order->save();
+
+            $request->img_payment->move(public_path($path), $nom);
+
+            return $order->id;
+            die();
+        }
+        
         if(auth()->user()){
             config(['shopping_cart.storage' => \App\Repositories\CartDBStorageRepository::class]); 
            

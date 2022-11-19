@@ -25,6 +25,8 @@
 
                 <form id="order-form" role="form" method="post" action="{{route('order.store')}}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
+                <input type="file" id="img_evidencia" name="img_evidencia"   accept="image/*" style="display:none"> 
+                <input type="text" id="typeaccount2" name="type_card" style="display:none">
                 @if(!config('settings.social_mode'))
 
                     @if (config('app.isft')&&count($timeSlots)>0)
@@ -157,9 +159,7 @@
 
           </div>
         </div>
-
-
-    </div>
+    
     @include('clients.modals')
   </section>
 @endsection
@@ -170,6 +170,47 @@
   <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
   <script>
+    $('#img_evidencia').on('change', function() {
+      if ($('#img_evidencia').val()) {
+            $('#fnamefile').html($('#img_evidencia')[0].files[0].name);
+            $("#btnselectfile").addClass("btn-success");
+         }else{
+            $('#fnamefile').html("Selecciona una imagen ");
+            $("#btnselectfile").addClass("btn-primary");
+         }
+
+    });
+    $('#typeaccount').on('change', function() {
+       $("#typeaccount2").val($(this).val());
+    });
+    function selectfileinput(){
+        $('#img_evidencia').click();
+    }
+    function validarmetodopago(){
+        var message="";
+        
+        if ($('#paymentStripe').is(':checked')) {
+            if($("#typeaccount").val()=="seleccione"){
+                message="Selecciona una cuenta";
+            }
+            if($("#img_evidencia").val()==""){
+                message="Selecciona comprobante de pago";
+            }
+            if(message!=""){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos vacios',
+                    text:message,
+                });
+            }else{
+              document.getElementById('order-form').submit(); 
+            }
+        } else {
+          document.getElementById('order-form').submit(); 
+        }
+        
+    }
+
     //"use strict";
     var RESTORANT = <?php echo json_encode($restorant) ?>;
     var STRIPE_KEY="{{ config('settings.stripe_key') }}";
