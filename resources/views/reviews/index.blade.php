@@ -2,7 +2,7 @@
 @section('thead')
     <th>{{ __('Rating') }}</th>
     <th>{{ __('Comment') }}</th>
-    <th>{{ __('Order') }}</th>
+    <th>{{ __('Nº de Orden') }}</th>
     <th>{{ __('User') }}</th>
     <th>{{ __('Actions') }}</th>
 @endsection
