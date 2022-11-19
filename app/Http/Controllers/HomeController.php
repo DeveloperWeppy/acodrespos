@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TimeOrderExport;
 use App\Exports\HourOrderExport;
 use App\Exports\OrderByDayExport;
-
+use App\Exports\RatingsExport;
 
 class HomeController extends Controller
 {
@@ -247,7 +247,7 @@ class HomeController extends Controller
                     array_push($items, $item);
                 }
     
-                return Excel::download(new OrderByDayExport($items), 'ordersByDay_'.time().'.xlsx');
+                return Excel::download(new OrderByDayExport($items), 'OrdenesPorDia_'.time().'.xlsx');
 
             }
 
@@ -255,30 +255,55 @@ class HomeController extends Controller
         }
 
 
-        /*
+        
         //grafico top 10 mejor calificados
         $ratingLabels=[];
         $ratingValues=[];
         if(auth()->user()->hasRole('admin')){
-            $raiting = DB::table('ratings')->select(DB::raw('SUM(rating) as rai,count(id) as can,(sum(rating)/COUNT(rating)) as promedio'))->where('user_id',$res->user_id)->get();
-            $companies = DB::table('companies')->where('active','1');
-            foreach ($companies->get() as $key => $res) {
-                $companies2 = DB::table('ratings')->select(DB::raw('SUM(rating) as rai,count(id) as can'))->where('user_id',$res->user_id)->get();
-                print_r($companies2);
-             
-                if($companies2[0]->can==0){
-                    $pro=0;
-                }else{
-                    $pro = $companies2[0]->rai/$companies2[0]->can;
-                    $pro = number_format($pro, 1, '.', ',');
-                }
+
+            $raiting = DB::table('ratings')
+            ->select(DB::raw('(sum(ratings.rating)/count(ratings.id)) as pro,orders.restorant_id as res'))
+            ->join('orders','orders.id','=','ratings.order_id')
+            ->groupBy('orders.restorant_id')
+            ->orderBy('pro','desc')->limit(10)->get();
+
+            foreach ($raiting as $key => $res) {
+                $restaurant = Restorant::find($res->res);
+                $pro = number_format($res->pro, 1, '.', ',');
                 
-                array_push($nameResLabels,$res->name);
-                array_push($orderResValues,$pro);
-              
+                array_push($ratingLabels,$restaurant->name);
+                array_push($ratingValues,$pro); 
             } 
+
+            if (isset($_GET['reportrating'])) {
+
+                $raiting = DB::table('ratings')
+                ->select(DB::raw('sum(ratings.rating) as suma,count(ratings.id) as contador,(sum(ratings.rating)/count(ratings.id)) as pro,orders.restorant_id as res'))
+                ->join('orders','orders.id','=','ratings.order_id')
+                ->groupBy('orders.restorant_id')
+                ->orderBy('pro','desc')->get();
+
+                $items = [];
+
+                foreach ($raiting as $key => $rating) {
+
+                    $restaurant = Restorant::find($rating->res);
+                    $pro = number_format($rating->pro, 1, '.', ',');
+
+                    $item = [
+                        'res'=>$restaurant->name,
+                        'sum'=>$rating->suma,
+                        'num'=>$rating->contador,
+                        'pro'=>$pro,
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new RatingsExport($items), 'CalificacionesRestaurante_'.time().'.xlsx');
+            }
+
         }
-        */
+        
 
 
 
@@ -423,7 +448,7 @@ class HomeController extends Controller
                     array_push($items, $item);
                 }
     
-                return Excel::download(new TimeOrderExport($items), 'timeOrders_'.time().'.xlsx');
+                return Excel::download(new TimeOrderExport($items), 'OrdenesPorTiempo_'.time().'.xlsx');
             }
 
         }
@@ -507,7 +532,7 @@ class HomeController extends Controller
                     array_push($items, $item);
                 }
     
-                return Excel::download(new HourOrderExport($items), 'hourOrders_'.time().'.xlsx');
+                return Excel::download(new HourOrderExport($items), 'OrdenesPorHorario_'.time().'.xlsx');
             }
             
 
@@ -638,7 +663,7 @@ class HomeController extends Controller
                     array_push($items, $item);
                 }
     
-                return Excel::download(new OrderByDayExport($items), 'ordersByDay_'.time().'.xlsx');
+                return Excel::download(new OrderByDayExport($items), 'OrdenPorDia_'.time().'.xlsx');
 
             }
         
@@ -996,6 +1021,8 @@ class HomeController extends Controller
             'daysResLabels' => $daysResLabels,
             'totalOrderResValues' =>  $totalOrderResValues,
             'companies'=>$companies,
+            'ratingLabels' => $ratingLabels,
+            'ratingValues' =>  $ratingValues,
         ];
         
         $response = new \Illuminate\Http\Response(view('dashboard', $dataToDisplay));

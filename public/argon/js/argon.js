@@ -1255,7 +1255,7 @@ var CopntResChart = (function() {
 
 
 // 
-//	contar restaurantes
+//	ventas restaurantes
 //
 var TotalResChart = (function() {
 
@@ -1324,6 +1324,94 @@ var TotalResChart = (function() {
 				datasets: [{
 					label: js.trans('Ventas'),
 					data: totaltotalOrderResValues,//[25, 20, 30, 22]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', tablesChart);
+	}
+
+
+	// Init chart
+	if ($chart.length) {
+		initChart($chart);
+	}
+
+})();
+
+
+
+// 
+//	ventas restaurantes
+//
+var RatingsResChart = (function() {
+
+	//
+	// Variables
+	//
+
+	var $chart = $('#chart-ratings');
+	var $ordersSelect = $('[name="ordersSelect"]');
+
+
+	//
+	// Methods
+	//
+
+	// Init chart
+	function initChart($chart) {
+
+		// Create chart
+		var tablesChart = new Chart($chart, {
+			type: 'bar',
+			options: {
+				scales: {
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Calificación",
+							fontColor: "#32325d",
+						},
+						ticks: {
+							callback: function(value) {
+								if (value % 1 == 0) {
+									//return '$' + value + 'k'
+									return value
+								}
+							}
+						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							fontColor: "#32325d",
+						},
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							var yLabel = item.yLabel;
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+
+							content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: totalratingLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: totalratingValues,//[25, 20, 30, 22]
 				}]
 			}
 		});

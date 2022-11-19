@@ -991,6 +991,59 @@
         @endif
 
 
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g11"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">CALIFICACION POR RESTAURANTE</h6>
+                                <h2 class="mb-0">TOP 10 RESTAURANTES CON MEJOR CALIFICACIÓN</h2>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                            @if ($parameters)
+                            <a href="{{Request::fullUrl().'&reportrating=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                            @else
+                            <a href="{{Request::fullUrl().'?reportrating=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                            @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        var ratingLabels = @json($ratingLabels);
+                        var ratingValues= @json($ratingValues);
+                        
+                        
+                        totalratingLabels=[];
+                        totalratingValues=[];
+                        
+                        for (const key in ratingLabels) {
+                            totalratingLabels.push(ratingLabels[key]);
+                            totalratingValues.push(ratingValues[key]);
+                        }
+
+                    </script>
+                    
+                    <div class="card-body">
+                        <!-- Chart -->
+                        @if(count($ratingLabels)>0)
+                            <div class="chart">
+                                <canvas id="chart-ratings" class="chart-canvas"></canvas>
+                            </div>
+                        @else
+                            <p>{{ __('No hay registros en este momento!') }}</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+
         {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))
             <br /><br />
             @include("plans.info",['planAttribute'=> auth()->user()->restorant->getPlanAttribute(),'showLinkToPlans'=>true])
