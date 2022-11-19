@@ -254,6 +254,34 @@ class HomeController extends Controller
            
         }
 
+
+        /*
+        //grafico top 10 mejor calificados
+        $ratingLabels=[];
+        $ratingValues=[];
+        if(auth()->user()->hasRole('admin')){
+            $raiting = DB::table('ratings')->select(DB::raw('SUM(rating) as rai,count(id) as can,(sum(rating)/COUNT(rating)) as promedio'))->where('user_id',$res->user_id)->get();
+            $companies = DB::table('companies')->where('active','1');
+            foreach ($companies->get() as $key => $res) {
+                $companies2 = DB::table('ratings')->select(DB::raw('SUM(rating) as rai,count(id) as can'))->where('user_id',$res->user_id)->get();
+                print_r($companies2);
+             
+                if($companies2[0]->can==0){
+                    $pro=0;
+                }else{
+                    $pro = $companies2[0]->rai/$companies2[0]->can;
+                    $pro = number_format($pro, 1, '.', ',');
+                }
+                
+                array_push($nameResLabels,$res->name);
+                array_push($orderResValues,$pro);
+              
+            } 
+        }
+        */
+
+
+
         
 
         //--- grafico de mesa caliente
