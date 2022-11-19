@@ -74,7 +74,14 @@
             <li class="nav-item">
                 @if ($menu['name'] != "Expenses")<!----ocultando menú de gastos --------->
                 <a class="nav-link" href="{{ route($menu['route'],isset($menu['params'])?$menu['params']:[]) }}">
-                    <i class="{{ $menu['icon'] }}"></i>{{ __($menu['name']) }}
+                    <i class="{{ $menu['icon'] }}"></i>
+                    @if ($menu['name']=='POS')
+                        POS
+                    @elseif($menu['name']=='Staff')
+                        Personal
+                    @else
+                        {{ __($menu['name']) }}
+                    @endif
                 </a>
                 @endif
                 

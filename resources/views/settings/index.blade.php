@@ -248,9 +248,37 @@
             $("input[name='env[SINGLE_MODE_ID]']").parent().parent().hide();
             $("input[name='env[URL_ROUTE]']").parent().parent().hide();
             $("input[name='env[URL_ROUTE_PLURAL]']").parent().parent().hide();
+            $("input[name='env[ENABLE_COST_PER_DISTANCE]']").parent().parent().hide();
+            $("input[name='env[COST_PER_KILOMETER]']").parent().parent().hide();
+            $("input[name='env[ENABLE_COST_IN_RANGE]']").parent().parent().hide();
+            $("input[name='env[RANGE_ONE]']").parent().parent().hide();
+            $("input[name='env[RANGE_TWO]']").parent().parent().hide();
+            $("input[name='env[RANGE_THREE]']").parent().parent().hide();
+            $("input[name='env[RANGE_FOUR]']").parent().parent().hide();
+            $("input[name='env[RANGE_FIVE]']").parent().parent().hide();
+            $("input[name='env[RANGE_ONE_PRICE]']").parent().parent().hide();
+            $("input[name='env[RANGE_TWO_PRICE]']").parent().parent().hide();
+            $("input[name='env[RANGE_THREE_PRICE]']").parent().parent().hide();
+            $("input[name='env[RANGE_FOUR_PRICE]']").parent().parent().hide();
+            $("input[name='env[RANGE_FIVE_PRICE]']").parent().parent().hide();
+            $("input[name='env[CHARS_IN_MENU_LIST]']").parent().parent().hide();
+            $("input[name='env[ENABLE_IMPORT_CSV]']").parent().parent().hide();
+
+            $("select[name='env[DRIVER_LINK_REGISTER_POSITION]']").parent().hide();
+            $("select[name='env[RESTAURANT_LINK_REGISTER_POSITION]']").parent().hide();
+            $("select[name='env[UNIT]']").parent().hide();
+            $("select[name='env[APP_ENV]']").parent().hide();
+            $("select[name='env[DEFAULT_PAYMENT]']").parent().hide();
+            $("select[name='env[SUBSCRIPTION_PROCESSOR]']").parent().hide();
             //FINANCES
             $("input[name='env[FORCE_USERS_TO_PAY]']").parent().parent().hide();
             $("input[name='env[FREE_PRICING_ID]']").parent().parent().hide();
+            $("input[name='env[ENABLE_STRIPE]']").parent().parent().hide();
+            $("input[name='env[STRIPE_KEY]']").parent().parent().hide();
+            $("input[name='env[STRIPE_SECRET]']").parent().parent().hide();
+            $("input[name='env[ENABLE_STRIPE_CONNECT]']").parent().parent().hide();
+
+            $("h4[id='sepenv[ENABLE_STRIPE]']").hide();
         });
         
 

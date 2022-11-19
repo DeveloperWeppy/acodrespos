@@ -116,7 +116,14 @@
         @foreach (auth()->user()->getExtraMenus() as $menu)
             <li class="nav-item">
                 <a class="nav-link" href="{{ route($menu['route'],isset($menu['params'])?$menu['params']:[]) }}">
-                        <i class="{{ $menu['icon'] }}"></i> {{ __($menu['name']) }}
+                        <i class="{{ $menu['icon'] }}"></i> 
+                        @if ($menu['name']=='POS')
+                            POS
+                        @elseif($menu['name']=='Staff')
+                            Personal
+                        @else
+                            {{ __($menu['name']) }}
+                        @endif
                     </a>
             </li>
         @endforeach
