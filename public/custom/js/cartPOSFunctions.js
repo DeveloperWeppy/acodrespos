@@ -18,6 +18,9 @@ var cartContentPersons=null;
 var valor_propi = 0;
 
 $('#localorder_phone').hide();
+
+
+
 /**
  *
  * @param {Number} net The net value
@@ -84,6 +87,10 @@ function updatePrices(net,delivery,expedition){
 
     $('#ask_propina_check').change(function() {
       if (this.checked) {
+        $('#autoprop').show();
+        $('#addprop').hide();
+        $('#edit_propina_check').prop('checked',false);
+
         valor_propi = ((net-deduct)*porcentaj_propina)/100;
         modalPayment.totalPropinaFormat=formatter.format(valor_propi);
 
@@ -91,15 +98,46 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
         $('#spanporcentaje_propina').show();
-
-        
       } else {
         modalPayment.totalPrice=net-deduct;
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
         $('#spanporcentaje_propina').hide();
-
       }
+    });
+
+    $('#edit_propina_check').change(function() {
+      if (this.checked) {
+        $('#ask_propina_check').prop('checked',false);
+        $('#autoprop').hide();
+        $('#addprop').show();
+        valor_propi = Number($(".propi").val()); 
+        modalPayment.totalPropinaFormat=formatter.format(valor_propi);
+
+        //modalPayment updated
+        modalPayment.totalPrice=net-deduct+valor_propi;
+        modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+        $('#spanporcentaje_propina').show();
+        
+      } else {
+        $('#autoprop').show();
+        $('#addprop').hide();
+        modalPayment.totalPrice=net-deduct;
+        modalPayment.totalPriceFormat=formatter.format(net-deduct);
+        modalPayment.totalPropinaFormat=formatter.format(0);
+        $('#spanporcentaje_propina').hide();
+      }
+    });
+
+    $(document).ready(function(){
+      $(".propi").keyup(function(){
+        valor_propi = Number($(".propi").val()); 
+        modalPayment.totalPropinaFormat=formatter.format(valor_propi);
+    
+        //modalPayment updated
+        modalPayment.totalPrice=net-deduct+valor_propi;
+        modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+      });
     });
    
   }
@@ -127,6 +165,10 @@ function updatePrices(net,delivery,expedition){
   cartTotal.lastChange=new Date().getTime();
   cartTotal.expedition=1;
 }
+
+
+
+
 $("textarea#order_comment").change(function() {
    if(commentOrd !=$('textarea#order_comment').val()){
     $('#actualizarPedido').show();
@@ -412,7 +454,6 @@ function ocultarbtn(){
     $('.input-persona').show();
   }
 }
-
 
 
 function submitOrderPOS(tipo=0){
@@ -942,3 +983,8 @@ window.onload = function () {
     },
   });
 }
+
+
+
+
+
