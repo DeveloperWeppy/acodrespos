@@ -105,8 +105,9 @@
                             <div class="row">
                                 <div class="col-sm-12 infobanco">
                                     <div class="form-group{{ $errors->has('img_evidencia') ? ' has-danger' : '' }}">
-                                    <label>{{ __('Cargar evidencia de pago') }}</label>
-                                    <input class="form-control{{ $errors->has('img_evidencia') ? ' is-invalid' : '' }}" type="file" name="img_evidencia" id="img_evidencia" accept="image/*" placeholder="Cargar recibo" required>    
+                                    <label>{{ __('Cargar evidencia de pago') }}</label><br>
+                                    <button type="button" id="btnselectfile" onclick="selectfileinput()" class="btn btn-primary" style="display: flex;align-items: center;"><span id="fnamefile">Selecciona una imagen  </span>  <i class="ni ni-cloud-upload-96"></i></button>
+                                    
                                 </div> 
                                 @if ($errors->has('img_evidencia'))
                                     <span class="invalid-feedback" role="alert">
@@ -141,7 +142,7 @@
                 v-if="totalPrice"
                 type="button"
                 class="btn btn-success mt-4 paymentbutton"
-                onclick="document.getElementById('order-form').submit();    "
+                onclick="validarmetodopago()"
             >{{ __('Place order') }}</button>
         </div>
         <!-- Payment Actions -->
