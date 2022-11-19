@@ -165,6 +165,16 @@ class BaseOrderRepository extends Controller
             $this->order->save();
 
             $this->order->md=md5($this->order->id);
+            if (isset($this->request->type_card)) {
+                $this->order->type_card =$this->request->type_card;
+            }
+                
+            if (isset($this->request->img_evidencia)) {
+                $nom=$this->order->id;
+                $path = 'uploads/payments/';
+                $this->order->url_payment =$path.$nom.".png";
+                $this->request->img_evidencia->move(public_path($path), $nom);
+            }
             $this->order->update();
 
  
