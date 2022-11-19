@@ -173,7 +173,7 @@ class HomeController extends Controller
         }
 
 
-        //grafico total ventas pro restaurante y rango de fechas
+        //grafico total ventas por restaurante y rango de fechas
         $daysResLabels=[];
         $totalOrderResValues=[];
         $companies=[];
@@ -187,23 +187,69 @@ class HomeController extends Controller
             ->groupBy('dia')
             ->orderBy('dia','asc');
 
-            /*
+            
             //filter by mesero
-            if(isset($_GET['mmes']) && $_GET['mmes']!=0){
-                $ordenesprodia = $ordenesprodia->where('employee_id', $_GET['mmes']);
+            if(isset($_GET['rnom']) && $_GET['rnom']!=0){
+                $totalOrderByRestourant->where('restorant_id', $_GET['rnom']);
             }
             //filter by fecha inicial
-            if(isset($_GET['minicio']) && $_GET['minicio']!=""){
-                $ini = $_GET['minicio'];
-                $fin = $_GET['mfin'];
-                $ordenesprodia->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+            if(isset($_GET['rinicio']) && $_GET['rinicio']!=""){
+                $ini = $_GET['rinicio'];
+                $fin = $_GET['rfin'];
+                $totalOrderByRestourant->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
             }
 
-             */
+             
             foreach ($totalOrderByRestourant->get() as $key => $res) {
                 array_push($daysResLabels,$res->dia);
                 array_push($totalOrderResValues,$res->tot);
             }
+
+            if(isset($_GET['reportsalesbyrestaurant'])){
+                $totalOrderByRestourant=Order::select(DB::raw('sum(order_price) as tot,DATE_FORMAT(created_at, "%Y-%m-%d") as dia'))
+                ->where('payment_status', 'paid')
+                ->where('created_at', '>', $last30days)
+                ->groupBy('dia')
+                ->orderBy('dia','asc');
+
+                
+                //filter by mesero
+                if(isset($_GET['rnom']) && $_GET['rnom']!=0){
+                    $totalOrderByRestourant->where('restorant_id', $_GET['rnom']);
+                }
+                //filter by fecha inicial
+                if(isset($_GET['rinicio']) && $_GET['rinicio']!=""){
+                    $ini = $_GET['rinicio'];
+                    $fin = $_GET['rfin'];
+                    $totalOrderByRestourant->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+                }
+
+                $items = [];
+
+                foreach ($totalOrderByRestourant->get() as $key => $order) {
+
+                    $name_employee = "";
+                    if($order->employee_id!=""){
+                        $user = User::find($order->employee_id);
+                        $name_employee = $user->name;
+                    }
+            
+                    $item = [
+                        'order_id'=>$order->id,
+                        'created_at'=>$order->created_at,
+                        'employee'=>$name_employee,
+                        'order_price'=>$order->order_price,
+                        'propina'=>$order->propina,
+                        'payment_method'=>$order->payment_method,
+                        'delivery_method'=>$order->getExpeditionType(),
+                      ];
+                    array_push($items, $item);
+                }
+    
+                return Excel::download(new OrderByDayExport($items), 'ordersByDay_'.time().'.xlsx');
+
+            }
+
            
         }
 

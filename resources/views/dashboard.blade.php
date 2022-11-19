@@ -850,6 +850,7 @@
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
                                 <h2 class="mb-0">TOP 10 RESTAURANTES CON MÁS VENTAS</h2>
                             </div>
+                            
                         </div>
                     </div>
 
@@ -885,7 +886,7 @@
 
 
         @if(auth()->user()->hasRole('admin'))
-        <div id="g9"> </div>
+        <div id="g10"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -894,6 +895,67 @@
                             <div class="col-8">
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
                                 <h2 class="mb-0">VENTAS POR RESTAURANTES</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                <form action="{{route('home')}}#g10" method="GET">
+                                    <div class="row mt-5 input-daterange datepicker">
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Restaurante</label>
+                                                <div class="">
+                                                    <select name="rnom" class="form-control form-control-sm">
+                                                        <option value="0" >Seleccionar</option>
+                                                        @foreach($companies as $key)
+                                                        <option value="{{$key->id}}"  <?php if(isset($_GET['rnom']) && $_GET['rnom']==$key->id){ echo "selected"; } ?> >{{$key->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha de</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="rinicio" class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['rinicio'])){echo 'value="'.$_GET['rinicio'].'"';} ?>/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha hasta</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="rfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['rfin'])){echo 'value="'.$_GET['rfin'].'"';} ?> />
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label"></label>
+                                                <div class="input-group">
+                                                    <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    @if ($parameters)
+                                                    <a href="{{Request::fullUrl().'&reportsalesbyrestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                    @else
+                                                    <a href="{{Request::fullUrl().'?reportsalesbyrestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                                    @endif
+                                                </div>
+                                            </div>
+    
+                                            
+                                        </div>
+                                    <div>
+                                </form>
+                                    
+                                    
                             </div>
                         </div>
                     </div>
