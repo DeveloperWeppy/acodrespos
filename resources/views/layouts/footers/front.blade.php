@@ -16,12 +16,12 @@
             <li class="nav-item">
               <a  target="_blank" class="button nav-link nav-link-icon" href="{{ route('newrestaurant.register') }}">Agrega tu Restaurante</a>
             </li>
-          @endif --}}
+          @endif 
           @if (config('app.isft')&&config('settings.driver_link_register_position')=="footer")
           <li class="nav-item">
               <a target="_blank" class="button nav-link nav-link-icon" href="{{ route('driver.register') }}">¿Quieres conducir para nosotros?</a>
             </li>
-            @endif
+            @endif--}}
 
           </ul>
         </div>

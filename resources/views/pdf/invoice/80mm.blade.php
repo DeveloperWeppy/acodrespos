@@ -29,7 +29,7 @@
     <hr>
     <div>MESA:{{strtoupper($order->table->name)}}</div>
     <div>PERSONAS:{{$order->number_people}}</div>
-    <div>ORDEN:{{$order->id}}</div>
+    <div>ORDEN:#{{$order->id}}</div>
     <div>FECHA:{{$order->created_at}}</div>
     <div>MESERO:{{strtoupper($mesero)}}</div>
     <hr>

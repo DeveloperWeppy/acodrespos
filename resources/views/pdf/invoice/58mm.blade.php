@@ -21,17 +21,17 @@
 <div style="width:100%;">
     <center>
       <div style="padding-top:10px">
-        <div>{{$order->restorant->name}} </div>
-        <div>NIT: {{$order->restorant->nit}}</div>
-        <div> {{$order->restorant->address}}</div>
+        <div>{{strtoupper($order->restorant->name)}} </div>
+        <div>NIT: {{strtoupper($order->restorant->nit)}}</div>
+        <div> {{strtoupper($order->restorant->address)}}</div>
       </div>
     </center> 
     <hr>
-    <div>MESA:{{$order->table->name}}</div>
-    <div>PERSONAS:8</div>
-    <div>ORDEN:{{$order->id}}</div>
+    <div>MESA:{{strtoupper($order->table->name)}}</div>
+    <div>PERSONAS:{{$order->number_people}}</div>
+    <div>ORDEN:#{{$order->id}}</div>
     <div>FECHA:{{$order->created_at}}</div>
-    <div>MESERO:{{$mesero}}</div>
+    <div>MESERO:{{strtoupper($mesero)}}</div>
     <hr>
     <table>
         <tr>
@@ -45,7 +45,7 @@
           ?>
           <tr>
                <td>{{$item->pivot->qty}}</td>
-               <td>{{$item->name}}</td>
+               <td>{{strtoupper($item->name)}}</td>
                <td>@money( $item->pivot->qty*$theItemPrice, $currency,true)</td>
           </tr> 
         @endforeach
@@ -67,5 +67,5 @@
     </table> 
     <br>
     
-    <div >{{$order->restorant->invoice_footer}}</div>
+    <div >{{strtoupper($order->restorant->invoice_footer)}}</div>
 </div>
