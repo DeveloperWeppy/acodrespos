@@ -31,6 +31,7 @@ use App\Events\NewOrder as PusherNewOrder;
 use App\Models\EncuestaClient;
 use App\Repositories\Orders\OrderRepoGenerator;
 use App\Models\usersDriver;
+use App\Models\ConfigCuentasBancarias;
 
 class OrderController extends Controller
 {
@@ -70,7 +71,7 @@ class OrderController extends Controller
             $driversData[$driver->id] = $driver->name;
         }
         */
-
+        
         $orders = Order::orderBy('created_at', 'desc')->whereNotNull('restorant_id');
 
         //Get client's orders
@@ -393,8 +394,8 @@ class OrderController extends Controller
         if ($request->hasFile('img_evidencia')) {
             $mobileLikeRequest->img_evidencia=$request->img_evidencia;
         }
-        if($request->has('type_card')) {
-            $mobileLikeRequest->type_card=$request->type_card;
+        if($request->has('id_account_bank')) {
+            $mobileLikeRequest->id_account_bank=$request->id_account_bank;
         }
         $vendorHasOwnPayment=null;
         if(config('settings.social_mode')||config('app.issd',false)){
@@ -577,7 +578,13 @@ class OrderController extends Controller
                         array_push($orderModules,$module->get('alias'));
                     }
                 }
-
+                $banck=array();
+            
+            if($order->id_account_bank!=""){
+                $bank2 = ConfigCuentasBancarias::find($order->id_account_bank);
+                $order->name_bank =$bank2->name_bank;
+                $order->number_account =$bank2->number_account;
+            }
             return view('orders.show', [
                 'order'=>$order,
                 'questions' => $questions,

@@ -81,7 +81,7 @@
 
      @if(count($order->items)>0)
      <h6 class="heading-small text-muted mb-4">{{ __('Orden') }}</h6>
-     
+    
      <ul id="order-items">
          @foreach($order->items as $item)
              <?php 
@@ -285,12 +285,27 @@
      <hr />
      <h3>{{ __("TOTAL") }}: @money( $order->delivery_price+$order->order_price_with_discount, $currency,true)</h3>
      <hr />
+
      <h4>{{ __("Payment method") }}: {{ __(strtoupper($order->payment_method) == 'CASH' ? 'Efectivo' : (strtoupper($order->payment_method) == 'COD' ? 'Contraentrega' : 'Otro')) }}</h4>
+     @if(!empty($order->name_bank))
+     <h4>Cuenta bancaria: {{$order->name_bank}} - {{$order->number_account}}</h4>
+     @endif
+     @if(!empty($order->url_payment))
+     <h3>Evidencia de pago
+        <button  onclick="Swal.fire({ imageUrl: '{{asset($order->url_payment)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
+            <span class="btn-inner--icon">
+                <i class="ni ni-image"></i>    
+            </span>
+        </button>
+     <h3>
+     @endif
+     
      <h4>{{ __("Payment status") }}: {{ __(ucfirst($order->payment_status)) }}</h4>
      @if ($order->payment_status=="unpaid"&&strlen($order->payment_link)>5)
          <button onclick="location.href='{{$order->payment_link}}'" class="btn btn-success">{{ __('Pay now') }}</button>
      @endif
      <hr />
+
      @if(config('app.isft') || config('app.iswp'))
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
          @hasrole('owner')

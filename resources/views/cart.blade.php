@@ -26,7 +26,7 @@
                 <form id="order-form" role="form" method="post" action="{{route('order.store')}}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <input type="file" id="img_evidencia" name="img_evidencia"   accept="image/*" style="display:none"> 
-                <input type="text" id="typeaccount2" name="type_card" style="display:none">
+                <input type="text" id="typeaccount2" name="id_account_bank" style="display:none">
                 @if(!config('settings.social_mode'))
 
                     @if (config('app.isft')&&count($timeSlots)>0)
