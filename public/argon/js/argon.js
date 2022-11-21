@@ -1254,91 +1254,6 @@ var CopntResChart = (function() {
 
 
 
-// 
-//	ventas restaurantes
-//
-var TotalResChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-totres');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'bar',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Total en pesos",
-							fontColor: "#32325d",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							fontColor: "#32325d",
-						},
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totaldaysResLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totaltotalOrderResValues,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
 
 
 
@@ -1429,6 +1344,122 @@ var RatingsResChart = (function() {
 })();
 
 
+// 
+//	ventas restaurantes
+//
+
+
+
+
+	//
+	// Methods
+	//
+
+	// Init chart
+
+	//form el nombre del formulario que va a llamar
+	//canva el contenedor donde mostrara el grafico
+	//grafico funcion al 
+
+	function charData(form,canva,grafic,type){
+
+		
+		if(form!=""){ 
+			var formData = new FormData($('#'+form)[0]); 
+		}else{
+			var formData = new FormData();
+		}
+
+		formData.append('grafico',grafic);
+	
+        $.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+            url: '/home/graficos',
+            type: 'POST',
+            success: function (data) {
+				var data = JSON.parse(data);
+			    if(type=="line"){
+				   graficoLinea(canva,data[0],data[1]);
+			    }
+			   
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+		
+	}
+
+
+	function graficoLinea(canvaId,chartlabels,chartvalues) {
+
+		var $chart = $('#'+canvaId);
+		var $ordersSelect = $('[name="ordersSelect"]');
+
+		// Create chart
+		var tablesChart = new Chart($chart, {
+			type: 'bar',
+			options: {
+				scales: {
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: "Calificación",
+							fontColor: "#32325d",
+						},
+						ticks: {
+							callback: function(value) {
+								if (value % 1 == 0) {
+									//return '$' + value + 'k'
+									return value
+								}
+							}
+						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							fontColor: "#32325d",
+						},
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							var yLabel = item.yLabel;
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+
+							content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: chartlabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: chartvalues,//[25, 20, 30, 22]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', tablesChart);
+	}
+
+
+	charData('graf1','chart-totres','grafico1','line');
+	
 
 // 
 //	table chart

@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
     Route::group(['middleware' => ['ChangePassword']], function () {
         Route::get('/home/{lang?}', 'HomeController@index')->name('home')->middleware(['isOwnerOnPro','verifiedSetup']);
 
+        Route::post('/home/graficos', 'HomeController@graficos')->name('home.graficos');
+
         Route::resource('user', 'UserController', ['except' => ['show']]);
         Route::post('/user/push', 'UserController@checkPushNotificationId');
 

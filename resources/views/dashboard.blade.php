@@ -898,7 +898,7 @@
                             </div>
                             <div class="col-12">
                             
-                                <form action="{{route('home')}}#g10" method="GET">
+                                <form action="#g10" method="GET" id="graf1">
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -941,7 +941,7 @@
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
-                                                    <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="button" onclick="charData('graf1','chart-totres','grafico1','line');" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
                                                     @if ($parameters)
                                                     <a href="{{Request::fullUrl().'&reportsalesbyrestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
                                                     @else
@@ -960,21 +960,6 @@
                         </div>
                     </div>
 
-                    <script>
-                        var daysResLabels = @json($daysResLabels);
-                        var totalOrderResValues= @json($totalOrderResValues);
-                        
-                        
-                        totaldaysResLabels=[];
-                        totaltotalOrderResValues=[];
-                        
-                        for (const key in daysResLabels) {
-                            totaldaysResLabels.push(daysResLabels[key]);
-                            totaltotalOrderResValues.push(totalOrderResValues[key]);
-                        }
-
-                    </script>
-                    
                     <div class="card-body">
                         <!-- Chart -->
                         @if(count($daysResLabels)>0)
@@ -1042,6 +1027,9 @@
             </div>
         </div>
         @endif
+
+
+
 
 
         {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))

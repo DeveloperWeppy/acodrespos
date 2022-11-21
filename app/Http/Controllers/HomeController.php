@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Stripe\OrderItem;
 
+use Illuminate\Http\Request;
+
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TimeOrderExport;
 use App\Exports\HourOrderExport;
@@ -1031,4 +1033,51 @@ class HomeController extends Controller
 
         return $response;
     }
+
+    public function graficos(Request $Request)
+    {
+        
+        $chartLabels=[];
+        $chartValues=[];
+
+        if(isset($Request) && $Request->grafico!=""){
+
+            if($Request->grafico=="grafico1"){
+
+                $last30days=Carbon::now()->subDays(30);
+
+                $totalOrderByRestourant=Order::select(DB::raw('sum(order_price) as tot,DATE_FORMAT(created_at, "%Y-%m-%d") as dia'))
+                ->where('payment_status', 'paid')
+                ->where('created_at', '>', $last30days)
+                ->groupBy('dia')
+                ->orderBy('dia','asc');
+
+                
+                //filter by mesero
+                if(isset($Request->rnom) && $Request->rnom!=0){
+                    $totalOrderByRestourant->where('restorant_id', $Request->rnom);
+                }
+                //filter by fecha inicial
+                if(isset($Request->rinicio) && $Request->rinicio!=""){
+                    $ini = $Request->rinicio;
+                    $fin = $Request->rfin;
+                    $totalOrderByRestourant->whereDate('created_at',">=","$ini")->whereDate('created_at',"<=","$fin");
+                }
+
+                
+                foreach ($totalOrderByRestourant->get() as $key => $res) {
+                    array_push($chartLabels,$res->dia);
+                    array_push($chartValues,$res->tot);
+                }
+            }
+
+        }
+
+        $datos[0] = $chartLabels;
+        $datos[1] = $chartValues;
+        return json_encode($datos);
+
+        
+    }
+
 }
