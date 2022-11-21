@@ -243,7 +243,7 @@
                             </div>
                             <div class="col-12">
                             
-                            <form action="{{route('home')}}#g4" method="GET">
+                            <form action="" method="GET" id="graf2">
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
@@ -285,7 +285,7 @@
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="button" onclick="charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
                                             </div>
                                         </div>
 
@@ -298,33 +298,16 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var tablesLables = @json($tablesLabels);
-                        var tablesPeoples= @json($tablesPeoples);
-                        
-                        
-                        totalTablesLabels=[];
-                        totalTablesPeoples=[];
-                        
-                        for (const key in tablesLables) {
-                            totalTablesLabels.push(tablesLables[key]);
-                            totalTablesPeoples.push(tablesPeoples[key]);
-                        }
-                    </script>
                     
                     <div class="card-body">
-                        @if(isset($mesaMasCaliente[0]->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} personas</span>
-                       @endif
+                       
+                    <span class="badge badge-primary badge-pill mb-3" id="mesaMasCaliente"></span>
+                    
                     <!-- Chart -->
-                        @if(count($tablesLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-tables" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                     
+                    <div class="chart">
+                        <canvas id="chart-tables" class="chart-canvas"></canvas>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -347,7 +330,8 @@
                             
                                 
 
-                            <form action="{{route('home')}}#g5" method="GET">
+                                <form action="{{route('home')}}#g5" method="GET" id="graf3">
+                                    <input name="report" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
@@ -376,12 +360,10 @@
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                @if ($parameters)
-                                                <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @else
-                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @endif
+                                                <button type="button" onclick="charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                
+                                                <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                               
                                                 
                                             </div>
                                         </div>
@@ -395,35 +377,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var periodLabels = @json($periodLabels);
-                        var periodTime= @json($periodTime);
-                        
-                        
-                        totalPeriodLabels=[];
-                        totalPeriodTime=[];
-                        
-                        for (const key in periodLabels) {
-                            totalPeriodLabels.push(periodLabels[key]);
-                        }
-                        for (const key in periodTime) {
-                            totalPeriodTime.push(periodTime[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
-                        @if(isset($mesaMasCaliente->nomt))
-                        @endif
                         <!-- Chart -->
-                        @if(count($tablesLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-timeorder" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-timeorder" class="chart-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -448,7 +407,8 @@
                             
                                 
 
-                            <form action="{{route('home')}}#g6" method="GET">
+                            <form action="{{route('home')}}#g6" method="GET" id="graf4">
+                                <input name="reportweekofday" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
 
                                     <div class="col-12 col-md-3">
@@ -535,13 +495,9 @@
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                @if ($parameters)
-                                                <a href="{{Request::fullUrl().'&reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @else
-                                                <a href="{{Request::fullUrl().'?reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @endif
-                                                
+                                                <button type="button" onclick="charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,1)"  class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
                                             </div>
                                         </div>
 
@@ -554,29 +510,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var horarioLabels = @json($horarioLabels);
-                        var horarioOrders= @json($horarioOrders);
-                        
-                        
-                        totalhorarioLabels=[];
-                        totalhorarioOrders=[];
-                        
-                        for (const key in horarioLabels) {
-                            totalhorarioLabels.push(horarioLabels[key]);
-                        }
-                        for (const key in horarioOrders) {
-                            totalhorarioOrders.push(horarioOrders[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
                         @if(isset($mesaMasCaliente->nomt))
                         @endif
                         <!-- Chart -->
-                        @if(count($tablesLabels)>0)
+                        @if(count($periodLabels)>0)
                             <div class="chart">
                                 <canvas id="chart-hourorder" class="chart-canvas"></canvas>
                             </div>
@@ -605,7 +544,7 @@
                             
                                 
 
-                            <form action="{{route('home')}}#g7" method="GET">
+                            <form action="{{route('home')}}#g7" method="GET" id="graf5">
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-3">
                                         <div class="form-group">
@@ -647,7 +586,7 @@
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="button" onclick="charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
                                                
                                             </div>
                                         </div>
@@ -661,31 +600,13 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var ordenespordiaLabels = @json($ordenespordiaLabels);
-                        var ordenespordiaValues= @json($ordenespordiaValues);
-                        
-                        
-                        totalorderbydayLabels=[];
-                        totalorderbydayValues=[];
-                        
-                        for (const key in ordenespordiaLabels) {
-                            totalorderbydayLabels.push(ordenespordiaLabels[key]);
-                            totalorderbydayValues.push(ordenespordiaValues[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($ordenespordiaLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                 
+                        <div class="chart">
+                            <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -708,8 +629,8 @@
                             <div class="col-12">
                             
                                 
-
-                                <form action="{{route('home')}}#g8" method="GET">
+                                <form action="{{route('home')}}#g8" method="GET" id="graf6">
+                                    <input name="reportbyday" type="text" hidden/>
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -790,12 +711,10 @@
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
-                                                    <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                    @if ($parameters)
-                                                    <a href="{{Request::fullUrl().'&reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @else
-                                                    <a href="{{Request::fullUrl().'?reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @endif
+                                                    
+                                                    <button type="button" onclick="charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
                                                 </div>
                                             </div>
     
@@ -808,28 +727,13 @@
                         </div>
                     </div>
 
-                    <script>
-                        var ordenestotalpordiaLabels = @json($ordenestotalpordiaLabels);
-                        var ordenestotalpordiaValues= @json($ordenestotalpordiaValues);
-                        
-                        totalpordiaLabels=[];
-                        totalpordiaValues=[];
-                        
-                        for (const key in ordenestotalpordiaLabels) {
-                            totalpordiaLabels.push(ordenestotalpordiaLabels[key]);
-                            totalpordiaValues.push(ordenestotalpordiaValues[key]);
-                        }
-                    </script>
                     
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($ordenespordiaLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-ordertotalbyday" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-ordertotalbyday" class="chart-canvas"></canvas>
+                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -897,8 +801,9 @@
                                 <h2 class="mb-0">VENTAS POR RESTAURANTES</h2>
                             </div>
                             <div class="col-12">
-                            
-                                <form action="#g10" method="GET" id="graf1">
+                                    
+                                <form action="{{route('home')}}#g10" method="GET" id="graf1">
+                                    <input name="reportsalesbyrestaurant" type="text" hidden/>
                                     <div class="row mt-5 input-daterange datepicker">
                                         <div class="col-12 col-md-3">
                                             <div class="form-group">
@@ -941,12 +846,9 @@
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
-                                                    <button type="button" onclick="charData('graf1','chart-totres','grafico1','line');" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                    @if ($parameters)
-                                                    <a href="{{Request::fullUrl().'&reportsalesbyrestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @else
-                                                    <a href="{{Request::fullUrl().'?reportsalesbyrestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @endif
+                                                    <button type="button" onclick="charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
                                                 </div>
                                             </div>
     
@@ -962,14 +864,11 @@
 
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($daysResLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-totres" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay registros en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-totres" class="chart-canvas"></canvas>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

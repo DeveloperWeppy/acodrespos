@@ -141,7 +141,7 @@ class OrderController extends Controller
         //FILTER BT status
         if (isset($_GET['status_id'])) {
             $orders = $orders->whereHas('laststatus', function($q){
-                $q->where('status_id', $_GET['status_id']);
+                $q->where('status_id', [$_GET['status_id']]);
             });
         }else{
             $orders = $orders->whereHas('laststatus', function($q){

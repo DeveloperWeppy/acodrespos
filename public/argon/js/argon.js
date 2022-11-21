@@ -984,185 +984,6 @@ var OrdersChart = (function() {
 })();
 
 
-// 
-//	table chart
-//
-var TablesChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-tables');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'bar',
-			options: {
-				scales: {
-					yAxes: [{
-						position: "left",
-						scaleLabel: {
-							display: true,
-							labelString: "N° de personas",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Mesas",
-							fontColor: "#525f7f",
-						},
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalTablesLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalTablesPeoples//[25, 20, 30, 22, 17, 29]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
-
-
-
-
-// 
-//	table chart
-//
-var TimeOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-timeorder');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'bar',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Tiempo en minutos",
-							fontColor: "#ffffff",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Tipo de pedido",
-							fontColor: "#ffffff",
-						},
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + ' min</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalPeriodLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalPeriodTime,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
 
 
 
@@ -1361,9 +1182,9 @@ var RatingsResChart = (function() {
 	//canva el contenedor donde mostrara el grafico
 	//grafico funcion al 
 
-	function charData(form,canva,grafic,type){
+	function charData(form,canva,grafic,type,labelx,labely,addtag,formatNumber,theme,filtro=0){
 
-		
+	
 		if(form!=""){ 
 			var formData = new FormData($('#'+form)[0]); 
 		}else{
@@ -1378,11 +1199,37 @@ var RatingsResChart = (function() {
 			},
             url: '/home/graficos',
             type: 'POST',
+
+			beforeSend: function() {
+				if(filtro==1){
+					Swal.fire({
+						title: 'Cargando datos, Espere por favor...',
+						button: false,
+						showConfirmButton: false,
+						allowOutsideClick: false,
+						allowEscapeKey: false,
+						showCancelButton: false,
+						showConfirmButton: false,
+						timer: 2000,
+						timerProgressBar: true,
+							didOpen: () => {
+								Swal.showLoading()
+							},
+					});
+				}
+			},
             success: function (data) {
 				var data = JSON.parse(data);
+				
 			    if(type=="line"){
-				   graficoLinea(canva,data[0],data[1]);
+				   graficoLinea(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
 			    }
+				if(type=="bar"){
+					graficoBarra(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
+				}
+				if(grafic=="grafico2"){
+					$('#mesaMasCaliente').html(data[2]);
+				}
 			   
             },
             data: formData,
@@ -1394,21 +1241,27 @@ var RatingsResChart = (function() {
 	}
 
 
-	function graficoLinea(canvaId,chartlabels,chartvalues) {
+	function graficoLinea(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber,theme=0) {
+		
+	
+		if(theme==0){ var colorLabels = "#32325d";}
+		if(theme==1){ var colorLabels = "#ffffff";}
+	
+		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
 
 		var $chart = $('#'+canvaId);
 		var $ordersSelect = $('[name="ordersSelect"]');
-
+		var tipograf = 'line';
 		// Create chart
 		var tablesChart = new Chart($chart, {
-			type: 'bar',
+			type: tipograf,
 			options: {
 				scales: {
 					yAxes: [{
 						scaleLabel: {
 							display: true,
-							labelString: "Calificación",
-							fontColor: "#32325d",
+							labelString: labely,
+							fontColor: colorLabels,
 						},
 						ticks: {
 							callback: function(value) {
@@ -1422,7 +1275,8 @@ var RatingsResChart = (function() {
 					xAxes: [{
 						scaleLabel: {
 							display: true,
-							fontColor: "#32325d",
+							labelString: labelx,
+							fontColor: colorLabels,
 						},
 					}]
 				},
@@ -1430,14 +1284,100 @@ var RatingsResChart = (function() {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
+							
 							var content = '';
 
 							if (data.datasets.length > 1) {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 							}
+							if(formatNumber==0){
+								var yLabel = item.yLabel; 
+							}
+							
+							if(formatNumber==1){
+								var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+							}
+							
 
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
+							content += '<span class="popover-body-value">' + yLabel+ " " + addtag+'</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: chartlabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: chartvalues,//[25, 20, 30, 22]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', tablesChart);
+	}
+
+	function graficoBarra(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber=0,theme=0) {
+		
+		
+		if(theme==0){ var colorLabels = "#32325d";}
+		if(theme==1){ var colorLabels = "#ffffff";}
+	
+		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
+
+		var $chart = $('#'+canvaId);
+		var $ordersSelect = $('[name="ordersSelect"]');
+		var tipograf = 'bar';
+		// Create chart
+		var tablesChart = new Chart($chart, {
+			type: tipograf,
+			options: {
+				scales: {
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: labely,
+							fontColor: colorLabels,
+						},
+						ticks: {
+							callback: function(value) {
+								if (value % 1 == 0) {
+									//return '$' + value + 'k'
+									return value
+								}
+							}
+						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: labelx,
+							fontColor: colorLabels,
+						},
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+							if(formatNumber==0){
+								var yLabel = item.yLabel; 
+							}
+							
+							if(formatNumber==1){
+								var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+							}
+							
+
+							content += '<span class="popover-body-value">' + yLabel+ " " + addtag+'</span>';
 
 							return content;
 						}
@@ -1458,259 +1398,14 @@ var RatingsResChart = (function() {
 	}
 
 
-	charData('graf1','chart-totres','grafico1','line');
-	
-
-// 
-//	table chart
-//
-var HourOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-hourorder');
-	var $ordersSelect = $('[name="ordersSelect"]');
+	charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
+	charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
+	charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,0);
+	charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,0);
+	charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,0);
+	charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,0);
 
 
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'line',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Número de ordenes",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalhorarioLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalhorarioOrders,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
-
-
-
-//
-//	days chart
-//
-var DayOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-orderbyday');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'line',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Número de ordenes",
-							fontColor: "#ffffff",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-
-							
-							var yLabel = item.yLabel;
-							var content = '';
-
-						
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalorderbydayLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalorderbydayValues,//[25, 20, 30, 22]
-				}]
-			},
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
-
-
-
-//
-//	total day chart
-//
-var DayTotalOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-ordertotalbyday');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'line',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Total",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');  
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + 'dddd</span>';
-							}
-
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalpordiaLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalpordiaValues,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
 
 //
 // Charts

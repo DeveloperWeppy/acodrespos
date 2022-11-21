@@ -464,13 +464,14 @@ function submitOrderPOS(tipo=0){
       return false;
     }
 
-  
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
 
   localStorage.removeItem(CURRENT_TABLE_ID);
   
   $('#submitOrderPOS').hide();
   $('#indicator').show();
+
+  
 
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
@@ -530,13 +531,17 @@ function submitOrderPOS(tipo=0){
         js.notify(response.data.message, "success");
         $('#modalPOSInvoice').modal('show');
         $('#modalPOSInvoice').attr('data-id',response.data.order.id);
-        if ($('#ask_propina_check').is(":checked")) {
+
+        
+
+        if ($('#ask_propina_check').is(":checked") || $('#edit_propina_check').is(":checked")) {
           //facturapos
           receiptPOS.totalPropina = valor_propi;
-        } else {
+        }else{
           receiptPOS.totalPropina = 0;
-        }
+        } 
         $("#ask_propina_check").prop("checked", false);
+        $("#edit_propina_check").prop("checked", false);
       }else{
         if(tipo==2){
           js.notify('Orden Actualizada', "success");
