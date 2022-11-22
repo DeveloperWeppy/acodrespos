@@ -156,6 +156,10 @@
                                 <figure>
                                     <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
+                                @else
+                                <figure>
+                                    <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                </figure>
                                 @endif
                                 <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
                                 <div class="res_description">{{ $item->short_description}}</div>
