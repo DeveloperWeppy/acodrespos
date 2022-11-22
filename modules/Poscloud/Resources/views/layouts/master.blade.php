@@ -326,6 +326,20 @@
 
      EXPEDITION==1?$('#client_address_fields').show():$('#client_address_fields').hide(); 
      EXPEDITION==3?$('#expedition').hide():$('#expedition').show();
+     EXPEDITION==3?$('#row_propina').show():$('#row_propina').hide();
+     if (EXPEDITION==3) {
+      $('#row_propina').show();
+      $('#autoprop').show();
+      $('.input-persona').show();
+      $('#form_number_people').show();
+      $('#expedition').hide();
+     } else {
+      $('#row_propina').hide();
+      $('#expedition').show();
+      $('#autoprop').hide();
+      $('#form_number_people').hide();
+      $('.input-persona').hide();
+     }
 
 
      SHOWN_NOW="order";

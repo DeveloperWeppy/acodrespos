@@ -54,7 +54,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="row_propina">
                                 <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
                                     <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
                                     <label class="custom-control-label" for="ask_propina_check">

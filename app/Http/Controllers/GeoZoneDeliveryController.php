@@ -27,7 +27,7 @@ class GeoZoneDeliveryController extends Controller
                $tabla.='<tr>
                 <td>'.$zona->name.'</td>
                 <td>'.$zona->price.'</td>
-                <td><input type="color" id="favcolor" name="favcolor" value="'.$zona->colorarea.'"></td>
+                <td><span id="favcolor" class="p-1" style=" background-color:'.$zona->colorarea.'"></span></td>
                 <td>'.$estado.'</td>
                 <td>'.$zona->created_at.'</td>
                 <td>

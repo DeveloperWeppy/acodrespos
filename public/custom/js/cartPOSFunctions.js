@@ -357,7 +357,9 @@ function getCartContentAndTotalPrice(){
       cartContentPersons.items=data_array;
       
        
-    } 
+    }else{
+      $('#card_division_personas').hide();
+    }
     updateSubTotalPrice(response.data.total,EXPEDITION);
     $(".listItemCart").each(function(){
       if($(this).attr("data")=="0"){
