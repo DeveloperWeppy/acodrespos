@@ -843,8 +843,8 @@ class HomeController extends Controller
     {
         $last30days=Carbon::now()->subDays(30);
         
-        $chartLabels=[0,0,0,0,0,0];
-        $chartValues=[0,0,0,0,0,0];
+        $chartLabels=[];
+        $chartValues=[];
         $aditional=[];
 
         if(isset($Request) && $Request->grafico!=""){
