@@ -9,6 +9,7 @@ use App\Restorant;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ClientsExport;
+use App\Exports\StaffExport;
 
 class ClientController extends Controller
 {
@@ -48,20 +49,38 @@ class ClientController extends Controller
             }else{
                 $User=User::role('client')->where(['active'=>1])->paginate(15);
             }
-
-
             
-
-
             //With downloaod
-            if (isset($_GET['reportstaff'])) {
+            if (isset($_GET['report'])) {
 
-                $staff = $this->getRestaurant()->staff()->with('roles')->whereDoesntHave('roles', function ($query) {
-                    $query->where('name', 'owner');
-                })->paginate(config('settings.paginate'));
+                $arrayId=[];
+                $arrayFecha=[];
+                $restaurant_id=0;
+                if(auth()->user()->restaurant_id==null){
+                    $restaurants=Restorant::where('user_id', auth()->user()->id)->get();
+                    if(count($restaurants)>0){
+                        $restaurant_id=$restaurants[0]->id;
+                    }
+                  
+                }else{
+                    $restaurant_id=auth()->user()->restaurant_id;
+                }
+                $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
+                foreach ($client as $key => $Item){ 
+                    array_push($arrayId,$Item->user_id);
+                    array_push($arrayFecha,$Item->created_at);
+                }
+                $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->get();
+                $arrayUser=$User;
+                foreach ($User as $key => $Item){ 
+                    $index =array_search($Item->id, $arrayId);
+                    $arrayUser[$key]->created_at=$arrayFecha[$index];  
+                }
+                $User=$arrayUser;
+
 
                 $itemsForExport = [];
-                foreach ($staff as $key => $item) {
+                foreach ($User as $key => $item) {
                     $item = [
                         'id'=>$item->id,
                         'name'=>$item->name,
@@ -72,7 +91,35 @@ class ClientController extends Controller
                     array_push($itemsForExport, $item);
                 }
 
-                return Excel::download(new ClientsExport($itemsForExport), 'staff_'.time().'.xlsx');
+                return Excel::download(new ClientsExport($itemsForExport), 'Clientes_'.time().'.xlsx');
+            }
+
+            //With downloaod
+            if (isset($_GET['reportstaff'])) {
+
+                $staff = $this->getRestaurant()->staff()->with('roles')->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'owner');
+                })->paginate(config('settings.paginate'));
+
+                $itemsForExport = [];
+                foreach ($staff as $key => $item) {
+
+                    foreach ($item->roles as $value){
+                        $role = $value->name == 'staff' ? 'Mesero' : ($value->name == 'manager_restorant' ? 'Administrador de Restaurante' : 'Cocina');
+                    }
+
+                    $item = [
+                        'id'=>$item->id,
+                        'name'=>$item->name,
+                        'email'=>$item->email,
+                        'phone'=>$item->phone,
+                        'role'=>$role,
+                        'created'=>$item->created_at,
+                    ];
+                    array_push($itemsForExport, $item);
+                }
+
+                return Excel::download(new StaffExport($itemsForExport), 'staff_'.time().'.xlsx');
             }
 
 
