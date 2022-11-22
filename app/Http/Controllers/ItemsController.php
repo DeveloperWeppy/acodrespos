@@ -122,7 +122,7 @@ class ItemsController extends Controller
                     }
                 }
     
-                return Excel::download(new ItemsExport($items), 'items_'.time().'.xlsx');
+                return Excel::download(new ItemsExport($items), 'Productos_'.time().'.xlsx');
             }
 
 
@@ -220,7 +220,7 @@ class ItemsController extends Controller
     public function edit(Items $item)
     {
         //if item belongs to owner restorant menu return view
-        if (auth()->user()->hasRole('owner') && $item->category->restorant->id == auth()->user()->restorant->id || auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('owner') && $item->category->restorant->id == auth()->user()->restorant->id || auth()->user()->hasRole('manager_restorant') && $item->category->restorant->id == auth()->user()->restorant->id ||  auth()->user()->hasRole('admin')) {
             
             //Change currency
             ConfChanger::switchCurrency($item->category->restorant);
