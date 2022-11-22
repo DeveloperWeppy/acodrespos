@@ -141,9 +141,13 @@ class OrderController extends Controller
     
         //FILTER BT status
         if (isset($_GET['status_id'])) {
+
+            $orders->where(DB::raw('(select status_id from order_has_status where order_id=orders.id order by status_id desc limit 1)'),'=',$_GET['status_id']);
+            /*
             $orders->whereHas('laststatus', function($q){
                 $q->where('status_id',"=", $_GET['status_id']);
             });
+            */
         }else{
             $orders->whereHas('laststatus', function($q){
                 $q->whereNotIn('status_id', [8,9]);
