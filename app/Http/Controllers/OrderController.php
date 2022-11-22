@@ -921,6 +921,17 @@ class OrderController extends Controller
             $theDriver->update();
         }
         */
+
+    
+        //Verifica si la orden aun tienen productos pendientes en cocina
+        if($alias=="prepared"){
+
+            $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
+
+            if($numPre>0){
+                return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+            }
+        }
         
         //asignar conductor con campo abierto
         if(isset($_GET['nom'],$_GET['tel'])){
@@ -1008,6 +1019,9 @@ class OrderController extends Controller
 
         
         if (config('app.isft')&&$order->client) {
+
+            
+
             if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7') {
                 
                 $res=new OrderNotification($order, $status_id_to_attach);
