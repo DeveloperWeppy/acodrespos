@@ -13,6 +13,8 @@ use Stripe\AccountLink;
 use Stripe\Stripe;
 use App\Status;
 
+use Illuminate\Support\Facades\DB;
+
 class FinanceController extends Controller
 {
     private function getResources()
@@ -69,9 +71,13 @@ class FinanceController extends Controller
         }
 
         if (isset($_GET['status_id'])) {
+
+            $orders->where(DB::raw('(select status_id from order_has_status where order_id=orders.id order by status_id desc limit 1)'),'=',$_GET['status_id']);
+            /*
             $orders = $orders->whereHas('laststatus', function($q){
                 $q->where('status_id', [$_GET['status_id']]);
             });
+            */
         }
 
         return ['orders' => $orders, 'restorants'=>$restorants, 'drivers'=>$drivers, 'clients'=>$clients];

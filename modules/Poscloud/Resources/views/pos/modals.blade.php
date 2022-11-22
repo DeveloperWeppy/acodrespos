@@ -55,16 +55,27 @@
                                 </div>
                             </div>
                             <div class="row">
-                            <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
+                                <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
                                     <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
                                     <label class="custom-control-label" for="ask_propina_check">
                                         <span class="text-muted" id="span_propina">Agregar Propina</span>
                                     </label>
                                 </div>
+                                <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
+                                    <input class="custom-control-input" name="edit_propina_check" id="edit_propina_check" type="checkbox">
+                                    <label class="custom-control-label" for="ask_propina_check">
+                                        <span class="text-muted" id="span_propina">Propina Personalizada</span>
+                                    </label>
+                                </div>
                             </div>
-                            <label class=" ckpropina" >{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
-                            <p class="h2  ckpropina">@{{ totalPropinaFormat }} </p>
-
+                            <div id="autoprop">
+                                <label class="ckpropina" >{{ __('Propina Sugerida') }} <span class="bg-success" id="spanporcentaje_propina"></span></label>
+                                <p class="h2  ckpropina">@{{ totalPropinaFormat }} </p>
+                            </div>
+                            <div  id="addprop" style="display:none">
+                                <label class="input-persona">Digite propina</label>
+                                <input type="text" placeholder="0" aria-label="o" autofocus="autofocus" class="form-control propi">
+                            </div>
                             <label>{{ __('Total') }}</label>
                             <p class="h2">@{{ totalPriceFormat }} </p>
 
@@ -292,4 +303,6 @@
         </div>
     </div>
 </div>
+
+
 <!-- End POS invoice Modal -->

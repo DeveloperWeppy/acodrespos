@@ -110,49 +110,56 @@ class OrderController extends Controller
 
         //FILTER BT RESTORANT
         if (isset($_GET['restorant_id'])) {
-            $orders = $orders->where(['restorant_id'=>$_GET['restorant_id']]);
+            $orders->where(['restorant_id'=>$_GET['restorant_id']]);
         }
         //If restorant owner, get his restorant orders only
         if (auth()->user()->hasRole('owner')) {
             //Current restorant id
             $restorant_id = auth()->user()->restorant->id;
-            $orders = $orders->where(['restorant_id'=>$restorant_id]);
+            $orders->where(['restorant_id'=>$restorant_id]);
         }
 
         //BY CLIENT
         if (isset($_GET['client_id'])) {
-            $orders = $orders->where(['client_id'=>$_GET['client_id']]);
+            $orders->where(['client_id'=>$_GET['client_id']]);
         }
 
         //BY DRIVER
         if (isset($_GET['driver_id'])) {
-            $orders = $orders->where(['driver_id'=>$_GET['driver_id']]);
+            $orders->where(['driver_id'=>$_GET['driver_id']]);
         }
 
         //BY DATE FROM
         if (isset($_GET['fromDate']) && strlen($_GET['fromDate']) > 3) {
-            $orders = $orders->whereDate('created_at', '>=', $_GET['fromDate']);
+            $orders->whereDate('created_at', '>=', $_GET['fromDate']);
         }
 
         //BY DATE TO
         if (isset($_GET['toDate']) && strlen($_GET['toDate']) > 3) {
-            $orders = $orders->whereDate('created_at', '<=', $_GET['toDate']);
+            $orders->whereDate('created_at', '<=', $_GET['toDate']);
         }
 
+    
         //FILTER BT status
         if (isset($_GET['status_id'])) {
-            $orders = $orders->whereHas('laststatus', function($q){
-                $q->where('status_id', $_GET['status_id']);
+
+            $orders->where(DB::raw('(select status_id from order_has_status where order_id=orders.id order by status_id desc limit 1)'),'=',$_GET['status_id']);
+            /*
+            $orders->whereHas('laststatus', function($q){
+                $q->where('status_id',"=", $_GET['status_id']);
             });
+            */
         }else{
-            $orders = $orders->whereHas('laststatus', function($q){
+            $orders->whereHas('laststatus', function($q){
                 $q->whereNotIn('status_id', [8,9]);
             });
         }
 
+        
+
          //FILTER BT payment status
          if (isset($_GET['payment_status'])&&strlen($_GET['payment_status'])>2) {
-            $orders = $orders->where('payment_status', $_GET['payment_status']);
+            $orders->where('payment_status', $_GET['payment_status']);
         }
 
      
