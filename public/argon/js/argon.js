@@ -1256,6 +1256,8 @@ var RatingsResChart = (function() {
 		var tablesChart = new Chart($chart, {
 			type: tipograf,
 			options: {
+				responsive: true,
+   	 			maintainAspectRatio: false,
 				scales: {
 					yAxes: [{
 						scaleLabel: {
@@ -1317,6 +1319,8 @@ var RatingsResChart = (function() {
 
 		// Save to jQuery object
 		$chart.data('chart', tablesChart);
+
+		$('#'+canvaId).css('width','100%');
 	}
 
 	function graficoBarra(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber=0,theme=0) {
@@ -1334,6 +1338,8 @@ var RatingsResChart = (function() {
 		var tablesChart = new Chart($chart, {
 			type: tipograf,
 			options: {
+				responsive: true,
+    			maintainAspectRatio: false,
 				scales: {
 					yAxes: [{
 						scaleLabel: {
@@ -1395,6 +1401,9 @@ var RatingsResChart = (function() {
 
 		// Save to jQuery object
 		$chart.data('chart', tablesChart);
+
+
+		$('#'+canvaId).css('width','100%');
 	}
 
 

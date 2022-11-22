@@ -145,7 +145,7 @@
                             
                                 <form action="{{route('home')}}#g3" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="input-group">
@@ -156,7 +156,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Filtrar por mes</label>
                                                 <div class="input-group">
@@ -175,7 +175,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
@@ -214,14 +214,19 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- Chart -->
-                        @if(count($salesValue)>0)
-                            <div class="chart">
-                                <canvas id="chart-byvendor" class="chart-canvas"></canvas>
+                     
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <!-- Chart -->
+                                @if(count($salesValue)>0)
+                                    <div class="chart">
+                                        <canvas id="chart-byvendor" class="chart-canvas"></canvas>
+                                    </div>
+                                @else
+                                    <p>{{ __('No expenses right now!') }}</p>
+                                @endif
                             </div>
-                        @else
-                            <p>{{ __('No expenses right now!') }}</p>
-                        @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,7 +250,7 @@
                             
                             <form action="" method="GET" id="graf2">
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Area</label>
                                             <div class="">
@@ -258,7 +263,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -269,7 +274,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -281,7 +286,7 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
@@ -304,9 +309,12 @@
                     <span class="badge badge-primary badge-pill mb-3" id="mesaMasCaliente"></span>
                     
                     <!-- Chart -->
-                     
-                    <div class="chart">
-                        <canvas id="chart-tables" class="chart-canvas"></canvas>
+                    <div class="row">
+                        <div class="col-12 col-sm-12">
+                            <div class="chart" style="position: relative; width:100%">
+                                        <canvas style="max-width: 100%" id="chart-tables" class="chart-canvas" ></canvas>
+                            </div>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -333,7 +341,7 @@
                                 <form action="{{route('home')}}#g5" method="GET" id="graf3">
                                     <input name="report" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -344,7 +352,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -356,7 +364,7 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
@@ -401,7 +409,7 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por Horario</h6>
-                                <h2 class="mb-0">Ordenes por horario</h2>
+                                <h2 class="mb-0">Órdenes por horario</h2>
                             </div>
                             <div class="col-12">
                             
@@ -411,7 +419,7 @@
                                 <input name="reportweekofday" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
 
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -422,7 +430,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -433,7 +441,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Hora de</label>
                                             <div class="">
@@ -462,7 +470,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Hora hasta</label>
                                             <div class="">
@@ -491,7 +499,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
@@ -546,7 +554,7 @@
 
                             <form action="{{route('home')}}#g7" method="GET" id="graf5">
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Mesero</label>
                                             <div class="">
@@ -560,7 +568,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -571,7 +579,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -582,7 +590,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
@@ -632,7 +640,7 @@
                                 <form action="{{route('home')}}#g8" method="GET" id="graf6">
                                     <input name="reportbyday" type="text" hidden/>
                                     <div class="row mt-5 input-daterange datepicker">
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mesero</label>
                                                 <div class="">
@@ -645,7 +653,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="">
@@ -657,9 +665,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
-                                                <label class="form-control-label">Metodo de pago</label>
+                                                <label class="form-control-label">Método de pago</label>
                                                 <div class="">
                                                     <select name="vpag" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
@@ -671,7 +679,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Tipo de pedido</label>
                                                 <div class="">
@@ -685,7 +693,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Fecha de</label>
                                                 <div class="input-group">
@@ -696,7 +704,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Fecha hasta</label>
                                                 <div class="input-group">
@@ -707,7 +715,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12 col-md-12 col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
