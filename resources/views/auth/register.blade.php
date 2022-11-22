@@ -132,7 +132,7 @@
 
                                 <div class="form-check"><input type="checkbox" name="termsCheckBox" id="termsCheckBox" class="h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top  "> 
                                     <label for="terms" class="form-check-label text-gray-500">
-                                    &nbsp;&nbsp;{{__('i_agree_to')}}
+                                    &nbsp;&nbsp;{{__('Estoy de acuerdo con los')}}
                                     <a href="{{config('settings.link_to_ts')}}" target="_blank" style="text-decoration: underline;">{{__('terms_of_service')}}</a> {{__('and')}}
                                     <a href="{{config('settings.link_to_pr')}}" target="_blank" style="text-decoration: underline;">{{__('privacy_policy')}}</a>.
                                     </label>

@@ -282,6 +282,8 @@ function getCartContentAndTotalPrice(){
 
         if (persons != null) {
           $('#card_division_personas').show();
+        }else{
+          $('#card_division_personas').hide();
         }
 
         var saldo = saldounit*quantity;
@@ -870,7 +872,7 @@ window.onload = function () {
     },
     methods: {
       onChange(event) {
-          console.log(event.target.value)
+          //console.log(event.target.value)
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"){
             this.received=this.totalPrice;
            
@@ -895,8 +897,8 @@ window.onload = function () {
         var txt = document.createElement("textarea");
         txt.innerHTML = html;
 
-        console.log("specia");
-        console.log(txt.value)
+        //console.log("specia");
+        //console.log(txt.value)
         return txt.value;
       },
       formatPrice(price){

@@ -25,7 +25,10 @@
                             
                                 <div class="col-4 text-right">
 
-                                    <a type="button" href="{{ route('clients.index') }}?reportstaff=true" class="btnFormClient btn btn-sm btn-success" style="color:#ffffff" >{{ __('Download report') }}</a>
+                                    @if (Request::route()->getName()=='staff.index')
+                                    <a type="button" href="{{ route('clients.index') }}?reportstaff=true" class="btnFormClient btn btn-sm btn-success" style="color:#ffffff" ><i class="fas fa-download"></i> {{ __('Download report') }}</a>
+
+                                    @endif
 
                                     
                                     @isset($action_link)

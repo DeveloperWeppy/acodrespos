@@ -328,7 +328,7 @@ class RestorantController extends Controller
             unset($workingHours['id']);
             $shifts[$shiftId]=$workingHours;
         }
-        $config_account_banks = ConfigCuentasBancarias::get();
+        $config_account_banks = ConfigCuentasBancarias::where('rid',$restaurantid)->get();
 
         if ($this->verifyAccess($restaurant)) {
             $cities=[];
