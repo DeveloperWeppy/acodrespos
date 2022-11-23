@@ -33,6 +33,15 @@
                         <i class="ni ni-single-02"></i>
                         <span>{{ __('My profile') }}</span>
                     </a>
+                    @if(auth()->user()->hasRole('owner'))
+                    <div class=" dropdown-header noti-title text-center">
+                        <span class="badge badge-primary badge-pill" style="font-size: 11px;">
+                          <i class="fa fa-star" style="color:#dc3545"></i> 
+                          <strong style="color: #000000;">{{number_format(auth()->user()->restaurant->averageRating, 1, '.', ',')}} <span class="small">/ 5 ({{ count(auth()->user()->restaurant->ratings) }})</span></strong>
+                        </span>
+                    </div>
+                    @endif
+    
                     <div class="dropdown-divider"></div>
                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="ni ni-user-run"></i>

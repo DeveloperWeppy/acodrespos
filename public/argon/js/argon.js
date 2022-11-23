@@ -984,185 +984,6 @@ var OrdersChart = (function() {
 })();
 
 
-// 
-//	table chart
-//
-var TablesChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-tables');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'bar',
-			options: {
-				scales: {
-					yAxes: [{
-						position: "left",
-						scaleLabel: {
-							display: true,
-							labelString: "N° de personas",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Mesas",
-							fontColor: "#525f7f",
-						},
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalTablesLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalTablesPeoples//[25, 20, 30, 22, 17, 29]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
-
-
-
-
-// 
-//	table chart
-//
-var TimeOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-timeorder');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'bar',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Tiempo en minutos",
-							fontColor: "#ffffff",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Tipo de pedido",
-							fontColor: "#ffffff",
-						},
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
-
-							content += '<span class="popover-body-value">' + yLabel + ' min</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalPeriodLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalPeriodTime,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
 
 
 
@@ -1254,16 +1075,19 @@ var CopntResChart = (function() {
 
 
 
+
+
+
 // 
-//	contar restaurantes
+//	ventas restaurantes
 //
-var TotalResChart = (function() {
+var RatingsResChart = (function() {
 
 	//
 	// Variables
 	//
 
-	var $chart = $('#chart-totres');
+	var $chart = $('#chart-ratings');
 	var $ordersSelect = $('[name="ordersSelect"]');
 
 
@@ -1282,12 +1106,12 @@ var TotalResChart = (function() {
 					yAxes: [{
 						scaleLabel: {
 							display: true,
-							labelString: "Total en pesos",
+							labelString: "Calificación",
 							fontColor: "#32325d",
 						},
 						ticks: {
 							callback: function(value) {
-								if (!(value % 10)) {
+								if (value % 1 == 0) {
 									//return '$' + value + 'k'
 									return value
 								}
@@ -1320,10 +1144,10 @@ var TotalResChart = (function() {
 				}
 			},
 			data: {
-				labels: totaldaysResLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				labels: totalratingLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
 				datasets: [{
 					label: js.trans('Ventas'),
-					data: totaltotalOrderResValues,//[25, 20, 30, 22]
+					data: totalratingValues,//[25, 20, 30, 22]
 				}]
 			}
 		});
@@ -1339,20 +1163,13 @@ var TotalResChart = (function() {
 	}
 
 })();
-
 
 
 // 
-//	table chart
+//	ventas restaurantes
 //
-var HourOrderChart = (function() {
 
-	//
-	// Variables
-	//
 
-	var $chart = $('#chart-hourorder');
-	var $ordersSelect = $('[name="ordersSelect"]');
 
 
 	//
@@ -1360,128 +1177,131 @@ var HourOrderChart = (function() {
 	//
 
 	// Init chart
-	function initChart($chart) {
 
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'line',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Número de ordenes",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = item.yLabel;
-							var content = '';
+	//form el nombre del formulario que va a llamar
+	//canva el contenedor donde mostrara el grafico
+	//grafico funcion al 
 
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
-							}
+	function charData(form,canva,grafic,type,labelx,labely,addtag,formatNumber,theme,filtro=0){
 
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
+	
+		if(form!=""){ 
+			var formData = new FormData($('#'+form)[0]); 
+		}else{
+			var formData = new FormData();
+		}
 
-							return content;
-						}
-					}
+		formData.append('grafico',grafic);
+	
+        $.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+            url: '/home/graficos',
+            type: 'POST',
+
+			beforeSend: function() {
+				if(filtro==1){
+					Swal.fire({
+						title: 'Cargando datos, Espere por favor...',
+						button: false,
+						showConfirmButton: false,
+						allowOutsideClick: false,
+						allowEscapeKey: false,
+						showCancelButton: false,
+						showConfirmButton: false,
+						timer: 2000,
+						timerProgressBar: true,
+							didOpen: () => {
+								Swal.showLoading()
+							},
+					});
 				}
 			},
-			data: {
-				labels: totalhorarioLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalhorarioOrders,//[25, 20, 30, 22]
-				}]
-			}
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
+            success: function (data) {
+				var data = JSON.parse(data);
+				
+			    if(type=="line"){
+				   graficoLinea(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
+			    }
+				if(type=="bar"){
+					graficoBarra(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
+				}
+				if(grafic=="grafico2"){
+					$('#mesaMasCaliente').html(data[2]);
+				}
+			   
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+		
 	}
 
 
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
+	function graficoLinea(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber,theme=0) {
+		
+	
+		if(theme==0){ var colorLabels = "#32325d";}
+		if(theme==1){ var colorLabels = "#ffffff";}
+	
+		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
 
-})();
-
-
-
-
-//
-//	days chart
-//
-var DayOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-orderbyday');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
+		var $chart = $('#'+canvaId);
+		var $ordersSelect = $('[name="ordersSelect"]');
+		var tipograf = 'line';
 		// Create chart
 		var tablesChart = new Chart($chart, {
-			type: 'line',
+			type: tipograf,
 			options: {
+				responsive: true,
+   	 			maintainAspectRatio: false,
 				scales: {
 					yAxes: [{
 						scaleLabel: {
 							display: true,
-							labelString: "Número de ordenes",
-							fontColor: "#ffffff",
+							labelString: labely,
+							fontColor: colorLabels,
 						},
 						ticks: {
 							callback: function(value) {
-								if (!(value % 10)) {
+								if (value % 1 == 0) {
 									//return '$' + value + 'k'
 									return value
 								}
 							}
 						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: labelx,
+							fontColor: colorLabels,
+						},
 					}]
 				},
 				tooltips: {
 					callbacks: {
 						label: function(item, data) {
 							var label = data.datasets[item.datasetIndex].label || '';
-
 							
-							var yLabel = item.yLabel;
 							var content = '';
-
-						
 
 							if (data.datasets.length > 1) {
 								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
 							}
+							if(formatNumber==0){
+								var yLabel = item.yLabel; 
+							}
+							
+							if(formatNumber==1){
+								var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+							}
+							
 
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
+							content += '<span class="popover-body-value">' + yLabel+ " " + addtag+'</span>';
 
 							return content;
 						}
@@ -1489,109 +1309,112 @@ var DayOrderChart = (function() {
 				}
 			},
 			data: {
-				labels: totalorderbydayLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				labels: chartlabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
 				datasets: [{
 					label: js.trans('Ventas'),
-					data: totalorderbydayValues,//[25, 20, 30, 22]
-				}]
-			},
-		});
-
-		// Save to jQuery object
-		$chart.data('chart', tablesChart);
-	}
-
-
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
-
-})();
-
-
-
-
-//
-//	total day chart
-//
-var DayTotalOrderChart = (function() {
-
-	//
-	// Variables
-	//
-
-	var $chart = $('#chart-ordertotalbyday');
-	var $ordersSelect = $('[name="ordersSelect"]');
-
-
-	//
-	// Methods
-	//
-
-	// Init chart
-	function initChart($chart) {
-
-		// Create chart
-		var tablesChart = new Chart($chart, {
-			type: 'line',
-			options: {
-				scales: {
-					yAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: "Total",
-							fontColor: "#525f7f",
-						},
-						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									//return '$' + value + 'k'
-									return value
-								}
-							}
-						}
-					}]
-				},
-				tooltips: {
-					callbacks: {
-						label: function(item, data) {
-							var label = data.datasets[item.datasetIndex].label || '';
-							var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');  
-							var content = '';
-
-							if (data.datasets.length > 1) {
-								content += '<span class="popover-body-label mr-auto">' + label + 'dddd</span>';
-							}
-
-
-							content += '<span class="popover-body-value">' + yLabel + '</span>';
-
-							return content;
-						}
-					}
-				}
-			},
-			data: {
-				labels: totalpordiaLabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
-				datasets: [{
-					label: js.trans('Ventas'),
-					data: totalpordiaValues,//[25, 20, 30, 22]
+					data: chartvalues,//[25, 20, 30, 22]
 				}]
 			}
 		});
 
 		// Save to jQuery object
 		$chart.data('chart', tablesChart);
+
+		$('#'+canvaId).css('width','100%');
+	}
+
+	function graficoBarra(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber=0,theme=0) {
+		
+		
+		if(theme==0){ var colorLabels = "#32325d";}
+		if(theme==1){ var colorLabels = "#ffffff";}
+	
+		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
+
+		var $chart = $('#'+canvaId);
+		var $ordersSelect = $('[name="ordersSelect"]');
+		var tipograf = 'bar';
+		// Create chart
+		var tablesChart = new Chart($chart, {
+			type: tipograf,
+			options: {
+				responsive: true,
+    			maintainAspectRatio: false,
+				scales: {
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: labely,
+							fontColor: colorLabels,
+						},
+						ticks: {
+							callback: function(value) {
+								if (value % 1 == 0) {
+									//return '$' + value + 'k'
+									return value
+								}
+							}
+						}
+					}],
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: labelx,
+							fontColor: colorLabels,
+						},
+					}]
+				},
+				tooltips: {
+					callbacks: {
+						label: function(item, data) {
+							var label = data.datasets[item.datasetIndex].label || '';
+							
+							var content = '';
+
+							if (data.datasets.length > 1) {
+								content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+							}
+							if(formatNumber==0){
+								var yLabel = item.yLabel; 
+							}
+							
+							if(formatNumber==1){
+								var yLabel = Number(item.yLabel).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); 
+							}
+							
+
+							content += '<span class="popover-body-value">' + yLabel+ " " + addtag+'</span>';
+
+							return content;
+						}
+					}
+				}
+			},
+			data: {
+				labels: chartlabels,// ['En la Mesa', 'Domicilio', 'Para Recoger', 'Digiturno'],
+				datasets: [{
+					label: js.trans('Ventas'),
+					data: chartvalues,//[25, 20, 30, 22]
+				}]
+			}
+		});
+
+		// Save to jQuery object
+		$chart.data('chart', tablesChart);
+
+
+		$('#'+canvaId).css('width','100%');
 	}
 
 
-	// Init chart
-	if ($chart.length) {
-		initChart($chart);
-	}
+	charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
+	charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
+	charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,0);
+	charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,0);
+	charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,0);
+	charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,0);
 
-})();
+
 
 //
 // Charts

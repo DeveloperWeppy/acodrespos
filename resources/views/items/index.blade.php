@@ -13,7 +13,7 @@
                 </div>-->
                 <div class="col-lg-12 col-12 text-right">
 
-                    <a href="{{ route('items.index')}}?report=true" class="btn btn-sm btn-success"><i class="fas fa-file-xlsx"></i> Descargar Informe</a>
+                    <a href="{{ route('items.index')}}?report=true" class="btn btn-sm btn-success"><i class="fas fa-download"></i>  Descargar Informe</a>
 
 
                     @if (isset($hasMenuPDf)&&$hasMenuPDf)
@@ -25,11 +25,11 @@
                     <button class="btn btn-icon btn-1 btn-sm btn-info" type="button" data-toggle="modal" data-target="#modal-items-category" data-toggle="tooltip" data-placement="top" title="{{ __('Add new category')}}">
                         <span class="btn-inner--icon"><i class="fa fa-plus"></i> {{ __('Add new category') }}</span>
                     </button>
-                    @if($canAdd)
+                    {{-- @if($canAdd)
                     <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-import-items" onClick=(setRestaurantId({{ $restorant_id }}))>
                         <span class="btn-inner--icon"><i class="fa fa-file-excel"></i> {{ __('Import from CSV') }}</span>
                     </button>
-                    @endif
+                    @endif --}}
                     @if(config('settings.enable_miltilanguage_menus'))
                         @include('items.partials.languages')
                     @endif

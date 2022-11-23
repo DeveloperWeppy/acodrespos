@@ -22,11 +22,14 @@
         @endif
     @endif
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.restaurants.edit',  auth()->user()->restorant->id) }}">
-            <i class="ni ni-shop text-info"></i> {{ __('Restaurant') }}
-        </a>
-    </li>
+        {{--
+           <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.restaurants.edit',  auth()->user()->restorant->id) }}">
+                    <i class="ni ni-shop text-info"></i> {{ __('Restaurant') }}
+                </a>
+            </li>  
+            --}}
+   
 
     
 

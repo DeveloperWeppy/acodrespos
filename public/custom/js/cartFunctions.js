@@ -22,7 +22,7 @@ function updatePrices(net,delivery,enableDelivery){
   net=parseFloat(net+"");
   delivery=parseFloat(delivery+"");
   var deduct=cartTotal.deduct;
-  console.log("Deduct is "+deduct);
+  //console.log("Deduct is "+deduct);
   
   var formatter = new Intl.NumberFormat(LOCALE, {
     style: 'currency',
@@ -63,10 +63,10 @@ function updatePrices(net,delivery,enableDelivery){
   }
   total.lastChange=new Date().getTime();
   cartTotal.lastChange=new Date().getTime();
-  console.log("DAta");
-console.log(cartTotal)
-  console.log("Total is "+total.totalPrice);
-  console.log("Total is "+cartTotal.withDelivery);
+  //console.log("DAta");
+//console.log(cartTotal)
+  //console.log("Total is "+total.totalPrice);
+ // console.log("Total is "+cartTotal.withDelivery);
   
 
 }

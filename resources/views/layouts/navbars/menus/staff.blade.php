@@ -3,7 +3,7 @@
        @if(in_array("poscloud", config('global.modules',[])))
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('home') }}">
-                    <i class="ni ni-tv-2 text-primary"></i> {{ __('POS') }}
+                    <i class="ni ni-tv-2 text-primary"></i> POS
                 </a>
             </li>
         @endif

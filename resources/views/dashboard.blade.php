@@ -145,7 +145,7 @@
                             
                                 <form action="{{route('home')}}#g3" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="input-group">
@@ -156,7 +156,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Filtrar por mes</label>
                                                 <div class="input-group">
@@ -175,7 +175,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
@@ -214,14 +214,19 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- Chart -->
-                        @if(count($salesValue)>0)
-                            <div class="chart">
-                                <canvas id="chart-byvendor" class="chart-canvas"></canvas>
+                     
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <!-- Chart -->
+                                @if(count($salesValue)>0)
+                                    <div class="chart">
+                                        <canvas id="chart-byvendor" class="chart-canvas"></canvas>
+                                    </div>
+                                @else
+                                    <p>{{ __('No expenses right now!') }}</p>
+                                @endif
                             </div>
-                        @else
-                            <p>{{ __('No expenses right now!') }}</p>
-                        @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,9 +248,9 @@
                             </div>
                             <div class="col-12">
                             
-                            <form action="{{route('home')}}#g4" method="GET">
+                            <form action="" method="GET" id="graf2">
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Area</label>
                                             <div class="">
@@ -258,7 +263,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -269,7 +274,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -281,11 +286,11 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="button" onclick="charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
                                             </div>
                                         </div>
 
@@ -298,33 +303,19 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var tablesLables = @json($tablesLabels);
-                        var tablesPeoples= @json($tablesPeoples);
-                        
-                        
-                        totalTablesLabels=[];
-                        totalTablesPeoples=[];
-                        
-                        for (const key in tablesLables) {
-                            totalTablesLabels.push(tablesLables[key]);
-                            totalTablesPeoples.push(tablesPeoples[key]);
-                        }
-                    </script>
                     
                     <div class="card-body">
-                        @if(isset($mesaMasCaliente[0]->nomt))
-                    <span class="badge badge-primary badge-pill">La mesa mas caliente es <b>{{$mesaMasCaliente[0]->nomt }}</b> con {{$mesaMasCaliente[0]->nump }} personas</span>
-                       @endif
+                       
+                    <span class="badge badge-primary badge-pill mb-3" id="mesaMasCaliente"></span>
+                    
                     <!-- Chart -->
-                        @if(count($tablesLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-tables" class="chart-canvas"></canvas>
+                    <div class="row">
+                        <div class="col-12 col-sm-12">
+                            <div class="chart" style="position: relative; width:100%">
+                                        <canvas style="max-width: 100%" id="chart-tables" class="chart-canvas" ></canvas>
                             </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -347,9 +338,10 @@
                             
                                 
 
-                            <form action="{{route('home')}}#g5" method="GET">
+                                <form action="{{route('home')}}#g5" method="GET" id="graf3">
+                                    <input name="report" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -360,7 +352,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -372,16 +364,14 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                @if ($parameters)
-                                                <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @else
-                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @endif
+                                                <button type="button" onclick="charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                
+                                                <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                                               
                                                 
                                             </div>
                                         </div>
@@ -395,35 +385,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var periodLabels = @json($periodLabels);
-                        var periodTime= @json($periodTime);
-                        
-                        
-                        totalPeriodLabels=[];
-                        totalPeriodTime=[];
-                        
-                        for (const key in periodLabels) {
-                            totalPeriodLabels.push(periodLabels[key]);
-                        }
-                        for (const key in periodTime) {
-                            totalPeriodTime.push(periodTime[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
-                        @if(isset($mesaMasCaliente->nomt))
-                        @endif
                         <!-- Chart -->
-                        @if(count($tablesLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-timeorder" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-timeorder" class="chart-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -442,16 +409,17 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">Informe por Horario</h6>
-                                <h2 class="mb-0">Ordenes por horario</h2>
+                                <h2 class="mb-0">Órdenes por horario</h2>
                             </div>
                             <div class="col-12">
                             
                                 
 
-                            <form action="{{route('home')}}#g6" method="GET">
+                            <form action="{{route('home')}}#g6" method="GET" id="graf4">
+                                <input name="reportweekofday" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
 
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -462,7 +430,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -473,7 +441,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Hora de</label>
                                             <div class="">
@@ -502,7 +470,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Hora hasta</label>
                                             <div class="">
@@ -531,17 +499,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                @if ($parameters)
-                                                <a href="{{Request::fullUrl().'&reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @else
-                                                <a href="{{Request::fullUrl().'?reportweekofday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                @endif
-                                                
+                                                <button type="button" onclick="charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,1)"  class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
                                             </div>
                                         </div>
 
@@ -554,29 +518,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var horarioLabels = @json($horarioLabels);
-                        var horarioOrders= @json($horarioOrders);
-                        
-                        
-                        totalhorarioLabels=[];
-                        totalhorarioOrders=[];
-                        
-                        for (const key in horarioLabels) {
-                            totalhorarioLabels.push(horarioLabels[key]);
-                        }
-                        for (const key in horarioOrders) {
-                            totalhorarioOrders.push(horarioOrders[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
                         @if(isset($mesaMasCaliente->nomt))
                         @endif
                         <!-- Chart -->
-                        @if(count($tablesLabels)>0)
+                        @if(count($periodLabels)>0)
                             <div class="chart">
                                 <canvas id="chart-hourorder" class="chart-canvas"></canvas>
                             </div>
@@ -605,9 +552,9 @@
                             
                                 
 
-                            <form action="{{route('home')}}#g7" method="GET">
+                            <form action="{{route('home')}}#g7" method="GET" id="graf5">
                                 <div class="row mt-5 input-daterange datepicker">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Mesero</label>
                                             <div class="">
@@ -621,7 +568,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
                                             <div class="input-group">
@@ -632,7 +579,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
                                             <div class="input-group">
@@ -643,11 +590,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
-                                                <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="button" onclick="charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
                                                
                                             </div>
                                         </div>
@@ -661,31 +608,13 @@
                             </div>
                         </div>
                     </div>
-
-                    <script>
-                        var ordenespordiaLabels = @json($ordenespordiaLabels);
-                        var ordenespordiaValues= @json($ordenespordiaValues);
-                        
-                        
-                        totalorderbydayLabels=[];
-                        totalorderbydayValues=[];
-                        
-                        for (const key in ordenespordiaLabels) {
-                            totalorderbydayLabels.push(ordenespordiaLabels[key]);
-                            totalorderbydayValues.push(ordenespordiaValues[key]);
-                        }
-
-                    </script>
                     
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($ordenespordiaLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                 
+                        <div class="chart">
+                            <canvas id="chart-orderbyday" class="chart-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -708,10 +637,10 @@
                             <div class="col-12">
                             
                                 
-
-                                <form action="{{route('home')}}#g8" method="GET">
+                                <form action="{{route('home')}}#g8" method="GET" id="graf6">
+                                    <input name="reportbyday" type="text" hidden/>
                                     <div class="row mt-5 input-daterange datepicker">
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mesero</label>
                                                 <div class="">
@@ -724,7 +653,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="">
@@ -736,9 +665,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
-                                                <label class="form-control-label">Metodo de pago</label>
+                                                <label class="form-control-label">Método de pago</label>
                                                 <div class="">
                                                     <select name="vpag" class="form-control form-control-sm">
                                                         <option value="0"  >Seleccionar</option>
@@ -750,7 +679,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Tipo de pedido</label>
                                                 <div class="">
@@ -764,7 +693,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Fecha de</label>
                                                 <div class="input-group">
@@ -775,7 +704,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Fecha hasta</label>
                                                 <div class="input-group">
@@ -786,16 +715,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12 col-md-12 col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
-                                                    <button type="submit" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                                    @if ($parameters)
-                                                    <a href="{{Request::fullUrl().'&reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @else
-                                                    <a href="{{Request::fullUrl().'?reportbyday=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
-                                                    @endif
+                                                    
+                                                    <button type="button" onclick="charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
                                                 </div>
                                             </div>
     
@@ -808,28 +735,13 @@
                         </div>
                     </div>
 
-                    <script>
-                        var ordenestotalpordiaLabels = @json($ordenestotalpordiaLabels);
-                        var ordenestotalpordiaValues= @json($ordenestotalpordiaValues);
-                        
-                        totalpordiaLabels=[];
-                        totalpordiaValues=[];
-                        
-                        for (const key in ordenestotalpordiaLabels) {
-                            totalpordiaLabels.push(ordenestotalpordiaLabels[key]);
-                            totalpordiaValues.push(ordenestotalpordiaValues[key]);
-                        }
-                    </script>
                     
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($ordenespordiaLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-ordertotalbyday" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-ordertotalbyday" class="chart-canvas"></canvas>
+                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -850,6 +762,7 @@
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
                                 <h2 class="mb-0">TOP 10 RESTAURANTES CON MÁS VENTAS</h2>
                             </div>
+                            
                         </div>
                     </div>
 
@@ -885,7 +798,7 @@
 
 
         @if(auth()->user()->hasRole('admin'))
-        <div id="g9"> </div>
+        <div id="g10"> </div>
         <div class="row mt-5">
             <div class="col-xl-12">
                 <div class="card shadow">
@@ -895,29 +808,123 @@
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
                                 <h2 class="mb-0">VENTAS POR RESTAURANTES</h2>
                             </div>
+                            <div class="col-12">
+                                    
+                                <form action="{{route('home')}}#g10" method="GET" id="graf1">
+                                    <input name="reportsalesbyrestaurant" type="text" hidden/>
+                                    <div class="row mt-5 input-daterange datepicker">
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Restaurante</label>
+                                                <div class="">
+                                                    <select name="rnom" class="form-control form-control-sm">
+                                                        <option value="0" >Seleccionar</option>
+                                                        @foreach($companies as $key)
+                                                        <option value="{{$key->id}}"  <?php if(isset($_GET['rnom']) && $_GET['rnom']==$key->id){ echo "selected"; } ?> >{{$key->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha de</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="rinicio" class="form-control form-control" placeholder="Fecha de" type="text" <?php if(isset($_GET['rinicio'])){echo 'value="'.$_GET['rinicio'].'"';} ?>/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha hasta</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="rfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['rfin'])){echo 'value="'.$_GET['rfin'].'"';} ?> />
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label"></label>
+                                                <div class="input-group">
+                                                    <button type="button" onclick="charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="submit"  class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+
+                                                </div>
+                                            </div>
+    
+                                            
+                                        </div>
+                                    <div>
+                                </form>
+                                    
+                                    
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Chart -->
+                        <div class="chart">
+                            <canvas id="chart-totres" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        @endif
+
+
+        @if(auth()->user()->hasRole('admin'))
+        <div id="g11"> </div>
+        <div class="row mt-5">
+            <div class="col-xl-12">
+                <div class="card shadow">
+                    <div class="card-header bg-transparent">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-8">
+                                <h6 class="text-uppercase text-muted ls-1 mb-1">CALIFICACION POR RESTAURANTE</h6>
+                                <h2 class="mb-0">TOP 10 RESTAURANTES CON MEJOR CALIFICACIÓN</h2>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                            @if ($parameters)
+                            <a href="{{Request::fullUrl().'&reportrating=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                            @else
+                            <a href="{{Request::fullUrl().'?reportrating=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
+                            @endif
+                            </div>
                         </div>
                     </div>
 
                     <script>
-                        var daysResLabels = @json($daysResLabels);
-                        var totalOrderResValues= @json($totalOrderResValues);
+                        var ratingLabels = @json($ratingLabels);
+                        var ratingValues= @json($ratingValues);
                         
                         
-                        totaldaysResLabels=[];
-                        totaltotalOrderResValues=[];
+                        totalratingLabels=[];
+                        totalratingValues=[];
                         
-                        for (const key in daysResLabels) {
-                            totaldaysResLabels.push(daysResLabels[key]);
-                            totaltotalOrderResValues.push(totalOrderResValues[key]);
+                        for (const key in ratingLabels) {
+                            totalratingLabels.push(ratingLabels[key]);
+                            totalratingValues.push(ratingValues[key]);
                         }
 
                     </script>
                     
                     <div class="card-body">
                         <!-- Chart -->
-                        @if(count($daysResLabels)>0)
+                        @if(count($ratingLabels)>0)
                             <div class="chart">
-                                <canvas id="chart-totres" class="chart-canvas"></canvas>
+                                <canvas id="chart-ratings" class="chart-canvas"></canvas>
                             </div>
                         @else
                             <p>{{ __('No hay registros en este momento!') }}</p>
@@ -927,6 +934,9 @@
             </div>
         </div>
         @endif
+
+
+
 
 
         {{-- @if(auth()->user()->hasRole('owner')&&config('settings.enable_pricing'))

@@ -68,4 +68,10 @@
         </div>
         @include('layouts.footers.auth')
     </div>
+    @section('js')
+        <script>
+            $('.input-group-addon').hide();
+            $("#show_hide_password").removeClass("input-group");
+        </script>
+    @endsection
 @endsection

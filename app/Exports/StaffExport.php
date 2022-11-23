@@ -24,7 +24,8 @@ class StaffExport implements FromArray, WithHeadings
             'id',
             'Nombre',
             'Correo electrónico',
-            'teléfono',
+            'Teléfono',
+            'Cargo',
             'Fecha de creación',
         ];
     }

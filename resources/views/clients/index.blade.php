@@ -15,7 +15,7 @@
                             </div>
                             @if(auth()->user()->hasRole('owner'))
                             <div class="col-4 text-right">
-                                <a type="button" href="{{ route('clients.index') }}?report=true" class="btnFormClient btn btn-sm btn-success" style="color:#ffffff" >{{ __('Download report') }}</a>
+                                <a type="button" href="{{ route('clients.index') }}?report=true" class="btnFormClient btn btn-sm btn-success" style="color:#ffffff" ><i class="fas fa-download"></i> {{ __('Download report') }}</a>
 
                                 <button type="button" onclick="setTimeout(()=>{initPhone('phone');}, 1000);" class="btnFormClient btn btn-sm btn-primary" data-toggle="modal" data-target="#modalRegister">Agregar Cliente</button>
                             </div>

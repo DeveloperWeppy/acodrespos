@@ -111,7 +111,7 @@ return [
     |
     */
 
-    'timezone' => env('TIME_ZONE'),
+    'timezone' => env('TIME_ZONE','America/Bogota'),
 
     /*
     |--------------------------------------------------------------------------

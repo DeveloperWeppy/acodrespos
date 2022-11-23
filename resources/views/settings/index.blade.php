@@ -263,6 +263,10 @@
             $("input[name='env[RANGE_FIVE_PRICE]']").parent().parent().hide();
             $("input[name='env[CHARS_IN_MENU_LIST]']").parent().parent().hide();
             $("input[name='env[ENABLE_IMPORT_CSV]']").parent().parent().hide();
+            $("h4[id='sepenv[LABEL_ON_CUSTOM_FIELDS]']").hide();
+
+            //INFORMACIÓN DEL SITIO
+            $("input[name='delivery']").parent().hide();
 
             $("select[name='env[DRIVER_LINK_REGISTER_POSITION]']").parent().hide();
             $("select[name='env[RESTAURANT_LINK_REGISTER_POSITION]']").parent().hide();
@@ -277,8 +281,11 @@
             $("input[name='env[STRIPE_KEY]']").parent().parent().hide();
             $("input[name='env[STRIPE_SECRET]']").parent().parent().hide();
             $("input[name='env[ENABLE_STRIPE_CONNECT]']").parent().parent().hide();
+            $("input[name='env[LOCAL_TRANSFER_INFO]']").parent().parent().hide();
+            $("input[name='env[LOCAL_TRANSFER_ACCOUNT]']").parent().parent().hide();
 
             $("h4[id='sepenv[ENABLE_STRIPE]']").hide();
+            $("h4[id='sepenv[LOCAL_TRANSFER_INFO]']").hide();
         });
         
 

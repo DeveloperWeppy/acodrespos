@@ -126,7 +126,7 @@ function clean($string)
                             <div class="custom-control custom-control-alternative custom-checkbox">
                                 <input class="custom-control-input" name="valor" id="ask_divide_check" type="checkbox">
                                 <label class="custom-control-label" for="ask_divide_check">
-                                    <span class="text-muted" id="span_dividir">No dividir cuenta</span>
+                                    <span class="text-muted" id="span_dividir">Dividir cuenta de pago</span>
                                 </label>
                             </div>
                         </div>
