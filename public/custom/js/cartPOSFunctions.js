@@ -461,6 +461,10 @@ function ocultarbtn(){
 function submitOrderPOS(tipo=0){
 
 
+  if(tipo==1){ $('#createOrder').prop('disabled', true); }
+  if(tipo==2){ $('#actualizarPedido').prop('disabled', true); }
+  if(tipo==0){ $('#submitOrderPOS').prop('disabled', true); }
+
     if($('#paymentType').val()=="transferencia" && $('#img_payment')[0].files.length === 0 ){
       $("#img_payment").addClass('is-invalid');
       return false;
