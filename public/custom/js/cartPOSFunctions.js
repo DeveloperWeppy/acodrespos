@@ -527,12 +527,17 @@ function submitOrderPOS(tipo=0){
     $('#indicator').hide();
 
     $('#modalPayment').modal('hide');
+
+    $("#client_name").val("").trigger('change');
+    $('#paymentId').val("");
+    $('#paymentType2').val("");
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
 
     if(response.data.status){
       $('textarea#order_comment').val("");
+      
       window.showOrders();
       receiptPOS.order=response.data.order;
       if(tipo==0){
@@ -576,7 +581,9 @@ function submitOrderPOS(tipo=0){
 function submitImage(orderid){
 
     var formData = new FormData($('#formImgPayment')[0]);
-    formData.append('orderid',orderid)
+    formData.append('orderid',orderid);
+    formData.append('cuentaid',$('#paymentId').val());
+    formData.append('tipotarjeta',$('#paymentType2').val());
     $.ajax({
         url: withSession('/poscloud/order'),
         type: 'POST',
@@ -925,7 +932,7 @@ window.onload = function () {
     methods: {
       onChange(event) {
           //console.log(event.target.value)
-          if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"){
+          if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
             this.received=this.totalPrice;
            
           }

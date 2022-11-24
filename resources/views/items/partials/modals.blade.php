@@ -11,7 +11,7 @@
             <div class="modal-body p-0">
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
-                        <form role="form" method="post" action="{{ route('categories.store') }}">
+                        <form role="form" class="newItem" method="post" action="{{ route('categories.store') }}">
                             @csrf
                             <input type="hidden" value="{{$restorant_id}}"  name="restaurant_id" />
                             <div class="row">
@@ -67,7 +67,7 @@
             <div class="modal-body p-0">
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
-                        <form role="form" id="form-edit-category" method="post" action="">
+                        <form role="form" class="newItem" id="form-edit-category" method="post" action="">
                             @csrf
                             @method('put')
                             <input name="cat_id" id="cat_id" type="hidden" required>
@@ -117,7 +117,7 @@
             <div class="modal-body p-0">
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
-                        <form role="form" method="post" action="{{ route('admin.restaurant.storenewlanguage') }}">
+                        <form role="form" class="newItem" method="post" action="{{ route('admin.restaurant.storenewlanguage') }}">
                             @csrf
                             <input type="hidden" value="{{$restorant_id}}"  name="restaurant_id" />
                             @include('partials.select', ['class'=>"col-12", 'classselect'=>"noselecttwo",'name'=>"Language",'id'=>"locale",'placeholder'=>__("Select Language"),'data'=>config('config.env')[2]['fields'][0]['data'],'required'=>true])
@@ -145,7 +145,7 @@
             <div class="modal-body p-0">
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
-                        <form role="form" method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
+                        <form role="form" class="newItem" method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group{{ $errors->has('item_name') ? ' has-danger' : '' }}">
                                 <input class="form-control" name="item_name" id="item_name" placeholder="{{ __('Item name') }} ..." type="text" required>
@@ -213,7 +213,7 @@
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="col-md-10 offset-md-1">
-                        <form role="form" method="post" action="{{ route('import.items') }}" enctype="multipart/form-data">
+                        <form role="form" class="newItem" method="post" action="{{ route('import.items') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group text-center{{ $errors->has('item_image') ? ' has-danger' : '' }}">
                                 <label class="form-control-label" for="items_excel">{{ __('Import your file') }}</label>
@@ -247,7 +247,7 @@
             <div class="modal-body p-0">
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
-                        <form role="form" method="post" action="{{ route('categories.storeareakitchen') }}">
+                        <form role="form" class="newItem" method="post" action="{{ route('categories.storeareakitchen') }}">
                             @csrf
                             <input type="hidden" value="{{$restorant_id}}"  name="restaurant_id" />
                             <div class="form-group{{ $errors->has('area_name') ? ' has-danger' : '' }}">

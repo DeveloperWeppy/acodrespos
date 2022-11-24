@@ -133,10 +133,14 @@ class Main extends Controller
     public function store(Request $request)
     {
         
-        $numUser=User::role('manager_restorant')->where('restaurant_id','=',auth()->user()->restorant->id)->count();
-        if($numUser==1){
-            return redirect()->route($this->webroute_path.'create')->with("error","Ya existe un Administrador de Restaurante", ['item'=>__($this->title)]);
+
+        if($request->new_address_checkout=="manager_restorant"){
+            $numUser=User::role('manager_restorant')->where('restaurant_id','=',auth()->user()->restorant->id)->count();
+            if($numUser==1){
+                return redirect()->route($this->webroute_path.'create')->with("error","Ya existe un Administrador de Restaurante", ['item'=>__($this->title)]);
+            }
         }
+        
    
 
         $rules = [

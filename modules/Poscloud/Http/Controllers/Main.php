@@ -269,9 +269,20 @@ class Main extends Controller
             $nom = $orderId.'.png';
             $order=Order::findOrFail($orderId);
             $order->url_payment = $path.$nom;
+            $order->id_account_bank = $request->cuentaid;
             $order->save();
 
             $request->img_payment->move(public_path($path), $nom);
+
+            return $order->id;
+            die();
+        }
+
+        if ($request->tipotarjeta) {
+            $orderId=$request->orderid;
+            $order=Order::findOrFail($orderId);
+            $order->type_card = $request->tipotarjeta;
+            $order->save();
 
             return $order->id;
             die();
@@ -337,7 +348,7 @@ class Main extends Controller
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
-                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->propina,$request->number_people,$request->paymentId,$request->paymentType2);
+                $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->propina,$request->number_people);
             }
             if ($validatorOnMaking->fails()) { 
                 return response()->json([

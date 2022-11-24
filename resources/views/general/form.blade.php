@@ -1,6 +1,6 @@
 @extends('general.index', $setup)
 @section('cardbody')
-<form action="{{ $setup['action'] }}" method="POST" enctype="multipart/form-data">
+<form class="newItem" action="{{ $setup['action'] }}" method="POST" enctype="multipart/form-data">
         @csrf
         @isset($setup['isupdate'])
             @method('PUT')
