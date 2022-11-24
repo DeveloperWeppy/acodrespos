@@ -128,7 +128,7 @@ Coded by www.creative-tim.com
     <!-- Control Center for Argon UI Kit: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('argonfront') }}/js/argon-design-system.js?v=1.2.0" type="text/javascript"></script>
 
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <!-- Import Vue -->
    <script src="{{ asset('vendor') }}/vue/vue.js"></script>
    <!-- Import AXIOS --->
@@ -163,14 +163,14 @@ Coded by www.creative-tim.com
 
      <!-- Google Map -->
      <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=geometry,drawing&key=<?php echo config('settings.google_maps_api_key'); ?>&libraries=places&callback=js.initializeGoogle"></script>
-
+     
     @if(strlen( config('broadcasting.connections.pusher.app_id'))>2)
         <!-- Pusher -->
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
         <script src="{{ asset('custom') }}/js/pusher.js"></script>
     @endif
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
 
     @yield('js')
 

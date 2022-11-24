@@ -77,17 +77,17 @@
         @guest()
             @include('layouts.footers.guest')
         @endguest
-
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- Commented because navtabs includes same script -->
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="{{ asset('vendor') }}/jasny/js/jasny-bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
         <script src="{{ asset('argonfront') }}/js/core/popper.min.js" type="text/javascript"></script>
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
         @yield('topjs')
-
+        
         <script>
             var t="<?php echo 'translations'.App::getLocale() ?>";
            window.translations = {!! Cache::get('translations'.App::getLocale(),"[]") !!};

@@ -433,6 +433,24 @@ window.onload = function () {
   //Activate deliveryAreaSwithcer
   deliveryAreaSwithcer();
 
+  function mostrarAlert(){
+    Swal.fire({
+      target: document.getElementById('productModal'),
+      title: '',
+      html: 'Agregando producto al carrito...',
+      button: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+          didOpen: () => {
+              Swal.showLoading()
+          },
+    });
+  }
 
   //VUE FOOTER PAGES
   footerPages = new Vue({
@@ -514,7 +532,7 @@ window.onload = function () {
     el:'#addToCart1',
     methods: {
         addToCartAct() {
-
+          //mostrarAlert();
             axios.post('/cart-add', {
                 id: $('#modalID').text(),
                 quantity: $('#quantity').val(),

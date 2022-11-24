@@ -5,6 +5,7 @@ if(typeof urlNotificacion === 'undefined'){
   var urlNotificacion="notificacion";
 }
 function notifivisto(){
+  
  $.ajax({
            headers: {
                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -90,6 +91,21 @@ function listnotificacion(index){
 }
 function listNotificacionAumenta(index){
  notificacionIndes=index;
+  Swal.fire({
+    title: '',
+    html: 'cargando datos...',
+    button: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showCancelButton: false,
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+        },
+  });
  listnotificacion(index);
 }
 

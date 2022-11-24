@@ -12,7 +12,7 @@
                     <div class="card-body px-lg-5 py-lg-5">
                         <form role="form">
                             <div class="form-group{{ $errors->has('new_address') ? ' has-danger' : '' }}">
-                                <input class="form-control" name="new_address" id="new_address" placeholder="{{ __( 'New address here' ) }} ..." type="text" required>
+                                <input class="form-control" name="new_address" id="new_address" placeholder="{{ __( 'Ingrese la referencia de la nueva dirección aquí' ) }} ..." type="text" required>
                                 @if ($errors->has('category_name'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('category_name') }}</strong>

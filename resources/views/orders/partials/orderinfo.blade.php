@@ -22,9 +22,9 @@
      @if (config('app.isft')&&$order->client)
          <h6 class="heading-small text-muted mb-4">{{ __('Client Information') }}</h6>
          <div class="pl-lg-4">
-             <h3>{{ $order->client?$order->client->name:"" }}</h3>
-             <h4>{{ $order->client?$order->client->email:"" }}</h4>
-             <h4>{{ $order->address?$order->address->address:"" }}</h4>
+             <h4>Nombre: {{ $order->client?$order->client->name:"" }}</h4>
+             <h4>Correo: {{ $order->client?$order->client->email:"" }}</h4>
+             <h4>Dirección: {{ $order->address?$order->address->address:"" }}</h4>
  
              @if(!empty($order->address->apartment))
                  <h4>{{ __("Apartment number") }}: {{ $order->address->apartment }}</h4>
@@ -39,7 +39,6 @@
                  <h4>{{ __("Intercom") }}: {{ $order->address->intercom }}</h4>
              @endif
              @if($order->client&&!empty($order->client->phone))
-             <br/>
              <h4>{{ __('Contact')}}: {{ $order->client->phone }}</h4>
              @endif
          </div>
@@ -83,7 +82,7 @@
      <h6 class="heading-small text-muted mb-4">{{ __('Orden') }}</h6>
     
      <ul id="order-items">
-         @foreach($order->items as $item)
+        @foreach($order->items as $item)
              <?php 
                  $theItemPrice= ($item->pivot->variant_price?$item->pivot->variant_price:$item->price);
              ?>
@@ -310,11 +309,15 @@
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
          @hasrole('owner')
             <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
-                <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
+                {{print_r($lasStatusId)}}
+                @if ($lasStatusId!=7||$lasStatusId!=5)
+                    <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
                         <span class="btn-inner--icon">
                             <i class="ni ni-ruler-pencil"></i>
                         </span>
-                </button>
+                    </button>
+                @endif
+                
             </h3>
         @endif
      @else
@@ -324,12 +327,12 @@
          @endif
      @endif
      
-     @if(isset($custom_data)&&count($custom_data)>0)
+     {{-- @if(isset($custom_data)&&count($custom_data)>0)
         <hr />
         <h3>{{ __(config('settings.label_on_custom_fields')) }}</h3>
         @foreach ($custom_data as $keyCutom => $itemValue)
             <h4>{{ __("custom.".$keyCutom) }}: {{ $itemValue }}</h4>
         @endforeach
-     @endif
+     @endif --}}
 
  </div>

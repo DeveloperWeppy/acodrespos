@@ -362,11 +362,18 @@ var initAddress=function(){
         var message="";
         if(address_number.length<1){
             doSubmit=false;
-            message+="\nPlease enter address number";
+            //message+="\nPor favor ingrese un número de dirección";
+            
         }
 
         if(!doSubmit){
-            alert(message);
+            //alert(message);
+            Swal.fire({
+                target: document.getElementById('modal-order-new-address'),
+                icon: 'error',
+                title: 'Ops...',
+                text: 'Por favor ingrese un número de dirección!',
+              });
             return false;
         }else{
 
@@ -389,6 +396,24 @@ var initAddress=function(){
                     entry: entry,
                     floor: floor
                 },
+                beforeSend:function(){
+                    $('#modal-order-new-address').modal('hide');
+                    /* Swal.fire({
+                             title: 'Guardando dirección',
+                             html: 'espere por favor...',
+                             button: false,
+                             showConfirmButton: false,
+                             allowOutsideClick: false,
+                             allowEscapeKey: false,
+                             showCancelButton: false,
+                             showConfirmButton: false,
+                             timer: 4000,
+                             timerProgressBar: true,
+                                 didOpen: () => {
+                                     Swal.showLoading()
+                                 },
+                         }); */
+                  },
                 success:function(response){
                     if(response.status){
                         window.location.reload();
