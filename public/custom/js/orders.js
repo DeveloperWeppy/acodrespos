@@ -32,10 +32,10 @@ jQuery(document).on("click", ".change-status", function() {
         data: data,
         dataType: 'json',
         beforeSend:function(){
-            $element.val('Cargando');
+            //$element.val('Cargando');
         },
         success: function(response) {
-            console.log(response);
+            //console.log(response);
             if (response.status == 'servicio') {
                 $element.find('span').removeAttr('class').attr('class', '');
                 $element.find('span').addClass('btn');

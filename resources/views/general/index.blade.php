@@ -108,5 +108,9 @@
     </div>
     @section('js')
         <script src="{{ asset('js') }}/showpassword.js"></script>
+        <script>
+            $('.input-group-addon').hide();
+            $("#show_hide_password").removeClass("input-group");
+        </script>
     @endsection
 @endsection

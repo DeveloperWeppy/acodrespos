@@ -89,7 +89,7 @@
         </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modalRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalRegister" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form class="modal-content" id="from-create-client">
       <div class="modal-header">

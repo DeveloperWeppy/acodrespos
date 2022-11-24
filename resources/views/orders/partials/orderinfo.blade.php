@@ -139,17 +139,7 @@
                                                 <?php echo $text_status; ?> <i class="fas fa-bell"></i>
                                             </span>
                                         </button>
-                                    </span>
-                                @else
-                                    <span class="small">
-                                        <button 
-                                        class="btn btn-outline-success btn-sm">
-                                            <span class="btn-inner--icon ">
-                                                {{$item->pivot->item_status}} <i class="fas fa-bell"></i>
-                                            </span>
-                                        </button>
-                                    </span>
-                                    
+                                    </span>                                    
                                 @endif
                             @endif
 
