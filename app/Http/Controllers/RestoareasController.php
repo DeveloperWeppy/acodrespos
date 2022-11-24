@@ -193,7 +193,7 @@ class RestoareasController extends Controller
                 return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
             }
         }else{
-            return redirect()->route($this->webroute_path.'index')->with("error","El producto ya no existe");
+            return redirect()->route($this->webroute_path.'index')->with("error","El area ya no existe");
         }
 
     
