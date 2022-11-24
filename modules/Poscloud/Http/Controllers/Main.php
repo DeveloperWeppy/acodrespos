@@ -36,12 +36,10 @@ class Main extends Controller
             }
             $vendor=Restorant::findOrFail(auth()->user()->restaurant_id);
 
-            /*
             $canDoOrdering =$vendor->getPlanAttribute()['canMakeNewOrder'];
             if(!$canDoOrdering){
                 return redirect()->route('orders.index')->withStatus(__('You can not receive more orders. Please subscribe to new plan.'));
             } 
-            */
                 
 
             //Associative array for the floor plan

@@ -141,6 +141,7 @@ class HomeController extends Controller
             return redirect()->route('front');
         }else if (auth()->user()->hasRole('admin')&&config('app.isft')){
             //Admin in FT
+
             $last30daysDeliveryFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->where('delivery_method',1)->sum('order_price');
             $last30daysStaticFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('propina');
             $last30daysDynamicFee = Order::all()->where('created_at', '>', $last30days)->where('payment_status','paid')->sum('vatvalue');
@@ -270,6 +271,10 @@ class HomeController extends Controller
             }
 
         }
+        
+
+
+
         
 
         //---areas
