@@ -265,7 +265,7 @@ function getCartContentAndTotalPrice(){
 
   //clear select item
 
-
+  $('#createOrder').prop('disabled', false);
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
     if (typeof response.data.order_id !== 'undefined'){
           ordenId=0;
@@ -465,7 +465,7 @@ function submitOrderPOS(tipo=0){
 
   if(tipo==1){ $('#createOrder').prop('disabled', true); }
   if(tipo==2){ $('#actualizarPedido').prop('disabled', true); }
-  if(tipo==0){ $('#submitOrderPOS').prop('disabled', true); }
+  if(tipo==0){ $('#submitOrderPOS').prop('disabled', true); localStorage.removeItem(CURRENT_TABLE_ID); }
 
     if($('#paymentType').val()=="transferencia" && $('#img_payment')[0].files.length === 0 ){
       $("#img_payment").addClass('is-invalid');
@@ -474,7 +474,7 @@ function submitOrderPOS(tipo=0){
 
   //EXPEDITION=1 enviar,EXPEDITION=2 recibir ,3=en mesa,
 
-  localStorage.removeItem(CURRENT_TABLE_ID);
+  
   
   $('#submitOrderPOS').hide();
   $('#indicator').show();

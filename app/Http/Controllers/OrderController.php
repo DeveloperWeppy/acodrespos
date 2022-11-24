@@ -924,14 +924,23 @@ class OrderController extends Controller
 
     
         //Verifica si la orden aun tienen productos pendientes en cocina
-        if($alias=="prepared"){
 
-            $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
+        $datos = auth()->user()->restorant->has_kitchen;
+        print_r($datos);
+    
+        if($datos==1){
+            if($alias=="prepared"){
 
-            if($numPre>0){
-                return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+                $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
+
+                if($numPre>0){
+                    return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+                }
             }
         }
+        
+
+       
         
         //asignar conductor con campo abierto
         if(isset($_GET['nom'],$_GET['tel'])){
