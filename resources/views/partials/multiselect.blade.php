@@ -5,9 +5,10 @@
         
         @foreach ($data as  $select)
             <div class="col-md-4">
+
                 <br />
                 <label class="form-control-label">{{ __($select['name']) }}</label>
-                <select class="form-control col-sm"  name="{{ $id."[".$select['id']."]" }}" id="{{  $id."[".$select['id']."]" }}">
+                <select class="form-control col-sm"  name="{{ $id."[".$select['id']."]" }}" id="{{  $id."[".$select['id']."]" }}" required="{{isset($field['required'])?'true':'false'}}">
                     <option disabled selected value> {{ __('Select')." ".$select['name']}} </option>
                     @foreach ($select['data'] as $key => $item)
                         @if (isset($select['value'])&&$key==$select['value'])

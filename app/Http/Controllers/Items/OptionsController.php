@@ -29,7 +29,7 @@ class OptionsController extends Controller
             'action_link'=>route('items.options.create', ['item'=>$item->id]),
             'action_name'=>'Añadir Nueva Opción',
             'items'=>$item->options()->paginate(10),
-            'item_names'=>'options',
+            'item_names'=>'opciones',
             'breadcrumbs'=>[
                 [__('Menu'), '/items'],
                 [$item->name, '/items/'.$item->id.'/edit'],
@@ -142,8 +142,8 @@ class OptionsController extends Controller
      */
     public function destroy(Options $option)
     {
+        
         $option->delete();
-
         return redirect()->route('items.options.index', ['item'=>$option->item->id])->withStatus(__('Option has been removed'));
     }
 }

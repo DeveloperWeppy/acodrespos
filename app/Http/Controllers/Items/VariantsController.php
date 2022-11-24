@@ -22,8 +22,7 @@ class VariantsController extends Controller
         }
 
         return [
-            ['ftype'=>'multiselect', 'name'=>'Options', 'id'=>'option', 'placeholder'=>'Enter option', 'required'=>false,
-            'data'=>$options, ],
+            ['ftype'=>'multiselect', 'name'=>'Options', 'id'=>'option', 'placeholder'=>'Enter option','data'=>$options, 'required'=>true],
         ];
     }
 

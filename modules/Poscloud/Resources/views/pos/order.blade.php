@@ -237,12 +237,19 @@ function clean($string)
             }
             // Se guarda en localStorage despues de JSON stringificarlo 
             localStorage.setItem(table, JSON.stringify(nuevovalor));
+
+            console.log(localStorage);
             $("#modal-add-consumidor").modal("hide");
             Swal.fire(
             'Cuenta Dividida Correctamente!',
             '',
             'success'
-            )
+            );
+
+            $("#ask_divide_check").prop("checked",false);
+            $("#myInput").val("");
+            RenderInputs(0);
+            
 
         }
     </script>
