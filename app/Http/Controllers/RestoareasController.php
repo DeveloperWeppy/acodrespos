@@ -181,13 +181,22 @@ class RestoareasController extends Controller
     public function destroy($id)
     {
         $this->authChecker();
-        $item = $this->provider::findOrFail($id);
-        if ($item->tables->count() > 0) {
-            return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_items_associated', ['item'=>__($this->title)]));
-        } else {
-            $item->delete();
+        $item = $this->provider::find($id);
 
-            return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+       
+        if(isset($item->tables)){
+            if ($item->tables->count() > 0) {
+                return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_items_associated', ['item'=>__($this->title)]));
+            } else {
+                $item->delete();
+
+                return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+            }
+        }else{
+            return redirect()->route($this->webroute_path.'index')->with("error","El producto ya no existe");
         }
+
+    
+       
     }
 }

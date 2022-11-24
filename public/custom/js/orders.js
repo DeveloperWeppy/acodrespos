@@ -46,3 +46,11 @@ jQuery(document).on("click", ".change-status", function() {
         }
     });
 });
+
+
+
+var envio = 0;
+
+$(".newItem").submit(function(e) {
+    if(envio!=0){  e.preventDefault(); } envio++;
+});
