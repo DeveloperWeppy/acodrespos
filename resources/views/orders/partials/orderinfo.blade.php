@@ -331,12 +331,15 @@
          @endif
      @endif
      
-     @if(isset($custom_data)&&count($custom_data)>0)
+     {{--
+         @if(isset($custom_data)&&count($custom_data)>0)
         <hr />
         <h3>{{ __(config('settings.label_on_custom_fields')) }}</h3>
         @foreach ($custom_data as $keyCutom => $itemValue)
             <h4>{{ __("custom.".$keyCutom) }}: {{ $itemValue }}</h4>
         @endforeach
      @endif
+    --}}
+    
 
  </div>
