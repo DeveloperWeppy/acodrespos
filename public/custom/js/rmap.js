@@ -82,10 +82,14 @@ function initMapA() {
     map = new google.maps.Map(document.getElementById('map2'), {center: {lat: -34.397, lng: 150.644}, zoom: 15 });
     marker = new google.maps.Marker({ position: {lat: -34.397, lng: 150.644}, map: map, title: 'Click to zoom'});
     infoWindow = new google.maps.InfoWindow;
-
+    const locationButton = document.createElement("button");
+    locationButton.innerHTML="<i class='fas fa-map-marked-alt'></i>";
+    locationButton.classList.add("custom-map-control-button");
+    map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationButton);
+    var pos = {};
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+           pos = { lat: position.coords.latitude, lng: position.coords.longitude };
 
             map.setCenter(pos);
             marker.setPosition(pos);
@@ -95,7 +99,29 @@ function initMapA() {
         });
     } else {
     }
-
+    locationButton.addEventListener("click", () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                lat = pos.lat;
+                lng =pos.lng;
+                infoWindow.setPosition(pos);
+                map.setCenter(pos);
+                marker.setPosition(new google.maps.LatLng(pos.lat, pos.lng));
+               
+                },
+                () => {
+                handleLocationError(true, infoWindow, map.getCenter());
+                }
+            );
+        } else {
+            handleLocationError(false, infoWindow, map.getCenter());
+        }
+    });
     map.addListener('click', function(event) {
         var currPos = new google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
         marker.setPosition(currPos);

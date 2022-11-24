@@ -1,4 +1,5 @@
-<div class="card card-profile shadow">
+
+<div class="card card-profile shadow"   <?php echo !$ifAreaDelivery==true? 'style=display:none':''?>>
     <div class="px-4">
       <div class="mt-5">
         <h3>{{ __('Delivery Address') }}<span class="font-weight-light"></span></h3>

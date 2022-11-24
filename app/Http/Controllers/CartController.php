@@ -245,13 +245,14 @@ class CartController extends Controller
            
             //user addresses
             $addresses = [];
+            $ifAreaDelivery=false;
             if (config('app.isft')) {
                 //$addresses = $this->getAccessibleAddresses($restaurant, auth()->user()->addresses->reverse());
                 $restaurantzona=GeoZoneDelivery::where('restorant_id',$restaurant->id)->get();
                
                 if(count($restaurantzona)>0){
                     $addresses =$this->getAccessibleAddresses2($restaurantzona,auth()->user()->addresses->reverse());
-                  
+                    $ifAreaDelivery=true;
                 }
                 
             }
@@ -304,6 +305,7 @@ class CartController extends Controller
                 'openingTime' => $businessHours->isClosed()?$formatter->format($businessHours->nextOpen($now)):null,
                 'closingTime' => $businessHours->isOpen()?$formatter->format($businessHours->nextClose($now)):null,
                 'addresses' => $addresses,
+                'ifAreaDelivery'=>$ifAreaDelivery,
                 'fieldsToRender'=>$fieldsToRender,
                 'extraPayments'=>$extraPayments,
                 'tid'=>$tid,

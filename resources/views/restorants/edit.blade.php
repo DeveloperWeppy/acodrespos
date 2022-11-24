@@ -327,6 +327,7 @@
         }
 
         function changeLocation(lat, lng){
+            alert("11");
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -350,6 +351,18 @@
         }
 
         function changeDeliveryArea(path){
+            var mensaje="La zona ha sido borrada";
+            if(path.length>0){
+                mensaje="La Zona de entrega se a gurdado"; 
+            }
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validan los datos',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+            }
+            );
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -366,7 +379,12 @@
                 },
                 success:function(response){
                     if(response.status){
-                        
+                        Swal.fire({
+                        icon: 'success',
+                        title: mensaje,
+                        showConfirmButton: false,
+                        timer: 1500
+                        });
                     }
                 }
             })
@@ -374,6 +392,8 @@
 
         function initializeMap(lat, lng){
             // en 1
+            infoWindow = new google.maps.InfoWindow();
+            const locationButton = document.createElement("button");
             var map_options = {
                 zoom: 13,
                 center: new google.maps.LatLng(lat, lng),
@@ -382,6 +402,32 @@
             }
 
             map_location = new google.maps.Map( document.getElementById("map_location"), map_options );
+
+            locationButton.innerHTML="<i class='fas fa-map-marked-alt'></i>";
+            locationButton.classList.add("custom-map-control-button");
+            map_location.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationButton);
+            locationButton.addEventListener("click", () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        infoWindow.setPosition(pos);
+                        map_location.setCenter(pos);
+                        marker.setPosition(new google.maps.LatLng(pos.lat, pos.lng));
+                        changeLocation(pos.lat, pos.lng);
+                        },
+                        () => {
+                        handleLocationError(true, infoWindow, map_location.getCenter());
+                        }
+                    );
+                } else {
+                    handleLocationError(false, infoWindow, map_location.getCenter());
+                }
+            });
+
             map_area = new google.maps.Map( document.getElementById("map_area"), map_options );
             map_area2 = new google.maps.Map( document.getElementById("map_area2"), map_options );
             arraypoly[0]=new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
@@ -436,6 +482,7 @@
         }
         function initializeMarker(lat, lng){
             // en 2
+          
             var markerData = new google.maps.LatLng(lat, lng);
             marker = new google.maps.Marker({
                 position: markerData,
@@ -579,6 +626,8 @@ $( "#btnerase" ).click(function() {
             initializeWorkingHours();
 
             getLocation(function(isFetched, currPost){
+                infoWindow = new google.maps.InfoWindow();
+
                 if(isFetched){
                     infoWindow = new google.maps.InfoWindow;
 
@@ -610,6 +659,7 @@ $( "#btnerase" ).click(function() {
                         });
                        
                     }else{
+                        
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(function(position) {
                                 var pos = { lat: position.coords.latitude, lng: position.coords.longitude };
@@ -660,7 +710,7 @@ $( "#btnerase" ).click(function() {
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
             infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : 'Error: Your browser doesn\'t support geolocation.');
-            infoWindow.open(map);
+            infoWindow.open(map_location);
         }
 
         /*var form = document.getElementById('restorant-form');

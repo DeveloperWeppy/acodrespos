@@ -23,7 +23,7 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         if($validator->fails()){$this->status=false;}
         return $validator;
     }
-    public function makeOrder($client_id=null,$comment=null,$tipo=0,$orderId=0,$cart_id=0,$propina=0,$number_people=0,$payment_id=0,$paymentType2=null){
+    public function makeOrder($client_id=null,$comment=null,$tipo=0,$orderId=0,$cart_id=0,$propina=0,$number_people=0,$payment_id=null,$paymentType2=null){
 
         //From Parent - Construct the order
         if($orderId==0){

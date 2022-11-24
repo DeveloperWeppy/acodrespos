@@ -20,8 +20,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
-            if(auth()->user()->hasRole('owner')){
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant')   ) {
+            
+            
+            if(auth()->user()->hasRole('owner')  || auth()->user()->hasRole('manager_restorant') ){
                 $arrayId=[];
                 $arrayFecha=[];
                 $restaurant_id=0;

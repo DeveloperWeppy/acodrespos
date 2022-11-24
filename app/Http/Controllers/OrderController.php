@@ -542,10 +542,6 @@ class OrderController extends Controller
 
         $driver = usersDriver::where('order_id','=',$order->id)->get();
 
-    
-            
-        
-        
 
         //Do we have pdf invoice
         $pdFInvoice=Module::has('pdf-invoice');
@@ -570,9 +566,10 @@ class OrderController extends Controller
             $driversData[$driver->id] = $driver->name;
         }
         */
-
+        
         if (auth()->user()->hasRole('client') && auth()->user()->id == $order->client_id ||
             auth()->user()->hasRole('owner') && auth()->user()->id == $order->restorant->user->id ||
+            auth()->user()->hasRole('manager_restorant') && auth()->user()->restaurant_id == $order->restorant->id ||
             auth()->user()->hasRole('staff') && auth()->user()->restaurant_id == $order->restorant->id ||
             auth()->user()->hasRole('kitchen') && auth()->user()->restaurant_id == $order->restorant->id ||
                 auth()->user()->hasRole('driver') && auth()->user()->id == $order->driver_id || auth()->user()->hasRole('admin')
@@ -824,7 +821,7 @@ class OrderController extends Controller
         }
 
         //----- Restaurant ------
-        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')||auth()->user()->hasRole('kitchen')) {
+        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('manager_restorant') ||auth()->user()->hasRole('staff')||auth()->user()->hasRole('kitchen')) {
             foreach ($items as $key => $item) {
 
                 
@@ -924,6 +921,17 @@ class OrderController extends Controller
             $theDriver->update();
         }
         */
+
+    
+        //Verifica si la orden aun tienen productos pendientes en cocina
+        if($alias=="prepared"){
+
+            $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
+
+            if($numPre>0){
+                return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+            }
+        }
         
         //asignar conductor con campo abierto
         if(isset($_GET['nom'],$_GET['tel'])){
@@ -1011,6 +1019,9 @@ class OrderController extends Controller
 
         
         if (config('app.isft')&&$order->client) {
+
+            
+
             if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7') {
                 
                 $res=new OrderNotification($order, $status_id_to_attach);

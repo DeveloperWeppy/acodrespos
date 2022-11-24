@@ -1007,6 +1007,7 @@ class HomeController extends Controller
                 }
 
                 if($Request->grafico=="grafico5"){
+                    //consulta pedidos del dia en la mesa y que hayan sido pagados
                     $ordenesprodia=Order::select(DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as dia,COUNT(id) as cantidad'))
                     ->where('delivery_method','3')
                     ->where('restorant_id',auth()->user()->restorant->id)

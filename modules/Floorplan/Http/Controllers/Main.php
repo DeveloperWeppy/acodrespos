@@ -17,7 +17,7 @@ class Main extends Controller
     public function edit(RestoArea $restoarea)
     {
 
-        if(auth()->user()->hasRole('owner')&&$restoarea->restorant->user_id==auth()->user()->id){
+        if(auth()->user()->hasRole('owner')&&$restoarea->restorant->user_id==auth()->user()->id || auth()->user()->hasRole('manager_restorant')&&$restoarea->restorant->id==auth()->user()->restaurant_id){
             //Ok
             return view('floorplan::edit',['restoarea'=>$restoarea,'title'=>__('Gerente de Piso para ').$restoarea->name]);
         }else{

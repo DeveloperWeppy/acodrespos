@@ -1,6 +1,8 @@
 
 <div class="card-body">
     @include('partials.flash') 
+
+    @hasrole('admin|staff|owner|client|manager_restorant')
     @if ($order->restorant)
         <h6 class="heading-small text-muted mb-4">{{ __('Restaurant information') }}</h6>
         <div class="pl-lg-4">
@@ -16,6 +18,7 @@
         </div>
         <hr class="my-4" />
     @endif
+ 
     
     
  
@@ -58,15 +61,16 @@
              <hr class="my-4" />
          @endif
      @endif
-     
+     @endhasrole
  
+   
     <?php 
         $currency=config('settings.cashier_currency');
         $convert=config('settings.do_convertion');
     ?>
 
     @if (isset($drivers[0]->name))
-        @hasrole('admin|owner|client|staff')
+        @hasrole('admin|owner|client|staff|manager_restorant')
             <h6 class="heading-small text-muted mb-4">{{ __('Driver') }}</h6>
             <div class="pl-lg-4">
             <h4>{{ $drivers[0]->name }}</h4>
@@ -92,7 +96,7 @@
                 @if($item->pivot->vatvalue>0)
                     <span class="small">-- {{ __('INC ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                 @endif
-                @hasrole('admin|owner|staff|kitchen')
+                @hasrole('admin|owner|staff|kitchen|manager_restorant')
                     <?php $lasStatusId=$order->status->pluck('id')->last(); ?>
                     {{-- @hasrole('staff|admin|owner') --}}
                     @if ($lasStatusId!=7&&$lasStatusId!=11)
@@ -123,7 +127,7 @@
                                 $vcolor=$valor->colorarea;
                             }
                      @endphp
-                     @hasrole('kitchen|admin|owner')
+                     @hasrole('kitchen|admin|owner|manager_restorant')
                         @if ($order->restorant->has_kitchen == 1)
                             @if ($lasStatusId == 3)
                                 @if ($item->pivot->item_status=='cocina')
@@ -271,6 +275,8 @@
      <h4>{{ __('Tiempo de Preparación') }}: {{ $order->time_to_prepare ." " .__('minutes')}}</h4>
      <br/>
      @endif
+
+     @hasrole('admin|staff|owner|client|manager_restorant')
      <h5>{{ __("PRECIO SIN INC") }}: @money( $order->order_price-$order->vatvalue, $currency ,true)</h5>
      <h5>{{ __("IMPOCONSUMO(INC)") }}: @money( $order->vatvalue, $currency,$convert)</h5>
      <h4>{{ __("Sub Total") }}: @money( $order->order_price, $currency,$convert)</h4>
@@ -284,6 +290,7 @@
      <hr />
      <h3>{{ __("TOTAL") }}: @money( $order->delivery_price+$order->order_price_with_discount, $currency,true)</h3>
      <hr />
+    
 
      <h4>{{ __("Payment method") }}: {{ __(strtoupper($order->payment_method) == 'CASH' ? 'Efectivo' : (strtoupper($order->payment_method) == 'COD' ? 'Contraentrega' : 'Otro')) }}</h4>
      @if(!empty($order->name_bank))
@@ -304,7 +311,7 @@
          <button onclick="location.href='{{$order->payment_link}}'" class="btn btn-success">{{ __('Pay now') }}</button>
      @endif
      <hr />
-
+     @endhasrole
      @if(config('app.isft') || config('app.iswp'))
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
          @hasrole('owner')
