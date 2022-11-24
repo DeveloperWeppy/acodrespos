@@ -533,6 +533,8 @@ function submitOrderPOS(tipo=0){
 
     if(response.data.status){
       $('textarea#order_comment').val("");
+      $('#paymentId').val("");
+      $('#paymentType2').val("");
       window.showOrders();
       receiptPOS.order=response.data.order;
       if(tipo==0){
@@ -576,7 +578,9 @@ function submitOrderPOS(tipo=0){
 function submitImage(orderid){
 
     var formData = new FormData($('#formImgPayment')[0]);
-    formData.append('orderid',orderid)
+    formData.append('orderid',orderid);
+    formData.append('cuentaid',$('#paymentId').val());
+    formData.append('tipotarjeta',$('#paymentType2').val());
     $.ajax({
         url: withSession('/poscloud/order'),
         type: 'POST',
