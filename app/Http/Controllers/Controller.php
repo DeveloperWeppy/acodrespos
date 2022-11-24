@@ -335,7 +335,7 @@ class Controller extends BaseController
     }
     public function getRestaurant()
     {
-        if (!auth()->user()->hasRole('owner')&&!auth()->user()->hasRole('staff')) {
+        if (!auth()->user()->hasRole('owner')&&!auth()->user()->hasRole('manager_restorant')&&!auth()->user()->hasRole('staff')) {
             return null;
         }
 
@@ -351,14 +351,11 @@ class Controller extends BaseController
             //Staff
             return Restorant::findOrFail(auth()->user()->restaurant_id);
         }
-        
-
-        
     }
 
     public function ownerOnly()
     {
-        if (! auth()->user()->hasRole('owner')) {
+        if (!auth()->user()->hasRole('owner') && !auth()->user()->hasRole('manager_restorant')) {
             abort(403, 'Unauthorized action.');
         }
     }
