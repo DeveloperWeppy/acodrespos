@@ -6,6 +6,7 @@ use App\User;
 use App\Models\RestaurantClient;
 use Illuminate\Http\Request;
 use App\Restorant;
+use App\Order;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ClientsExport;
@@ -36,9 +37,11 @@ class ClientController extends Controller
                 }else{
                     $restaurant_id=auth()->user()->restaurant_id;
                 }
-                $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
+                //$client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
+
+                $client=Order::where(['restorant_id'=>$restaurant_id])->groupBy('client_id')->get();
                 foreach ($client as $key => $Item){ 
-                    array_push($arrayId,$Item->user_id);
+                    array_push($arrayId,$Item->client_id);
                     array_push($arrayFecha,$Item->created_at);
                 }
                 $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->orderBy('id','desc')->paginate(15);
@@ -67,9 +70,10 @@ class ClientController extends Controller
                 }else{
                     $restaurant_id=auth()->user()->restaurant_id;
                 }
-                $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
+                //$client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
+                $client=Order::where(['restorant_id'=>$restaurant_id])->groupBy('client_id')->get();
                 foreach ($client as $key => $Item){ 
-                    array_push($arrayId,$Item->user_id);
+                    array_push($arrayId,$Item->client_id);
                     array_push($arrayFecha,$Item->created_at);
                 }
                 $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->get();
