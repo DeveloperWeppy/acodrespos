@@ -264,32 +264,33 @@ function clearDeduct(){
 function getCartContentAndTotalPrice(){
 
   //clear select item
-
-  alert(cartSessionId);
-
-  if(cartSessionId!=null){
-    Swal.fire({
-      title: 'Cargando datos, Espere por favor...',
-      button: false,
-      showConfirmButton: false,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showCancelButton: false,
-      showConfirmButton: false,
-      timer: 1000,
-      timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading()
-        },
-    });
-  }
+  
   
 
   $('#createOrder').prop('disabled', false);
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
     if (typeof response.data.order_id !== 'undefined'){
+
+          //aparece el modal de cargando, para darle tiempo al codigo de refresar la mesa
+          Swal.fire({
+            title: 'Cargando datos, Espere por favor...',
+            button: false,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading()
+              },
+          });
+
+
           ordenId=0;
           if(response.data.order_id>0){
+
              ordenId=response.data.order_id;
              commentOrd=response.data.comment;
             $('textarea#order_comment').val(response.data.comment);
