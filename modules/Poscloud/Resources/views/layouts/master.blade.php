@@ -130,7 +130,6 @@
 
    <!-- Notify JS -->
    <script src="{{ asset('custom') }}/js/notify.min.js"></script>
-   <script src="{{ asset('custom') }}/js/notify.min.js"></script>
    <link rel="stylesheet" href="{{asset('vendor/intltelinput/build/css/intlTelInput.css')}}">
 <script src="{{asset('vendor/intltelinput/build/js/intlTelInput.js')}}"></script>
 <script src="{{asset('vendor/intltelinput/build/js/utils.js')}}"></script>
