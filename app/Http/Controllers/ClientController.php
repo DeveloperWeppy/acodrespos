@@ -44,9 +44,7 @@ class ClientController extends Controller
                     array_push($arrayId,$Item->client_id);
                     array_push($arrayFecha,$Item->created_at);
                 }
-                //$User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->orderBy('id','desc')->paginate(15);
                 $User=User::role('client')->where(['restaurant_id'=>$restaurant_id])->orWhereIn('id', $arrayId)->where(['active'=>1])->orderBy('id','desc')->paginate(15);
-
                 $arrayUser=$User;
                 foreach ($User as $key => $Item){ 
                     $index =array_search($Item->id, $arrayId);
@@ -72,13 +70,12 @@ class ClientController extends Controller
                 }else{
                     $restaurant_id=auth()->user()->restaurant_id;
                 }
-                //$client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
-                $User=User::role('client')->where(['restaurant_id'=>$restaurant_id])->orWhereIn('id', $arrayId)->where(['active'=>1])->orderBy('id','desc')->paginate(15);
+                $client=RestaurantClient::where(['companie_id'=>$restaurant_id])->get();
                 foreach ($client as $key => $Item){ 
-                    array_push($arrayId,$Item->client_id);
+                    array_push($arrayId,$Item->user_id);
                     array_push($arrayFecha,$Item->created_at);
                 }
-                $User=User::role('client')->whereIn('id', $arrayId)->where(['active'=>1])->get();
+                $User=User::role('client')->where(['restaurant_id'=>$restaurant_id])->orWhereIn('id', $arrayId)->where(['active'=>1])->orderBy('id','desc')->get();
                 $arrayUser=$User;
                 foreach ($User as $key => $Item){ 
                     $index =array_search($Item->id, $arrayId);
