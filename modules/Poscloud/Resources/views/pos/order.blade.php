@@ -235,6 +235,7 @@ function clean($string)
                 };
                 nuevovalor.push(array);
             }
+    
             // Se guarda en localStorage despues de JSON stringificarlo 
             localStorage.setItem(table, JSON.stringify(nuevovalor));
 
