@@ -729,7 +729,11 @@ class HomeController extends Controller
                 $id_product = $value->id_product;
                 $cantidad= $value->cantidad;
                 $item = Items::find($id_product);
-                $name_product = $item->name;
+                $name_product = "Eliminado";
+                if($item){
+                    $name_product = $item->name;
+                }
+                
 
                 
                 if(isset($_GET['fcat']) && $_GET['fcat']==2){
