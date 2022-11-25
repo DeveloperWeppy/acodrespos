@@ -248,6 +248,8 @@ function clean($string)
             );
 
             $("#ask_divide_check").prop("checked",false);
+            $("#btncontinuar").css("display","block");
+            
             $("#myInput").val("");
             RenderInputs(0);
             
