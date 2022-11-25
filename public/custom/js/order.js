@@ -271,14 +271,18 @@ function setCurrentItem(id){
         $("#modalDialogItem").addClass("col-sm-6 col-md-6 col-lg-6 offset-3");
     }
     if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
-        $("#group_personasdivision").show();
+        
         //parslocal = JSON.parse(getlocal);
         selectpersonas.empty();
 
-        $.each(getlocal, function(index, value){
-            //add options to select of account divide
-            selectpersonas.append("<option value='" + (index+1) + "' >" + value.nombre + "</option>");            
-        }); 
+        if(EXPEDITION==3){
+            $("#group_personasdivision").show();
+            $.each(getlocal, function(index, value){
+                //add options to select of account divide
+                selectpersonas.append("<option value='" + (index+1) + "' >" + value.nombre + "</option>");            
+            }); 
+        }
+        
         
     }
 
