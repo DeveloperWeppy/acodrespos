@@ -265,20 +265,25 @@ function getCartContentAndTotalPrice(){
 
   //clear select item
 
-  Swal.fire({
-    title: 'Cargando datos, Espere por favor...',
-    button: false,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    showCancelButton: false,
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-      didOpen: () => {
-        Swal.showLoading()
-      },
-  });
+  alert(cartSessionId);
+
+  if(cartSessionId!=null){
+    Swal.fire({
+      title: 'Cargando datos, Espere por favor...',
+      button: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 1000,
+      timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        },
+    });
+  }
+  
 
   $('#createOrder').prop('disabled', false);
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
