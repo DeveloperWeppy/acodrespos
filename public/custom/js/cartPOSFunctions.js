@@ -246,6 +246,23 @@ function doMoveOrder(tableFrom,tableTo){
 
 function withSession(endpoint){
    if(CURRENT_TABLE_ID!=null&&CURRENT_TABLE_ID!=undefined){
+    //aparece el modal de cargando, para darle tiempo al codigo de refresar la mesa
+    Swal.fire({
+      title: 'Cargando datos, Espere por favor...',
+      button: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 1000,
+      timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        },
+    });
+
+
     endpoint+="?session_id="+CURRENT_TABLE_ID;
    }
    return endpoint;
@@ -266,26 +283,11 @@ function getCartContentAndTotalPrice(){
   //clear select item
   
   
-
   $('#createOrder').prop('disabled', false);
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
     if (typeof response.data.order_id !== 'undefined'){
 
-          //aparece el modal de cargando, para darle tiempo al codigo de refresar la mesa
-          Swal.fire({
-            title: 'Cargando datos, Espere por favor...',
-            button: false,
-            showConfirmButton: false,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showCancelButton: false,
-            showConfirmButton: false,
-            timer: 1000,
-            timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading()
-              },
-          });
+          
 
 
           ordenId=0;
@@ -305,6 +307,9 @@ function getCartContentAndTotalPrice(){
       $("#orderId").hide();
       $("#orderNumber").show();
     }
+
+
+    
     cartSessionId=response.data.id;
     cartContent.items=response.data.data;
     //cartTotal.deduct=0;
