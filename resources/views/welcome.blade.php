@@ -178,5 +178,10 @@
                 } 
         });
     });
+
+
+    var urlNotificacion="{{route('order.notificacion')}}";
+
+    listnotificacion(notificacionIndes);
 </script>
 @endsection
