@@ -403,6 +403,8 @@
       EXPEDITION=1;
       expedition.config={};
       getCartContentAndTotalPrice();
+
+      
       showOrderDetail(CURRENT_TABLE_ID);
    }
 
@@ -412,6 +414,7 @@
       EXPEDITION=2;
       expedition.config={};
       getCartContentAndTotalPrice();
+    
       showOrderDetail(CURRENT_TABLE_ID);
 
     }

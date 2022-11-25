@@ -98,6 +98,8 @@
                 @endif
                 @hasrole('admin|owner|staff|kitchen|manager_restorant')
                     <?php $lasStatusId=$order->status->pluck('id')->last(); ?>
+
+                    @hasrole('admin|owner|staff|manager_restorant')
                     {{-- @hasrole('staff|admin|owner') --}}
                     @if ($lasStatusId!=7&&$lasStatusId!=11)
                         <span class="small">
@@ -113,6 +115,8 @@
                             </button>
                         </span>
                     @endif
+                    @endhasanyrole
+
                     {{-- @endhasanyrole --}}
 
                      @php

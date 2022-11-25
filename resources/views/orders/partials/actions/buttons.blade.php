@@ -16,11 +16,11 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
             <a href="{{ url('updatestatus/accepted_by_admin/'.$order->id) }}" class="btn btn-primary">{{ __('Accept') }}</a>
             <a href="{{ url('updatestatus/rejected_by_admin/'.$order->id) }}" class="btn btn-danger">{{ __('Reject') }}</a>
         
-        @elseif($lastStatusAlisas == "accepted_by_restaurant"&&$order->delivery_method.""!="2")
+        @elseif($lastStatusAlisas == "accepted_by_restaurant"&&$order->delivery_method.""!="2" &&$order->delivery_method!=3  )
             <button type="button" class="btn btn-primary" onClick=(setSelectedOrderId({{ $order->id }}))  data-toggle="modal" data-target="#modal-asign-driver">{{ __('Assign to driver') }}</button>
-        @elseif($lastStatusAlisas == "rejected_by_driver"&&$order->delivery_method.""!="2")
+        @elseif($lastStatusAlisas == "rejected_by_driver"&&$order->delivery_method.""!="2" &&$order->delivery_method!=3 )
             <button type="button" class="btn btn-primary" onClick=(setSelectedOrderId({{ $order->id }}))  data-toggle="modal" data-target="#modal-asign-driver">{{ __('Assign to driver') }}</button>
-        @elseif($lastStatusAlisas == "prepared"&&$order->delivery_method.""!="2"&&$order->driver==null)
+        @elseif($lastStatusAlisas == "prepared"&&$order->delivery_method.""!="2"&&$order->delivery_method!=3 &&$order->driver==null)
             <button type="button" class="btn btn-primary" onClick=(setSelectedOrderId({{ $order->id }}))  data-toggle="modal" data-target="#modal-asign-driver">{{ __('Assign to driver') }}</button>
         @else
             <p>{{ __('No actions for you right now!') }}</p>
