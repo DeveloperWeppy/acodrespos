@@ -2,6 +2,9 @@
 <div class="card-body">
     @include('partials.flash') 
 
+
+    
+
     @hasrole('admin|staff|owner|client|manager_restorant')
     @if ($order->restorant)
         <h6 class="heading-small text-muted mb-4">{{ __('Restaurant information') }}</h6>
@@ -96,12 +99,17 @@
                 @if($item->pivot->vatvalue>0)
                     <span class="small">-- {{ __('INC ').$item->pivot->vat."%: "}} ( @money( $item->pivot->vatvalue, $currency,$convert) )</span>
                 @endif
+
+              
+
                 @hasrole('admin|owner|staff|kitchen|manager_restorant')
                     <?php $lasStatusId=$order->status->pluck('id')->last(); ?>
 
                     @hasrole('admin|owner|staff|manager_restorant')
+
+                    
                     {{-- @hasrole('staff|admin|owner') --}}
-                    @if ($lasStatusId!=7&&$lasStatusId!=11)
+                    @if ($lasStatusId!=7&&$lasStatusId!=11&&$lasStatusId!=8&&$lasStatusId!=9)
                         <span class="small">
                             <button 
                             data-toggle="modal" 
@@ -115,8 +123,12 @@
                             </button>
                         </span>
                     @endif
+
+
                     @endhasanyrole
 
+
+                    
                     {{-- @endhasanyrole --}}
 
                      @php
@@ -133,7 +145,7 @@
                      @endphp
                      @hasrole('kitchen|admin|owner|manager_restorant')
                         @if ($order->restorant->has_kitchen == 1)
-                            @if ($lasStatusId == 3)
+                            @if ($lasStatusId == 3 &&$lasStatusId != 8&&$lasStatusId != 9)
                                 @if ($item->pivot->item_status=='cocina')
                                     <span class="small">
                                         <button 
@@ -311,7 +323,7 @@
          @hasrole('owner')
             <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
                 {{print_r($lasStatusId)}}
-                @if ($lasStatusId!=7||$lasStatusId!=5)
+                @if ($lasStatusId!=7&&$lasStatusId!=5&&$lasStatusId!=8&&$lasStatusId!=9)
                     <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
                         <span class="btn-inner--icon">
                             <i class="ni ni-ruler-pencil"></i>
