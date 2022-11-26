@@ -133,7 +133,6 @@ class HomeController extends Controller
         $last30days=Carbon::now()->subDays(30);
 
 
-
         //Driver
         if (auth()->user()->hasRole('driver')) {
             return $this->driverInfo();            
