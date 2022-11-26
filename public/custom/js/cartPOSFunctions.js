@@ -287,9 +287,6 @@ function getCartContentAndTotalPrice(){
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
     if (typeof response.data.order_id !== 'undefined'){
 
-          
-
-
           ordenId=0;
           if(response.data.order_id>0){
 
@@ -344,6 +341,7 @@ function getCartContentAndTotalPrice(){
     var clave = Object.values(objperso);
     if( clave.length != 0 ){
       Object.entries(objperso).forEach(([key, value]) => {
+        
         var persons = value.personaccount;
         var saldounit = value.price;
         var quantity = value.quantity;
