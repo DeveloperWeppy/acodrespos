@@ -929,7 +929,6 @@ class OrderController extends Controller
         //Verifica si la orden aun tienen productos pendientes en cocina
 
         $datos = auth()->user()->restorant->has_kitchen;
-        print_r($datos);
     
         if($datos==1){
             if($alias=="prepared"){
