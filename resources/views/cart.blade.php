@@ -283,7 +283,7 @@
 
     var urlNotificacion="{{route('order.notificacion')}}";
 
-listnotificacion(notificacionIndes);
+   listnotificacion(notificacionIndes);
 
     
   </script>

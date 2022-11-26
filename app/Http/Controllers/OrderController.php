@@ -928,18 +928,21 @@ class OrderController extends Controller
     
         //Verifica si la orden aun tienen productos pendientes en cocina
 
-        $datos = auth()->user()->restorant->has_kitchen;
-    
-        if($datos==1){
-            if($alias=="prepared"){
+        if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant')) {
+            $datos = auth()->user()->restorant->has_kitchen;
+        
+            if($datos==1){
+                if($alias=="prepared"){
 
-                $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
+                    $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
 
-                if($numPre>0){
-                    return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+                    if($numPre>0){
+                        return redirect()->route('orders.show', ['order'=>$order])->with('error','Aun hay productos en cocina');
+                    }
                 }
             }
         }
+        
         
 
        
