@@ -128,7 +128,12 @@
             </li>
         @endif 
 
-      
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('reservation.index') }}">
+                <i class="fas fa-ticket-alt"></i> {{ __('Reservas') }}
+            </a>
+        </li>
+
         @if ( in_array("coupons", config('global.modules',[]))   )
 
             <li class="nav-item">

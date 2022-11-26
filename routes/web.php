@@ -153,13 +153,22 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
                 Route::post('storenewlanguage', 'RestorantController@storeNewLanguage')->name('storenewlanguage');
             });
         });
-
+        //------------------------------------------------------------------------------------//
         #routes for settings banks account
         Route::prefix('configuracioncuenta')->name('configuracioncuenta.')->group(function () {
             Route::post('guardar', 'ConfigCuentasBancariasController@store')->name('store');
             Route::get('/del/{id}', 'ConfigCuentasBancariasController@destroy')->name('delete');
             Route::post('obtener', 'ConfigCuentasBancariasController@geInfoCuentas')->name('obtener');
         });
+
+        #routes for reservations
+        Route::prefix('reservas')->name('reservation.')->group(function () {
+            Route::get('/', 'ReservationController@index')->name('index');
+            Route::post('obtener', 'ReservationController@geInfoMesas')->name('obtener');
+            Route::post('guardar', 'ReservationController@store')->name('store');
+        });
+
+        // --------------------------------------------------------------------------------- //
 
         Route::resource('cities', 'CitiesController');
         Route::get('/cities/del/{city}', 'CitiesController@destroy')->name('cities.delete');
