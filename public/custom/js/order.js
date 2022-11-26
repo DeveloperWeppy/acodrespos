@@ -270,13 +270,17 @@ function setCurrentItem(id){
         $("#modalDialogItem").removeClass("modal-lg");
         $("#modalDialogItem").addClass("col-sm-6 col-md-6 col-lg-6 offset-3");
     }
+
+
+    selectpersonas.empty();
+    $("#group_personasdivision").hide();
     if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
         
         //parslocal = JSON.parse(getlocal);
-        selectpersonas.empty();
 
         if(EXPEDITION==3){
             $("#group_personasdivision").show();
+            
             $.each(getlocal, function(index, value){
                 //add options to select of account divide
                 selectpersonas.append("<option value='" + (index+1) + "' >" + value.nombre + "</option>");            

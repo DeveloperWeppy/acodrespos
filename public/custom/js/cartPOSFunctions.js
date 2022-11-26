@@ -337,14 +337,19 @@ function getCartContentAndTotalPrice(){
     });
     var nuevovalor = [];
     var objperso = response.data.data;
-    //console.log(objperso);
+    
+    
     var clave = Object.values(objperso);
     if( clave.length != 0 ){
       Object.entries(objperso).forEach(([key, value]) => {
         
+        
+
         var persons = value.personaccount;
         var saldounit = value.price;
         var quantity = value.quantity;
+
+        
 
         if (persons != null) {
           $('#card_division_personas').show();
