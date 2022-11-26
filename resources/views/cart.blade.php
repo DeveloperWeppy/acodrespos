@@ -280,6 +280,11 @@
             });
          }
     });
+
+    var urlNotificacion="{{route('order.notificacion')}}";
+
+listnotificacion(notificacionIndes);
+
     
   </script>
   <script src="{{ asset('custom') }}/js/checkout.js"></script>

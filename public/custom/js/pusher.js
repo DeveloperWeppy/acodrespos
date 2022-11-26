@@ -25,6 +25,8 @@ function notifivisto(){
        });
 }
 function listnotificacion(index){
+
+
  $.ajax({
            headers: {
                  'X-CSRF-TOKEN': '{{ csrf_token() }}'

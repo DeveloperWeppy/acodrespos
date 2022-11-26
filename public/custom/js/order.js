@@ -442,3 +442,4 @@ $(".nav-item-category").on('click', function() {
         }
     });
 });
+
