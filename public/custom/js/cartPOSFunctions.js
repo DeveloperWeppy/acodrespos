@@ -246,6 +246,23 @@ function doMoveOrder(tableFrom,tableTo){
 
 function withSession(endpoint){
    if(CURRENT_TABLE_ID!=null&&CURRENT_TABLE_ID!=undefined){
+    //aparece el modal de cargando, para darle tiempo al codigo de refresar la mesa
+    Swal.fire({
+      title: 'Cargando datos, Espere por favor...',
+      button: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 1000,
+      timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+        },
+    });
+
+
     endpoint+="?session_id="+CURRENT_TABLE_ID;
    }
    return endpoint;
@@ -264,12 +281,18 @@ function clearDeduct(){
 function getCartContentAndTotalPrice(){
 
   //clear select item
-
+  
+  
   $('#createOrder').prop('disabled', false);
    axios.get(withSession('/cart-getContent-POS')).then(function (response) {
     if (typeof response.data.order_id !== 'undefined'){
+
+          
+
+
           ordenId=0;
           if(response.data.order_id>0){
+
              ordenId=response.data.order_id;
              commentOrd=response.data.comment;
             $('textarea#order_comment').val(response.data.comment);
@@ -284,11 +307,14 @@ function getCartContentAndTotalPrice(){
       $("#orderId").hide();
       $("#orderNumber").show();
     }
+
+
+    
     cartSessionId=response.data.id;
     cartContent.items=response.data.data;
     //cartTotal.deduct=0;
-    carro=response.data.id;
-    $("#mesaid").val(carro);
+
+    $("#mesaid").val(cartSessionId);
     //console.log(response.data);
 
     var obj=response.data.config;
@@ -396,29 +422,25 @@ function getCartContentAndTotalPrice(){
 function applyDiscount(){
   var code = $('#coupon_code').val();
 
+  
+
   axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice}).then(function (response) {
-   
       if(response.data.status){
           //$("#promo_code_btn").attr("disabled",true);
           //$("#promo_code_btn").attr("readonly");
-
          // $("#promo_code_war").hide();
           //$("#promo_code_succ").show();
-
           setDeduct(response.data.deduct);
           js.notify(response.data.msg,"success");
-
           //$('#promo_code_btn').hide();
-
           //$( "#coupon_code" ).prop( "disabled", true );
       }else{
           //$("#promo_code_succ").hide();
           //$("#promo_code_war").show();
-
           js.notify(response.data.msg,"warning");
       }
   }).catch(function (error) {
-      
+    applyDiscount();
   });
 }
 
@@ -494,9 +516,9 @@ function submitOrderPOS(tipo=0){
     number_people:$('#form_number_people').val(),
     order_comment:$('textarea#order_comment').val()
   };
-  if(EXPEDITION==1||EXPEDITION==2){
 
-    
+
+  if(EXPEDITION==1||EXPEDITION==2){ 
     //Pickup OR deliver
     dataToSubmit.custom={
       client_id:selectClientId,
@@ -528,6 +550,9 @@ function submitOrderPOS(tipo=0){
 
     $('#modalPayment').modal('hide');
 
+    
+
+    $('#paymentType').val("cash");
     $("#client_name").val("").trigger('change');
     $('#paymentId').val("");
     $('#paymentType2').val("");
@@ -546,7 +571,6 @@ function submitOrderPOS(tipo=0){
         $('#modalPOSInvoice').attr('data-id',response.data.order.id);
 
         
-
         if ($('#ask_propina_check').is(":checked") || $('#edit_propina_check').is(":checked")) {
           //facturapos
           receiptPOS.totalPropina = valor_propi;

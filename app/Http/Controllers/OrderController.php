@@ -633,12 +633,15 @@ class OrderController extends Controller
             ) {
             if($request->has('delivery_pickup_interval')) {
                 $interEntrega=explode("_",$order->delivery_pickup_interval);
-                $aumentartiempo=intval($interEntrega[1])+$request->delivery_pickup_interval;
-                if($aumentartiempo>0 && $aumentartiempo>intval($interEntrega[0])){
-                    $order->delivery_pickup_interval=$interEntrega[0]."_".$aumentartiempo;
-                    $order->update();
-                    $order->client->notify(new OrderNotification($order,11));
+                if(isset($interEntrega[1])){
+                    $aumentartiempo=intval($interEntrega[1])+$request->delivery_pickup_interval;
+                    if($aumentartiempo>0 && $aumentartiempo>intval($interEntrega[0])){
+                        $order->delivery_pickup_interval=$interEntrega[0]."_".$aumentartiempo;
+                        $order->update();
+                        $order->client->notify(new OrderNotification($order,11));
+                    }
                 }
+                
             }
                
 

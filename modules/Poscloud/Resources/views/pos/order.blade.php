@@ -235,6 +235,7 @@ function clean($string)
                 };
                 nuevovalor.push(array);
             }
+    
             // Se guarda en localStorage despues de JSON stringificarlo 
             localStorage.setItem(table, JSON.stringify(nuevovalor));
 
@@ -247,6 +248,8 @@ function clean($string)
             );
 
             $("#ask_divide_check").prop("checked",false);
+            $("#btncontinuar").css("display","block");
+            
             $("#myInput").val("");
             RenderInputs(0);
             

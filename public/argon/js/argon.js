@@ -1526,8 +1526,6 @@ var ExpensesChart = (function() {
 		// Create chart
 		var ordersChart = new Chart($chart, {
 			type: 'pie',
-			
-			
 			data: {
 				labels: theLabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 				datasets: [{

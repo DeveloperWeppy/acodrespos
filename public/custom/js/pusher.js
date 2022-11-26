@@ -91,27 +91,30 @@ function listnotificacion(index){
 }
 function listNotificacionAumenta(index){
  notificacionIndes=index;
-  Swal.fire({
-    title: '',
-    html: 'cargando datos...',
-    button: false,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    showCancelButton: false,
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-        didOpen: () => {
-            Swal.showLoading()
-        },
-  });
+  
  listnotificacion(index);
 }
 
 "use strict";
 $(document).ready(function() {
-    if($("#listNotif").length > 0 ) {
+    if($(".listNotif").length > 0 ) {
+      /*
+      Swal.fire({
+        title: '',
+        html: 'cargando datos...',
+        button: false,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showCancelButton: false,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+            },
+      });
+      */
         listNotificacionAumenta(1);
     }
     // Enable pusher logging - don't include this in production

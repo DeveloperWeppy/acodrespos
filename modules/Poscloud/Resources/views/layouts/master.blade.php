@@ -130,7 +130,6 @@
 
    <!-- Notify JS -->
    <script src="{{ asset('custom') }}/js/notify.min.js"></script>
-   <script src="{{ asset('custom') }}/js/notify.min.js"></script>
    <link rel="stylesheet" href="{{asset('vendor/intltelinput/build/css/intlTelInput.css')}}">
 <script src="{{asset('vendor/intltelinput/build/js/intlTelInput.js')}}"></script>
 <script src="{{asset('vendor/intltelinput/build/js/utils.js')}}"></script>
@@ -403,6 +402,8 @@
       EXPEDITION=1;
       expedition.config={};
       getCartContentAndTotalPrice();
+
+      
       showOrderDetail(CURRENT_TABLE_ID);
    }
 
@@ -412,6 +413,7 @@
       EXPEDITION=2;
       expedition.config={};
       getCartContentAndTotalPrice();
+    
       showOrderDetail(CURRENT_TABLE_ID);
 
     }
@@ -435,10 +437,10 @@
         CURRENT_TABLE_NAME=floorPlan[id];
         EXPEDITION=3;
       }else if(idLength==7){
-        CURRENT_TABLE_NAME="Takeaway order";
+        CURRENT_TABLE_NAME="Pedido para llevar";
         EXPEDITION=2;
       }else{
-        CURRENT_TABLE_NAME="Delivery order";
+        CURRENT_TABLE_NAME="Orden de entrega";
         EXPEDITION=1;
       }
       $("#row_names").hide();
