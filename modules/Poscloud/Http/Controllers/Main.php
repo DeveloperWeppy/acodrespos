@@ -3,23 +3,24 @@
 
 namespace Modules\Poscloud\Http\Controllers;
 
+use PDO;
+use Cart;
+use App\User;
+use DateTime;
+use App\Order;
+use App\Tables;
+use App\Restorant;
+use Carbon\Carbon;
 use Akaunting\Money\Money;
-use App\Models\CartStorageModel;
-use App\Repositories\Orders\OrderRepoGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
 use App\Models\SimpleDelivery;
-use App\Restorant;
-use App\Tables;
-use App\User;
+use App\Models\CartStorageModel;
+use App\Http\Controllers\Controller;
 use Darryldecode\Cart\CartCollection;
-use Carbon\Carbon;
-use Cart;
-use App\Order;
 use Akaunting\Module\Facade as Module;
 use App\Models\ConfigCuentasBancarias;
-use PDO;
+use App\Repositories\Orders\OrderRepoGenerator;
 
 class Main extends Controller
 {
@@ -129,7 +130,7 @@ class Main extends Controller
                     'id'=>$order->id,
                     'receipt_number'=>$order->receipt_number,
                     'employee'=>$order->user->name,
-                    'date'=>$formatter->format($order->created_at),
+                    'date'=> $this->fechaCastellano($order->created_at),
                     'table'=>$order->type==3?$theTable->restoarea->name."-".$theTable->name:"",
                     'expedition'=>$order->type,
                     'type'=>$order->type==3?__('Dine in'):($order->type==2?__('Takeaway'):__('Delivery')),
@@ -148,6 +149,17 @@ class Main extends Controller
             'count' => count($returnArray),
             'orders'=>$returnArray
         ]);
+    }
+
+    function fechaCastellano ($fecha) {
+        $fecha = substr($fecha, 0, 10);
+        $numeroDia = date('d', strtotime($fecha));
+        $dia = date('l', strtotime($fecha));
+        $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+        $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+        $nombredia = str_replace($dias_EN, $dias_ES, $dia);
+        $hora = Carbon::parse($fecha)->format('h:i:s');
+        return $nombredia.": ".$hora;
     }
 
     /**
