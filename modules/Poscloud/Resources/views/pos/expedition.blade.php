@@ -21,7 +21,7 @@
         
         <label>{{ __('Time') }}</label><br />
         <div class="input-group mb-3">
-          <select name="timeslot" id="timeslot" class="form-control{{ $errors->has('timeslot') ? ' is-invalid' : '' }}" required>
+          <select name="timeslot" id="timeslot" class="form-control{{ $errors->has('timeslot') ? ' is-invalid' : '' }}" required >
             @foreach ($timeSlots as $value => $text)
                 <option value={{ $value }}>{{$text}}</option>
             @endforeach

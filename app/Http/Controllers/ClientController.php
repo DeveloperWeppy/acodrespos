@@ -124,7 +124,7 @@ class ClientController extends Controller
                     array_push($itemsForExport, $item);
                 }
 
-                return Excel::download(new StaffExport($itemsForExport), 'staff_'.time().'.xlsx');
+                return Excel::download(new StaffExport($itemsForExport), 'Personal_'.time().'.xlsx');
             }
 
 

@@ -37,6 +37,7 @@
   <link id="pagestyle" href="{{ asset('softd') }}/css/soft-ui-dashboard.css?v=1.0.1" rel="stylesheet" />
 
   <!-- Select2  -->
+  
   <link type="text/css" href="{{ asset('custom') }}/css/select2.min.css" rel="stylesheet">
 
   <!--Custom CSS -->
