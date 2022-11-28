@@ -25,6 +25,8 @@ function notifivisto(){
        });
 }
 function listnotificacion(index){
+
+
  $.ajax({
            headers: {
                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -151,3 +153,6 @@ $(document).ready(function() {
         });
     }
 });
+
+
+//js.notify("fffffffffff Orden ddd#1" ,{type:"primary"} ,"onclick='javascript:location.href='/orders/1'");  

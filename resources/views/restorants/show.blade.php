@@ -296,6 +296,12 @@
         var LOCALE="<?php echo  App::getLocale() ?>";
         var IS_POS=false;
         var TEMPLATE_USED="<?php echo config('settings.front_end_template','defaulttemplate') ?>";
+
+        var urlNotificacion="{{route('order.notificacion')}}";
+
+    listnotificacion(notificacionIndes);
+
+   
     </script>
     <script src="{{ asset('custom') }}/js/order.js"></script>
     @include('restorants.phporderinterface') 
