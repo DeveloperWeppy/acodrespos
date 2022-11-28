@@ -84,11 +84,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $resId = null;
+
+        if(isset(auth()->user()->restorant->id)){
+            $resId = auth()->user()->restorant->id;
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'number_identification' => $data['number_identification'],
             'email' => $data['email'],
             'phone' => $data['phone'],
+            'restaurant_id' =>$resId,
             'password' => Hash::make($data['password']),
             'api_token' => Str::random(80),
             'birth_date' => isset($data['birth_date']) ? $data['birth_date'] : '',
