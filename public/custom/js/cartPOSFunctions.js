@@ -321,8 +321,11 @@ function getCartContentAndTotalPrice(){
     if( Object.keys(obj).length != 0 ){
       expedition.config=response.data.config;
 
-      console.log(response.data.config);
-      $("#client_name").val(response.data.config.client_name).trigger('change');
+  
+      if (response.data.config.client_name) {
+         $("#client_name").val(response.data.config.client_name).trigger('change');
+      }
+      
       //Set the dd
       if(response.data.config.delivery_area){
         $("#delivery_area").val(response.data.config.delivery_area);
@@ -557,10 +560,6 @@ function submitOrderPOS(tipo=0){
     $('#indicator').hide();
 
     $('#modalPayment').modal('hide');
-
-    
-
-  
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
