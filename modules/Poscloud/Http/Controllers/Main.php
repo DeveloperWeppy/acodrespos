@@ -152,13 +152,13 @@ class Main extends Controller
     }
 
     function fechaCastellano ($fecha) {
-        $fecha = substr($fecha, 0, 10);
+        //$fecha = substr($fecha, 0, 10);
         $numeroDia = date('d', strtotime($fecha));
         $dia = date('l', strtotime($fecha));
         $dias_ES = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
         $dias_EN = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
         $nombredia = str_replace($dias_EN, $dias_ES, $dia);
-        $hora = Carbon::parse($fecha)->format('h:i:s');
+        $hora = Carbon::parse($fecha)->format('h:i:s A');
         return $nombredia.": ".$hora;
     }
 
