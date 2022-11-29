@@ -11,12 +11,7 @@
             ['ftype'=>'input','name'=>"Restaurant description",'id'=>"description",'placeholder'=>"Restaurant description",'required'=>true,'value'=>$restorant->description],
             ['ftype'=>'input','name'=>"Restaurant address",'id'=>"address",'placeholder'=>"Restaurant address",'required'=>true,'value'=>$restorant->address],
             ['ftype'=>'input','name'=>"Restaurant phone",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
-            ['ftype'=>'input','name'=>"Nit",'id'=>"nit",'placeholder'=>"Nit",'required'=>true,'value'=>$restorant->nit],
-            ['ftype'=>'select','name'=>"Tamaño de factura",'id'=>"invoice_size",'data'=>['58mm'=>'58 mm','80mm'=>'80 mm'],'required'=>true,'value'=>$restorant->invoice_size],
-            ['ftype'=>'textarea','name'=>"footer factura",'id'=>"invoice_footer",'placeholder'=>"footer factura",'required'=>true,'value'=>$restorant->invoice_footer],
-
-            ['ftype'=>'input','type'=>'number','name'=>"Porcentaje de Propina (%)",'id'=>"propina",'placeholder'=>"Porcentaje de Propina",'required'=>true,'value'=>$restorant->propina],
-
+            ['ftype'=>'input','name'=>"Nit",'id'=>"nit",'placeholder'=>"Nit",'required'=>true,'value'=>$restorant->nit]
         ]])
         <h6 class="heading-small text-muted mb-4">vínculos sociales</h6>
          @include('partials.fields',['fields'=>[
@@ -107,7 +102,18 @@
                 @include('restorants.partials.ordering')
             @endif
             @include('restorants.partials.localisation')
-
+            <h6 class="heading-small text-muted mb-4">Informacion de factura</h6>
+            @include('partials.fields',['fields'=>[
+                ['ftype'=>'select','name'=>"Tamaño de factura",'id'=>"invoice_size",'data'=>['58mm'=>'58 mm','80mm'=>'80 mm'],'required'=>true,'value'=>$restorant->invoice_size],
+                ['ftype'=>'input','name'=>"Prefijo consecutivo",'id'=>"prefix_consecutive",'placeholder'=>"Prefijo consecutivo",'required'=>true,'value'=>$restorant->prefix_consecutive],
+                ['ftype'=>'input','type'=>'number','name'=>"Consecutivo inicial",'id'=>"initial_consecutive",'placeholder'=>"Consecutivo inicial",'required'=>true,'value'=>$restorant->initial_consecutive],
+                ['ftype'=>'input','type'=>'number','name'=>"Consecutivo final",'id'=>"final_consecutive",'placeholder'=>"Consecutivo final",'required'=>true,'value'=>$restorant->final_consecutive],
+                ['ftype'=>'input','type'=>'number','name'=>"Consecutivo actual",'id'=>"current_consecutive",'placeholder'=>"Consecutivo actual","readonly"=>true,'required'=>true,'value'=>$restorant->current_consecutive],
+                ['ftype'=>'textarea','name'=>"footer factura",'id'=>"invoice_footer",'placeholder'=>"footer factura",'required'=>true,'value'=>$restorant->invoice_footer],
+    
+                ['ftype'=>'input','type'=>'number','name'=>"Porcentaje de Propina (%)",'id'=>"propina",'placeholder'=>"Porcentaje de Propina",'required'=>true,'value'=>$restorant->propina],
+    
+            ]])
             <!-- WHATS APP MODE -->
             @if (config('settings.is_whatsapp_ordering_mode'))
                 @include('restorants.partials.social_info')  
