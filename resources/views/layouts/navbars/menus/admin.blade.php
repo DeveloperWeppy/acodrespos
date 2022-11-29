@@ -134,6 +134,7 @@
             </a>
         </li>
 
+        {{--
         @if(!config('settings.hideApps'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('apps.index') }}">
@@ -141,6 +142,7 @@
                 </a>
             </li>
         @endif
+        --}}
 
         {{--  
         <li class="nav-item">
