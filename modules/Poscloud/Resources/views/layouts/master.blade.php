@@ -313,6 +313,8 @@
     }
 
     function showOrderDetail(id) {
+
+     
       
      $('textarea#order_comment').val("");
      $("#floorTabs").hide();
@@ -452,23 +454,28 @@
         $('.personitem').show();
         $('#card_division_personas').show();
       }else{
-        $('.personitem').text("");
-        $("#modal-add-consumidor").modal("show");
-        $('#card_division_personas').hide();
-        $('#ask_divide_check').change(function() {
-                if (this.checked) {
-                    $("#span_dividir").text("Cuenta Dividida");
-                    $("#row_names").show();
-                    $("#btncontinuar").hide();
-                } else {
-                    $("#span_dividir").text("Sin cuenta dividida");
-                    $("#row_names").hide();
-                    $("#btncontinuar").show();
-                }
-            });
+        if(EXPEDITION==3){
+          $('.personitem').text("");
+          $("#modal-add-consumidor").modal("show");
+          $('#card_division_personas').hide();
+          $('#ask_divide_check').change(function() {
+                  if (this.checked) {
+                      $("#span_dividir").text("Cuenta Dividida");
+                      $("#row_names").show();
+                      $("#btncontinuar").hide();
+                  } else {
+                      $("#span_dividir").text("Sin cuenta dividida");
+                      $("#row_names").hide();
+                      $("#btncontinuar").show();
+                  }
+              });
+        }
+        
       }
       getCartContentAndTotalPrice();
       showOrderDetail(id);
+
+      
     }
 
     function makeOcccupied(id){
@@ -520,7 +527,7 @@
         var setTheHidden =function(){
             var theHidden=document.querySelector("input[type=hidden][name='"+name+"']");
             theHidden.value = iti.getSelectedCountryData().dialCode+input.value;
-            console.log(theHidden.value);
+          
         }
 
 

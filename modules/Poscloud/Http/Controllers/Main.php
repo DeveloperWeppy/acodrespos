@@ -124,6 +124,7 @@ class Main extends Controller
                 return $item->getPriceSum();
             });
             //dd($theOrder);
+            
             $theTable=$order->type==3?Tables::findOrFail($order->id):null;
             if($sum!=0){
                 array_push($returnArray,[

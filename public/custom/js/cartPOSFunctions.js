@@ -309,6 +309,8 @@ function getCartContentAndTotalPrice(){
     
     cartSessionId=response.data.id;
     cartContent.items=response.data.data;
+
+
     //cartTotal.deduct=0;
 
     $("#mesaid").val(cartSessionId);
@@ -319,6 +321,8 @@ function getCartContentAndTotalPrice(){
     if( Object.keys(obj).length != 0 ){
       expedition.config=response.data.config;
 
+      console.log(response.data.config);
+      $("#client_name").val(response.data.config.client_name).trigger('change');
       //Set the dd
       if(response.data.config.delivery_area){
         $("#delivery_area").val(response.data.config.delivery_area);
@@ -450,6 +454,7 @@ function applyDiscount(){
 function updateExpeditionPOS(){
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
+    client_idname:$('#client_name option:selected').text(),
     client_name:$('#client_name').val(),
     client_phone:$('#client_phone').val(),
     timeslot:$('#timeslot').val(),
@@ -555,15 +560,19 @@ function submitOrderPOS(tipo=0){
 
     
 
-    $('#paymentType').val("cash");
-    $("#client_name").val("").trigger('change');
-    $('#paymentId').val("");
-    $('#paymentType2').val("");
+  
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
 
     if(response.data.status){
+
+      $('#paymentType').val("cash");
+      $("#client_name").val("").trigger('change');
+      $('#paymentId').val("");
+      $('#paymentType2').val("");
+
+      
       $('textarea#order_comment').val("");
       
       window.showOrders();
