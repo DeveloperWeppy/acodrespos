@@ -546,7 +546,7 @@
                         <div class="row align-items-center">
                             <div class="col-8">
                                 <h6 class="text-uppercase text-light ls-1 mb-1">Informe por Dias</h6>
-                                <h2 class="mb-0 text-white">Cantidad de ventas por día</h2>
+                                <h2 class="mb-0 text-white">Cantidad de ventas por día de meseros</h2>
                             </div>
                             <div class="col-12">
                             
