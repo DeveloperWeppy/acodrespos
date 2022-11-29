@@ -451,6 +451,7 @@ function updateExpeditionPOS(){
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
     client_name:$('#client_name').val(),
+    client_name2:$('#client_name option:selected').text(),
     client_phone:$('#client_phone').val(),
     timeslot:$('#timeslot').val(),
   };
