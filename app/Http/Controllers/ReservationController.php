@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\RestoArea;
+use App\Restorant;
 use App\Tables;
 use Illuminate\Http\Request;
 
@@ -16,27 +17,8 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $restaurant_id = auth()->user()->restorant->id;
-
-        #mesas get
-        $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
-        
-        return view('reservation.admin.index', compact('restoareas'));
     }
 
-    public function geInfoMesas(Request $request)
-    {
-        $restaurant_id = auth()->user()->restorant->id;
-        $zona = $request->zona;
-
-        if ($zona=='seleccione') {
-            return view('reservation.admin.index', compact('zona'))->render();
-        } else {
-            $tables = Tables::where('restoarea_id', $zona)->where('restaurant_id', $restaurant_id)->get();
-
-            return view('reservation.admin.index', compact('zona', 'tables'))->render();
-        }
-    }
 
     /**
      * Show the form for creating a new resource.

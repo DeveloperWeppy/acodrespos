@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ConfigReservation;
+use App\Tables;
+use App\RestoArea;
+use App\Restorant;
 use Illuminate\Http\Request;
+use App\Models\ConfigReservation;
+use App\Models\ReservationReason;
 
 class ConfigReservationController extends Controller
 {
@@ -14,7 +18,26 @@ class ConfigReservationController extends Controller
      */
     public function index()
     {
-        //
+        $restaurant_id = auth()->user()->restorant->id;
+        $zona ='seleccione';
+        #mesas get
+        $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
+        $compani = Restorant::find($restaurant_id);
+        $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
+        return view('reservation.admin.index', compact('restoareas', 'zona', 'compani', 'motivos'));
+    }
+
+    public function geInfoMesas(Request $request)
+    {
+        $restaurant_id = auth()->user()->restorant->id;
+        try {
+            $zona = $request->input('zona');
+            $tables = Tables::where('restoarea_id', $zona)->where('restaurant_id', $restaurant_id)->get();
+            $response = ['data' => $tables];
+        } catch (\Exception $exception) {
+            return response()->json(['message' => 'There was an error retrieving the records'], 500);
+        }
+        return response()->json($response);
     }
 
     /**
@@ -35,7 +58,7 @@ class ConfigReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

@@ -4,3 +4,9 @@
 .env
 storage/installed
 public/uploads
+public/android-chrome-192x192.png
+public/android-chrome-256x256.png
+public/apple-touch-icon.png
+public/favicon-16x16.png
+public/favicon-32x32.png
+public/mstile-150x150.png

@@ -89,7 +89,7 @@
     border: 0;
     box-shadow: 0 0 0 rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%);
 }
-/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+/* Estilos para motores Webkit y blink de notificaciones(Chrome, Safari, Opera... )*/
 
 /* Tamaño del scroll */
 #listNotif::-webkit-scrollbar {
@@ -121,6 +121,41 @@
   #listNotif::-webkit-scrollbar-track:active {
     background: #d4d4d4;
   }
+
+  /* Estilos para motores Webkit y blink de sidebarmenu(Chrome, Safari, Opera... )*/
+
+/* Tamaño del scroll */
+#sidenav-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+ /* Estilos barra (thumb) de scroll */
+#sidenav-main::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 20px;
+}
+
+#sidenav-main::-webkit-scrollbar-thumb:active {
+  background-color: #999999;
+}
+
+#sidenav-main::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+ /* Estilos track de scroll */
+#sidenav-main::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 4px;
+}
+
+#sidenav-main::-webkit-scrollbar-track:hover, 
+#sidenav-main::-webkit-scrollbar-track:active {
+  background: #d4d4d4;
+}
+
+/*******************************************************/
   .custom-map-control-button {
     appearance: button;
     background-color: #fff;

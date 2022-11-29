@@ -161,13 +161,17 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('obtener', 'ConfigCuentasBancariasController@geInfoCuentas')->name('obtener');
         });
 
-        #routes for reservations
+        #routes for config of reservations
         Route::prefix('reservas')->name('reservation.')->group(function () {
-            Route::get('/', 'ReservationController@index')->name('index');
-            Route::post('obtener', 'ReservationController@geInfoMesas')->name('obtener');
-            Route::post('guardar', 'ReservationController@store')->name('store');
+            Route::get('/', 'ConfigReservationController@index')->name('index');
+            Route::post('obtener-mesas', 'ConfigReservationController@geInfoMesas')->name('obtener');
+            Route::post('guardar', 'ConfigReservationController@store')->name('store');
         });
 
+        #routes for reason of reservations
+        Route::prefix('reservas/motivos/')->name('reservationreason.')->group(function () {
+            Route::post('guardar', 'ReservationReasonController@store')->name('store');
+        });
         // --------------------------------------------------------------------------------- //
 
         Route::resource('cities', 'CitiesController');
