@@ -320,6 +320,9 @@ function getCartContentAndTotalPrice(){
       expedition.config=response.data.config;
 
       //Set the dd
+      if (response.data.config.client_name) {
+          $("#client_name").val(response.data.config.client_name).trigger('change');
+      }
       if(response.data.config.delivery_area){
         $("#delivery_area").val(response.data.config.delivery_area);
         $('#delivery_area').trigger('change');

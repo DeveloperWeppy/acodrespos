@@ -397,6 +397,7 @@
    }
 
    function createDeliveryOrder() {
+    $("#client_name").val("").trigger('change');
       CURRENT_TABLE_ID= 1+""+(new Date().getTime()+"").substring(6)
       CURRENT_TABLE_NAME="Nueva orden de entrega";
       EXPEDITION=1;
@@ -408,6 +409,9 @@
    }
 
    function createPickupOrder() { 
+
+    $("#client_name").val("").trigger('change');
+
       CURRENT_TABLE_ID= (new Date().getTime()+"").substring(6)
       CURRENT_TABLE_NAME="Nuevo pedido para llevar";
       EXPEDITION=2;
