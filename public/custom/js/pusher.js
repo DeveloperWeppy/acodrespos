@@ -133,6 +133,8 @@ $(document).ready(function() {
         var channel = pusher.subscribe('user.'+USER_ID);
         channel.bind('callwaiter-event', function(data) {
             js.notify(data.msg + " " + data.table.restoarea.name+" "+data.table.name,"primary");
+            $(".notifyjs-arrow").html('<i class="fas fa-times-circle" style="position:absolute; text-align:right;top:-7px;color:#8965e0;"></i>');
+            $(".notifyjs-arrow").css('right','16px');
             audio.play();
         });
 
@@ -142,12 +144,16 @@ $(document).ready(function() {
             }
             if(!data.order.ifclient){
                 js.notify(data.msg + " Orden #" + data.order.id,"primary","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");
+                $(".notifyjs-arrow").html('<i class="fas fa-times-circle" style="position:absolute; text-align:right;top:-7px;color:#8965e0;"></i>');
+                $(".notifyjs-arrow").css('right','16px');
             }else{
                 var type="";
                 if(data.msg=="Pedido rechazado"){
                     type="warning";
                 }
                 js.notify(data.msg + ". Orden #" + data.order.id,type,"onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");  
+                $(".notifyjs-arrow").html('<i class="fas fa-times-circle" style="position:absolute; text-align:right;top:-7px;color:#8965e0;"></i>');
+                $(".notifyjs-arrow").css('right','16px');
             }
             audio.play();
         });

@@ -159,6 +159,10 @@ class RestorantController extends Controller
         $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->subdomain = $this->makeAlias(strip_tags($request->name));
         $restaurant->nit= strip_tags($request->nit.'');
+        $restaurant->prefix_consecutive= strip_tags($request->prefix_consecutive);
+        $restaurant->initial_consecutive= strip_tags($request->initial_consecutive);
+        $restaurant->final_consecutive= strip_tags($request->final_consecutive);
+        $restaurant->current_consecutive= strip_tags($request->current_consecutive);
         $restaurant->invoice_size= strip_tags($request->invoice_size.'');
         $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
         $restaurant->save();
@@ -379,6 +383,10 @@ class RestorantController extends Controller
         $restaurant->instagram = strip_tags($request->instagram);
         $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->nit= strip_tags($request->nit.'');
+        $restaurant->prefix_consecutive= strip_tags($request->prefix_consecutive);
+        $restaurant->initial_consecutive= strip_tags($request->initial_consecutive);
+        $restaurant->final_consecutive= strip_tags($request->final_consecutive);
+        //$restaurant->current_consecutive= strip_tags($request->current_consecutive);
         $restaurant->invoice_size= strip_tags($request->invoice_size.'');
         $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
 

@@ -397,6 +397,7 @@
    }
 
    function createDeliveryOrder() {
+    $("#client_name").val("").trigger('change');
       CURRENT_TABLE_ID= 1+""+(new Date().getTime()+"").substring(6)
       CURRENT_TABLE_NAME="Nueva orden de entrega";
       EXPEDITION=1;
@@ -408,6 +409,9 @@
    }
 
    function createPickupOrder() { 
+
+    $("#client_name").val("").trigger('change');
+
       CURRENT_TABLE_ID= (new Date().getTime()+"").substring(6)
       CURRENT_TABLE_NAME="Nuevo pedido para llevar";
       EXPEDITION=2;
@@ -451,20 +455,23 @@
         $('.personitem').show();
         $('#card_division_personas').show();
       }else{
-        $('.personitem').text("");
-        $("#modal-add-consumidor").modal("show");
-        $('#card_division_personas').hide();
-        $('#ask_divide_check').change(function() {
-                if (this.checked) {
-                    $("#span_dividir").text("Cuenta Dividida");
-                    $("#row_names").show();
-                    $("#btncontinuar").hide();
-                } else {
-                    $("#span_dividir").text("Sin cuenta dividida");
-                    $("#row_names").hide();
-                    $("#btncontinuar").show();
-                }
-            });
+        if(EXPEDITION==3){
+          $('.personitem').text("");
+            $("#modal-add-consumidor").modal("show");
+            $('#card_division_personas').hide();
+            $('#ask_divide_check').change(function() {
+                    if (this.checked) {
+                        $("#span_dividir").text("Cuenta Dividida");
+                        $("#row_names").show();
+                        $("#btncontinuar").hide();
+                    } else {
+                        $("#span_dividir").text("Sin cuenta dividida");
+                        $("#row_names").hide();
+                        $("#btncontinuar").show();
+                    }
+                });
+        }
+       
       }
       getCartContentAndTotalPrice();
       showOrderDetail(id);

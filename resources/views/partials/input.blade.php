@@ -9,13 +9,13 @@
     @endif
     @if (isset($type) == 'password')
         <div class="input-group" id="show_hide_password">
-            <input @isset($accept) accept="{{ $accept }}" @endisset step="{{ isset($step)?$step:".01"}}" @isset($min) min="{{ $min }}" @endisset  @isset($max) max="{{ $max }}" @endisset type="{{ isset($type)?$type:"text"}}" name="{{ $id }}" id="{{ $id }}" class="form-control @isset($editclass) {{$editclass}} @endisset  {{ $errors->has($id) ? ' is-invalid' : '' }}" placeholder="{{ __($placeholder) }}" value="{{ old($id)?old($id):(isset($value)?$value:(app('request')->input($id)?app('request')->input($id):null)) }}" <?php if($required) {echo 'required';} ?> >
+            <input @isset($accept) accept="{{ $accept }}" @endisset step="{{ isset($step)?$step:".01"}}" @isset($min) min="{{ $min }}" @endisset  @isset($max) max="{{ $max }}" @endisset type="{{ isset($type)?$type:"text"}}" name="{{ $id }}" id="{{ $id }}" class="form-control @isset($editclass) {{$editclass}} @endisset  {{ $errors->has($id) ? ' is-invalid' : '' }}" placeholder="{{ __($placeholder) }}" value="{{ old($id)?old($id):(isset($value)?$value:(app('request')->input($id)?app('request')->input($id):null)) }}" <?php if($required) {echo 'required';} ?>  <?php if(isset($readonly)) {echo ' readonly';} ?>>
             <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
             </div>
         </div>
         @else
-        <input @isset($accept) accept="{{ $accept }}" @endisset step="{{ isset($step)?$step:".01"}}" @isset($min) min="{{ $min }}" @endisset  @isset($max) max="{{ $max }}" @endisset type="{{ isset($type)?$type:"text"}}" name="{{ $id }}" id="{{ $id }}" class="form-control @isset($editclass) {{$editclass}} @endisset  {{ $errors->has($id) ? ' is-invalid' : '' }}" placeholder="{{ __($placeholder) }}" value="{{ old($id)?old($id):(isset($value)?$value:(app('request')->input($id)?app('request')->input($id):null)) }}" <?php if($required) {echo 'required';} ?> >
+        <input @isset($accept) accept="{{ $accept }}" @endisset step="{{ isset($step)?$step:".01"}}" @isset($min) min="{{ $min }}" @endisset  @isset($max) max="{{ $max }}" @endisset type="{{ isset($type)?$type:"text"}}" name="{{ $id }}" id="{{ $id }}" class="form-control @isset($editclass) {{$editclass}} @endisset  {{ $errors->has($id) ? ' is-invalid' : '' }}" placeholder="{{ __($placeholder) }}" value="{{ old($id)?old($id):(isset($value)?$value:(app('request')->input($id)?app('request')->input($id):null)) }}" <?php if($required) {echo 'required';} ?>  <?php if(isset($readonly)) {echo ' readonly';} ?>>
     @endif
     
     @isset($additionalInfo)

@@ -320,6 +320,9 @@ function getCartContentAndTotalPrice(){
       expedition.config=response.data.config;
 
       //Set the dd
+      if (response.data.config.client_name) {
+          $("#client_name").val(response.data.config.client_name).trigger('change');
+      }
       if(response.data.config.delivery_area){
         $("#delivery_area").val(response.data.config.delivery_area);
         $('#delivery_area').trigger('change');
@@ -451,6 +454,7 @@ function updateExpeditionPOS(){
   var dataToSubmit={
     table_id:CURRENT_TABLE_ID,
     client_name:$('#client_name').val(),
+    client_name2:$('#client_name option:selected').text(),
     client_phone:$('#client_phone').val(),
     timeslot:$('#timeslot').val(),
   };
