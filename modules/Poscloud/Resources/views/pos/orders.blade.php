@@ -57,7 +57,7 @@
                           </td>
                           <td class="align-middle text-center">
                             <span v-if="item.expedition==3" class="text-secondary text-xs font-weight-bold">@{{ item.table }}</span>
-                            <span v-if="item.config&&item.config.client_name" class="text-secondary text-xs font-weight-bold">@{{ item.config.client_name }}</span>
+                            <span v-if="item.config&&item.config.client_name" class="text-secondary text-xs font-weight-bold">@{{ item.config.client_name2 }}</span>
                           </td>
                         
                       </tr>
