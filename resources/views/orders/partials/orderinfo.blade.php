@@ -342,11 +342,11 @@
      @endif
      @if ($order->prefix_consecutive!="")
         <h3>Factura de venta No.{{strtoupper($order->prefix_consecutive.$order->consecutive)}} 
-            <button>
+            <a class="btn btn-outline-success btn-sm" target="_blank"  href="{{ route('pdf',$order->id) }}">
                 <span class="btn-inner--icon">
-                    <i class="ni ni-ruler-pencil"></i>
+                    <i class="ni ni-cloud-download-95"></i>
                 </span>
-            </button>
+            </a>
         </h3>
     @endif
   

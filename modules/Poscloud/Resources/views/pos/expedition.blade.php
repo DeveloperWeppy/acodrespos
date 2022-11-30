@@ -39,8 +39,9 @@
           <div class="input-group mb-3">
             <select name="delivery_area" id="delivery_area" class="form-control{{ $errors->has('deliveryAreas') ? ' is-invalid' : '' }}" >
               <option  value="0">{{__('Select delivery area')}}</option>
-              @foreach ($deliveryAreas as $simplearea)
-                  <option  value={{ $simplearea->id }}>{{$simplearea->getPriceFormated()}}</option>
+            
+              @foreach ($geoZoneDelivery as $simplearea)
+              <option  value={{ $simplearea->id }}>{{ $simplearea->name }} @money($simplearea->price,config('settings.cashier_currency'),true)</option>
               @endforeach
             </select>
           </div>

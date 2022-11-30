@@ -15,6 +15,7 @@ use Akaunting\Money\Money;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\SimpleDelivery;
+use App\Models\GeoZoneDelivery;
 use App\Models\CartStorageModel;
 use App\Http\Controllers\Controller;
 use Darryldecode\Cart\CartCollection;
@@ -59,8 +60,13 @@ class Main extends Controller
             $timeSlots = $this->getTimieSlots($vendor);
 
 
+            $geoZoneDelivery=GeoZoneDelivery::where('restorant_id',$vendor->id)->get();
             $deliveryAreas=SimpleDelivery::where('restaurant_id',$vendor->id)->get();
-            $deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
+            //$deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
+            $deliveryAreasCost=array();
+            foreach ($geoZoneDelivery as $clave => $zona) {
+                $deliveryAreasCost[$zona->id]=$zona->price;
+            }
             $listClient=User::role('client')->where('active','1')->get();
             $selectClient=array();
             $selectTelefono=array();
@@ -81,7 +87,7 @@ class Main extends Controller
                     }
             }
             $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
-            return view('poscloud::index',['configaccountsbanks'=>$configaccountsbanks,'deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono]);
+            return view('poscloud::index',['configaccountsbanks'=>$configaccountsbanks,'deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono,"geoZoneDelivery"=>$geoZoneDelivery]);
         }else{
             return redirect(route('login'));
         }
