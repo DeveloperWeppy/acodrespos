@@ -29,11 +29,13 @@
     </center> 
     <hr>
     <div>FACTURA DE VENTA NO.{{strtoupper($order->prefix_consecutive.$order->consecutive)}} </div>
-    <div>MESA:{{strtoupper($order->table->name)}}</div>
-    <div>PERSONAS:{{$order->number_people}}</div>
-    <div>ORDEN:#{{$order->id}}</div>
-    <div>FECHA:{{$order->created_at}}</div>
-    <div>MESERO:{{strtoupper($mesero)}}</div>
+    @if(isset($order->table->name))
+      <div>MESA: {{strtoupper($order->table->name)}}</div>
+      <div>PERSONAS: {{$order->number_people}}</div>
+    @endif
+    <div>ORDEN: #{{$order->id}}</div>
+    <div>FECHA: {{$order->created_at}}</div>
+    <div>MESERO: {{strtoupper($mesero)}}</div>
     <hr>
     <table>
         <tr>

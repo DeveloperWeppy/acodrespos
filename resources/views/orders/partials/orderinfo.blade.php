@@ -302,6 +302,7 @@
      @if(!empty($order->name_bank))
      <h4>Cuenta bancaria: {{$order->name_bank}} - {{$order->number_account}}</h4>
      @endif
+
      @if(!empty($order->url_payment))
      <h3>Evidencia de pago
         <button  onclick="Swal.fire({ imageUrl: '{{asset($order->url_payment)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
@@ -339,7 +340,16 @@
              <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated])</h3>
          @endif
      @endif
-     
+     @if ($order->prefix_consecutive!="")
+        <h3>Factura de venta No.{{strtoupper($order->prefix_consecutive.$order->consecutive)}} 
+            <button>
+                <span class="btn-inner--icon">
+                    <i class="ni ni-ruler-pencil"></i>
+                </span>
+            </button>
+        </h3>
+    @endif
+  
      {{-- @if(isset($custom_data)&&count($custom_data)>0)
         <hr />
         <h3>{{ __(config('settings.label_on_custom_fields')) }}</h3>
