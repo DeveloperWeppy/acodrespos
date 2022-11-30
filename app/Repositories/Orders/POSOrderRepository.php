@@ -11,6 +11,7 @@ namespace App\Repositories\Orders;
 use Illuminate\Support\Facades\Validator;
 use Cart;
 use App\Order;
+use App\Restorant;
 use Illuminate\Support\Facades\Cookie;
 
 
@@ -32,13 +33,23 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
                 $this->order->cart_storage_id=$cart_id."_cart_items";
                 $this->order->payment_status='unpaid';
             }else{
-                $this->order->payment_status='paid'; 
+                $this->order->payment_status='paid';
+                $restaurant = Restorant::findOrFail($this->order->restorant_id);
+                $this->order->prefix_consecutive=$restaurant->prefix_consecutive;
+                $this->order->consecutive=$restaurant->current_consecutive;
+                $restaurant->current_consecutive=intval($restaurant->current_consecutive)+1;  
+                $restaurant->update();
             }
         }else{
             $this->order=Order::findOrFail($orderId);
             $this->constructOrder();
             if($tipo!=2){
-              $this->order->payment_status='paid'; 
+              $this->order->payment_status='paid';
+              $restaurant = Restorant::findOrFail($this->order->restorant_id);
+              $this->order->prefix_consecutive=$restaurant->prefix_consecutive;
+              $this->order->consecutive=$restaurant->current_consecutive;
+              $restaurant->current_consecutive=intval($restaurant->current_consecutive)+1;  
+              $restaurant->update();
             }
         }
         $this->order->propina=$propina;

@@ -7,6 +7,7 @@ use DB;
 use Image;
 use Artisan;
 use App\City;
+use App\Order;
 use App\User;
 use DateTime;
 use App\Hours;
@@ -383,9 +384,34 @@ class RestorantController extends Controller
         $restaurant->instagram = strip_tags($request->instagram);
         $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->nit= strip_tags($request->nit.'');
-        $restaurant->prefix_consecutive= strip_tags($request->prefix_consecutive);
-        $restaurant->initial_consecutive= strip_tags($request->initial_consecutive);
-        $restaurant->final_consecutive= strip_tags($request->final_consecutive);
+        $ifErrorCon="";
+      
+        if(intval($request->final_consecutive)<=intval($request->initial_consecutive)){
+            $ifErrorCon="!Error consecutivo final menor o igual al inicial";
+        }else{
+            $orderspref = Order::where(['restorant_id'=>$restaurant->id,'prefix_consecutive'=>$request->prefix_consecutive])->orderByRaw('CAST(consecutive as unsigned) DESC')->get();
+            if(count($orderspref)>0){
+                if(intval($orderspref[0]->consecutive)>=intval($request->final_consecutive)){
+                    if($request->prefix_consecutive==$restaurant->prefix_consecutive){
+                        $ifErrorCon="Error el consecutivo final no puede ser menor que ".(intval($orderspref[0]->consecutive)+1);
+                    }else{
+                        $ifErrorCon="Error el consecutivo final no puede ser menor o igual que el actual ".$orderspref[0]->consecutive;
+                    }
+                   
+                }else{
+                    $restaurant->initial_consecutive= strip_tags($request->initial_consecutive);
+                    $restaurant->final_consecutive= strip_tags($request->final_consecutive);
+                    if($request->prefix_consecutive!=$restaurant->prefix_consecutive){
+                        $restaurant->current_consecutive=intval($orderspref[0]->consecutive)+1;
+                    }
+                }
+            }else{
+                $restaurant->current_consecutive=$request->initial_consecutive;
+                $restaurant->initial_consecutive= strip_tags($request->initial_consecutive);
+                $restaurant->final_consecutive= strip_tags($request->final_consecutive);
+            }
+        }
+
         //$restaurant->current_consecutive= strip_tags($request->current_consecutive);
         $restaurant->invoice_size= strip_tags($request->invoice_size.'');
         $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
@@ -517,7 +543,12 @@ class RestorantController extends Controller
         if (auth()->user()->hasRole('admin')) {
             return redirect()->route('admin.restaurants.edit', $restaurant->id)->withStatus(__('Restaurant successfully updated.'));
         } else {
-            return redirect()->route('admin.restaurants.edit', $restaurant->id)->withStatus(__('Restaurant successfully updated.'));
+            if($ifErrorCon==""){
+                return redirect()->route('admin.restaurants.edit', $restaurant->id)->withStatus(__('Restaurant successfully updated.'));
+            }else{
+                return redirect()->route('admin.restaurants.edit',$restaurant->id)->with("error",$ifErrorCon);
+            }
+           
         }
     }
 
