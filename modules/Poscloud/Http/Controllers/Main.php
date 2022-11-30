@@ -341,7 +341,7 @@ class Main extends Controller
 
             //Repo Holder
             $orderRepo=OrderRepoGenerator::makeOrderRepo($vendor_id,$mobileLikeRequest,$expedition,$hasPayment,$isStripe,true, $vendorHasOwnPayment,"POS");
-
+           
              //Proceed with validating the data
             $validator=$orderRepo->validateData();
             if ($validator->fails()) { 
@@ -354,12 +354,24 @@ class Main extends Controller
             //Proceed with making the order   POSOrderRepository
             if($request->has('custom')){
                 $customFields=$request->custom;
+                if((intval($vendor->current_consecutive)>intval($vendor->final_consecutive))){
+                    return response()->json([
+                        'status' => false,
+                        'message' =>"!Error actualiza el consecutivo de factura ",
+                    ]);
+                }
                 if(isset($customFields['client_id'])) {
                     $validatorOnMaking=$orderRepo->makeOrder($customFields['client_id'],$request->order_comment);
                 }else{
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
+                if((intval($vendor->current_consecutive)>intval($vendor->final_consecutive)) && $request->order_id>0){
+                    return response()->json([
+                        'status' => false,
+                        'message' =>"!Error actualiza el consecutivo de factura ",
+                    ]);
+                }
                 $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->propina,$request->number_people);
             }
             if ($validatorOnMaking->fails()) { 
