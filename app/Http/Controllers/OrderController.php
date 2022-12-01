@@ -71,7 +71,13 @@ class OrderController extends Controller
             $driversData[$driver->id] = $driver->name;
         }
         */
-        
+        $times_delivered = array(
+            '10 - 20' => '10 - 20',
+            '20 - 30' => '20 - 30',
+            '40 - 50' => '40 - 50',
+            '60 - 70' => '60 - 70',
+            '80 - 90' => '80 - 90',
+        );
         $orders = Order::orderBy('created_at', 'desc')->whereNotNull('restorant_id');
 
         //Get client's orders
@@ -222,7 +228,9 @@ class OrderController extends Controller
             'statuses'=>$estados,
             'orders' => $orders,
             'restorants'=>$restorants,
-            'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true]],
+            'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],
+            ['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'maxlength'=>'10', 'required'=>true],
+            ['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Tiempo estimado de Entrega(minutos)', 'id'=>'time_delivered', 'placeholder'=>'Seleccione Tiempo en Minutos', 'data'=>$times_delivered, 'required'=>true]],
             'clients'=>$clients,
             'parameters'=>count($_GET) != 0,
         ]);
@@ -948,12 +956,14 @@ class OrderController extends Controller
        
         
         //asignar conductor con campo abierto
-        if(isset($_GET['nom'],$_GET['tel'])){
-            $usersDriver = new usersDriver;
-            $usersDriver->order_id = $order->id;
-            $usersDriver->name = strip_tags($_GET['nom']);
-            $usersDriver->phone = strip_tags($_GET['tel']);
-            $usersDriver->save();
+        if(isset($_GET['nom'],$_GET['tel'],$_GET['time_delivered'])){
+            $usersDriver = usersDriver::updateOrCreate(
+                ['order_id' => $order->id],
+                ['name' => strip_tags($_GET['nom']),
+                'phone' => strip_tags($_GET['tel']),
+                'time_delivered' => strip_tags($_GET['time_delivered'])
+                ]
+            );
         }
 
         if (isset($_GET['time_to_prepare'])) {

@@ -171,6 +171,7 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
         #routes for reason of reservations
         Route::prefix('reservas/motivos/')->name('reservationreason.')->group(function () {
             Route::post('guardar', 'ReservationReasonController@store')->name('store');
+            Route::get('obtener', 'ReservationReasonController@cargarMotivos')->name('obtener');
         });
         // --------------------------------------------------------------------------------- //
 

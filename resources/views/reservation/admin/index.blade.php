@@ -137,6 +137,7 @@
             $("#horas").hide();
             $("#dias_").hide();
             $("#div_mesas").hide();
+            //consultarcuenta();
             var select_mesas = $('#select_mesas');
 
             //permitir chequear solo un checkbox de tiempos de reservación
@@ -229,13 +230,14 @@
                 let restaurant = $('#restaurant_id').val();
                 //url
                 var url_ajax = "{{route('reservationreason.store')}}";
+                //form de register motivo
                 var formData = new FormData();
                 formData.append('restaurant_id', restaurant);
                 formData.append('name', name);
                 formData.append('description', description);
                 formData.append('price', price);
                 //peticion
-                console.log(name);
+                
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -262,19 +264,36 @@
                     }
                 }).done(function(respuesta){
                     console.log(respuesta);
-                    if (respuesta.data.length > 0) {
+                    /* if (respuesta.data.length > 0) {
                         $('#div_cargar_motivos').html(respuesta);
+                    } */
+                    $('#modal-registrar-motivo').modal('hide');
+                    if (!respuesta.error) {
+                        $('#name_motivo').val("");
+                        $('#description_motivo').val("");
+                        $('#price_motivo').val("");
+                        consultarmotivos();
+                            Swal.fire({
+                                title: 'Motivo de reservación guardado!',
+                                icon: 'success',
+                                showConfirmButton: true,
+                                timer: 2000
+                            });
+
+                    } else {
+                            setTimeout(function(){
+                                Swal.fire({
+                                    title: respuesta.mensaje,
+                                    icon: 'error',
+                                    showConfirmButton: true,
+                                    timer: 2000
+                                });
+                            },2000);
                     }
-                    Swal.fire({
-                        text: "Información Cargada",
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    $('modal-registrar-motivo').modal('hide');
+                    
                 }).fail(function(resp){
                     console.log(resp);
-                    $('modal-registrar-motivo').modal('hide');
+                    $('#modal-registrar-motivo').modal('hide');
                     Swal.fire({
                         title: "Se presento un error!",
                         text: 'Intenta otra vez, si persiste el error, comunicate con el area encargada, gracias.',
@@ -282,7 +301,45 @@
                     });
                 });
             };
+
+            
+            
         });
+        //consultar motivos
+        function consultarmotivos()
+            {
+            var url = "{{ route('reservationreason.obtener') }}";
+                $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                encoding:"UTF-8",
+                url: url,
+                method: "GET",
+                cache: false,
+                datatype: 'html',
+                /* data: {
+                    type: ids_type_account,
+                }, */
+                beforeSend:function(){
+                    Swal.fire({
+                        target: document.getElementById('modal-registrar-motivo'),
+                        text: "Cargando datos, espere por favor...",
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
+                }).done(function(respuesta){
+
+                    $('#div_cargar_motivos').html(respuesta);
+                    Swal.close();
+
+                }).fail(function(resp){
+                    console.log(resp);
+                });
+            }
     </script>
 @endsection
 @endsection

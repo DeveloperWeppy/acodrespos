@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Restorant;
+use Illuminate\Http\Request;
 use App\Models\ReservationReason;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class ReservationReasonController extends Controller
 {
@@ -36,6 +37,9 @@ class ReservationReasonController extends Controller
      */
     public function store(Request $request)
     {
+        $error = false;
+        $mensaje = '';
+
         $numcuenta_validate =  ReservationReason::where('name', $request->name)->where('companie_id', $request->restaurant_id)->exists();
 
         if ($numcuenta_validate) {
@@ -49,13 +53,22 @@ class ReservationReasonController extends Controller
             ]);
 
             if ($register->save()) {
-                $motivos = ReservationReason::where('companie_id', $request->restaurant_id)->get();
-                return view('reservation.admin.index', compact('motivos'))->render();
+                $error = false;
+                $mensaje = 'Registro de Motivo Exitosa';
             } else {
-                return redirect()->back()->withStatus(__('error','Ha ocurrido un error'));
+                $error = true;
+                $mensaje = 'Error! Se presento un problema al registrar el motivo de reserva, intenta de nuevo.';
             }
-            
         }
+        echo json_encode(array('error' => $error, 'mensaje' => $mensaje));
+    }
+
+    
+    public function cargarMotivos()
+    {
+        $restaurant_id = auth()->user()->restorant->id;
+        $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
+        return view('reservation.admin.includes.cargarmotivos', compact('motivos'))->render();
     }
 
     /**

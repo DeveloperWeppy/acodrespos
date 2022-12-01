@@ -18,6 +18,7 @@ class CreateUsersDriver extends Migration
             $table->foreignId('order_id')->references('id')->on('orders');
             $table->string('name', 250);
             $table->string('phone', 250);
+            $table->string('time_delivered', 255);
             $table->timestamps();
         });
     }

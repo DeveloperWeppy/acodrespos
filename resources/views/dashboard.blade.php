@@ -145,7 +145,7 @@
                             
                                 <form action="{{route('home')}}#g3" method="GET">
                                     <div class="row mt-5 input-daterange datepicker">
-                                        <div class="col-12 col-md-6 col-lg-3">
+                                        <div class="col-12 col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="input-group">
@@ -156,7 +156,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 col-lg-3">
+                                        <div class="col-12 col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label class="form-control-label">Filtrar por mes</label>
                                                 <div class="input-group">
@@ -175,7 +175,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 col-lg-3">
+                                        <div class="col-12 col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">

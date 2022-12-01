@@ -9,5 +9,5 @@ class usersDriver extends Model
 {
     use HasFactory;
     protected $table = 'users_driver';
-    protected $fillable = ['order_id', 'name', 'phone'];
+    protected $fillable = ['order_id', 'name', 'phone', 'time_delivered'];
 }

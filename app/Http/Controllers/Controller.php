@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Restorant;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Str;
 use Image;
+use App\Restorant;
 use Carbon\Carbon;
-use Akaunting\Module\Facade as Module;
+use Illuminate\Support\Str;
+use App\Models\ReservationReason;
 use Illuminate\Support\Facades\Http;
+use Akaunting\Module\Facade as Module;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {

@@ -26,7 +26,7 @@
                             </div>
                             <input name="restaurant_id" id="restaurant_id" type="hidden" value="{{$compani->id}}" required>
                             <div class="text-center">
-                                <button type="button" class="btn btn-primary my-4" id="btn_save_motivoo">{{ __('Save') }}</button>
+                                <button type="button" class="btn btn-primary my-4" id="btn_save_motivo">{{ __('Save') }}</button>
                             </div>
                         </form>
                         </div>

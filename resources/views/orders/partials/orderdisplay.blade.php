@@ -1,16 +1,16 @@
 <thead class="thead-light">
     <tr>
-        <th scope="col">{{ __('ID') }}</th>
+        <th scope="col">{{ __('N. Orden') }}</th>
         @hasrole('admin|driver')
             <th scope="col">{{ __('Restaurant') }}</th>
         @endif
         <th class="table-web" scope="col">{{ __('Created') }}</th>
-        <th class="table-web" scope="col">{{ __('Time Slot') }}</th>
+        {{-- <th class="table-web" scope="col">{{ __('Time Slot') }}</th> --}}
         <th class="table-web" scope="col">{{ __('Method') }}</th>
         <th scope="col">{{ __('Last status') }}</th>
-        @hasrole('admin|owner|driver')
+        {{-- @hasrole('admin|owner|driver')
             <th class="table-web" scope="col">{{ __('Client') }}</th>
-        @endif
+        @endif 
         @if(auth()->user()->hasRole('admin'))
             <th class="table-web" scope="col">{{ __('Address') }}</th>
         @endif
@@ -19,9 +19,9 @@
         @endif
         @hasrole('admin|owner')
             <th class="table-web" scope="col">{{ __('Driver') }}</th>
-        @endif
+        @endif--}}
         <th class="table-web" scope="col">{{ __('Price') }}</th>
-        <th class="table-web" scope="col">{{ __('Delivery') }}</th>
+        {{-- <th class="table-web" scope="col">{{ __('Delivery') }}</th> --}}
         @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('staff') || auth()->user()->hasRole('kitchen'))
             <th scope="col">{{ __('Actions') }}</th>
         @endif
@@ -50,16 +50,16 @@
     <td class="table-web">
         {{ $order->created_at->locale(Config::get('app.locale'))->isoFormat('LLLL') }}
     </td>
-    <td class="table-web">
+    {{-- <td class="table-web">
         {{ $order->time_formated }}
-    </td>
+    </td> --}}
     <td class="table-web">
         <span class="badge badge-primary badge-pill">{{ $order->getExpeditionType() }}</span>
     </td>
     <td>
         @include('orders.partials.laststatus')
     </td>
-    @hasrole('admin|owner|driver')
+    {{-- @hasrole('admin|owner|driver')
     <td class="table-web">
         @if ($order->client)
             {{ $order->client->name }}
@@ -82,14 +82,14 @@
         <td class="table-web">
             {{ !empty($order->driver->name) ? $order->driver->name : "" }}
         </td>
-    @endif
+    @endif --}}
     <td class="table-web">
         @money( $order->order_price_with_discount, config('settings.cashier_currency'),config('settings.do_convertion'))
 
     </td>
-    <td class="table-web">
+    {{-- <td class="table-web">
         @money( $order->delivery_price, config('settings.cashier_currency'),config('settings.do_convertion'))
-    </td>
+    </td> --}}
     @include('orders.partials.actions.table',['order' => $order ])
 </tr>
 @endforeach

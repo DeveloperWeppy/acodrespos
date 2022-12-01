@@ -5,7 +5,7 @@
         </div>
     @else
         @foreach ($motivos as $item)
-            <div class="row">
+            {{-- <div class="row"> --}}
                 <div class="col-sm-3 col-12">
                     <p>{{$item->name}}</p>
                 </div>
@@ -15,7 +15,7 @@
                 <div class="col-sm-3 col-12">
                     <p>{{$item->price}}</p>
                 </div>
-            </div>
+            {{-- </div> --}}
         @endforeach
     @endif
 

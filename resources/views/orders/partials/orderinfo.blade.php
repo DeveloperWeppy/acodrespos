@@ -76,8 +76,9 @@
         @hasrole('admin|owner|client|staff|manager_restorant')
             <h6 class="heading-small text-muted mb-4">{{ __('Driver') }}</h6>
             <div class="pl-lg-4">
-            <h4>{{ $drivers[0]->name }}</h4>
+            <h4>Nombre: {{ $drivers[0]->name }}</h4>
             <h4>Contacto: {{ $drivers[0]->phone }}</h4>
+            <h4>Tiempo de entrega: {{ $drivers[0]->time_delivered }} minutos</h4>
             <hr class="my-4" />
             </div>
         @endhasanyrole
@@ -150,7 +151,7 @@
                                     <span class="small">
                                         <button 
                                         type="submit" id="{{$item->pivot->id}}"
-                                        class="bg-transparent change-status">
+                                        class="bg-transparent btn <?php echo $class_status; ?> change-status">
                                             <span class="btn <?php echo $class_status; ?> ">
                                                 <?php echo $text_status; ?> <i class="fas fa-bell"></i>
                                             </span>
