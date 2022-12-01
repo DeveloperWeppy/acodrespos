@@ -15,6 +15,7 @@ use Akaunting\Money\Money;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\SimpleDelivery;
+use App\Models\GeoZoneDelivery;
 use App\Models\CartStorageModel;
 use App\Http\Controllers\Controller;
 use Darryldecode\Cart\CartCollection;
@@ -59,8 +60,13 @@ class Main extends Controller
             $timeSlots = $this->getTimieSlots($vendor);
 
 
+            $geoZoneDelivery=GeoZoneDelivery::where('restorant_id',$vendor->id)->get();
             $deliveryAreas=SimpleDelivery::where('restaurant_id',$vendor->id)->get();
-            $deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
+            //$deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
+            $deliveryAreasCost=array();
+            foreach ($geoZoneDelivery as $clave => $zona) {
+                $deliveryAreasCost[$zona->id]=$zona->price;
+            }
             $listClient=User::role('client')->where('active','1')->get();
             $selectClient=array();
             $selectTelefono=array();
@@ -81,7 +87,7 @@ class Main extends Controller
                     }
             }
             $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
-            return view('poscloud::index',['configaccountsbanks'=>$configaccountsbanks,'deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono]);
+            return view('poscloud::index',['configaccountsbanks'=>$configaccountsbanks,'deliveryAreasCost'=>$deliveryAreasCost,'deliveryAreas'=>$deliveryAreas,'timeSlots'=>$timeSlots,'vendor'=>$vendor,'restorant'=>$vendor,'floorPlan'=>$floorPlan,'selectClient'=>$selectClient,'selectTelefono'=>$selectTelefono,"geoZoneDelivery"=>$geoZoneDelivery]);
         }else{
             return redirect(route('login'));
         }
@@ -341,7 +347,7 @@ class Main extends Controller
 
             //Repo Holder
             $orderRepo=OrderRepoGenerator::makeOrderRepo($vendor_id,$mobileLikeRequest,$expedition,$hasPayment,$isStripe,true, $vendorHasOwnPayment,"POS");
-
+           
              //Proceed with validating the data
             $validator=$orderRepo->validateData();
             if ($validator->fails()) { 
@@ -354,12 +360,24 @@ class Main extends Controller
             //Proceed with making the order   POSOrderRepository
             if($request->has('custom')){
                 $customFields=$request->custom;
+                if((intval($vendor->current_consecutive)>intval($vendor->final_consecutive))){
+                    return response()->json([
+                        'status' => false,
+                        'message' =>"!Error actualiza el consecutivo de factura ",
+                    ]);
+                }
                 if(isset($customFields['client_id'])) {
                     $validatorOnMaking=$orderRepo->makeOrder($customFields['client_id'],$request->order_comment);
                 }else{
                     $validatorOnMaking=$orderRepo->makeOrder();
                 }
             }else{
+                if((intval($vendor->current_consecutive)>intval($vendor->final_consecutive)) && $request->order_id>0){
+                    return response()->json([
+                        'status' => false,
+                        'message' =>"!Error actualiza el consecutivo de factura ",
+                    ]);
+                }
                 $validatorOnMaking=$orderRepo->makeOrder(null,$request->order_comment,$request->tipo,$request->order_id,$request->cart_id,$request->propina,$request->number_people);
             }
             if ($validatorOnMaking->fails()) { 

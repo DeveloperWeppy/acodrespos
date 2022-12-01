@@ -18,20 +18,25 @@
      
   }
 </style>
+<div style="text-align: center;font-weight: bold;">APP {{strtoupper(config('app.name'))}}</div>
 <div style="width:100%;">
     <center>
       <div style="padding-top:10px">
-        <div>{{strtoupper($order->restorant->name)}} </div>
-        <div>NIT: {{strtoupper($order->restorant->nit)}}</div>
-        <div> {{strtoupper($order->restorant->address)}}</div>
+        <div style="font-weight: bold;">{{strtoupper($order->restorant->name)}} </div>
+        <div style="font-weight: bold;">NIT: {{strtoupper($order->restorant->nit)}}</div>
+        <div style="font-weight: bold;"> {{strtoupper($order->restorant->address)}}</div>
       </div>
     </center> 
     <hr>
-    <div>MESA:{{strtoupper($order->table->name)}}</div>
-    <div>PERSONAS:{{$order->number_people}}</div>
-    <div>ORDEN:#{{$order->id}}</div>
-    <div>FECHA:{{$order->created_at}}</div>
-    <div>MESERO:{{strtoupper($mesero)}}</div>
+    <div>FACTURA DE VENTA NO.{{strtoupper($order->prefix_consecutive.$order->consecutive)}} </div>
+    @if(isset($order->table->name))
+      <div>MESA: {{strtoupper($order->table->name)}}</div>
+      <div>PERSONAS: {{$order->number_people}}</div>
+    @endif
+
+    <div>ORDEN: #{{$order->id}}</div>
+    <div>FECHA: {{$order->created_at}}</div>
+    <div>MESERO: {{strtoupper($mesero)}}</div>
     <hr>
     <table>
         <tr>

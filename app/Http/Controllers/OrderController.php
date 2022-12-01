@@ -920,6 +920,18 @@ class OrderController extends Controller
     public function updateStatus($alias, Order $order,$motivo="")
     {
 
+        if($alias=="accepted_by_restaurant"){
+            if((intval($order->restorant->current_consecutive)>intval($order->restorant->final_consecutive)) && $order->consecutive=="" ){
+                return redirect()->route('orders.index')->with("error","! Error Actualiza el  consecutivo de factura");
+            }
+            if($order->consecutive=="" && (intval($order->restorant->current_consecutive)<=intval($order->restorant->final_consecutive))){
+                $order->prefix_consecutive=$order->restorant->prefix_consecutive;
+                $order->consecutive=$order->restorant->current_consecutive;
+                $restaurantp = Restorant::findOrFail($order->restorant_id);
+                $restaurantp->current_consecutive=intval($order->restorant->current_consecutive)+1;
+                $restaurantp->update();
+            }
+         }
         //-- asignar conductor con id desde la tabla de users
         /*
         if (isset($_GET['driver'])) {
@@ -1105,6 +1117,7 @@ class OrderController extends Controller
         if($alias=="accepted_by_restaurant"){
            //ed: 3 
            OrderAcceptedByVendor::dispatch($order);
+
         }
         if($alias=="accepted_by_admin"){
             //IN FT send email
