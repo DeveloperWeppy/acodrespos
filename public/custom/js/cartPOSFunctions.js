@@ -40,6 +40,8 @@ function updatePrices(net,delivery,expedition){
     style: 'currency',
     currency:  CASHIER_CURRENCY,
   });
+
+ 
   
   var deduct=parseFloat(cartTotal.deduct);
   //console.log("Deduct is "+deduct);
@@ -514,7 +516,6 @@ function submitOrderPOS(tipo=0){
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
     paymentId:$('#paymentId').val(),
-    paymentType2:$('#paymentType2').val(),
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,
@@ -615,6 +616,8 @@ function submitImage(orderid){
     formData.append('orderid',orderid);
     formData.append('cuentaid',$('#paymentId').val());
     formData.append('tipotarjeta',$('#paymentType2').val());
+    formData.append('franquicia',$('#franquicia').val());
+    formData.append('voucher',$('#voucher').val());
     $.ajax({
         url: withSession('/poscloud/order'),
         type: 'POST',
@@ -662,6 +665,8 @@ function decCart(product_id){
     
   });
 }
+
+
 //add extras to cart
 function updataObser(){
   $("#modalObservacion").modal('hide');
@@ -837,6 +842,7 @@ function chageDeliveryCost(deliveryCost){
     });
 }
 
+
 window.onload = function () {
 
   
@@ -962,13 +968,12 @@ window.onload = function () {
     },
     methods: {
       onChange(event) {
-          //console.log(event.target.value)
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
             this.received=this.totalPrice;
            
           }
-      }
-  }
+      },
+    }
   })
 
 
@@ -1001,6 +1006,8 @@ window.onload = function () {
             style: 'currency',
             currency:  CASHIER_CURRENCY,
         });
+
+        
     
         var formated=formatter.format(price);
     

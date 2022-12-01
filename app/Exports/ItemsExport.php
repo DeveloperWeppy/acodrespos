@@ -17,7 +17,7 @@ class ItemsExport implements FromArray, WithHeadings
             'Nombre',
             'Categoria',
             'Valor',
-            'Fecha de creacion',
+            'Fecha de creación',
         ];
     }
 

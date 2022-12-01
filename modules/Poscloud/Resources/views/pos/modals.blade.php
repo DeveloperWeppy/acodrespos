@@ -35,7 +35,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="selecuenta2" style="display: none;">
+                            <div class="selecuenta2" style="display: none;">
                                 <label for="">Seleccione tipo de tarjeta</label>
                                 <div class="input-group mb-3">
                                     <select class="form-control noselecttwo"  id="paymentType2" >
@@ -44,6 +44,18 @@
                                         <option value="Debito">Debito</option>
                                     </select>
                                 </div>
+                                <label for="">Seleccione franquicia</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo"  id="franquicia" >
+                                        <option value="">Seleccionar</option>
+                                        <option value="American">American</option>
+                                        <option value="Dinners">Dinners</option>
+                                        <option value="Mastercard">Mastercard</option>
+                                        <option value="Visa">Visa</option>
+                                    </select>
+                                </div>
+                                <label for="">Comprobante Voucher</label>
+                                <input type="text" placeholder="" class="form-control" id="voucher">
                             </div>
                             <div id="seletipocuenta" style="display: none;">
                                 <label for="">Seleccione el tipo de Cuenta</label>
