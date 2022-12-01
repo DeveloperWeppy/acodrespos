@@ -320,7 +320,7 @@ class HomeController extends Controller
         
             if (isset($_GET['report'])) {
 
-                $orders = Order::select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=5) as fecPreparado'))
+                $orders = Order::select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=3 limit 1) as fecAceptado,(select created_at from order_has_status where order_id=orders.id and status_id=5) as fecPreparado'))
                 ->orderBy('delivery_method', 'desc')
                 ->whereNotNull('restorant_id')
                 ->where(['restorant_id'=>auth()->user()->restorant->id])
@@ -340,19 +340,19 @@ class HomeController extends Controller
 
                 foreach ($orders->get() as $key => $order) {
 
-        
+                    
+                    $to_time = strtotime($order->fecAceptado);
 
                     if(isset($_GET['pest']) && $_GET['pest']==5 && $order->fecPreparado!=null){
                         $from_time = strtotime($order->fecPreparado);
                     }else{
-                        $from_time = strtotime($order->created_at);
+                        $from_time = strtotime($order->updated_at);
                     }
-                    $to_time = strtotime($order->updated_at);
                     $diff=0;
                     if($order->fecPreparado!=null){
                         $diff=  round(abs($to_time - $from_time) / 60,2). " min";
                     }
-                    
+                   
 
 
 
@@ -1091,7 +1091,7 @@ class HomeController extends Controller
 
                 if($Request->grafico=="grafico3"){
                     $orders = Order::orderBy('delivery_method', 'desc')
-                    ->select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=5) as fecPreparado'))
+                    ->select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=3 limit 1) as fecAceptado,(select created_at from order_has_status where order_id=orders.id and status_id=5) as fecPreparado'))
                     ->whereNotNull('restorant_id')
                     ->where(['restorant_id'=>auth()->user()->restorant->id])
                     ->where('orders.created_at', '>', $last30days)
@@ -1116,9 +1116,9 @@ class HomeController extends Controller
                         if(isset($Request->pest) && $Request->pest==5 && $orde->fecPreparado!=null){
                             $from_time = strtotime($orde->fecPreparado);
                         }else{
-                            $from_time = strtotime($orde->created_at);
+                            $from_time = strtotime($orde->updated_at);
                         }
-                        $to_time = strtotime($orde->updated_at);
+                        $to_time = strtotime($orde->fecAceptado);
                         $diff=0;
                         if($orde->fecPreparado!=null){
                             $diff =  round(abs($to_time - $from_time) / 60,2);
