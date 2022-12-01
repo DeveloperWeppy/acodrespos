@@ -540,7 +540,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
 
-        $driver = usersDriver::where('order_id','=',$order->id)->get();
+        $driver = usersDriver::where('order_id','=',$order->id)->orderBy('id','desc')->get();
 
 
         //Do we have pdf invoice
@@ -597,9 +597,13 @@ class OrderController extends Controller
                 'statuses'=>Status::pluck('name', 'id'), 
                 'drivers'=>$driver,
                 'orderModules'=>$orderModules,
-                'fields'=>[['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Driver', 'id'=>'driver', 'placeholder'=>'Assign Driver', 'data'=>$driversData, 'required'=>true]],
+                'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true]],
+
 
             ]);
+
+            //                'fields'=>[['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Driver', 'id'=>'driver', 'placeholder'=>'Assign Driver', 'data'=>$driversData, 'required'=>true]],
+
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access.'));
         }

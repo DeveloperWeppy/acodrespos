@@ -1227,6 +1227,9 @@ var RatingsResChart = (function() {
 				if(type=="bar"){
 					graficoBarra(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
 				}
+				if(type=="pie"){
+					graficoCirculo(canva,data[0],data[1],labelx,labely,addtag,formatNumber,theme);
+				}
 				if(grafic=="grafico2"){
 					$('#mesaMasCaliente').html(data[2]);
 				}
@@ -1406,6 +1409,49 @@ var RatingsResChart = (function() {
 		$('#'+canvaId).css('width','100%');
 	}
 
+	function graficoCirculo(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber=0,theme=0){
+		
+		if(theme==0){ var colorLabels = "#32325d";}
+		if(theme==1){ var colorLabels = "#ffffff";}
+	
+		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
+
+		var $chart = $('#'+canvaId);
+
+		var ordersChart = new Chart($chart, {
+			type: 'pie',
+			data: {
+				labels: chartlabels,//['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				datasets: [{
+					label: 'Expenses',
+					backgroundColor: ["#172b4d","#5e72e4","#11cdef","#2dce89","#f5365c","#fb6340","#4e6342", "#1D8348", "#943126", "#283747"],
+					data: chartvalues//[25, 20, 30, 22, 17, 29]
+				}]
+			},
+			options: {
+				responsive: true,
+				plugins: {
+				  legend: {
+					position: 'top',
+				  },
+				  title: {
+					display: true,
+					text: 'dddd'
+				  }
+				},
+				legend:{
+					display:true
+				},
+			  },
+		});
+
+		// Save to jQuery object
+		
+		ordersChart.options.legend.display = !myLine.options.legend.display;
+	
+		$chart.data('chart', ordersChart);
+	}
+
 
 	charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
 	charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
@@ -1414,6 +1460,8 @@ var RatingsResChart = (function() {
 	charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,0);
 	charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,0);
 
+	charData('graf7','chart-bycategory','grafico7','pie','','','',1,0,0);
+	charData('','chart-byvendor','grafico8','bar','','','',1,0,0);
 
 
 //
@@ -1505,6 +1553,7 @@ var SalesChart = (function() {
 // Orders chart
 //
 
+/*
 var ExpensesChart = (function() {
 
 	//
@@ -1513,8 +1562,6 @@ var ExpensesChart = (function() {
 
 	var $chartByCategory = $('#chart-bycategory');
 	var $chartByVendor = $('#chart-byvendor');
-
-
 
 	//
 	// Methods
@@ -1611,3 +1658,5 @@ var ExpensesChart = (function() {
 	}
 
 })();
+
+*/

@@ -28,7 +28,7 @@
     @if(!auth()->user()->hasRole('driver'))
     <div class="container-fluid mt--7">
         <div class="row">
-            <div class="col-xl-8 mb-5 mb-xl-0">
+            <div class="col-xl-12 mb-5 mb-xl-5">
                 <div class="card bg-gradient-default shadow">
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
+            <div class="col-xl-12">
                 <div class="card shadow">
                     <div class="card-header bg-transparent">
                         <div class="row align-items-center">
@@ -110,24 +110,6 @@
             var vendorsLabels = {!! json_encode($expenses['last30daysCostPerVendorLabels']) !!};
             var vendorsValues = {!! json_encode($expenses['last30daysCostPerVendorValues']) !!};
             
-            var datos = {!! json_encode($expenses['data']) !!};
-
-            var datos7dias = {!! json_encode($expenses['laste7days']) !!};
-            
-            datos.forEach(function(value, index) {
-                nameproducts.push(value.datos.name_product);
-            });
-            datos.forEach(function(value, index) {
-                cantidadproducts.push(value.datos.cantidad);
-            });
-
-            datos7dias.forEach(function(value, index) {
-                namedias.push(value.datos.day);
-                //console.log(value.datos.day);
-            });
-            datos7dias.forEach(function(value, index) {
-                totalventas7dias.push(value.datos.total_ordenes);
-            });
         </script>
 
         <div id="g3"> </div>
@@ -143,14 +125,15 @@
 
                             <div class="col-12">
                             
-                                <form action="{{route('home')}}#g3" method="GET">
-                                    <div class="row mt-5 input-daterange datepicker">
+                                <form action="{{route('home')}}#g3"  id="graf7">
+                                    <input name="reportItems" type="text" hidden/>
+                                    <div class="row mt-3 input-daterange datepicker">
                                         <div class="col-12 col-md-6 col-lg-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Mostrar</label>
                                                 <div class="input-group">
                                                     <select name="fcat" class="form-control form-control-sm noselecttwo">
-                                                        <option value="1" <?php if(isset($_GET['fcat']) && $_GET['fcat']==1){echo "selected";} ?> >Items</option>
+                                                        <option value="1" <?php if(isset($_GET['fcat']) && $_GET['fcat']==1){echo "selected";} ?> >Productos</option>
                                                         <option value="2" <?php if(isset($_GET['fcat']) && $_GET['fcat']==2){echo "selected";} ?> >Categorias</option>
                                                     </select>
                                                 </div>
@@ -175,11 +158,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 col-lg-3">
+                                        <div class="col-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-control-label"></label>
                                                 <div class="input-group">
-                                                    <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="button" onclick="charData('graf7','chart-bycategory','grafico7','pie','','','',1,0,0)" class="btn btn-primary btn-sm" style="margin-top: 8px;">Filtrar</button>
+                                                    <button type="submit"  class="btn btn-sm btn-success " style="margin-left: 10px;margin-top: 8px;" >{{ __('Download report') }}</button>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -193,13 +178,11 @@
 
                         
                         <!-- Chart -->
-                        @if(count($salesValue)>0)
-                            <div class="chart">
-                                <canvas id="chart-bycategory" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No expenses right now!') }}</p>
-                        @endif
+                   
+                        <div class="chart">
+                            <canvas id="chart-bycategory" class="chart-canvas"></canvas>
+                        </div>
+                
                     </div>
                 </div>
             </div>
@@ -210,6 +193,22 @@
                             <div class="col">
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">{{ __('Ranking de ventas de los últimos') }} ( 7 {{ __('days') }} )</h6>
                                 <h2 class="mb-0">{{ __('Ventas por Días de la Semana') }}</h2>
+                            </div>
+                            <div class="col-12">
+                            
+                                <form action="{{route('home')}}#g3"  id="graf7">
+                                    <input name="reportWeek" type="text" hidden/>
+                                    <div class="row mt-3 input-daterange ">
+                                        <div class="col-12 col-md-6 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label"></label>
+                                                <div class="input-group">
+                                                <button type="submit"  class="btn btn-md btn-success btn-sm" style="margin-left: 10px;" >{{ __('Download report') }}</button>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -249,6 +248,7 @@
                             <div class="col-12">
                             
                             <form action="" method="GET" id="graf2">
+                                <input name="reportTables" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
@@ -274,6 +274,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha hasta</label>
@@ -284,13 +285,15 @@
                                                 <input name="tfin" class="form-control form-control" placeholder="Fecha hasta" type="text" <?php if(isset($_GET['tfin'])){echo 'value="'.$_GET['tfin'].'"';} ?> />
                                             </div>
                                         </div>
-                                        
                                     </div>
+                                    
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
                                                 <button type="button" onclick="charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
+                                                <button type="submit"  class="btn btn-md btn-success " style="margin-left: 10px;margin-top: 8px;" >{{ __('Download report') }}</button>
+
                                             </div>
                                         </div>
 
@@ -341,6 +344,17 @@
                                 <form action="{{route('home')}}#g5" method="GET" id="graf3">
                                     <input name="report" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
+                                    <div class="col-12 col-md-6 col-lg-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Promedio de</label>
+                                            <div class="">
+                                                <select name="pest" class="form-control form-control-sm">
+                                                    <option value="7" >Entregado</option>
+                                                    <option value="5" >Preparado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
                                             <label class="form-control-label">Fecha de</label>
@@ -522,14 +536,10 @@
                     <div class="card-body">
                         @if(isset($mesaMasCaliente->nomt))
                         @endif
-                        <!-- Chart -->
-                        @if(count($periodLabels)>0)
-                            <div class="chart">
-                                <canvas id="chart-hourorder" class="chart-canvas"></canvas>
-                            </div>
-                        @else
-                            <p>{{ __('No hay ventas en este momento!') }}</p>
-                        @endif
+                        <div class="chart">
+                            <canvas id="chart-hourorder" class="chart-canvas"></canvas>
+                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -553,6 +563,7 @@
                                 
 
                             <form action="{{route('home')}}#g7" method="GET" id="graf5">
+                                <input name="reportStaff" type="text" hidden/>
                                 <div class="row mt-5 input-daterange datepicker">
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <div class="form-group">
@@ -595,7 +606,7 @@
                                             <label class="form-control-label"></label>
                                             <div class="input-group">
                                                 <button type="button" onclick="charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,1)" class="btn btn-primary btn" style="margin-top: 8px;">Filtrar</button>
-                                               
+                                                <button type="submit"  class="btn btn-sm btn-success " style="margin-left: 10px;margin-top: 8px;" >{{ __('Download report') }}</button>
                                             </div>
                                         </div>
 
@@ -761,6 +772,9 @@
                             <div class="col-8">
                                 <h6 class="text-uppercase text-muted ls-1 mb-1">RANKING POR RESTAURANTES ( 30 DÍAS )</h6>
                                 <h2 class="mb-0">TOP 10 RESTAURANTES CON MÁS VENTAS</h2>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <a href="{{Request::fullUrl().'?reporSalesRestaurant=true' }}" class="btn btn-md btn-success" style="margin-top: 8px;margin-left: 10px;" >{{ __('Download report') }}</a>
                             </div>
                             
                         </div>
