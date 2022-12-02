@@ -110,6 +110,26 @@
     <script>
     "use strict";
     var IsplaceChange = false;
+    Swal.fire({
+      title: '',
+      html: 'Cargando Restaurantes...',
+      button: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      timer: 5000,
+      timerProgressBar: true,
+          didOpen: () => {
+              Swal.showLoading()
+          },
+    });
+    //cerrar swealert cuando ya se ha construido el arbol del DOM
+    document.addEventListener("DOMContentLoaded", () => {
+        Swal.close();
+    });
+
     $(document).ready(function () {
         var input = document.getElementById('txtlocation');
 
