@@ -24,7 +24,7 @@ class ClientsExport implements FromArray, WithHeadings
             'id',
             'Nombre',
             'Correo electrónico',
-            'teléfono',
+            'Teléfono',
             'Fecha de creación',
         ];
         /*

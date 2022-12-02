@@ -40,6 +40,8 @@ function updatePrices(net,delivery,expedition){
     style: 'currency',
     currency:  CASHIER_CURRENCY,
   });
+
+ 
   
   var deduct=parseFloat(cartTotal.deduct);
   //console.log("Deduct is "+deduct);
@@ -50,6 +52,11 @@ function updatePrices(net,delivery,expedition){
   //Subtotal
   cartTotal.totalPrice=net;
   cartTotal.totalPriceFormat=formatter.format(net);
+
+  modalPayment.totalPriceRestado = net+delivery-deduct;
+  modalPayment.totalPriceRestadoFormated = formatter.format(net+delivery-deduct);
+
+  modalPayment.totalCambioFormated=formatter.format(0);
 
   if(expedition==1){
     //Delivery
@@ -66,6 +73,9 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPrice=cartTotal.withDelivery;
     modalPayment.totalPriceFormat=cartTotal.withDeliveryFormat;
     modalPayment.received=0;
+    modalPayment.totalCambioFormated=formatter.format(0);
+   
+    
 
 
   }else{
@@ -84,6 +94,7 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
     modalPayment.totalPropinaFormat=formatter.format(0);
     modalPayment.received=0;
+    modalPayment.totalCambioFormated=formatter.format(0);
 
     $('#ask_propina_check').change(function() {
       if (this.checked) {
@@ -514,7 +525,6 @@ function submitOrderPOS(tipo=0){
     table_id:CURRENT_TABLE_ID,
     paymentType:$('#paymentType').val(),
     paymentId:$('#paymentId').val(),
-    paymentType2:$('#paymentType2').val(),
     expedition:EXPEDITION,
     tipo:tipo,
     order_id:ordenId,
@@ -563,6 +573,8 @@ function submitOrderPOS(tipo=0){
     $("#client_name").val("").trigger('change');
     $('#paymentId').val("");
     $('#paymentType2').val("");
+    $('#franquicia').val("");
+    $('#voucher').val("");
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
@@ -615,6 +627,8 @@ function submitImage(orderid){
     formData.append('orderid',orderid);
     formData.append('cuentaid',$('#paymentId').val());
     formData.append('tipotarjeta',$('#paymentType2').val());
+    formData.append('franquicia',$('#franquicia').val());
+    formData.append('voucher',$('#voucher').val());
     $.ajax({
         url: withSession('/poscloud/order'),
         type: 'POST',
@@ -662,6 +676,8 @@ function decCart(product_id){
     
   });
 }
+
+
 //add extras to cart
 function updataObser(){
   $("#modalObservacion").modal('hide');
@@ -837,6 +853,7 @@ function chageDeliveryCost(deliveryCost){
     });
 }
 
+
 window.onload = function () {
 
   
@@ -948,6 +965,7 @@ window.onload = function () {
     }
   })
 
+  //Calcula los valores a mostrar en el modal de pago
   modalPayment= new Vue({
     el: '#modalPayment',
     data: {
@@ -958,17 +976,50 @@ window.onload = function () {
       deliveryPriceFormated:"",
       delivery:true,
       valid:false,
-      received:0
+      received:0,
+      receivedFormated:"",
+      totalPriceRestado:0,
+      totalPriceRestadoFormated:"",
+      totalCambioFormated:"",
     },
     methods: {
-      onChange(event) {
-          //console.log(event.target.value)
+     
+      change: function (event) {
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
             this.received=this.totalPrice;
-           
+            this.receivedFormated = puntosMil(this.totalPrice);
+            this.totalPriceRestadoFormated = puntosMil(0);
           }
-      }
-  }
+      },
+      show: function (event) {
+        // `this` inside methods points to the Vue instance
+
+        this.receivedFormated = puntosMil(this.receivedFormated);
+
+        this.received = this.receivedFormated.replace(".", "");
+
+            this.totalPriceRestado=(this.totalPrice-this.received);
+
+            var locale=LOCALE;
+            var formatter = new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency:  CASHIER_CURRENCY,
+            });
+            
+            var formated = formatter.format(0);
+            if(this.totalPrice>this.received){
+              formated=formatter.format(this.totalPriceRestado);
+            }
+            this.totalPriceRestadoFormated=formated;
+      
+            this.totalCambioFormated = formatter.format(0);
+            if(this.received-this.totalPrice>0){
+              this.totalCambioFormated = formatter.format(this.received-this.totalPrice);
+            }
+
+      },
+      
+    }
   })
 
 
@@ -996,11 +1047,13 @@ window.onload = function () {
         if(CASHIER_CURRENCY.toUpperCase()=="USD"){
             locale=locale+"-US";
         }
-    
+        
         var formatter = new Intl.NumberFormat(locale, {
             style: 'currency',
             currency:  CASHIER_CURRENCY,
         });
+
+        
     
         var formated=formatter.format(price);
     
@@ -1036,6 +1089,8 @@ window.onload = function () {
 }
 
 
-
-
-
+function puntosMil(value){
+  return value.toString().replace(/\D/g, "")
+  .replace(/([0-9])([0-9]{0})$/, '$1')
+  .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+}
