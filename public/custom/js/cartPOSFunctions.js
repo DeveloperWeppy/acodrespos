@@ -57,7 +57,7 @@ function updatePrices(net,delivery,expedition){
   modalPayment.totalPriceRestadoFormated = formatter.format(net+delivery-deduct);
 
   modalPayment.totalCambioFormated=formatter.format(0);
-
+  
   if(expedition==1){
     //Delivery
     cartTotal.delivery=true;
@@ -73,6 +73,7 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPrice=cartTotal.withDelivery;
     modalPayment.totalPriceFormat=cartTotal.withDeliveryFormat;
     modalPayment.received=0;
+    modalPayment.receivedFormated=0;
     modalPayment.totalCambioFormated=formatter.format(0);
    
     
@@ -94,6 +95,7 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
     modalPayment.totalPropinaFormat=formatter.format(0);
     modalPayment.received=0;
+    modalPayment.receivedFormated=0;
     modalPayment.totalCambioFormated=formatter.format(0);
 
     $('#ask_propina_check').change(function() {
@@ -575,6 +577,7 @@ function submitOrderPOS(tipo=0){
     $('#paymentType2').val("");
     $('#franquicia').val("");
     $('#voucher').val("");
+    $('.selecuenta2').hide()
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
