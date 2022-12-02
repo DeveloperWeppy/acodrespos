@@ -324,7 +324,7 @@
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
          @hasrole('owner')
             <h4>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
-                {{print_r($lasStatusId)}}
+               
                 @if ($lasStatusId!=7&&$lasStatusId!=5&&$lasStatusId!=8&&$lasStatusId!=9)
                     <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
                         <span class="btn-inner--icon">
