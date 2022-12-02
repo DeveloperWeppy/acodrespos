@@ -16,7 +16,7 @@
                         <form role="form text-left">
                             <label>{{ __('Payment method') }}</label>
                             <div class="input-group mb-3">
-                                <select @change="onChange($event)" class="form-control noselecttwo" id="paymentType" >
+                                <select v-on:change="change($event)"  class="form-control noselecttwo" id="paymentType" >
                                     <option value="cash">{{ __('Cash') }}</option>
                                     {{-- <option value="cardterminal">{{ __('Card terminal') }}</option>
                                     <option value="onlinepayments">{{ __('Online payments') }}</option> --}}

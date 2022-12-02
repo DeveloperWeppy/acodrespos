@@ -573,6 +573,8 @@ function submitOrderPOS(tipo=0){
     $("#client_name").val("").trigger('change');
     $('#paymentId').val("");
     $('#paymentType2').val("");
+    $('#franquicia').val("");
+    $('#voucher').val("");
   
     //Call to get the total price and items
     getCartContentAndTotalPrice();
@@ -981,11 +983,12 @@ window.onload = function () {
       totalCambioFormated:"",
     },
     methods: {
-      onChange(event) {
+     
+      change: function (event) {
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
             this.received=this.totalPrice;
-
-            this.receivedFormated = this.totalPrice;
+            this.receivedFormated = puntosMil(this.totalPrice);
+            this.totalPriceRestadoFormated = puntosMil(0);
           }
       },
       show: function (event) {
@@ -1087,7 +1090,7 @@ window.onload = function () {
 
 
 function puntosMil(value){
-  return value.replace(/\D/g, "")
+  return value.toString().replace(/\D/g, "")
   .replace(/([0-9])([0-9]{0})$/, '$1')
   .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
 }
