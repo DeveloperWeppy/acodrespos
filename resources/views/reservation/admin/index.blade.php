@@ -24,6 +24,7 @@
 
                     <div class="card-body">
                         @if ($compani->has_reservation==1)
+                        <!-------------------gestionar habilitación de tiempo de antelación de reservación ---------->
                             <h6 class="heading-small text-muted mb-2">{{ __('Tiempos de Reservación') }}</h6>
                             <p>Habilita el tiempo de antelación de reserva con respecto al día que quiera el cliente reservar.
                             </p>
@@ -69,6 +70,7 @@
                                 </div>
                             </div>
 
+                            <!-------------------gestionar habilitación de mesas a reservar ---------->
                             <h6 class="heading-small text-muted mb-2">{{ __('Habilitar mesas de Reservación') }}</h6>
                             <p>Establezca las mesas que estarán habilitadas para reservar</p>
 
@@ -88,12 +90,39 @@
                                     </select>
                                 </div>
                             </div>
+                            <!-------------------configurar tipos de cobros de reservas ---------->
+                            <h6 class="heading-small text-muted mb-2 mt-3">{{ __('Administre los cobros de reserva') }}</h6>
+                            <p>Cree los motivos de reservación que tendrá disponibles para los clientes.</p>
+                            <div class="row">
+                                <div class="col-sm-12 col-12">
+                                    <div class="form-group  ">
+                                        <div class="custom-control custom-checkbox">
+                                            <input value="dia" type="checkbox" class="custom-control-input"
+                                                name="time_reservation" id="ch_dia">
+                                            <label class="custom-control-label" for="ch_dia">Pago Completo</label>
+                                        </div>
 
+                                        <div class="custom-control custom-checkbox">
+                                            <input value="hora" type="checkbox" class="custom-control-input"
+                                                name="time_reservation" id="ch_horas">
+                                            <label class="custom-control-label" for="ch_horas">Porcentaje de Pago</label>
+                                        </div>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input value="dia_actual" type="checkbox" class="custom-control-input"
+                                                name="time_reservation" id="ch_actual">
+                                            <label class="custom-control-label" for="ch_actual">Sin Cobro de Reserva</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-------------------gestionar motivos de reservación ---------->
                             <h6 class="heading-small text-muted mb-2 mt-3">{{ __('Administre los Motivos de Reservación') }}</h6>
                             <p>Cree los motivos de reservación que tendrá disponibles para los clientes.</p>
 
                             @include('reservation.admin.includes.registrarmotivo')
-
+                            
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <button type="button" class="btn btn-sm btn-primary float-left" data-toggle="modal" data-target="#modal-registrar-motivo">Agregar Motivo</button>
@@ -109,6 +138,8 @@
                                 </div>
                             </div>
                             @include('reservation.admin.includes.cargarmotivos')
+
+                            
 
                         @else
                             <div class="row">
@@ -145,7 +176,7 @@
                 // in the handler, 'this' refers to the box clicked on
                 var $box = $(this);
                 var $id = $(this).attr("id");
-                console.log($id);
+                
                 if ($box.is(":checked")) {
                     // the name of the box is retrieved using the .attr() method
                     // as it is assumed and expected to be immutable
@@ -307,7 +338,7 @@
         });
         //consultar motivos
         function consultarmotivos()
-            {
+        {
             var url = "{{ route('reservationreason.obtener') }}";
                 $.ajax({
                 headers: {
@@ -339,7 +370,7 @@
                 }).fail(function(resp){
                     console.log(resp);
                 });
-            }
+        }
     </script>
 @endsection
 @endsection
