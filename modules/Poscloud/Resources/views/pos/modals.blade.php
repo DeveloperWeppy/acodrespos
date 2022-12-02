@@ -98,18 +98,18 @@
                         <form role="form text-left">
                             <label>{{ __('Received ammount')}}</label>
                             <div class="input-group mb-3">
-                                <input type="text" v-model="received" class="form-control" placeholder="0" aria-label="o" autofocus>
+                                <input type="text" v-model="receivedFormated" v-on:keyup="show" class="form-control" placeholder="0" aria-label="o" autofocus >
                             </div>
                             <label class="input-persona">{{ __('Nº de Personas en la mesa')}}</label>
                             <div class="input-group mb-3 input-persona">
                                 <input type="number" id="form_number_people"  class="form-control" placeholder="0" aria-label="o" value="1" autofocus>
                             </div>
                             <label>{{ __('Change') }}</label>
-                            <p class="h2 text-success">@{{ received-totalPrice>0?(received-totalPrice).toFixed(2):0 }}
+                            <p class="h2 text-success">@{{ totalCambioFormated }}
                             </p>
 
                             <label>{{ __('Remaining') }}</label>
-                            <p class="h2 text-danger">@{{ totalPrice-received>0?(totalPrice-received).toFixed(2):0 }}
+                            <p class="h2 text-danger">@{{ totalPriceRestadoFormated }}
                             </p>
                         </form>
 
@@ -318,3 +318,4 @@
 
 
 <!-- End POS invoice Modal -->
+

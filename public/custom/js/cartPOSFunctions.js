@@ -53,6 +53,11 @@ function updatePrices(net,delivery,expedition){
   cartTotal.totalPrice=net;
   cartTotal.totalPriceFormat=formatter.format(net);
 
+  modalPayment.totalPriceRestado = net+delivery-deduct;
+  modalPayment.totalPriceRestadoFormated = formatter.format(net+delivery-deduct);
+
+  modalPayment.totalCambioFormated=formatter.format(0);
+
   if(expedition==1){
     //Delivery
     cartTotal.delivery=true;
@@ -68,6 +73,9 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPrice=cartTotal.withDelivery;
     modalPayment.totalPriceFormat=cartTotal.withDeliveryFormat;
     modalPayment.received=0;
+    modalPayment.totalCambioFormated=formatter.format(0);
+   
+    
 
 
   }else{
@@ -86,6 +94,7 @@ function updatePrices(net,delivery,expedition){
     modalPayment.totalPriceFormat=formatter.format(net-deduct);
     modalPayment.totalPropinaFormat=formatter.format(0);
     modalPayment.received=0;
+    modalPayment.totalCambioFormated=formatter.format(0);
 
     $('#ask_propina_check').change(function() {
       if (this.checked) {
@@ -954,6 +963,7 @@ window.onload = function () {
     }
   })
 
+  //Calcula los valores a mostrar en el modal de pago
   modalPayment= new Vue({
     el: '#modalPayment',
     data: {
@@ -964,15 +974,48 @@ window.onload = function () {
       deliveryPriceFormated:"",
       delivery:true,
       valid:false,
-      received:0
+      received:0,
+      receivedFormated:"",
+      totalPriceRestado:0,
+      totalPriceRestadoFormated:"",
+      totalCambioFormated:"",
     },
     methods: {
       onChange(event) {
           if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
             this.received=this.totalPrice;
-           
+
+            this.receivedFormated = this.totalPrice;
           }
       },
+      show: function (event) {
+        // `this` inside methods points to the Vue instance
+
+        this.receivedFormated = puntosMil(this.receivedFormated);
+
+        this.received = this.receivedFormated.replace(".", "");
+
+            this.totalPriceRestado=(this.totalPrice-this.received);
+
+            var locale=LOCALE;
+            var formatter = new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency:  CASHIER_CURRENCY,
+            });
+            
+            var formated = formatter.format(0);
+            if(this.totalPrice>this.received){
+              formated=formatter.format(this.totalPriceRestado);
+            }
+            this.totalPriceRestadoFormated=formated;
+      
+            this.totalCambioFormated = formatter.format(0);
+            if(this.received-this.totalPrice>0){
+              this.totalCambioFormated = formatter.format(this.received-this.totalPrice);
+            }
+
+      },
+      
     }
   })
 
@@ -1001,7 +1044,7 @@ window.onload = function () {
         if(CASHIER_CURRENCY.toUpperCase()=="USD"){
             locale=locale+"-US";
         }
-    
+        
         var formatter = new Intl.NumberFormat(locale, {
             style: 'currency',
             currency:  CASHIER_CURRENCY,
@@ -1043,6 +1086,8 @@ window.onload = function () {
 }
 
 
-
-
-
+function puntosMil(value){
+  return value.replace(/\D/g, "")
+  .replace(/([0-9])([0-9]{0})$/, '$1')
+  .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+}
