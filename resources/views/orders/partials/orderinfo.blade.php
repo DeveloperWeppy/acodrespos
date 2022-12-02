@@ -299,19 +299,19 @@
      <hr />
     
 
-     <h4>{{ __("Payment method") }}: {{ __(strtoupper($order->payment_method) == 'CASH' ? 'Efectivo' : (strtoupper($order->payment_method) == 'COD' ? 'Contraentrega' : 'Otro')) }}</h4>
+     <h4>{{ __("Payment method") }}: {{ (strtoupper($order->payment_method) == 'CASH' ? 'Efectivo' : (strtoupper($order->payment_method) == 'CARDTERMINAL' ? 'Datáfono' : (strtoupper($order->payment_method) == 'TRANSFERENCIA' ? 'Transferencia' : 'Otro'))) }}</h4>
      @if(!empty($order->name_bank))
      <h4>Cuenta bancaria: {{$order->name_bank}} - {{$order->number_account}}</h4>
      @endif
 
      @if(!empty($order->url_payment))
-     <h3>Evidencia de pago
+     <h4>Evidencia de pago
         <button  onclick="Swal.fire({ imageUrl: '{{asset($order->url_payment)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
             <span class="btn-inner--icon">
                 <i class="ni ni-image"></i>    
             </span>
         </button>
-     <h3>
+     <h4>
      @endif
      
      <h4>{{ __("Payment status") }}: {{ __(ucfirst($order->payment_status)) }}</h4>
@@ -323,7 +323,7 @@
      @if(config('app.isft') || config('app.iswp'))
          <h4>{{ __("Delivery method") }}: {{ $order->getExpeditionType() }}</h4>
          @hasrole('owner')
-            <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
+            <h4>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated]) 
                 {{print_r($lasStatusId)}}
                 @if ($lasStatusId!=7&&$lasStatusId!=5&&$lasStatusId!=8&&$lasStatusId!=9)
                     <button data-toggle="modal" data-target="#modal-partials-time" type="button" onclick="$('#delivery_pickup_interval').val('0');   $('#order_id2').val('{{$order->id}}');" class="btn btn-outline-danger btn-sm">
@@ -333,12 +333,12 @@
                     </button>
                 @endif
                 
-            </h3>
+            </h4>
         @endif
      @else
          <h4>{{ __("Dine method") }}: {{ $order->getExpeditionType() }}</h4>
          @if ($order->delivery_method!=3)
-             <h3>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated])</h3>
+             <h4>{{ __("Time slot") }}: @include('orders.partials.time', ['time'=>$order->time_formated])</h4>
          @endif
      @endif
      @if ($order->prefix_consecutive!="")

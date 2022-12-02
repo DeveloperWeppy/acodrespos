@@ -6,7 +6,7 @@ use App\Order;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ItemsExport implements FromArray, WithHeadings
+class ItemsCountExport implements FromArray, WithHeadings
 {
     protected $orders;
 
@@ -15,9 +15,7 @@ class ItemsExport implements FromArray, WithHeadings
         return [
             'N° de item',
             'Nombre',
-            'Categoria',
-            'Valor',
-            'Fecha de creación',
+            'Cantidad',
         ];
     }
 
@@ -31,6 +29,7 @@ class ItemsExport implements FromArray, WithHeadings
         return $this->orders;
     }
 }
+
 
 
 

@@ -184,17 +184,17 @@
             $('#selecuenta').show()
             $('#loadarchivo').show()
             $('#seletipocuenta').hide()
-            $('#selecuenta2').hide()
+            $('.selecuenta2').hide()
           }else if ($(this).val()=='cardterminal') {
             $('#selecuenta').hide()
             $('#seletipocuenta').hide()
             $('#loadarchivo').hide()
-            $('#selecuenta2').show()
+            $('.selecuenta2').show()
           }else {
             $('#selecuenta').hide()
             $('#seletipocuenta').hide()
             $('#loadarchivo').hide()
-            $('#selecuenta2').hide()
+            $('.selecuenta2').hide()
           }
         });
 

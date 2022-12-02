@@ -300,6 +300,8 @@ class Main extends Controller
             $orderId=$request->orderid;
             $order=Order::findOrFail($orderId);
             $order->type_card = $request->tipotarjeta;
+            $order->franquicia = $request->franquicia;
+            $order->voucher = $request->voucher;
             $order->save();
 
             return $order->id;

@@ -16,7 +16,7 @@
                         <form role="form text-left">
                             <label>{{ __('Payment method') }}</label>
                             <div class="input-group mb-3">
-                                <select @change="onChange($event)" class="form-control noselecttwo" id="paymentType" >
+                                <select v-on:change="change($event)"  class="form-control noselecttwo" id="paymentType" >
                                     <option value="cash">{{ __('Cash') }}</option>
                                     {{-- <option value="cardterminal">{{ __('Card terminal') }}</option>
                                     <option value="onlinepayments">{{ __('Online payments') }}</option> --}}
@@ -35,7 +35,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div id="selecuenta2" style="display: none;">
+                            <div class="selecuenta2" style="display: none;">
                                 <label for="">Seleccione tipo de tarjeta</label>
                                 <div class="input-group mb-3">
                                     <select class="form-control noselecttwo"  id="paymentType2" >
@@ -44,6 +44,18 @@
                                         <option value="Debito">Debito</option>
                                     </select>
                                 </div>
+                                <label for="">Seleccione franquicia</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control noselecttwo"  id="franquicia" >
+                                        <option value="">Seleccionar</option>
+                                        <option value="American">American</option>
+                                        <option value="Dinners">Dinners</option>
+                                        <option value="Mastercard">Mastercard</option>
+                                        <option value="Visa">Visa</option>
+                                    </select>
+                                </div>
+                                <label for="">Comprobante Voucher</label>
+                                <input type="text" placeholder="" class="form-control" id="voucher">
                             </div>
                             <div id="seletipocuenta" style="display: none;">
                                 <label for="">Seleccione el tipo de Cuenta</label>
@@ -86,18 +98,18 @@
                         <form role="form text-left">
                             <label>{{ __('Received ammount')}}</label>
                             <div class="input-group mb-3">
-                                <input type="text" v-model="received" class="form-control" placeholder="0" aria-label="o" autofocus>
+                                <input type="text" v-model="receivedFormated" v-on:keyup="show" class="form-control" placeholder="0" aria-label="o" autofocus >
                             </div>
                             <label class="input-persona">{{ __('Nº de Personas en la mesa')}}</label>
                             <div class="input-group mb-3 input-persona">
                                 <input type="number" id="form_number_people"  class="form-control" placeholder="0" aria-label="o" value="1" autofocus>
                             </div>
                             <label>{{ __('Change') }}</label>
-                            <p class="h2 text-success">@{{ received-totalPrice>0?(received-totalPrice).toFixed(2):0 }}
+                            <p class="h2 text-success">@{{ totalCambioFormated }}
                             </p>
 
                             <label>{{ __('Remaining') }}</label>
-                            <p class="h2 text-danger">@{{ totalPrice-received>0?(totalPrice-received).toFixed(2):0 }}
+                            <p class="h2 text-danger">@{{ totalPriceRestadoFormated }}
                             </p>
                         </form>
 
@@ -306,3 +318,4 @@
 
 
 <!-- End POS invoice Modal -->
+

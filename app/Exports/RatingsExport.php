@@ -14,7 +14,7 @@ class RatingsExport implements FromArray, WithHeadings
     {
         return [
             'Restaurante',
-            'Suma de calificacion',
+            'Suma de calificación',
             'Numero de calificaciones',
             'Promedio',
         ];
