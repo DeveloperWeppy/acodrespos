@@ -398,7 +398,61 @@
                 zoom: 13,
                 center: new google.maps.LatLng(lat, lng),
                 mapTypeId: "terrain",
-                scaleControl: true
+                scaleControl: true,
+                styles:[
+                  {
+                    "featureType": "administrative.land_parcel",
+                    "stylers": [
+                      {
+                        "visibility": "off"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "administrative.neighborhood",
+                    "stylers": [
+                      {
+                        "visibility": "off"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "poi",
+                    "elementType": "labels.icon",
+                    "stylers": [
+                      {
+                        "visibility": "off"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "poi",
+                    "elementType": "labels.text",
+                    "stylers": [
+                      {
+                        "visibility": "off"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "road",
+                    "elementType": "labels",
+                    "stylers": [
+                      {
+                        "visibility": "on"
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "water",
+                    "elementType": "labels.text",
+                    "stylers": [
+                      {
+                        "visibility": "off"
+                      }
+                    ]
+                  }
+                ]
             }
 
             map_location = new google.maps.Map( document.getElementById("map_location"), map_options );
@@ -452,9 +506,21 @@
             if(markerIndex2==0){
                 $( "#btnerase" ).show();
             }
+            var icona=area;
+            arrayLocatio.push(latLng);
+            if(arraypoly[indexpoly].getPath().length==0){
+                icona=start;
+            }else{
+                if(arrayLocatio.length>2){
+                    markers2[markers2.length-2]=new google.maps.Marker({ map: map_area2, position: arrayLocatio[arrayLocatio.length-2], draggable: false, icon: area });
+                }
+                icona="/images/blue_pin2.png";
+                
+                
+            }
            // markerIndex2 = poly2.getPath().length;
             var isFirstMarker = markerIndex2 === 0;
-            markerArea2 = new google.maps.Marker({ map: map_area2, position: latLng, draggable: false, icon: area });
+            markerArea2 = new google.maps.Marker({ map: map_area2, position: latLng, draggable: false, icon: icona });
 
             //push markers
             markers2.push(markerArea2);
@@ -464,6 +530,7 @@
                     if (isClosed2) return;
                     path2f = arraypoly[indexpoly].getPath();
                     arraypoly[indexpoly].setMap(null);
+                    arrayLocatio=[];
                     //al crear 2 encerr
                     arraypoly[indexpoly] = new google.maps.Polygon({ map: map_area2, path: path2f, strokeColor: "yellow", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "green", fillOpacity: 0.35, editable: false });   
                     isClosed2 = true;
@@ -507,6 +574,7 @@ function borrarmarkply(index,tipo=0){
     $( "#btnsave" ).hide();
 }
 $( "#btnerase" ).click(function() {
+    arrayLocatio=[];
     var index=indexpoly;
     borrarmarkply(index,1);
 });
@@ -616,6 +684,7 @@ $( "#btnerase" ).click(function() {
         var markerIndex2 = null;
         var markerArea2 = null;
         var markers2 = [];
+        var arrayLocatio = [];
         var path = null;
         var  path2f=null;
         var  path2f2=null;

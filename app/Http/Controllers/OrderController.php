@@ -9,6 +9,7 @@ use App\Status;
 use App\Coupons;
 use App\Restorant;
 use Carbon\Carbon;
+use App\Categories;
 use App\Models\Orderitems;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -753,7 +754,24 @@ class OrderController extends Controller
         $doneOrders = [];
 
         $items = [];
+        $arrayCategories = json_decode( json_encode( Categories::where('restorant_id', $resto->id)->get() ), true );
+        $arrayArea= json_decode( json_encode(DB::table('area_kitchens')->where('restorant_id',$resto->id)->get()), true );
+       
         foreach ($orders as $key => $order) {
+            $arrayareac=array();
+            $orderf = Order::findOrFail($order['id']);
+            foreach ($orderf->items()->get() as $key => $item2) {
+                $found_key = array_search($item2->category_id, array_column($arrayCategories, 'id'));
+                if($found_key!==false){
+                    $found_key2 = array_search($arrayCategories[$found_key]['areakitchen_id'], array_column($arrayArea, 'id'));
+                    if($found_key2!==false){
+                        $found_key3 = array_search($arrayArea[$found_key2]['id'], array_column($arrayareac, 'id'));
+                        if($found_key3==false){
+                            array_push($arrayareac,array('id'=>$arrayArea[$found_key2]['id'],'name'=>$arrayArea[$found_key2]['name'],'colorarea'=>$arrayArea[$found_key2]['colorarea']));
+                        }
+                    }
+                }
+            }
             $client="";
             if(config('app.isft')){
                 //$client=$order['client']['name'];
@@ -792,6 +810,7 @@ class OrderController extends Controller
                 'client'=>$client,
                 'link'=>'/orders/'.$order['id'],
                 'price'=>money($order['order_price'], config('settings.cashier_currency'), config('settings.do_convertion')).'',
+                'areas'=>$arrayareac
             ]);
         }
 
