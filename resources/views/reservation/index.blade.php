@@ -74,7 +74,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-6 col-12">
-                                <label for="">Seleccione las mesas que estarám disponibles</label>
+                                <label for="">Seleccione las mesas que estarán disponibles</label>
                                 <select name="" class="form-control" id="">
                                     @foreach ($restoareas as $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
