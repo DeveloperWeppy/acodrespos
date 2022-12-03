@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Restorant;
 use Illuminate\Http\Request;
 use App\Models\ReservationReason;
+
 use App\Http\Controllers\Controller;
 
 class ReservationReasonController extends Controller
@@ -62,6 +63,9 @@ class ReservationReasonController extends Controller
         }
         echo json_encode(array('error' => $error, 'mensaje' => $mensaje));
     }
+
+    
+
 
     
     public function cargarMotivos()

@@ -166,6 +166,8 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::get('/', 'ConfigReservationController@index')->name('index');
             Route::post('obtener-mesas', 'ConfigReservationController@geInfoMesas')->name('obtener');
             Route::post('guardar', 'ConfigReservationController@store')->name('store');
+            Route::post('storeConfig', 'ConfigReservationController@storeConfig')->name('storeConfig');
+            Route::post('getInfoConfig', 'ConfigReservationController@getInfoConfig')->name('getInfoConfig');
         });
 
         #routes for reason of reservations
