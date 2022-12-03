@@ -33,6 +33,7 @@ use App\Models\EncuestaClient;
 use App\Repositories\Orders\OrderRepoGenerator;
 use App\Models\usersDriver;
 use App\Models\ConfigCuentasBancarias;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -476,15 +477,15 @@ class OrderController extends Controller
 
           
             $order = Order::findOrFail($item->order_id);
-            if(auth()->user()->id!=$order->employee_id){
+            if(Auth::user()->id!=$order->employee_id){
                   $producto= DB::table('items')->where('id',$item->item_id)->get();
                   $employee = User::findOrFail($order->employee_id);
                   $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
             }
             if ($actualiza == 1) {
              
-                $class_status = ($active == 'servicio') ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
-                $text_status = ($active == 'servicio') ? "Servicio" : "Cocina";
+                $class_status = $active == 'servicio' ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
+                $text_status = $active == 'servicio' ? "Servicio" : "Cocina";
                 $status = 'servicio';
             } 
             

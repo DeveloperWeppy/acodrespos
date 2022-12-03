@@ -33,9 +33,25 @@ jQuery(document).on("click", ".change-status", function() {
         dataType: 'json',
         beforeSend:function(){
             //$element.val('Cargando');
+            Swal.fire({
+                title: '',
+                text: 'Cargando...',
+                button: false,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: false,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+              });
         },
         success: function(response) {
             //console.log(response);
+            Swal.close();
             if (response.status == 'servicio') {
                 $element.find('span').removeAttr('class').attr('class', '');
                 $element.find('span').addClass('btn');
