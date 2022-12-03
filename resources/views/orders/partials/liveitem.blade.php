@@ -1,8 +1,10 @@
 
   <div v-for="item2 in item.areas">
-      <button type="button" class="btn btn-secondary" :style="{'background':[item2.color] }" data-toggle="tooltip" data-placement="top" >
-        Tooltip on top
-      </button>
+    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" :title="item2.name" :style="'width: 30px; height: 30px; padding: 0; border-radius: 50%;color:white;background:'+item2.colorarea">
+     
+    </button>
+
+   
  </div>
 <div class="row align-items-center" v-cloak>
     <div :class="item.pulse"></div>
