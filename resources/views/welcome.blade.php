@@ -112,7 +112,7 @@
     var IsplaceChange = false;
     Swal.fire({
       title: '',
-      html: 'Cargando Restaurantes...',
+      text: 'Cargando Restaurantes...',
       button: false,
       showConfirmButton: false,
       allowOutsideClick: false,
