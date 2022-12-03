@@ -778,7 +778,7 @@ class OrderController extends Controller
                     $found_key2 = array_search($arrayCategories[$found_key]['areakitchen_id'], array_column($arrayArea, 'id'));
                     if($found_key2!==false){
                         $found_key3 = array_search($arrayArea[$found_key2]['id'], array_column($arrayareac, 'id'));
-                        if($found_key3==false){
+                        if($found_key3===false){
                             array_push($arrayareac,array('id'=>$arrayArea[$found_key2]['id'],'name'=>$arrayArea[$found_key2]['name'],'colorarea'=>$arrayArea[$found_key2]['colorarea']));
                         }
                     }

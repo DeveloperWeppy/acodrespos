@@ -25,8 +25,12 @@ class PdfController extends Controller
           $alto=300+(count($items)*25)+150;
           $ancho=119;
           $dpi=42;
+        }
+        $mesero="";
+        if(isset($mesero->name)){
+            $mesero=$mesero->name;
         }  
-        $dompdf->loadHtml(view('pdf.invoice.'.$order->restorant->invoice_size,array("order"=> $order,"mesero"=>$mesero->name,"items"=>$items)));
+        $dompdf->loadHtml(view('pdf.invoice.'.$order->restorant->invoice_size,array("order"=> $order,"mesero"=>$mesero,"items"=>$items)));
         
         $dompdf->set_paper(array(0,0,$ancho, $alto));
         $dompdf->set_option('dpi', $dpi);

@@ -1,6 +1,6 @@
 
-  <div v-for="item2 in item.areas">
-    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" :title="item2.name" :style="'width: 30px; height: 30px; padding: 0; border-radius: 50%;color:white;background:'+item2.colorarea">
+  <div>
+    <button  v-for="item2 in item.areas" type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" :title="item2.name" :style="'width: 30px; height: 30px; padding: 0; border-radius: 50%;color:white;background:'+item2.colorarea">
      
     </button>
 
