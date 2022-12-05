@@ -135,6 +135,11 @@
 <script src="{{asset('vendor/intltelinput/build/js/utils.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- @if(strlen( config('broadcasting.connections.pusher.app_id'))>2) --}}
+        <!-- Pusher -->
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+        <script src="{{ asset('custom') }}/js/pusher.js"></script>
+  {{-- @endif --}}
   @stack('js')
   @yield('js')
 

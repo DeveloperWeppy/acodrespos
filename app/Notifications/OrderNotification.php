@@ -243,7 +243,7 @@ class OrderNotification extends Notification
             
         } elseif ($this->status.'' == '4') {
             //Assigned to driver
-            $greeting = __('There is new order for you.');
+            $greeting = __('Tu pedido está en camino.');
             $line = __('There is new order assigned to you.');
         } elseif ($this->status.'' == '5') {
             //Prepared
@@ -275,11 +275,16 @@ class OrderNotification extends Notification
             }
            
         }
-        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 || $this->status==11){
+        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 || $this->status==11 || $this->status==4){
             event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
         }
         if($this->status.'' == 'cocina' || $this->status.'' == 'servicio' ){
-            event(new PusherNewOrder($this->order,$greeting));
+            if(isset($this->order->employee_id)){
+                event(new PusherNewOrder($this->order,$greeting));
+            }else{
+                event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
+            }
+           
         }
         return [
             'title'=>$greeting,

@@ -480,9 +480,18 @@ class OrderController extends Controller
             if ($order->employee_id != null) {
                 if(Auth::user()->id!=$order->employee_id){
                     $producto= DB::table('items')->where('id',$item->item_id)->get();
-                    $employee = User::find($order->employee_id);
+                    $employee = User::findOrFail($order->employee_id);
                     $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
-              }
+                }
+            }
+            if($order->client_id != null){
+                
+                
+                $res=new OrderNotification($order,$active);
+               
+                $order->client->notify( $res);
+               
+                
             }
             
             if ($actualiza == 1) {
@@ -1085,7 +1094,7 @@ class OrderController extends Controller
 
             
 
-            if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7') {
+            if ($status_id_to_attach.'' == '3' || $status_id_to_attach.'' == '5' || $status_id_to_attach.'' == '9' || $status_id_to_attach.'' == '7' || $status_id_to_attach.'' == '4') {
                 
                 $res=new OrderNotification($order, $status_id_to_attach);
                
@@ -1096,7 +1105,11 @@ class OrderController extends Controller
                //$order->driver->notify(new OrderNotification($order, $status_id_to_attach));
             }
         }
-        
+        if(isset($order->employee_id)){
+              
+                $employee = User::findOrFail($order->employee_id);
+                $employee->notify(new OrderNotification($order, $status_id_to_attach));
+        }
 
         //Picked up - start tracing
         /*
