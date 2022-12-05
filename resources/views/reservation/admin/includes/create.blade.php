@@ -79,26 +79,6 @@
                                 </div>
 
                                 <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="email_client">Opciones de pago</label>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="hidden" value="1" name="can_pickup" id="can_pickuphid">
-                                        <label class="custom-control-label" for="can_pickup">Porcentaje (Paga el 45% antes y el resto en el restaurante)</label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
-                                    <label class="form-control-label" for="email_client">Metodo de pago</label>
-                                    <div class="">
-                                        <select name="mmes" class="form-control form-control-sm">
-                                            <option value=""  >Seleccionar cuenta</option>
-                                            @foreach ($configaccountsbanks as $item)
-                                                <option value="{{$item->id}}">{{ $item->name_bank . " - ". $item->number_account}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                
                                     <div class="row">
                                         <div class="col-md-6">
@@ -165,6 +145,35 @@
 
         @include('reservation.admin.includes.modals')
 
+        @section('js')
+        <script>
+            $("#paymentType").on('change', function() {
+                alert();
+                if ($(this).val()=='transferencia') {
+                    $('#selecuenta').show()
+                    $('#loadarchivo').show()
+                    $('#seletipocuenta').hide()
+                    $('.selecuenta2').hide()
+                }else if ($(this).val()=='cardterminal') {
+                    $('#selecuenta').hide()
+                    $('#seletipocuenta').hide()
+                    $('#loadarchivo').hide()
+                    $('.selecuenta2').show()
+                }else {
+                    $('#selecuenta').hide()
+                    $('#seletipocuenta').hide()
+                    $('#loadarchivo').hide()
+                    $('.selecuenta2').hide()
+                }
+            });
+        </script>
+        @endsection
+
+
         @include('layouts.footers.auth')
+
+        
     </div>
 @endsection
+
+
