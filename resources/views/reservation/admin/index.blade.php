@@ -44,7 +44,35 @@
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
-                                ddd
+                                Reservaciones
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-sm-2 col-12">
+                                    <h4>Cliente</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4>Area - Mesa</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4>Motivo</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4>Valor</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4>Pendiente</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4>Estado</h4>
+                                </div>
+                                <div class="col-sm-2 col-12">
+                                    <h4><a type="button" class="btn btn-sm btn-primary float-left" href={{route('reservation.create')}}>Nueva reservación</button></a>
+                                </div>
+                            </div>
+                            <div class="row mt-3" id="div_cargar_reservas">
                             </div>
                         </div>
                     </div>
@@ -205,28 +233,23 @@
                             @include('reservation.admin.includes.registrarmotivo')
 
                             <div class="row">
-                                <div class="col-sm-12 mb-2">
-                                    <button type="button" class="btn btn-sm btn-primary float-left" data-toggle="modal" data-target="#modal-registrar-motivo">Agregar Motivo</button>
-                                </div>
                                 <div class="col-sm-3 col-12">
                                     <h4>Nombre del Motivo</h4>
                                 </div>
-                                <div class="col-sm-6 col-12">
-                                    <h4 class="text-center">Descripción del Motivo</h4>
+                                <div class="col-sm-3 col-12">
+                                    <h4>Descripción del Motivo</h4>
                                 </div>
                                 <div class="col-sm-3 col-12">
                                     <h4>Precio del Motivo</h4>
                                 </div>
+                                <div class="col-sm-3 col-12">
+                                    <h4><button type="button" class="btn btn-sm btn-primary float-left" data-toggle="modal" data-target="#modal-registrar-motivo">Agregar Motivo</button></h4>
+                                </div>
                             </div>
+                            <div class="row mt-3" id="div_cargar_motivos">
                             @include('reservation.admin.includes.cargarmotivos')
+                            </div>
                         </div>
-
-                        <div class="card-footer py-4">
-                            <nav class="d-flex justify-content-end" aria-label="...">
-                              
-                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Cambios</button>
-                            </nav>
-                        </div> 
                     </div>
                 </div>
 
@@ -285,17 +308,27 @@
                 saveMotivo();
             });
 
+            $(document).on('click', '.editarMotivo', function(){
+               
+                var idd = $(this).data('id');
+                alert(idd.id);
+                $('input[name=name_motivo]').val(idd.name);
+                $('textarea[name=description_motivo]').val(idd.description);
+                $('input[name=price_motivo]').val(idd.price);
+                $('input[name=motive_id]').val(idd.id);
+            });
+
             function saveMotivo(){
                 //obteniendo los datos
                 let name = $('#name_motivo').val();
                 let description = $('#description_motivo').val();
                 let price = $('#price_motivo').val();
-                let restaurant = $('#restaurant_id').val();
+                let motive_id = $('#motive_id').val();
                 //url
                 var url_ajax = "{{route('reservationreason.store')}}";
                 //form de register motivo
                 var formData = new FormData();
-                formData.append('restaurant_id', restaurant);
+                formData.append('motive_id', motive_id);
                 formData.append('name', name);
                 formData.append('description', description);
                 formData.append('price', price);
@@ -365,12 +398,15 @@
                 });
             };
 
+
+
+
             
             
         });
         //consultar motivos
         function consultarmotivos()
-            {
+        {
             var url = "{{ route('reservationreason.obtener') }}";
                 $.ajax({
                 headers: {
@@ -402,67 +438,65 @@
                 }).fail(function(resp){
                     console.log(resp);
                 });
-            }
+        }
 
-            $("#configReservation").submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData($("#configReservation")[0]);
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{route('reservation.storeConfig')}}",
-                    type: 'POST',
-                    success: function (data) {
+        
+        $("#configReservation").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData($("#configReservation")[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('reservation.storeConfig')}}",
+                type: 'POST',
+                success: function (data) {
 
-                        console.log(data);
-                        Swal.fire({
-                            title: "Datos Guardados",
-                            text: '',
-                            icon: 'success',
-                        });
-                    },
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
+                    console.log(data);
+                    Swal.fire({
+                        title: "Datos Guardados",
+                        text: '',
+                        icon: 'success',
+                    });
+                },
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
             });
+        });
 
-            //retornar información
-            $(document).ready(function() {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{route('reservation.getInfoConfig')}}",
-                    type: 'POST',
-                    success: function (data) {
-                        if(data.length>0){
-                            $('input[value='+data[0].minimum_period+']').prop('checked', true);
-                            $('input[name=time_reservation_number]').val(data[0].condition_period);
-                            $('input[name=porcentage_payment]').val(data[0].percentage_payment);
-                            $('input[name=wait_time]').val(data[0].wait_time);
-                            $('input[name=standard_price]').val(data[0].standard_price);
-                            if(data[0].condition_period==1){
-                                $('input[name=time_reservation]').prop('checked', true);
-                            }
-
-                            var mesas = data[0].mesas.split(',');
-                            for(var i=0;i<mesas.length;i++){
-                                $('#zonas option[value='+mesas[i]+']').prop('selected', true);
-
-                                $('#zonas').trigger('change')
-                            }
-                        
-
+        //retornar información
+        $(document).ready(function() {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('reservation.getInfoConfig')}}",
+                type: 'POST',
+                success: function (data) {
+                    if(data.length>0){
+                        $('input[value='+data[0].minimum_period+']').prop('checked', true);
+                        $('input[name=time_reservation_number]').val(data[0].condition_period);
+                        $('input[name=porcentage_payment]').val(data[0].percentage_payment);
+                        $('input[name=wait_time]').val(data[0].wait_time);
+                        $('input[name=standard_price]').val(data[0].standard_price);
+                        if(data[0].condition_period==1){
+                            $('input[name=time_reservation]').prop('checked', true);
                         }
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
+                        var mesas = data[0].mesas.split(',');
+                        for(var i=0;i<mesas.length;i++){
+                            $('#zonas option[value='+mesas[i]+']').prop('selected', true);
+
+                            $('#zonas').trigger('change')
+                        }
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
             });
+        });
 
             
 

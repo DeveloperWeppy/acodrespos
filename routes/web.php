@@ -168,12 +168,15 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('guardar', 'ConfigReservationController@store')->name('store');
             Route::post('storeConfig', 'ConfigReservationController@storeConfig')->name('storeConfig');
             Route::post('getInfoConfig', 'ConfigReservationController@getInfoConfig')->name('getInfoConfig');
+            Route::get('create', 'ConfigReservationController@create')->name('create');
         });
 
         #routes for reason of reservations
         Route::prefix('reservas/motivos/')->name('reservationreason.')->group(function () {
             Route::post('guardar', 'ReservationReasonController@store')->name('store');
             Route::get('obtener', 'ReservationReasonController@cargarMotivos')->name('obtener');
+            Route::get('del/{id}', 'ReservationReasonController@destroy')->name('delete');
+            Route::post('getMotivos', 'ReservationReasonController@getMotivos')->name('getMotivos');
         });
         // --------------------------------------------------------------------------------- //
 

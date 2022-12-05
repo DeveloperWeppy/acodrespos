@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Tables;
 use App\RestoArea;
 use App\Restorant;
+use App\User;
 use Illuminate\Http\Request;
 use App\Models\ConfigReservation;
 use App\Models\ReservationReason;
 use App\Models\ReservationConfig;
 use App\Models\ReservationTables;
+use App\Models\ConfigCuentasBancarias;
 use DB;
 
 
@@ -54,7 +56,7 @@ class ConfigReservationController extends Controller
         $restaurant_id = auth()->user()->restorant->id;
 
         $restaurantConfig = DB::table('reservations_config')
-            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservations_tables where reservations_tables.companie_id=reservations_config.companie_id ) as mesas'))
+            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
             ->where('companie_id', $restaurant_id)->get();
 
         return response()->json($restaurantConfig);
@@ -67,7 +69,26 @@ class ConfigReservationController extends Controller
      */
     public function create()
     {
-        //
+
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
+
+            $restaurant_id = auth()->user()->restorant->id;
+            
+            $clients = User::role('client')->where(['active'=>1])->get();
+
+            $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
+            $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
+
+            $motive = ReservationReason::where(['active'=>1])->get();
+
+            $vendor=Restorant::findOrFail($restaurant_id);
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
+
+            return view('reservation.admin.includes.create', compact('clients','restoareas','restomesas','motive','configaccountsbanks'));
+
+        } else {
+            return redirect()->route('orders.index')->withStatus(__('No Access'));
+        }
     }
 
     /**

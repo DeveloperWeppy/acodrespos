@@ -1,19 +1,25 @@
 
-    @if (count($motivos) == 0)
+    @if (count($reservaciones) == 0)
         <div class="col-sm-12">
-            <p class="text-center">¡No hay motivos de reservas registrados!</p>
+            <p class="text-center">¡No hay reservas registradas!</p>
         </div>
     @else
-        @foreach ($motivos as $item)
+        @foreach ($reservaciones as $item)
             {{-- <div class="row"> --}}
                 <div class="col-sm-3 col-12">
-                    <p>{{$item->name}}</p>
+                    <p>{{$item->client_id}}</p>
                 </div>
                 <div class="col-sm-3 col-12">
-                    <p>{{$item->description}}</p>
+                    <p>{{$item->table_id}}</p>
+                </div>
+                <div class="col-sm-3 col-12">
+                    <p>{{$item->reservation_reason_id}}</p>
                 </div>
                 <div class="col-sm-3 col-12">
                     <p>{{$item->price}}</p>
+                </div>
+                <div class="col-sm-3 col-12">
+                    <p>{{$item->last_status}}</p>
                 </div>
                 <div class="col-sm-3 col-12">
                     <a href="" data="delivered" data-toggle="modal" data-id="{{$item}}" data-target="#modal-registrar-motivo" class="btn btn-sm  btn-primary editarMotivo">

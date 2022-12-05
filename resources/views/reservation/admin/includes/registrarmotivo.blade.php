@@ -24,7 +24,7 @@
                                 <label class="form-control-label" for="price_motivo">Precio del Motivo</label>
                                 <input type="number" class="form-control" name="price_motivo" id="price_motivo" required>
                             </div>
-                            <input name="restaurant_id" id="restaurant_id" type="hidden" value="{{$compani->id}}" required>
+                            <input name="motive_id" id="motive_id" type="hidden" value="0" required>
                             <div class="text-center">
                                 <button type="button" class="btn btn-primary my-4" id="btn_save_motivo">{{ __('Save') }}</button>
                             </div>
