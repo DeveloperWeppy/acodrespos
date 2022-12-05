@@ -475,13 +475,16 @@ class OrderController extends Controller
               ->where('id', $id)
               ->update(['item_status' => $active]);
 
-          
+            
             $order = Order::findOrFail($item->order_id);
-            if(Auth::user()->id!=$order->employee_id){
-                  $producto= DB::table('items')->where('id',$item->item_id)->get();
-                  $employee = User::findOrFail($order->employee_id);
-                  $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
+            if ($order->employee_id != null) {
+                if(Auth::user()->id!=$order->employee_id){
+                    $producto= DB::table('items')->where('id',$item->item_id)->get();
+                    $employee = User::find($order->employee_id);
+                    $employee->notify(new OrderNotification($order, $active,null,$producto[0]->name));
+              }
             }
+            
             if ($actualiza == 1) {
              
                 $class_status = $active == 'servicio' ? "btn-outline-success btn-sm" : "btn-outline-warning btn-sm";
