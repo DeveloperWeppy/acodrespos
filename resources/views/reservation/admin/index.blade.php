@@ -152,7 +152,7 @@
                                     <div class="col-sm-12 col-12">
                                         <div class="form-group">
                                             <div>
-                                                <label for="" class="form-control-label">Precio estandar</label>
+                                                <label for="" class="form-control-label">Precio estándar por mesa</label>
                                             </div>
                                             <input type="number" name="standard_price" class="form-control " id=""
                                                 value="0">

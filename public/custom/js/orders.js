@@ -54,3 +54,4 @@ var envio = 0;
 $(".newItem").submit(function(e) {
     if(envio!=0){  e.preventDefault(); } envio++;
 });
+

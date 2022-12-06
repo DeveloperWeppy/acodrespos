@@ -1,5 +1,3 @@
-
-
 <div class="modal fade" id="modal-payment-reservation" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-" role="document">
         <div class="modal-content">
@@ -69,31 +67,46 @@
                                             </div>
                                         </div>
 
-                                        <div class="custom-control custom-control-alternative custom-checkbox ckpropina">
-                                            <input class="custom-control-input" name="valor_propina" id="ask_propina_check" type="checkbox">
-                                            <label class="custom-control-label" for="ask_propina_check">
-                                                <span class="text-muted" id="span_propina">Pagar porcentaje</span>
+                                        @if(isset($restaurantConfig[0]->percentage_payment) && $restaurantConfig[0]->percentage_payment!=0)
+                                        <div class="custom-control custom-control-alternative custom-checkbox ckpropina mt-3">
+                                            <input class="custom-control-input" name="check_por" value="1" id="check_por" type="checkbox">
+                                            <label class="custom-control-label" for="check_por">
+                                                <span class="" id="span_propina">Pagar porcentaje</span>
                                             </label>
+                                            <br>
+                                            <span class="text-secundary mt-2" style="font-size: 11px;display: block;line-height: 17px;">(Al pagar el porcentaje aceptas pagar el {{$restaurantConfig[0]->percentage_payment}}% y el resto en en el restaurante.)</span>
                                         </div>
+                                        @endif
 
                                         <label class="mt-3">{{ __('Total') }}</label>
-                                        <p class="h2">@{{ totalPriceFormat }} </p>
+                                        <div class="totalreserva">
+                                            <p class="h1">@{{priceReservationFormated}} COP</p>
+                                        </div>
+                                        
+                                    <div id="divPercentage" style="display: none">
+                                        <label class="mt-2">Pendiente a pagar en el restaurante</label>
+                                        <div class="totalreserva">
+                                            <p class="h1"><span id="resRes"></span> COP</p>
+                                        </div>
+                                    </div>
             
             
                                     </form>
                                 </div>
                                 <div class="col">
-                                    <form role="form text-left">
+                                    <form role="form text-left" class="">
                                         <label>{{ __('Received ammount')}}</label>
                                         <div class="input-group mb-3">
                                             <input type="text" v-model="receivedFormated" v-on:keyup="show" class="form-control" placeholder="0" aria-label="o" autofocus >
                                         </div>
                                         <label>{{ __('Change') }}</label>
-                                        <p class="h2 text-success">@{{ totalCambioFormated }}
+                                        <p class="h2 text-success">
+                                            @{{totalCambioFormated}} COP
                                         </p>
             
                                         <label>{{ __('Remaining') }}</label>
-                                        <p class="h2 text-danger">@{{ totalPriceRestadoFormated }}
+                                        <p class="h2 text-danger">
+                                            @{{totalPriceRestadoFormated}} COP
                                         </p>
                                     </form>
             
@@ -113,7 +126,7 @@
 
                         </div>
                     </div>
-                    <div class="modal-footer" v-if="received-totalPrice>=0" v-cloak>
+                    <div class="modal-footer" >
 
                         <i id="indicator" style="display: none" class="fas fa-spinner fa-spin"></i>
                         <button type="button" id="pagarReserva" onclick="pagarReserva()" class="btn bg-gradient-primary">
@@ -126,7 +139,3 @@
         </div>
     </div>
 </div>
-
-
-
-
