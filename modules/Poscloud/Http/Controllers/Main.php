@@ -458,6 +458,54 @@ class Main extends Controller
         ]);
     }
 
+
+    public function ocupationTable(Request $request){
+        $restaurant_id = auth()->user()->restorant->id;
+        $error = false;
+
+        $fecha = Carbon::now('America/Bogota')->format('Y-m-d H:i:s');
+
+        /*
+
+        if(isset($request->table_id)){
+            list($time, $ampm) = explode(' ', $request->hora);
+            list($hh, $mm) = explode(':', $time);
+
+            if($ampm == 'AM' && $hh == 12) {
+                $hhto = '02';
+            } elseif($ampm == 'PM' && $hh < 12) {
+                $hh += 12;
+            }
+            $hhto = $hh+2;  //le suma 2 horaas a la hora elegida para comprobar si la mesa esta ocupada la siguiente hora
+            if($hh==23 || $hh===24){
+                $hhto = $hh;
+            }
+            
+            $fecha = $request->fecha." ".$hh.":".$mm;
+            $fechato = $request->fecha." ".$hhto.":".$mm;
+
+            $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids,date'))->where('companie_id','=',$restaurant_id)->whereBetween('date',[$fecha,$fechato])->get();
+
+            $registros = 0;
+            if(isset($reservation) && $reservation[0]->ids!=null && isset($request->mesas)){
+                $ids = explode(",",$reservation[0]->ids);
+                $mesas = $request->mesas;
+                $mesas=DB::table('reservations_clients')->select(DB::raw('count(id) contador'))->whereIn('reservation_id',$ids)->whereIn('table_id',$mesas)->get();
+
+                $registros = $mesas[0]->contador;
+            }
+        }
+
+        
+        
+        //contar las tablas que estan dentro de ese id y dentro de las mesas que envio.
+        return response()->json(array('error' => $error, 'datos' => $registros)); 
+
+        */
+
+        return $fecha;
+    }
+
     /**
      * Remove the specified resource from storage.
      * @param int $id

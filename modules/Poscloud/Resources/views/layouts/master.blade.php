@@ -21,6 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('softd') }}/img/apple-icon.png">
   <link rel="icon" type="image/png" href="{{ asset('softd') }}/img/favicon.png">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>
     {{ $vendor->name." - ".config('app.name')}}
   </title>
@@ -311,8 +312,12 @@
       SHOWN_NOW="orders";
     }
 
+   
     function showOrderDetail(id) {
-      
+
+
+
+
      $('textarea#order_comment').val("");
      $("#floorTabs").hide();
      $("#floorAreas").hide();
@@ -404,7 +409,6 @@
       expedition.config={};
       getCartContentAndTotalPrice();
 
-      
       showOrderDetail(CURRENT_TABLE_ID);
    }
 
@@ -431,15 +435,18 @@
       $("#orderDetails").hide();
       SHOWN_NOW="floor";
     }
+ //ejecuta al dar clic en la mesa
 
     function openTable(id,receipt_number) {
-      
       CURRENT_TABLE_ID=id;
+
       CURRENT_RECEIPT_NUMBER=receipt_number;
       idLength=(id+"").length;
       if(idLength<6){
         CURRENT_TABLE_NAME=floorPlan[id];
         EXPEDITION=3;
+
+        
       }else if(idLength==7){
         CURRENT_TABLE_NAME="Pedido para llevar";
         EXPEDITION=2;
@@ -448,29 +455,44 @@
         EXPEDITION=1;
       }
       $("#row_names").hide();
-      var getlocal = JSON.parse(localStorage.getItem(CURRENT_TABLE_ID));
+      
       //console.log(mesaocupada);
-      if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
-        $("#modal-add-consumidor").modal("hide");
-        $('.personitem').show();
-        $('#card_division_personas').show();
-      }else{
-        if(EXPEDITION==3){
-          $('.personitem').text("");
-            $("#modal-add-consumidor").modal("show");
-            $('#card_division_personas').hide();
-            $('#ask_divide_check').change(function() {
-                    if (this.checked) {
-                        $("#span_dividir").text("Cuenta Dividida");
-                        $("#row_names").show();
-                        $("#btncontinuar").hide();
-                    } else {
-                        $("#span_dividir").text("Sin cuenta dividida");
-                        $("#row_names").hide();
-                        $("#btncontinuar").show();
-                    }
-                });
+      if(EXPEDITION==3){
+
+        var ocupada = ocupacionMesa();
+        
+     
+        
+          var getlocal = JSON.parse(localStorage.getItem(CURRENT_TABLE_ID));
+
+          if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
+              $("#modal-add-consumidor").modal("hide");
+              $('.personitem').show();
+              $('#card_division_personas').show();
+          }else{
+
+              $('.personitem').text("");
+              $("#modal-add-consumidor").modal("show");
+              $('#card_division_personas').hide();
+              $('#ask_divide_check').change(function() {
+                  if (this.checked) {
+                      $("#span_dividir").text("Cuenta Dividida");
+                      $("#row_names").show();
+                      $("#btncontinuar").hide();
+                  } else {
+                      $("#span_dividir").text("Sin cuenta dividida");
+                      $("#row_names").hide();
+                      $("#btncontinuar").show();
+                  }
+              });
+          }
+
+          /*
+          if(ocupada==0){
         }
+        */
+
+        
        
       }
       getCartContentAndTotalPrice();
@@ -483,6 +505,32 @@
 
     function makeFree(){
       $('.occcupied').removeClass('occcupied');
+    }
+
+
+    function ocupacionMesa(){
+
+      var formData = new FormData();
+      formData.append('table_id',CURRENT_TABLE_ID);
+      $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "{{route('poscloud.ocupationTable')}}",
+          type: 'POST',
+          success: function (data) {
+            alert(data);
+          },
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+
+
+      $('#modalMesaReservada').modal('show');
+      alert(CURRENT_TABLE_ID);
+      return 1;
     }
   </script>
 

@@ -18,14 +18,11 @@ Route::group([
     'namespace' => 'Modules\Poscloud\Http\Controllers'
 ], function () {
     Route::prefix('poscloud')->group(function() {
-
-        
         Route::get('/pos', 'Main@index')->name('poscloud.index');
         Route::get('/orders', 'Main@orders')->name('poscloud.orders');
         Route::post('/order','Main@store')->name('posccloud.storeorder');
         Route::post('/orderupdate','Main@update')->name('posccloud.updateorder');
         Route::get('/moveorder/{from}/{to}', 'Main@moveOrder')->name('poscloud.moveorder');
-        
-        
+        Route::post('/pos', 'Main@ocupationTable')->name('poscloud.ocupationTable');
     });
 });

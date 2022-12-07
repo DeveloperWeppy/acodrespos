@@ -19,8 +19,6 @@ var valor_propi = 0;
 
 $('#localorder_phone').hide();
 
-
-
 /**
  *
  * @param {Number} net The net value
@@ -28,7 +26,7 @@ $('#localorder_phone').hide();
  * @param {String} expedition 1 - Delivery 2 - Pickup 3 - Dine in
  */
 function updatePrices(net,delivery,expedition){
-
+  
   var porcentaj_propina = $('#porcentaje_propina').val();
   $('#spanporcentaje_propina').hide();
   var span_propi_porcen = $('#spanporcentaje_propina').text(porcentaj_propina+"%");
@@ -911,7 +909,6 @@ window.onload = function () {
     methods:
     {
       openDetails:function(id,receipt_number){
-        
         window.openTable(id,"#"+receipt_number);
       }
     }
@@ -1085,7 +1082,7 @@ window.onload = function () {
     methods: {
         addToCartAct() {
 
-          addToCartVUE();
+            addToCartVUE();
         },
     },
   });
