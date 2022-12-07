@@ -30,7 +30,7 @@
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_client">{{ __('Client') }}</label>
                                         <div class="">
-                                            <select name="cli" class="form-control form-control-sm" required>
+                                            <select name="cli" class="form-control form-control-sm" readonly="">
                                                 <option value="" >Seleccionar cliente</option>
                                                 @foreach($clients as $key)
                                                 <option value="{{$key->id}}" >{{$key->number_identification}} - {{$key->name}}</option>
@@ -118,7 +118,6 @@
                         <div class="card-footer py-4">
                             <nav class="d-flex justify-content-end" aria-label="...">
                             
-                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Reserva</button>
                             </nav>
                         </div>
                     </form>
@@ -369,7 +368,33 @@
                 revisarOcupacion();
             });
 
-    
+
+
+            $('select[name=cli]').val('{{(isset($reservation->client_id)?$reservation->client_id:"")}}');
+
+            $('select[name=mot]').val('{{(isset($reservation->reservation_reason_id)?$reservation->reservation_reason_id:"")}}');
+            $('select[name=mot]').trigger('change')
+
+            $('textarea[name=com]').val('{{(isset($reservation->description)?$reservation->description:"")}}');
+
+            var fecha = '{{(isset($reservation->date)?$reservation->date:"")}}';
+
+            var fechaHora = fecha.split(' ');
+            if(fechaHora[0]!=undefined){
+                $('input[name=fec]').val(fechaHora[0]);
+            }
+            if(fechaHora[1]!=undefined){
+                $('input[name=hora]').val(fechaHora[1]);
+            }
+
+            var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mesas:"")}}';
+            var mesas = mesasSeleccionadas.split(',');
+            for(var i=0;i<mesas.length;i++){
+                $('#zonas option[value='+mesas[i]+']').prop('selected', true);
+
+                $('#zonas').trigger('change')
+            }
+            
         </script>
         @endsection
 

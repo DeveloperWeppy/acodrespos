@@ -170,6 +170,10 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('getInfoConfig', 'ConfigReservationController@getInfoConfig')->name('getInfoConfig');
             Route::get('create', 'ConfigReservationController@create')->name('create');
             Route::post('store', 'ConfigReservationController@store')->name('store');
+            Route::post('storePendiente', 'ConfigReservationController@storePendiente')->name('storePendiente');
+            Route::post('getOcupation', 'ConfigReservationController@getOcupation')->name('getOcupation');
+            Route::post('getTables', 'ConfigReservationController@getTables')->name('getTables');
+            Route::get('edit/{id}', 'ConfigReservationController@edit')->name('edit');
         });
 
         #routes for reason of reservations

@@ -47,6 +47,9 @@
 
         <!-- Range datepicker -->
         <link rel="stylesheet" type="text/css" href="{{ asset('vendor') }}/daterangepicker/daterangepicker.css" />
+        <!-- Range timepicker -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('vendor') }}/timepicker/timepicker.min.css" />
+
 
         @yield('head')
         @laravelPWA
@@ -99,6 +102,9 @@
 
 
         <script src="{{ asset('argon') }}/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    
+        <script src="{{ asset('vendor') }}/timepicker/timepicker.min.js"></script>
+
 
         <!-- Nouslider -->
         <script src="{{ asset('argon') }}/vendor/nouislider/distribute/nouislider.min.js" type="text/javascript"></script>

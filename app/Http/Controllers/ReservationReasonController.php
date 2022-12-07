@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Restorant;
 use Illuminate\Http\Request;
 use App\Models\ReservationReason;
+use App\Models\Reservation;
 
 use App\Http\Controllers\Controller;
 
@@ -145,9 +146,23 @@ class ReservationReasonController extends Controller
     public function destroy($id)
     {
         $this->authChecker();
-        $item = ReservationReason::findOrFail($id);
-        $item->delete();
+
+        $restaurant_id = auth()->user()->restorant->id;
+
+
+        $contador = Reservation::where('companie_id', $restaurant_id)->where('reservation_reason_id','=',$id)->count();
+
+        if($contador==0){
+            $item = ReservationReason::findOrFail($id);
+            $item->delete();
+            return redirect('/reservas')->with('success','El motivo ha sido removido');
+        }
+        
+        return redirect('/reservas')->with('error','El motivo esta relacionado con algunas reservas');
+
+
+
         //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
-        return redirect('/reservas')->with('success','El motivo ha sido removido');
+        
     }
 }

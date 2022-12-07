@@ -28,6 +28,9 @@ class ConfigReservationController extends Controller
     public function index()
     {
         $restaurant_id = auth()->user()->restorant->id;
+
+        $vendor=Restorant::findOrFail($restaurant_id);
+        $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
         
         #mesas get
         $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
@@ -36,9 +39,14 @@ class ConfigReservationController extends Controller
         $compani = Restorant::find($restaurant_id);
         $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
 
-        $reservaciones = Reservation::where('companie_id', $restaurant_id)->paginate(10);
+        $restaurantConfig = DB::table('reservations_config')
+            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
+            ->where('companie_id', $restaurant_id)->get();
+
+        $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->orderBy('id','desc')->paginate(10);
         
-        return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones'));
+        
+        return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones','configaccountsbanks','restaurantConfig'));
     }
 
     public function geInfoMesas(Request $request)
@@ -111,8 +119,12 @@ class ConfigReservationController extends Controller
             $restaurant_id = auth()->user()->restorant->id;
 
             $porc = 0;
-            if(isset($request->porc)){
+            $payment_status = "unpaid";
+            if(isset($request->porc) && $request->porc==1){
                 $porc = $request->porc;
+                $payment_status = "pending";
+            }else{
+                $payment_status = "paid";
             }
 
             $pago1 = [
@@ -121,7 +133,21 @@ class ConfigReservationController extends Controller
                 'tarjeta'=> $request->tipotarjeta,
                 'franquicia'=> $request->franquicia,
                 'voucher'=> $request->voucher,
+                'total'=> $request->pagado,
             ];
+
+            //captura la hora y la convierte en formato de 24 horas
+            list($time, $ampm) = explode(' ', $request->hora);
+            list($hh, $mm) = explode(':', $time);
+            if($ampm == 'AM' && $hh == 12) {
+                $hh = '00';
+            } elseif($ampm == 'PM' && $hh < 12) {
+                $hh += 12;
+            }
+            if(!isset($request->com)){
+                $request->com = "";
+            }
+
 
             $reservation = new Reservation;
             $reservation->companie_id = $restaurant_id;
@@ -129,12 +155,13 @@ class ConfigReservationController extends Controller
             $reservation->check_percentage = $porc;
             $reservation->reservation_reason_id = $request->mot;
             $reservation->description = $request->com;
-            $reservation->payment_status = '';
+            $reservation->payment_status = $payment_status;
             $reservation->active = 1;
             $reservation->note = '';
             $reservation->observations ='';
-            $reservation->date = $request->fec." ".$request->hora.":00";
+            $reservation->date = $request->fec." ".$hh.":".$mm;
             $reservation->total = $request->total;
+            $reservation->pendiente = $request->pendiente;
             $reservation->payment_1 = json_encode($pago1);
             $reservation->save();
 
@@ -164,6 +191,48 @@ class ConfigReservationController extends Controller
                 $reservation->save();
 
             }
+
+
+        } else {
+            return redirect()->route('orders.index')->withStatus(__('No Access'));
+        }
+    }
+
+    public function storePendiente(Request $request)
+    {
+        if (auth()->user()->hasRole('owner')) {
+            $restaurant_id = auth()->user()->restorant->id;
+
+        
+            $pago2 = [
+                'metodo'=> $request->met,
+                'cuenta_id'=> $request->cuentaid,
+                'tarjeta'=> $request->tipotarjeta,
+                'franquicia'=> $request->franquicia,
+                'voucher'=> $request->voucher,
+                'total'=> $request->pagado,
+            ];
+
+            $reservation =Reservation::findOrFail($request->reserva_id);
+            $reservation->pendiente = 0;
+            $reservation->payment_2= json_encode($pago2);
+            $reservation->payment_status = 'paid';
+            $reservation->save();
+
+            $iddRes = $request->reserva_id;
+
+            if ($request->hasFile('img_payment')) {
+                $path = 'uploads/reservations/';
+                $nom = $iddRes.'_2.png';
+
+                $request->img_payment->move(public_path($path), $nom);
+
+                $reservation=Reservation::findOrFail($iddRes);
+                $reservation->url_payment2 = $path.$nom;
+                $reservation->save();
+            }
+
+            echo 1;
 
 
         } else {
@@ -204,6 +273,60 @@ class ConfigReservationController extends Controller
         echo 1;
     }
 
+    public function getOcupation(Request $request){
+        $restaurant_id = auth()->user()->restorant->id;
+        $error = false;
+
+        if(isset($request->fecha,$request->hora,$request->mesas)){
+            list($time, $ampm) = explode(' ', $request->hora);
+            list($hh, $mm) = explode(':', $time);
+
+            if($ampm == 'AM' && $hh == 12) {
+                $hhto = '02';
+            } elseif($ampm == 'PM' && $hh < 12) {
+                $hh += 12;
+            }
+            $hhto = $hh+2;  //le suma 2 horaas a la hora elegida para comprobar si la mesa esta ocupada la siguiente hora
+            if($hh==23 || $hh===24){
+                $hhto = $hh;
+            }
+            
+            $fecha = $request->fecha." ".$hh.":".$mm;
+            $fechato = $request->fecha." ".$hhto.":".$mm;
+
+            $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids,date'))->where('companie_id','=',$restaurant_id)->whereBetween('date',[$fecha,$fechato])->get();
+
+            $registros = 0;
+            if(isset($reservation) && $reservation[0]->ids!=null && isset($request->mesas)){
+                $ids = explode(",",$reservation[0]->ids);
+                $mesas = $request->mesas;
+                $mesas=DB::table('reservations_clients')->select(DB::raw('count(id) contador'))->whereIn('reservation_id',$ids)->whereIn('table_id',$mesas)->get();
+
+                $registros = $mesas[0]->contador;
+            }
+        }
+
+        
+        
+        //contar las tablas que estan dentro de ese id y dentro de las mesas que envio.
+        return response()->json(array('error' => $error, 'datos' => $registros)); 
+        
+    }
+
+    public function getTables(Request $request)
+    {
+        $reservation=DB::table('reservations_clients')->select(DB::raw('group_concat(table_id) as idr'))->where('reservation_id','=',$request->reservacion_id)->get();
+          
+       
+        $mesas = [];
+        if(isset($reservation) && $reservation[0]->idr!=null){
+            $idm = explode(",",$reservation[0]->idr);
+            $mesas = DB::table('tables')->select(DB::raw('tables.*,(select name from restoareas where id=restoarea_id) as area'))->whereIn('id',$idm)->get();
+        }
+        return view('reservation.admin.includes.tablamodalmesas', compact('mesas'))->render();
+ 
+    }
+
 
     /**
      * Display the specified resource.
@@ -222,9 +345,35 @@ class ConfigReservationController extends Controller
      * @param  \App\Models\ConfigReservation  $configReservation
      * @return \Illuminate\Http\Response
      */
-    public function edit(ConfigReservation $configReservation)
+    public function edit($id)
     {
-        //
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
+
+            $restaurant_id = auth()->user()->restorant->id;
+            
+            $clients = User::role('client')->where(['active'=>1])->get();
+
+            $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
+            $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
+
+            $motive = ReservationReason::where(['active'=>1])->get();
+
+            $vendor=Restorant::findOrFail($restaurant_id);
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
+
+            $restaurantConfig = DB::table('reservations_config')
+            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
+            ->where('companie_id', $restaurant_id)->get();
+
+            
+            $reservation=DB::table('reservations')->select(DB::raw('reservations.*,(select group_concat(table_id) from reservations_clients where reservation_id=reservations.id ) as mesas'))->where('id','=',$id)->first();
+
+
+            return view('reservation.admin.includes.edit', compact('clients','restoareas','restomesas','motive','configaccountsbanks','restaurantConfig','reservation'));
+
+        } else {
+            return redirect()->route('orders.index')->withStatus(__('No Access'));
+        }
     }
 
     /**

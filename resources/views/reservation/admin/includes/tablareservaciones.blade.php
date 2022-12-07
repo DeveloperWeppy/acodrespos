@@ -1,8 +1,5 @@
 
     @if (count($reservaciones) == 0)
-        <div class="col-sm-12">
-            <p class="text-center">¡No hay reservas registradas!</p>
-        </div>
     @else
 
     
@@ -11,30 +8,37 @@
 
             <tr>
                 <td>
-                    <a class="btn badge badge-success badge-pill" href="http://www.testpost.com/orders/776">#{{$item->id}}</a>
-                </td>
-                
-                <td class="table-web">
-                    {{$item->client_id}}
-                </td>
-                
-                <td class="table-web">
-                    <span class="badge badge-primary badge-pill">{{$item->table_id}}</span>
+                    <a class="btn badge badge-success badge-pill" href="{{route('reservation.edit',[$item->id])}}">#{{$item->id}}</a>
                 </td>
                 <td>
-                    <span class="badge badge-success badge-pill">{{$item->reservation_reason_id}}</span>
+                    <p><small class="text-muted">{{ $item->date }}</small></p><p>
+                </p></td>
+                
+                <td class="table-web">
+                    {{$item->cli}}
                 </td>
                 
                 <td class="table-web">
-                    {{$item->price}}
+                    <button class="btn btn-icon btn-1 btn-sm btn-primary mostrarMesas" type="button" data-id="{{$item->id}}">
+                        <span class="btn-inner--icon"><i class="fa fa-address-book-o"></i></span>
+                    </button>
+                </td>
+                <td>
+                    <span class="badge badge-success badge-pill">{{$item->mot}}</span>
+                </td>
+                
+                <td class="table-web">
+                    {{$item->total}}
                 </td>
                 <td class="table-web">
-                    {{$item->price}}
+                    @if($item->pendiente>0)
+                    <button data="rejected_by_restaurant" class="btn btn-sm  btn-danger modalPendiente" data-item="{{json_encode($item)}}" >{{$item->pendiente}}</button> 
+                    @else
+                    No hay acciones...
+                    @endif
                 </td>
     
-                <td>
-                    <p><small class="text-muted">{{$item->last_status}}</small></p><p>
-                </p></td>
+                
             </tr>
         @endforeach
 

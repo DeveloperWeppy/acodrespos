@@ -44,25 +44,33 @@
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
-                                Reservaciones
+                                <div class="col">
+                                    Reservaciones
+                                </div>
+                                <div class="col text-right">
+                                    <a type="button" class="btn btn-sm btn-primary" href={{route('reservation.create')}}>Nueva reservación</a>
+                                </div>
                             </div>
+                            
                         </div>
-                        <div class="card-body">
+                        <div class="">
+
 
                             <div class="table-responsive">
                                 <table class="table align-items-center">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col">N. Reserva</th>
+                                            <th scope="col">Fecha y Hora</th>
                                             <th class="table-web" scope="col">Cliente</th>
                                             <th class="table-web" scope="col">Area - Mesa</th>
                                             <th scope="col">Motivo</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>
-                                            <th scope="col">Estado</th>
+                                            
                                         </tr>
                                     </thead>
-                                    <tbody id="listaReservas">
+                                    <tbody id="listaReservas" style="background: #ffffff;">
                                         @include('reservation.admin.includes.tablareservaciones')
                                     
                                     </tbody>
@@ -76,7 +84,7 @@
                                 {{ $reservaciones->appends(Request::all())->links() }}
                             </nav>
                             @else
-                                <h4>{{ __('You don`t have any orders') }} ...</h4>
+                                <h4>No tienes reservas...</h4>
                             @endif
                         </div>
                         
@@ -263,6 +271,11 @@
     </div>
 </div>
 
+<div class="totalreserva">
+    @include('reservation.admin.includes.modals')
+</div>
+
+
 
 
 
@@ -314,14 +327,40 @@
             });
 
             $(document).on('click', '.editarMotivo', function(){
-               
                 var idd = $(this).data('id');
-                alert(idd.id);
                 $('input[name=name_motivo]').val(idd.name);
                 $('textarea[name=description_motivo]').val(idd.description);
                 $('input[name=price_motivo]').val(idd.price);
                 $('input[name=motive_id]').val(idd.id);
             });
+
+            $(document).on('click', '.mostrarMesas', function(){
+                var idr = $(this).data('id');
+                $('#numReservation').html(idr)
+                var formdata = new FormData();
+                formdata.append('reservacion_id',idr);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{route('reservation.getTables')}}",
+                    type: 'POST',
+                    success: function (data) {
+                      
+                        $('#mesasReservacion').html(data);
+
+                        $('#modal-reservation-mesas').modal('show');
+                        
+                    },
+                    data: formdata,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            });
+
+
+            
 
             function saveMotivo(){
                 //obteniendo los datos
@@ -504,6 +543,127 @@
         });
 
     
+
+        var totalReservas = new Vue({
+            el: '.totalreserva',
+            data: {
+                reserva_id:0,
+                totalPriceReservation:0,//almacena el valor total de la reservación
+                priceReservation:0,// precio de la reservacion a mostrar y cancelar, contiene todas las codiciones de menos porcentaje y demas
+                priceReservationFormated:'0',
+                received:0,
+                receivedFormated:'0',
+                totalPriceRestado:0,
+                totalPriceRestadoFormated:'0',
+                totalCambioFormated:'0',
+                
+            },
+            methods: {
+                change: function (event) {
+                    metodoPago();
+                    if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
+                        this.received=this.priceReservation;
+                        this.receivedFormated = puntosMil(this.priceReservation);
+                        this.totalPriceRestadoFormated = puntosMil(0);
+                    }
+                },
+                show: function (event) {
+                    this.receivedFormated = puntosMil(this.receivedFormated);
+
+                    this.received = this.receivedFormated.replaceAll(".", "").replaceAll(",", ".");
+
+                   
+                    this.totalPriceRestadoFormated=0;
+                    if(this.priceReservation-this.received>0){
+                        this.totalPriceRestadoFormated=puntosMil(this.priceReservation-this.received);
+                    }
+                    
+                    this.totalCambioFormated = '0';
+                    if(this.received-this.priceReservation>0){
+                        this.totalCambioFormated = puntosMil(this.received-this.priceReservation);
+                    }
+
+                },
+            },
+        });
+
+        function metodoPago(){
+            if ($("#paymentType").val()=='transferencia') {
+                $('#selecuenta').show()
+                $('#loadarchivo').show()
+                $('#seletipocuenta').hide()
+                $('.selecuenta2').hide()
+            }else if ($("#paymentType").val()=='cardterminal') {
+                $('#selecuenta').hide()
+                $('#seletipocuenta').hide()
+                $('#loadarchivo').hide()
+                $('.selecuenta2').show()
+            }else {
+                $('#selecuenta').hide()
+                $('#seletipocuenta').hide()
+                $('#loadarchivo').hide()
+                $('.selecuenta2').hide()
+            }
+        }
+
+        $(".modalPendiente").on('click', function() {
+
+            $('.ckpropina').css('display','none');
+            var item = $(this).data('item');
+
+            totalReservas.reserva_id = item.id;
+            totalReservas.priceReservation = item.pendiente;
+            totalReservas.priceReservationFormated = puntosMil(item.pendiente);
+            
+            $('#modal-payment-reservation').modal('show');
+         
+        });
+
+        function puntosMil(value){
+            return value.toString().replace(/\D/g, "")
+            .replace(/([0-9])([0-9]{0})$/, '$1')
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+        }
+
+        function pagarReserva(){
+            var formData = new FormData();
+            formData.append('reserva_id',totalReservas.reserva_id);
+            formData.append('met',$('#paymentType').val());
+            formData.append('cuentaid',$('#paymentId').val());
+            formData.append('tipotarjeta',$('#paymentType2').val());
+            formData.append('franquicia',$('#franquicia').val());
+            formData.append('voucher',$('#voucher').val());
+            formData.append('pagado',totalReservas.priceReservation);
+            formData.append('img_payment',$('#img_payment')[0].files[0]);
+            
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('reservation.storePendiente')}}",
+                type: 'POST',
+                success: function (data) {
+
+                    $('#modal-payment-reservation').modal('hide');
+
+                    Swal.fire({
+                        title: "Datos Guardados",
+                        text: '',
+                        icon: 'success',
+                    }).then(function() {
+                        window.location.href = "{{route('reservation.index');}}";
+                    });
+                },
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        }
+
+        
+
+
 
             
 
