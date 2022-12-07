@@ -29,7 +29,7 @@
 </div>
 
 
-<div class="container-fluid mt--7">
+<div class="container-fluid mt--7 mb-5">
     <div class="row">
         <div class="col-12">
             <br />
@@ -49,32 +49,37 @@
                         </div>
                         <div class="card-body">
 
-                            <div class="row">
-                                <div class="col-sm-2 col-12">
-                                    <h4>Cliente</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4>Area - Mesa</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4>Motivo</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4>Pendiente</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4>Estado</h4>
-                                </div>
-                                <div class="col-sm-2 col-12">
-                                    <h4><a type="button" class="btn btn-sm btn-primary float-left" href={{route('reservation.create')}}>Nueva reservación</button></a>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table align-items-center">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">N. Reserva</th>
+                                            <th class="table-web" scope="col">Cliente</th>
+                                            <th class="table-web" scope="col">Area - Mesa</th>
+                                            <th scope="col">Motivo</th>
+                                            <th class="table-web" scope="col">Valor</th>
+                                            <th scope="col">Pendiente</th>
+                                            <th scope="col">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaReservas">
+                                        @include('reservation.admin.includes.tablareservaciones')
+                                    
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="row mt-3" id="div_cargar_reservas">
-                            </div>
+
                         </div>
+                        <div class="card-footer py-4">
+                            @if(count($reservaciones))
+                            <nav class="d-flex justify-content-end" aria-label="...">
+                                {{ $reservaciones->appends(Request::all())->links() }}
+                            </nav>
+                            @else
+                                <h4>{{ __('You don`t have any orders') }} ...</h4>
+                            @endif
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -497,6 +502,8 @@
                 processData: false
             });
         });
+
+    
 
             
 

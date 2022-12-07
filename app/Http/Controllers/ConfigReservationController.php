@@ -35,8 +35,10 @@ class ConfigReservationController extends Controller
 
         $compani = Restorant::find($restaurant_id);
         $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
+
+        $reservaciones = Reservation::where('companie_id', $restaurant_id)->paginate(10);
         
-        return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos'));
+        return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones'));
     }
 
     public function geInfoMesas(Request $request)
@@ -113,55 +115,37 @@ class ConfigReservationController extends Controller
                 $porc = $request->porc;
             }
 
-            $restaurant = new Reservation;
-            $restaurant->companie_id = $restaurant_id;
-            $restaurant->client_id = $request->cli;
-            $restaurant->check_percentage = $porc;
-            $restaurant->reservation_reason_id = $request->mot;
-            $restaurant->description = $request->com;
-            $restaurant->payment_method = $request->met;
-            $restaurant->payment_status = '';
-            $restaurant->last_status = '';
-            $restaurant->active = 1;
-            $restaurant->note = '';
-            $restaurant->observations ='';
-            $restaurant->date = $request->fec." ".$request->hora.":00";
-            $restaurant->total = $request->total;
-            $restaurant->save();
+            $pago1 = [
+                'metodo'=> $request->met,
+                'cuenta_id'=> $request->cuentaid,
+                'tarjeta'=> $request->tipotarjeta,
+                'franquicia'=> $request->franquicia,
+                'voucher'=> $request->voucher,
+            ];
 
-            if ($request->hasFile('img_payment')) {
-                
-             
-                $path = 'uploads/reservations/';
-                $nom = $orderId.'.png';
+            $reservation = new Reservation;
+            $reservation->companie_id = $restaurant_id;
+            $reservation->client_id = $request->cli;
+            $reservation->check_percentage = $porc;
+            $reservation->reservation_reason_id = $request->mot;
+            $reservation->description = $request->com;
+            $reservation->payment_status = '';
+            $reservation->active = 1;
+            $reservation->note = '';
+            $reservation->observations ='';
+            $reservation->date = $request->fec." ".$request->hora.":00";
+            $reservation->total = $request->total;
+            $reservation->payment_1 = json_encode($pago1);
+            $reservation->save();
 
-                $order = Reservation::find($restaurant->id);
-                $order->url_payment = $path.$nom;
-                $order->id_account_bank = $request->cuentaid;
-                $order->save();
-    
-                $request->img_payment->move(public_path($path), $nom);
-            }
-    
-            if ($request->tipotarjeta) {
-                $orderId=$request->orderid;
-                $order=Order::findOrFail($orderId);
-                $order->type_card = $request->tipotarjeta;
-                $order->franquicia = $request->franquicia;
-                $order->voucher = $request->voucher;
-                $order->save();
-    
-                return $order->id;
-                die();
-            }
+            $iddRes = $reservation->id;
 
             if(isset($request->zonas)){
-                ReservationClientsController::where('reservation_id','=',$restaurant->id)->delete();
+                ReservationClientsController::where('reservation_id','=',$iddRes)->delete();
                 foreach($request->zonas as $key){
-                    
                     $mesas = ReservationClientsController::updateOrCreate(
                         [
-                            'reservation_id' => $restaurant->id,
+                            'reservation_id' => $iddRes,
                             'client_id' => $request->cli,
                             'table_id' => $key,
                         ],
@@ -169,8 +153,17 @@ class ConfigReservationController extends Controller
                 }
             }
 
-            
+            if ($request->hasFile('img_payment')) {
+                $path = 'uploads/reservations/';
+                $nom = $iddRes.'.png';
 
+                $request->img_payment->move(public_path($path), $nom);
+
+                $reservation=Reservation::findOrFail($iddRes);
+                $reservation->url_payment1 = $path.$nom;
+                $reservation->save();
+
+            }
 
 
         } else {
@@ -210,6 +203,7 @@ class ConfigReservationController extends Controller
 
         echo 1;
     }
+
 
     /**
      * Display the specified resource.

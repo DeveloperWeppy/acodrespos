@@ -4,33 +4,44 @@
             <p class="text-center">¡No hay reservas registradas!</p>
         </div>
     @else
+
+    
+
         @foreach ($reservaciones as $item)
-            {{-- <div class="row"> --}}
-                <div class="col-sm-3 col-12">
-                    <p>{{$item->client_id}}</p>
-                </div>
-                <div class="col-sm-3 col-12">
-                    <p>{{$item->table_id}}</p>
-                </div>
-                <div class="col-sm-3 col-12">
-                    <p>{{$item->reservation_reason_id}}</p>
-                </div>
-                <div class="col-sm-3 col-12">
-                    <p>{{$item->price}}</p>
-                </div>
-                <div class="col-sm-3 col-12">
-                    <p>{{$item->last_status}}</p>
-                </div>
-                <div class="col-sm-3 col-12">
-                    <a href="" data="delivered" data-toggle="modal" data-id="{{$item}}" data-target="#modal-registrar-motivo" class="btn btn-sm  btn-primary editarMotivo">
-                        <span class="btn-inner--icon"><i class="ni ni-ruler-pencil"></i></span>
-                        Editar</a>
-                    <a href="{{route('reservationreason.delete',[$item->id ])}}" data="rejected_by_restaurant" class="btn btn-sm  btn-danger">
-                        <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
-                        Eliminar</a>
-                </div>
-            {{-- </div> --}}
+
+            <tr>
+                <td>
+                    <a class="btn badge badge-success badge-pill" href="http://www.testpost.com/orders/776">#{{$item->id}}</a>
+                </td>
+                
+                <td class="table-web">
+                    {{$item->client_id}}
+                </td>
+                
+                <td class="table-web">
+                    <span class="badge badge-primary badge-pill">{{$item->table_id}}</span>
+                </td>
+                <td>
+                    <span class="badge badge-success badge-pill">{{$item->reservation_reason_id}}</span>
+                </td>
+                
+                <td class="table-web">
+                    {{$item->price}}
+                </td>
+                <td class="table-web">
+                    {{$item->price}}
+                </td>
+    
+                <td>
+                    <p><small class="text-muted">{{$item->last_status}}</small></p><p>
+                </p></td>
+            </tr>
         @endforeach
+
+        
+        
+
     @endif
 
+    
 

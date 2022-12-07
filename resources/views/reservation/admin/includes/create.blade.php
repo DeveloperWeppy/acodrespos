@@ -276,13 +276,17 @@
                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
             }
 
-
             function pagarReserva(){
                 var formData = new FormData($('#formReserva')[0]);
                 formData.append('porc',$('#check_por').val());
                 formData.append('met',$('#paymentType').val());
-                formData.append('met',$('#paymentType').val());
+                formData.append('cuentaid',$('#paymentId').val());
+                formData.append('tipotarjeta',$('#paymentType2').val());
+                formData.append('franquicia',$('#franquicia').val());
+                formData.append('voucher',$('#voucher').val());
                 formData.append('total',totalReservas.totalPriceReservation);
+                formData.append('img_payment',$('#img_payment')[0].files[0]);
+                
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -290,11 +294,15 @@
                     url: "{{route('reservation.store')}}",
                     type: 'POST',
                     success: function (data) {
-                        alert(1);
+
+                        $('#modal-payment-reservation').modal('hide');
+
                         Swal.fire({
                             title: "Datos Guardados",
                             text: '',
                             icon: 'success',
+                        }).then(function() {
+                            window.location.href = "{{route('reservation.index');}}";
                         });
                     },
                     data: formData,
@@ -304,11 +312,6 @@
                 });
             }
 
-                            
-            
-            
-       
-            
         </script>
         @endsection
 
