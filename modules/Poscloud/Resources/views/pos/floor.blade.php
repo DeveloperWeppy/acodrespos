@@ -10,7 +10,6 @@
                           <div class="card card-frame" style="text-align: center; justify-content: center; align-items: center;" >
                             <div class="card-body ">
                               <div class="canva " id="canvaHolder">
-  
                                 @foreach ($area->tables as $table)
                                             <?php
                                           
@@ -20,7 +19,8 @@
                                             }
                                             ?>
                                             <div 
-                                            id="drag-{{$table->id}}" 
+                                            id="drag-{{$table->id}}"
+                                            data-ocupado="0"; 
                                             data-id="{{$table->id}}" 
                                             data-x="{{$table->x}}"
                                             data-y="{{$table->y}}"
@@ -28,6 +28,9 @@
                                             data-rounded="{{$table->rounded?$table->rounded:"no"}}"
                                             data-size="{{$table->size}}"
                                             class="resize-drag {{ $table->rounded=="yes"?"circle":""}}" style="transform: translate({{$table->x}}px, {{$table->y}}px); {{$whString}}" >
+                                            <div class="ribbon" id="ribbon-{{$table->id}}"  >
+                                              
+                                            </div>
                                                 <p> {{$table->name}} </p>
                                                 <span>{{$table->size}}</span>
                                             </div>

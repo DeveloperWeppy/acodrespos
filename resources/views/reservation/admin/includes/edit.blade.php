@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">Crear reservación</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('clients.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
+                                <a href="{{ route('reservation.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
                             </div>
                         </div>
                     </div>
@@ -377,8 +377,8 @@
 
             $('textarea[name=com]').val('{{(isset($reservation->description)?$reservation->description:"")}}');
 
-            var fecha = '{{(isset($reservation->date)?$reservation->date:"")}}';
-
+            var fecha = '{{(isset($reservation->date_reservation)?$reservation->date_reservation:"")}}';
+            
             var fechaHora = fecha.split(' ');
             if(fechaHora[0]!=undefined){
                 $('input[name=fec]').val(fechaHora[0]);

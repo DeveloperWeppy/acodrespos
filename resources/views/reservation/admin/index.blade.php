@@ -67,6 +67,7 @@
                                             <th scope="col">Motivo</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>
+                                            <th scope="col">Estado</th>
                                             
                                         </tr>
                                     </thead>
@@ -127,17 +128,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 col-12">
+                                    <div class="col-sm-12 col-12" id="condi">
                                         <div class="form-group">
-                                            <div id="dias_">
-                                                <label for="" class="form-control-label">Ingrese la cantidad de días con la
+                                            <div id="">
+                                                <label for="" class="form-control-label" id="labelCondition">Ingrese la cantidad de días con la
                                                 que puede el cliente reservar</label>
                                             </div>
-                                            <div id="horas" style="display:none">
-                                                <label for="" class="form-control-label">Ingrese la cantidad de horas con la
-                                                    que puede el cliente reservar</label>
-                                            </div>
-                                            <input type="number" name="time_reservation_number" class="form-control " id="condi"
+                                            <input type="number" name="time_reservation_number" class="form-control " 
                                                 value="0" minlength="0" >
                                         </div>
                                     </div>
@@ -155,9 +152,19 @@
                                     <div class="col-sm-12 col-12">
                                         <div class="form-group">
                                             <div>
-                                                <label for="" class="form-control-label">Tiempo de espera en minutos</label>
+                                                <label for="" class="form-control-label">Tiempo de espera en minutos despues de pasada la hora de reservación</label>
                                             </div>
                                             <input type="number" name="wait_time" class="form-control " id=""
+                                                value="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="" class="form-control-label">Tiempo en minutos en el que se marcara una mesa como ocupada antes de cada reservación</label>
+                                            </div>
+                                            <input type="number" name="anticipation_time" class="form-control " id=""
                                                 value="0">
                                         </div>
                                     </div>
@@ -176,7 +183,7 @@
                                         <div class="form-group  ">
                                             <div class="custom-control custom-checkbox">
                                                 <input value="1" type="checkbox" class="custom-control-input"
-                                                    name="time_reservation" id="check_no_cost">
+                                                    name="check_no_cost" id="check_no_cost">
                                                 <label class="custom-control-label" for="check_no_cost">Desabilitar pago para reservaciones</label>
                                             </div>
                                         </div>
@@ -282,11 +289,6 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $("#horas").hide();
-            $("#dias_").hide();
-            $("#div_mesas").hide();
-            //consultarcuenta();
-            var select_mesas = $('#select_mesas');
 
             //permitir chequear solo un checkbox de tiempos de reservación
             $("input:checkbox").on('click', function() {
@@ -307,15 +309,13 @@
                 }
 
                 if ($id === 'ch_dia') {
-                    $("#horas").hide();
-                    $("#dias_").show();
+                    $("#labelCondition").html("Ingrese la cantidad de días con la que puede el cliente reservar");
                     $("#condi").show();
                 } else if ($id === 'ch_horas') {
-                    $("#horas").show();
-                    $("#dias_").hide();
+                    $("#labelCondition").html("Ingrese la cantidad de horas con la que puede el cliente reservar");
                     $("#condi").show();
                 } else {
-                    $("#horas").hide();
+                    $("#labelCondition").html("");
                     $("#dias_").hide();
                     $("#condi").hide();
                 }
@@ -524,6 +524,7 @@
                         $('input[name=time_reservation_number]').val(data[0].condition_period);
                         $('input[name=porcentage_payment]').val(data[0].percentage_payment);
                         $('input[name=wait_time]').val(data[0].wait_time);
+                        $('input[name=anticipation_time]').val(data[0].anticipation_time);
                         $('input[name=standard_price]').val(data[0].standard_price);
                         if(data[0].condition_period==1){
                             $('input[name=time_reservation]').prop('checked', true);

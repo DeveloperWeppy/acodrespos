@@ -10,6 +10,6 @@ class Reservation extends Model
     use HasFactory;
     protected $table = 'reservations';
     protected $fillable = [
-        'companie_id', 'client_id','check_percentage', 'reservation_reason_id', 'description', 'payment_method','payment_status','active','note','observations','date','total'
+        'companie_id', 'client_id','check_percentage', 'reservation_reason_id', 'description', 'payment_method','payment_status','active','note','observations','date_reservation','total'
     ];
 }

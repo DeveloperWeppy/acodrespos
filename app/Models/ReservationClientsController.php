@@ -10,6 +10,6 @@ class ReservationClientsController extends Model
     use HasFactory;
     protected $table = 'reservations_clients';
     protected $fillable = [
-        'reservation_id', 'client_id','table_id'
+        'reservation_id', 'client_id','table_id','date_reservation',
     ];
 }

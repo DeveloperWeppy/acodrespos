@@ -120,6 +120,8 @@
       var selectClientId=0;
       var selectClientText="";
       var mesaocupada = false;
+      var rerservaId = false;
+      
    </script>
    <script src="{{ asset('custom') }}/js/cartPOSFunctions.js"></script>
    
@@ -435,6 +437,34 @@
       $("#orderDetails").hide();
       SHOWN_NOW="floor";
     }
+
+    function marcarMesaOcupada(){
+        $.ajax({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{route('poscloud.mesasOcupadas')}}",
+            type: 'get',
+            success: function (data) {
+              if(data.datos[0]!=undefined){
+                if(data.datos[0]!=undefined){
+                  var mesas = data.datos[0].idm;
+                  var mesas = mesas.split(',');
+
+                  for (let i = 0; i < mesas.length; i++) {
+                    $("#drag-"+mesas[i]).attr('data-ocupado',"1");
+                    $('#ribbon-'+mesas[i]).html('<div class="contentribbon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>');
+                  }
+                }
+              }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+      }
+      setInterval("marcarMesaOcupada()", 5000);
+
  //ejecuta al dar clic en la mesa
 
     function openTable(id,receipt_number) {
@@ -450,53 +480,23 @@
       }else if(idLength==7){
         CURRENT_TABLE_NAME="Pedido para llevar";
         EXPEDITION=2;
+
+        getCartContentAndTotalPrice();
+        showOrderDetail(id);
       }else{
         CURRENT_TABLE_NAME="Orden de entrega";
         EXPEDITION=1;
+
+        getCartContentAndTotalPrice();
+        showOrderDetail(id);
       }
       $("#row_names").hide();
       
       //console.log(mesaocupada);
       if(EXPEDITION==3){
-
-        var ocupada = ocupacionMesa();
-        
-     
-        
-          var getlocal = JSON.parse(localStorage.getItem(CURRENT_TABLE_ID));
-
-          if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
-              $("#modal-add-consumidor").modal("hide");
-              $('.personitem').show();
-              $('#card_division_personas').show();
-          }else{
-
-              $('.personitem').text("");
-              $("#modal-add-consumidor").modal("show");
-              $('#card_division_personas').hide();
-              $('#ask_divide_check').change(function() {
-                  if (this.checked) {
-                      $("#span_dividir").text("Cuenta Dividida");
-                      $("#row_names").show();
-                      $("#btncontinuar").hide();
-                  } else {
-                      $("#span_dividir").text("Sin cuenta dividida");
-                      $("#row_names").hide();
-                      $("#btncontinuar").show();
-                  }
-              });
-          }
-
-          /*
-          if(ocupada==0){
-        }
-        */
-
-        
-       
+        ocupacionMesa();
       }
-      getCartContentAndTotalPrice();
-      showOrderDetail(id);
+     
     }
 
     function makeOcccupied(id){
@@ -519,7 +519,27 @@
           url: "{{route('poscloud.ocupationTable')}}",
           type: 'POST',
           success: function (data) {
-            alert(data);
+
+            if(data.datos[1]!=undefined && data.datos[1].length>0){
+              
+              rerservaId = data.datos[0].id;
+              //datos del cliente
+              $('#resNom').html(data.datos[2].name);
+              $('#resDoc').html(data.datos[2].number_identification);
+              $('#resTel').html(data.datos[2].phone);
+
+              var fechaHora = data.datos[1][0].date_reservation;
+              var fechaHora = fechaHora.split(' ');
+              $('#resFec').html(fechaHora[0]);
+              $('#resHor').html(fechaHora[1]);
+
+              $('#resMin').html(data.datos[3]);
+
+
+              $('#modalMesaReservada').modal('show');
+            }else{
+              ocuparMesa(0);
+            }
           },
           data: formData,
           cache: false,
@@ -527,10 +547,59 @@
           processData: false
       });
 
+    }
 
-      $('#modalMesaReservada').modal('show');
-      alert(CURRENT_TABLE_ID);
-      return 1;
+    function ocuparMesa(type){
+
+        if(type==1){
+          $('#ribbon-'+CURRENT_TABLE_ID).html("");
+          
+
+          var formData = new FormData();
+          formData.append('reserva_id',rerservaId);
+          $.ajax({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              url: "{{route('reservation.desabilitarReserva')}}",
+              type: 'POST',
+              success: function (data) {
+
+              },
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false
+          });
+        }
+
+
+        $('#modalMesaReservada').modal('hide');
+        var getlocal = JSON.parse(localStorage.getItem(CURRENT_TABLE_ID));
+
+        if(getlocal != null && getlocal != "" && getlocal != false && getlocal != undefined){
+            $("#modal-add-consumidor").modal("hide");
+            $('.personitem').show();
+            $('#card_division_personas').show();
+        }else{
+
+            $('.personitem').text("");
+            $("#modal-add-consumidor").modal("show");
+            $('#card_division_personas').hide();
+            $('#ask_divide_check').change(function() {
+                if (this.checked) {
+                    $("#span_dividir").text("Cuenta Dividida");
+                    $("#row_names").show();
+                    $("#btncontinuar").hide();
+                } else {
+                    $("#span_dividir").text("Sin cuenta dividida");
+                    $("#row_names").hide();
+                    $("#btncontinuar").show();
+                }
+            });
+        }
+        getCartContentAndTotalPrice();
+        showOrderDetail(CURRENT_TABLE_ID);
     }
   </script>
 

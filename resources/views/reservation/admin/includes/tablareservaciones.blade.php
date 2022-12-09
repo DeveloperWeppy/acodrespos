@@ -11,7 +11,7 @@
                     <a class="btn badge badge-success badge-pill" href="{{route('reservation.edit',[$item->id])}}">#{{$item->id}}</a>
                 </td>
                 <td>
-                    <p><small class="text-muted">{{ $item->date }}</small></p><p>
+                    <p><small class="text-muted">{{ $item->date_reservation }}</small></p><p>
                 </p></td>
                 
                 <td class="table-web">
@@ -36,6 +36,14 @@
                     @else
                     No hay acciones...
                     @endif
+                </td>
+                <td>
+                    @if($item->active==1)
+                        <span class="badge badge-danger badge-pill">Pendiente</span>
+                    @else
+                        <span class="badge badge-success badge-pill">Terminado</span>
+                    @endif
+                   
                 </td>
     
                 

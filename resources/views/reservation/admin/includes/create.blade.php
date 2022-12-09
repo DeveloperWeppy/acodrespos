@@ -14,7 +14,7 @@
                                 <h3 class="mb-0">Crear reservación</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="{{ route('clients.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
+                                <a href="{{ route('reservation.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
                             </div>
                         </div>
                     </div>
@@ -266,7 +266,7 @@
 
             function pagarReserva(){
                 var formData = new FormData($('#formReserva')[0]);
-                formData.append('porc',$('#check_por').val());
+                
                 formData.append('met',$('#paymentType').val());
                 formData.append('cuentaid',$('#paymentId').val());
                 formData.append('tipotarjeta',$('#paymentType2').val());
@@ -275,14 +275,17 @@
                 formData.append('total',totalReservas.totalPriceReservation);
                 formData.append('pagado',totalReservas.priceReservation);
 
-            
+              
                 if($('#check_por').is(':checked')){
                     var totalPercentage = (porcentagePayment/100)*totalReservas.totalPriceReservation;
                     var restanteRes = totalReservas.totalPriceReservation-totalPercentage;
                     formData.append('pendiente',restanteRes);
+                    formData.append('porc',1);
                 }else{
                     formData.append('pendiente',0);
+                    formData.append('porc',0);
                 }
+                
                 
                 
                 formData.append('img_payment',$('#img_payment')[0].files[0]);

@@ -24,5 +24,6 @@ Route::group([
         Route::post('/orderupdate','Main@update')->name('posccloud.updateorder');
         Route::get('/moveorder/{from}/{to}', 'Main@moveOrder')->name('poscloud.moveorder');
         Route::post('/pos', 'Main@ocupationTable')->name('poscloud.ocupationTable');
+        Route::get('/pos/mesasocupadas', 'Main@mesasOcupadas')->name('poscloud.mesasOcupadas');
     });
 });

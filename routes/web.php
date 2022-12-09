@@ -174,6 +174,8 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('getOcupation', 'ConfigReservationController@getOcupation')->name('getOcupation');
             Route::post('getTables', 'ConfigReservationController@getTables')->name('getTables');
             Route::get('edit/{id}', 'ConfigReservationController@edit')->name('edit');
+            Route::post('inactiveReservation', 'ConfigReservationController@inactiveReservation')->name('desabilitarReserva');
+           
         });
 
         #routes for reason of reservations

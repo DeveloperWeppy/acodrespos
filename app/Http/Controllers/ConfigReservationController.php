@@ -119,12 +119,10 @@ class ConfigReservationController extends Controller
             $restaurant_id = auth()->user()->restorant->id;
 
             $porc = 0;
-            $payment_status = "unpaid";
+            $payment_status = "paid";
             if(isset($request->porc) && $request->porc==1){
                 $porc = $request->porc;
                 $payment_status = "pending";
-            }else{
-                $payment_status = "paid";
             }
 
             $pago1 = [
@@ -159,7 +157,7 @@ class ConfigReservationController extends Controller
             $reservation->active = 1;
             $reservation->note = '';
             $reservation->observations ='';
-            $reservation->date = $request->fec." ".$hh.":".$mm;
+            $reservation->date_reservation = $request->fec." ".$hh.":".$mm;
             $reservation->total = $request->total;
             $reservation->pendiente = $request->pendiente;
             $reservation->payment_1 = json_encode($pago1);
@@ -175,6 +173,7 @@ class ConfigReservationController extends Controller
                             'reservation_id' => $iddRes,
                             'client_id' => $request->cli,
                             'table_id' => $key,
+                            'date_reservation'=>$request->fec." ".$hh.":".$mm,
                         ],
                     );
                 }
@@ -251,6 +250,7 @@ class ConfigReservationController extends Controller
             'condition_period' => $_POST['time_reservation_number'],
             'percentage_payment' => strip_tags($_POST['porcentage_payment']),
             'wait_time' => strip_tags($_POST['wait_time']),
+            'anticipation_time' => strip_tags($_POST['anticipation_time']),
             'standard_price' => strip_tags($_POST['standard_price']),
             'check_no_cost' => (isset($_POST['check_no_cost'])?$_POST['check_no_cost']:0),
             ]
@@ -271,6 +271,13 @@ class ConfigReservationController extends Controller
         }
 
         echo 1;
+    }
+
+
+    public function inactiveReservation(Request $request){
+        $reservacion = Reservation::find($request->reserva_id);
+        $reservacion->active = 0;
+        $reservacion->save();
     }
 
     public function getOcupation(Request $request){
@@ -294,7 +301,7 @@ class ConfigReservationController extends Controller
             $fecha = $request->fecha." ".$hh.":".$mm;
             $fechato = $request->fecha." ".$hhto.":".$mm;
 
-            $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids,date'))->where('companie_id','=',$restaurant_id)->whereBetween('date',[$fecha,$fechato])->get();
+            $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids'))->where('companie_id','=',$restaurant_id)->whereBetween('date_reservation',[$fecha,$fechato])->get();
 
             $registros = 0;
             if(isset($reservation) && $reservation[0]->ids!=null && isset($request->mesas)){
@@ -312,6 +319,8 @@ class ConfigReservationController extends Controller
         return response()->json(array('error' => $error, 'datos' => $registros)); 
         
     }
+
+    
 
     public function getTables(Request $request)
     {
