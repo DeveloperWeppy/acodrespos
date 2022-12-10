@@ -13,11 +13,7 @@
                 <td>
                     <p><small class="text-muted">{{ $item->date_reservation }}</small></p><p>
                 </p></td>
-                
-                <td class="table-web">
-                    {{$item->cli}}
-                </td>
-                
+            
                 <td class="table-web">
                     <button class="btn btn-icon btn-1 btn-sm btn-primary mostrarMesas" type="button" data-id="{{$item->id}}">
                         <span class="btn-inner--icon"><i class="fa fa-address-book-o"></i></span>
@@ -39,7 +35,7 @@
                 </td>
                 <td>
                     @if($item->active==1)
-                        <button class="btn btn-sm  btn-danger liberarMesa" data-item="{{json_encode($item)}}" >Liberar mesa</button> 
+                        <span class="badge badge-danger badge-pill">Pendiente</span>
                     @else
                         <span class="badge badge-success badge-pill">Terminado</span>
                     @endif

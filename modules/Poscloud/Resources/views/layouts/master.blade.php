@@ -446,11 +446,13 @@
             url: "{{route('poscloud.mesasOcupadas')}}",
             type: 'get',
             success: function (data) {
+
+              $('.ribbon').html('');
+
               if(data.datos[0]!=undefined){
                 if(data.datos[0]!=undefined){
                   var mesas = data.datos[0].idm;
                   var mesas = mesas.split(',');
-
                   for (let i = 0; i < mesas.length; i++) {
                     $("#drag-"+mesas[i]).attr('data-ocupado',"1");
                     $('#ribbon-'+mesas[i]).html('<div class="contentribbon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>');

@@ -16,6 +16,8 @@ use App\Models\Reservation;
 use App\Models\ReservationClientsController;
 use DB;
 
+use Carbon\Carbon;
+
 
 
 class ConfigReservationController extends Controller
@@ -27,26 +29,38 @@ class ConfigReservationController extends Controller
      */
     public function index()
     {
-        $restaurant_id = auth()->user()->restorant->id;
 
-        $vendor=Restorant::findOrFail($restaurant_id);
-        $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
-        
-        #mesas get
-        $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
-        $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
+        if(auth()->user()->hasRole('owner')){
+            $restaurant_id = auth()->user()->restorant->id;
 
-        $compani = Restorant::find($restaurant_id);
-        $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
+            $vendor=Restorant::findOrFail($restaurant_id);
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
+            
+            #mesas get
+            $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
+            $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
 
-        $restaurantConfig = DB::table('reservations_config')
-            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
-            ->where('companie_id', $restaurant_id)->get();
+            $compani = Restorant::find($restaurant_id);
+            $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
 
-        $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->orderBy('id','desc')->paginate(10);
-        
-        
-        return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones','configaccountsbanks','restaurantConfig'));
+            $restaurantConfig = DB::table('reservations_config')
+                ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
+                ->where('companie_id', $restaurant_id)->get();
+
+            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->orderBy('id','desc')->paginate(10);
+            
+            
+            return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones','configaccountsbanks','restaurantConfig'));
+        }
+
+        if(auth()->user()->hasRole('client')){
+    
+            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from reservation_reasons where id=reservation_reason_id) as mot'))->where('client_id', auth()->user()->id)->orderBy('id','desc')->paginate(10);
+            
+            return view('reservation.client.index', compact('reservaciones'));
+            
+        }
+       
     }
 
     public function geInfoMesas(Request $request)
@@ -82,16 +96,20 @@ class ConfigReservationController extends Controller
     public function create()
     {
 
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
+        if (auth()->user()->hasRole('owner')) {
 
             $restaurant_id = auth()->user()->restorant->id;
+
+            $now =Carbon::now('America/Bogota')->format('Y-m-d');
             
             $clients = User::role('client')->where(['active'=>1])->get();
 
             $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
             $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
 
-            $motive = ReservationReason::where(['active'=>1])->get();
+            $motive = ReservationReason::where('companie_id', $restaurant_id)->where(['active'=>1])->get();
+
+            
 
             $vendor=Restorant::findOrFail($restaurant_id);
             $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
@@ -100,11 +118,23 @@ class ConfigReservationController extends Controller
             ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
             ->where('companie_id', $restaurant_id)->get();
 
-            return view('reservation.admin.includes.create', compact('clients','restoareas','restomesas','motive','configaccountsbanks','restaurantConfig'));
+            return view('reservation.admin.includes.create', compact('clients','restoareas','restomesas','motive','configaccountsbanks','restaurantConfig','now'));
 
-        } else {
-            return redirect()->route('orders.index')->withStatus(__('No Access'));
+        } 
+        if (auth()->user()->hasRole('client')) {
+            $restaurant=Restorant::where('active','=','1')->get();
+
+            return view('reservation.client.includes.create',compact('restaurant'));
+
         }
+        return redirect()->route('orders.index')->withStatus(__('No Access'));
+        
+    }
+
+    public function getHours(){
+        $restaurant_id = auth()->user()->restorant->id;
+        $jornada = DB::table('hours')->where('restorant_id', $restaurant_id)->get();
+        return response()->json($jornada);
     }
 
     /**
@@ -239,6 +269,47 @@ class ConfigReservationController extends Controller
         }
     }
 
+
+    public function storeUpdate(Request $request)
+    {
+        if (auth()->user()->hasRole('owner')) {
+            $restaurant_id = auth()->user()->restorant->id;
+
+        
+            $pago3 = [
+                'metodo'=> $request->met,
+                'cuenta_id'=> $request->cuentaid,
+                'tarjeta'=> $request->tipotarjeta,
+                'franquicia'=> $request->franquicia,
+                'voucher'=> $request->voucher,
+                'total'=> $request->pagado,
+            ];
+
+            $reservation =Reservation::findOrFail($request->reserva_id);
+            $reservation->payment_3= json_encode($pago3);
+            $reservation->save();
+
+            $iddRes = $request->reserva_id;
+
+            if ($request->hasFile('img_payment')) {
+                $path = 'uploads/reservations/';
+                $nom = $iddRes.'_3.png';
+
+                $request->img_payment->move(public_path($path), $nom);
+
+                $reservation=Reservation::findOrFail($iddRes);
+                $reservation->url_payment3 = $path.$nom;
+                $reservation->save();
+            }
+
+            echo 1;
+
+
+        } else {
+            return redirect()->route('orders.index')->withStatus(__('No Access'));
+        }
+    }
+
     public function storeConfig(Request $request)
     {
        
@@ -252,6 +323,7 @@ class ConfigReservationController extends Controller
             'wait_time' => strip_tags($_POST['wait_time']),
             'anticipation_time' => strip_tags($_POST['anticipation_time']),
             'standard_price' => strip_tags($_POST['standard_price']),
+            'update_price' => strip_tags($_POST['update_price']),
             'check_no_cost' => (isset($_POST['check_no_cost'])?$_POST['check_no_cost']:0),
             ]
         );
@@ -359,13 +431,15 @@ class ConfigReservationController extends Controller
         if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
 
             $restaurant_id = auth()->user()->restorant->id;
+
+            $now =Carbon::now('America/Bogota')->format('Y-m-d');
             
             $clients = User::role('client')->where(['active'=>1])->get();
 
             $restoareas = RestoArea::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->get();
             $restomesas = Tables::where('restaurant_id', $restaurant_id)->where('deleted_at', null)->orderBy('restoarea_id')->get();
 
-            $motive = ReservationReason::where(['active'=>1])->get();
+            $motive = ReservationReason::where('companie_id', $restaurant_id)->where(['active'=>1])->get();
 
             $vendor=Restorant::findOrFail($restaurant_id);
             $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
@@ -378,11 +452,48 @@ class ConfigReservationController extends Controller
             $reservation=DB::table('reservations')->select(DB::raw('reservations.*,(select group_concat(table_id) from reservations_clients where reservation_id=reservations.id ) as mesas'))->where('id','=',$id)->first();
 
 
-            return view('reservation.admin.includes.edit', compact('clients','restoareas','restomesas','motive','configaccountsbanks','restaurantConfig','reservation'));
+            return view('reservation.admin.includes.edit', compact('clients','restoareas','restomesas','motive','configaccountsbanks','restaurantConfig','reservation','now'));
 
         } else {
             return redirect()->route('orders.index')->withStatus(__('No Access'));
         }
+    }
+
+    public function configRestaurant(Request $request){
+
+        $error = false;
+        $restaurant_id = $request->restaurant_id;
+        $registros=[];
+
+        $config = ReservationConfig::where('companie_id', $restaurant_id)->first();
+        
+        $areasMesas = [];
+        $mesas = DB::table('reservation_tables')->select(DB::raw('group_concat(table_id) as idm'))->where('companie_id', $restaurant_id)->first();
+        if($mesas->idm!=""){
+            $idm = explode(',',$mesas->idm);
+            $areas = DB::table('tables')->select(DB::raw('group_concat(restoarea_id) as ida'))->where('restaurant_id', $restaurant_id)->whereIn('id',$idm)->first();
+            if($areas->ida!=""){
+                $ida = explode(',',$areas->ida);
+                $areas = DB::table('restoareas')->where('restaurant_id', $restaurant_id)->whereIn('id',$ida)->get();
+                $areasMesas = [];
+                for($i=0;$i<count($areas);$i++){
+                    $areasMesas[$i][0] = $areas[$i];
+                    $messa = DB::table('tables')->where('restaurant_id', $restaurant_id)->where('restoarea_id', $areas[$i]->id)->whereIn('id',$idm)->get();
+                    $areasMesas[$i][1]=$messa;
+                }
+            }
+        }
+
+        $motive = ReservationReason::where('companie_id', $restaurant_id)->where(['active'=>1])->get();
+
+        $jornadas = DB::table('hours')->where('restorant_id', $restaurant_id)->first();
+
+        $registros[0]=$areasMesas;
+        $registros[1]=$motive;
+        $registros[2]=$jornadas;
+        $registros[3]=$config;
+        return response()->json(array('error' => $error, 'datos' => $registros)); 
+
     }
 
     /**

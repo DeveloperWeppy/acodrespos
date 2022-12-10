@@ -13,15 +13,6 @@
                 <li class="nav-item">
                     <a class="nav-link mb-sm-3 mb-md-0 active " id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#accountbanks" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-settings-gear-65"></i> Configuración de reservaciones</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#hours" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-tag mr-2"></i>Motivos de reservaciones</a>
-                </li>
-
             </ul>
         </div>
 
@@ -48,7 +39,7 @@
                                     Reservaciones
                                 </div>
                                 <div class="col text-right">
-                                    <a type="button" class="btn btn-sm btn-primary" href={{route('reservation.create')}}>Nueva reservación</a>
+                                    <a type="button" class="btn btn-sm btn-primary" href={{route('reservation.create')}}>Solicitar reservación</a>
                                 </div>
                             </div>
                             
@@ -62,7 +53,6 @@
                                         <tr>
                                             <th scope="col">N. Reserva</th>
                                             <th scope="col">Fecha y Hora</th>
-                                            <th class="table-web" scope="col">Cliente</th>
                                             <th class="table-web" scope="col">Area - Mesa</th>
                                             <th scope="col">Motivo</th>
                                             <th class="table-web" scope="col">Valor</th>
@@ -72,7 +62,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="listaReservas" style="background: #ffffff;">
-                                        @include('reservation.admin.includes.tablareservaciones')
+                                        @include('reservation.client.includes.tablareservaciones')
                                     
                                     </tbody>
                                 </table>
@@ -92,202 +82,11 @@
                     </div>
                 </div>
 
-                 <!-- Tab Managment -->
-                 <div class="tab-pane fade" id="accountbanks" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
-                    <div class="card bg-secondary shadow mb-4" >
-                        <div class="card-header bg-white border-0">
-                            <div class="row align-items-center">
-                                Configuración de reservaciones
-                            </div>
-                        </div>
-                        <form action="" id="configReservation">
-                        <div class="card-body">
-                           
-                            @if ($compani->has_reservation==1)
-                                <h6 class="heading-small text-muted mb-2">{{ __('Tiempos de Reservación') }}</h6>
-                                <p>Habilita el tiempo de antelación de reserva con respecto al día que quiera el cliente reservar.</p>
-                                <div class="row">
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group  ">
-                                            <div class="custom-control custom-checkbox">
-                                                <input value="dia" type="checkbox" class="custom-control-input"
-                                                    name="time_reservation" id="ch_dia">
-                                                <label class="custom-control-label" for="ch_dia">Día</label>
-                                            </div>
-    
-                                            <div class="custom-control custom-checkbox">
-                                                <input value="hora" type="checkbox" class="custom-control-input"
-                                                    name="time_reservation" id="ch_horas" >
-                                                <label class="custom-control-label" for="ch_horas">Hora</label>
-                                            </div>
-    
-                                            <div class="custom-control custom-checkbox">
-                                                <input value="dia_actual" type="checkbox" class="custom-control-input"
-                                                    name="time_reservation" id="ch_actual">
-                                                <label class="custom-control-label" for="ch_actual">Día Actual</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 col-12" id="condi">
-                                        <div class="form-group">
-                                            <div id="">
-                                                <label for="" class="form-control-label" id="labelCondition">Ingrese la cantidad de días con la
-                                                que puede el cliente reservar</label>
-                                            </div>
-                                            <input type="number" name="time_reservation_number" class="form-control " 
-                                                value="0" minlength="0" >
-                                        </div>
-                                    </div>
-    
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="" class="form-control-label">Porcentaje para pago en dos pasos (%)</label>
-                                            </div>
-                                            <input type="number" name="porcentage_payment" class="form-control " id=""
-                                                value="0">
-                                        </div>
-                                    </div>
-    
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="" class="form-control-label">Tiempo de espera en minutos despues de pasada la hora de reservación</label>
-                                            </div>
-                                            <input type="number" name="wait_time" class="form-control " id=""
-                                                value="0">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="" class="form-control-label">Tiempo en minutos en el que se marcara una mesa como ocupada antes de cada reservación</label>
-                                            </div>
-                                            <input type="number" name="anticipation_time" class="form-control " id=""
-                                                value="0">
-                                        </div>
-                                    </div>
-    
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="" class="form-control-label">Precio estándar por mesa</label>
-                                            </div>
-                                            <input type="number" name="standard_price" class="form-control " id=""
-                                                value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <div>
-                                                <label for="" class="form-control-label">Precio modificación reserva</label>
-                                            </div>
-                                            <input type="number" name="update_price" class="form-control " id=""
-                                                value="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 col-12">
-                                        <div class="form-group  ">
-                                            <div class="custom-control custom-checkbox">
-                                                <input value="1" type="checkbox" class="custom-control-input"
-                                                    name="check_no_cost" id="check_no_cost">
-                                                <label class="custom-control-label" for="check_no_cost">Desabilitar pago para reservaciones</label>
-                                            </div>
-                                        </div>
-                                    </div>
-    
-                                </div>
-    
-                                <h6 class="heading-small text-muted mb-2">{{ __('Habilitar mesas de Reservación') }}</h6>
-                                <p>Establezca las mesas que estarán habilitadas para reservar</p>
-    
-                                <div class="row">
-                                    <div class="col-sm-12 col-12">
-                                        <label for="zonas" class="form-control-label">Seleccione la Zona</label>
-                                        <select name="zonas[]" class="form-control" id="zonas" multiple>
-                                            <option value="">-- Seleccionar --</option>
-                                            <?php
-                                            $k=0;
-                                                foreach ($restoareas as $item){
-                                                    $opciones="";
-                                                    foreach ($restomesas as $item2){
-                                                        if($item->id==$item2->restoarea_id){
-                                                            $opciones.='<option value="'.$item2->id.'">'.$item2->name.'</option>';
-                                                        }
-                                                    }
-                                                    echo '<optgroup label="'.$item->name.'" >'.$opciones.'</optgroup>';
-                                                }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                               
-    
-                            @else
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <p>No has habilitado <strong>Reservación</strong>, ve al módulo de Restaurante y habilita la opción de Reservación para que puedas configurar todos los parámetros de Reservas</p>
-                                        <lottie-player src="{{ asset('animations/no_check.json')}}"  background="transparent"  speed="1"  style="width: 300px; height: 300px;" loop autoplay></lottie-player>
-                                    </div>
-                                </div>
-                            @endif
-                            
-                        </div>
-
-                        <div class="card-footer py-4">
-                            <nav class="d-flex justify-content-end" aria-label="...">
-                              
-                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Cambios</button>
-                            </nav>
-                        </div> 
-                    </form> 
-                    </div>
-                </div>
-
-                 <!-- Tab Managment -->
-                 <div class="tab-pane fade" id="hours" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
-                    <div class="card bg-secondary shadow">
-                        <div class="card-header bg-white border-0">
-                            <div class="row align-items-center">
-                                {{ __('Administre los Motivos de Reservación') }}
-                            </div>
-                        </div>
-                        <div class="card-body">
-                         
-                            <p>Cree los motivos de reservación que tendrá disponibles para los clientes.</p>
-
-                            @include('reservation.admin.includes.registrarmotivo')
-
-                            <div class="row">
-                                <div class="col-sm-3 col-12">
-                                    <h4>Nombre del Motivo</h4>
-                                </div>
-                                <div class="col-sm-3 col-12">
-                                    <h4>Descripción del Motivo</h4>
-                                </div>
-                                <div class="col-sm-3 col-12">
-                                    <h4>Precio del Motivo</h4>
-                                </div>
-                                <div class="col-sm-3 col-12">
-                                    <h4><button type="button" class="btn btn-sm btn-primary float-left" data-toggle="modal" data-target="#modal-registrar-motivo">Agregar Motivo</button></h4>
-                                </div>
-                            </div>
-                            <div class="row mt-3" id="div_cargar_motivos">
-                            @include('reservation.admin.includes.cargarmotivos')
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            
 
             </div>
         </div>
     </div>
-</div>
-
-<div class="totalreserva">
-    @include('reservation.admin.includes.modals')
 </div>
 
 
@@ -449,6 +248,12 @@
                     });
                 });
             };
+
+
+
+
+            
+            
         });
         //consultar motivos
         function consultarmotivos()
@@ -664,42 +469,6 @@
                 processData: false
             });
         }
-
-
-        $('.liberarMesa').on('click', function(){
-    
-            var item = $(this).data('item');
-
-            Swal.fire({
-            title: '¿Estás seguro de liberar la mesa?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: 'Confirmar',
-            denyButtonText: 'Cancelar',
-            }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                
-                var formData = new FormData();
-                formData.append('reserva_id',item.id);
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{route('reservation.desabilitarReserva')}}",
-                    type: 'POST',
-                    success: function (data) {
-                        location.reload();
-                    },
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            }
-            })
-            
-        });
 
         
 

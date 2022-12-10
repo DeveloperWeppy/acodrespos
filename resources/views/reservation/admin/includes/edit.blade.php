@@ -73,29 +73,35 @@
                                         <textarea class="form-control" name="com" ></textarea>
                                     </div>
 
-                                    <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
-                                
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Fecha</label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                                                        </div>
-                                                        <input name="fec" class="form-control datepickerReserva" required placeholder="Fecha" type="text">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Hora</label>
-                                                    <input name="hora" class="form-control timepicker" placeholder="Hora" required type="text">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Jornada</label>
+                                                <div class="">
+                                                    <select name="jor" id="jor" class="form-control form-control-sm" required>
+                                                        
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                         
-                                
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Fecha</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                    </div>
+                                                    <input name="fec" class="form-control datepickerReserva" value="{{$now}}" required placeholder="Fecha" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Hora</label>
+                                                <input name="hora" class="form-control timepicker" placeholder="Hora" required type="text">
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}" >
@@ -104,9 +110,10 @@
                                         <div class="">
                                             <p class="h4"><strong>Total por mesas:</strong> <span id="valorMesas"></span> COP</p>
                                             <p class="h4"><strong>Valor motivo:</strong> <span id="valorMotivo"></span> COP</p>
+                                            <p class="h4"><strong>Total:</strong> @{{totalDetalleFormated}} COP</p>
                                         </div>
 
-                                        <label class="form-control-label" for="email_client">Total a pagar</label>
+                                        <label class="form-control-label mt-3" for="email_client">Total a pagar por modificación</label>
                                         <div class="">
                                             <p class="h1">@{{priceReservationFormated}} COP</p>
                                         </div>
@@ -117,7 +124,7 @@
                         </div>
                         <div class="card-footer py-4">
                             <nav class="d-flex justify-content-end" aria-label="...">
-                            
+                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Modifcación</button>
                             </nav>
                         </div>
                     </form>
@@ -137,11 +144,16 @@
             var precioEstandarF = 0;
 
             var porcentagePayment = {{(isset($restaurantConfig[0]->percentage_payment)?$restaurantConfig[0]->percentage_payment:0)}};
+            var updatePrice = {{(isset($restaurantConfig[0]->update_price)?$restaurantConfig[0]->update_price:0)}};
+            var reserva_id = {{(isset($reservation->id)?$reservation->id:0)}};
 
          
             $('#valorMesa').html(puntosMil(precioEstandar));
             $('#valorMesas').html("0");
             $('#valorMotivo').html("0");
+
+
+            $('.ckpropina').css('display','none');
 
             function metodoPago(){
                 if ($("#paymentType").val()=='transferencia') {
@@ -162,46 +174,24 @@
                 }
             }
 
-            $(document).on('change', '#check_por', function(){
-                if (this.checked) {
-                    var totalPercentage = (porcentagePayment/100)*totalReservas.totalPriceReservation;
-                    totalReservas.priceReservation = totalPercentage;
-                    totalReservas.priceReservationFormated = puntosMil(totalPercentage);
-
-                    totalReservas.received = totalPercentage;
-                    totalReservas.receivedFormated = puntosMil(totalPercentage);
-
-                    var restanteRes = totalReservas.totalPriceReservation-totalPercentage;
-                    $('#resRes').html(puntosMil(restanteRes));
-                    $('#divPercentage').css('display','block');
-                    
-                }else{
-                    totalReservas.priceReservation = totalReservas.totalPriceReservation;
-                    totalReservas.priceReservationFormated = puntosMil(totalReservas.totalPriceReservation);
-
-                    totalReservas.received = totalReservas.totalPriceReservation;
-                    totalReservas.receivedFormated = puntosMil(totalReservas.totalPriceReservation);
-
-                    $('#resRes').html(0);
-                    $('#divPercentage').css('display','none');
-                }
-            });
-
-            
+        
      
             var totalReservas = new Vue({
                 el: '.totalreserva',
                 data: {
                     totalPriceReservation:0,//almacena el valor total de la reservación
-                    priceReservation:0,// precio de la reservacion a mostrar y cancelar, contiene todas las codiciones de menos porcentaje y demas
-                    priceReservationFormated:'0',
+                    priceReservation:updatePrice,// precio de la reservacion a mostrar y cancelar, contiene todas las codiciones de menos porcentaje y demas
+                    priceReservationFormated:puntosMil(updatePrice),
                     received:0,
                     receivedFormated:'0',
                     totalPriceRestado:0,
                     totalPriceRestadoFormated:'0',
                     totalCambioFormated:'0',
-                    
+                    totalUpdate:updatePrice,
+                    totalUpdateFormated:puntosMil(updatePrice),
+                    totalDetalleFormated:'0',
                 },
+                
                 methods: {
                     change: function (event) {
                         metodoPago();
@@ -228,6 +218,7 @@
 
                     },
                 },
+                
             });
             
 
@@ -238,9 +229,7 @@
 
                 $('#valorMotivo').html(puntosMil(mot));
 
-                totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+                totalReservas.totalDetalleFormated = puntosMil((precioEstandar*mesas)+mot);
             });
 
             $("#zonas").on('change', function() {
@@ -250,12 +239,106 @@
 
                 $('#valorMesas').html(puntosMil(precioEstandar*mesas));
 
-                totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+                totalReservas.totalDetalleFormated = puntosMil((precioEstandar*mesas)+mot);
 
 
             });
+
+            $(document).on('change', '#jor', function(){
+                let date = new Date($("input[name=fec]").val());
+                var dia = date.getDay();
+                jornada = jornadas[$(this).val()];
+                selectHora(dia);
+            });
+
+            $("input[name=fec]").on('change', function() {
+                let date = new Date($(this).val());
+                var dia = date.getDay();
+                selectHora(dia);
+            });
+
+            function getJornadas(){
+          
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{route('reservation.getHours')}}",
+                    type: 'GET',
+                    success: function (data) {
+                        let selectJornada = $("#jor");
+                        if(data.length>0){
+                            jornadas = data;
+                            jornada = data[0];
+                            $k = 0;
+                            data.forEach(element => {
+                                selectJornada.append('<option value="'+$k+'" >Jornada '+($k+1)+'</option>');
+                                $k++;
+                            });
+                            selectJornada.trigger('change');
+                        }
+                        console.log(data);
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+            getJornadas();
+
+            function selectHora(dia){
+          
+                var min = '6';
+                var max = '20';
+
+                switch (dia) {
+                    case 0:
+                        min = Object.values(jornada)[3];
+                        max = Object.values(jornada)[4];
+                        break;
+                    case 1:
+                        min = Object.values(jornada)[5];
+                        max = Object.values(jornada)[6];
+                        break;
+                    case 2:
+                        min = Object.values(jornada)[7];
+                        max = Object.values(jornada)[8];
+                        break;
+                    case 3:
+                        min = Object.values(jornada)[9];
+                        max = Object.values(jornada)[10];
+                        break;
+                    case 4:
+                        min = Object.values(jornada)[11];
+                        max = Object.values(jornada)[12];
+                        break;
+                    case 5:
+                        min = Object.values(jornada)[13];
+                        max = Object.values(jornada)[14];
+                        break;
+                    case 6:
+                        min = Object.values(jornada)[15];
+                        max = Object.values(jornada)[16];
+                        break;
+                }
+                if(min==null && max==null ){
+                    min = '6';
+                    max = '20';
+                }
+                $('.timepicker').timepicker({
+                    timeFormat: 'h:mm p',
+                    interval: 30,
+                    minTime: min,
+                    maxTime: max,
+                    dynamic: false,
+                    dropdown: true,
+                    scrollbar: true,
+                });
+
+                let timPicker = $('.timepicker');
+                timPicker.timepicker('option', 'maxTime', min);
+                timPicker.timepicker('option', 'maxTime', max);
+            }
 
             function puntosMil(value){
                 return value.toString().replace(/\D/g, "")
@@ -265,32 +348,20 @@
 
             function pagarReserva(){
                 var formData = new FormData($('#formReserva')[0]);
-                formData.append('porc',$('#check_por').val());
+                formData.append('reserva_id',reserva_id);
                 formData.append('met',$('#paymentType').val());
                 formData.append('cuentaid',$('#paymentId').val());
                 formData.append('tipotarjeta',$('#paymentType2').val());
                 formData.append('franquicia',$('#franquicia').val());
                 formData.append('voucher',$('#voucher').val());
-                formData.append('total',totalReservas.totalPriceReservation);
                 formData.append('pagado',totalReservas.priceReservation);
-
-            
-                if($('#check_por').is(':checked')){
-                    var totalPercentage = (porcentagePayment/100)*totalReservas.totalPriceReservation;
-                    var restanteRes = totalReservas.totalPriceReservation-totalPercentage;
-                    formData.append('pendiente',restanteRes);
-                }else{
-                    formData.append('pendiente',0);
-                }
-                
-                
                 formData.append('img_payment',$('#img_payment')[0].files[0]);
                 
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{route('reservation.store')}}",
+                    url: "{{route('reservation.storeUpdate')}}",
                     type: 'POST',
                     success: function (data) {
 
@@ -319,16 +390,7 @@
             });
             
 
-            $('.timepicker').timepicker({
-                timeFormat: 'h:mm p',
-                interval: 30,
-                minTime: '7',
-                maxTime: '20',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true,
-                disabledTime:['7','8','9'],
-            });
+           
 
 
             function revisarOcupacion(){
@@ -368,12 +430,13 @@
                 revisarOcupacion();
             });
 
-
+        window.onload = function() {
 
             $('select[name=cli]').val('{{(isset($reservation->client_id)?$reservation->client_id:"")}}');
+            $('select[name=cli]').trigger('change');
 
             $('select[name=mot]').val('{{(isset($reservation->reservation_reason_id)?$reservation->reservation_reason_id:"")}}');
-            $('select[name=mot]').trigger('change')
+            $('select[name=mot]').trigger('change');
 
             $('textarea[name=com]').val('{{(isset($reservation->description)?$reservation->description:"")}}');
 
@@ -384,16 +447,20 @@
                 $('input[name=fec]').val(fechaHora[0]);
             }
             if(fechaHora[1]!=undefined){
-                $('input[name=hora]').val(fechaHora[1]);
+                let timPicker1 = $('.timepicker').val(fechaHora[1]);
+                
             }
+
+            
 
             var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mesas:"")}}';
             var mesas = mesasSeleccionadas.split(',');
             for(var i=0;i<mesas.length;i++){
                 $('#zonas option[value='+mesas[i]+']').prop('selected', true);
 
-                $('#zonas').trigger('change')
+                $('#zonas').trigger('change');
             }
+        }
             
         </script>
         @endsection

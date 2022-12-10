@@ -11,7 +11,7 @@
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">Crear reservación</h3>
+                                <h3 class="mb-0">Solicitar reservación</h3>
                             </div>
                             <div class="col-4 text-right">
                                 <a href="{{ route('reservation.index') }}" class="btn btn-sm btn-primary">{{ __('Back to list') }}</a>
@@ -28,32 +28,23 @@
 
 
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
-                                        <label class="form-control-label" for="name_client">{{ __('Client') }}</label>
+                                        <label class="form-control-label" for="name_client">Restaurante</label>
                                         <div class="">
-                                            <select name="cli" class="form-control form-control-sm" required>
-                                                <option value="" >Seleccionar cliente</option>
-                                                @foreach($clients as $key)
-                                                <option value="{{$key->id}}" >{{$key->number_identification}} - {{$key->name}}</option>
-                                                @endforeach
+                                            <select name="res" class="form-control form-control-sm" id="res" required>
+                                                <option value="" >Seleccionar restaurante</option>
+                                             
+                                                    @foreach($restaurant as $key)
+                                                    <option value="{{$key->id}}" >{{$key->name}}</option>
+                                                    @endforeach
+                                               
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_client">Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</label>
                                         <select name="zonas[]" class="form-control" id="zonas" multiple required>
-                                            <option value="">Seleccionar mesas</option>
-                                            <?php
-                                            $k=0;
-                                                foreach ($restoareas as $item){
-                                                    $opciones="";
-                                                    foreach ($restomesas as $item2){
-                                                        if($item->id==$item2->restoarea_id){
-                                                            $opciones.='<option value="'.$item2->id.'">'.$item2->name.'</option>';
-                                                        }
-                                                    }
-                                                    echo '<optgroup label="'.$item->name.'" >'.$opciones.'</optgroup>';
-                                                }
-                                            ?>
+                                           
                                         </select>
                                     </div>
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
@@ -61,9 +52,12 @@
                                         <div class="">
                                             <select name="mot" id="mot" class="form-control form-control-sm" required>
                                                 <option value="" data-price="0" >Seleccionar motivo</option>
-                                                @foreach($motive as $key)
+                                                {{--
+                                                   @foreach($motive as $key)
                                                 <option value="{{$key->id}}" data-price="{{$key->price}}">{{$key->name}} ({{number_format($key->price, 2, ",", ".")}} COP) </option>
                                                 @endforeach
+                                                   --}}
+                                              
                                             </select>
                                         </div>
                                     </div>
@@ -76,29 +70,18 @@
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                 
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Jornada</label>
-                                                    <div class="">
-                                                        <select name="jor" id="jor" class="form-control form-control-sm" required>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">Fecha</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                         </div>
-                                                        <input name="fec" class="form-control datepickerReserva" value="{{$now}}" required placeholder="Fecha" type="text">
+                                                        <input name="fec" class="form-control datepickerReserva" required placeholder="Fecha" type="text">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">Hora</label>
                                                     <input name="hora" class="form-control timepicker" placeholder="Hora" required type="text">
@@ -129,7 +112,7 @@
                         <div class="card-footer py-4">
                             <nav class="d-flex justify-content-end" aria-label="...">
                             
-                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Reserva</button>
+                                <button type="submit" class="btn btn-md btn-primary float-left" >Solicitar Reserva</button>
                             </nav>
                         </div>
                     </form>
@@ -140,7 +123,6 @@
     </div>
      
 
-        @include('reservation.admin.includes.modals')
 </div> 
         @section('js')
         <script>
@@ -150,8 +132,6 @@
 
             var porcentagePayment = {{(isset($restaurantConfig[0]->percentage_payment)?$restaurantConfig[0]->percentage_payment:0)}};
 
-            var jornadas = [];
-            var jornada = [];
          
             $('#valorMesa').html(puntosMil(precioEstandar));
             $('#valorMesas').html("0");
@@ -245,16 +225,45 @@
             });
             
 
-            $("#mot").on('change', function() {
-                var mot = $("#mot option:selected").data('price');
-                var mes = $("#zonas").val();
-                var mesas = mes.length;
+            $("#res").on('change', function() {
 
-                $('#valorMotivo').html(puntosMil(mot));
+                var formData = new FormData();
+                formData.append('restaurant_id',$('#res').val());
+                
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{route('reservation.configRestaurant')}}",
+                    type: 'post',
+                    success: function (data) {
+                        alert(1);
+                        if(data.datos[3]!=null){
+                            let selectMesas = $('#zonas');
+                            console.log(data.datos[0].length);
+                            if(data.datos[0]!=null){
+                                var k = 0;
+                               for (var i = 0; i < data.datos[0].length; i++) {
+                                    var areas = data.datos[0][i][0];
+                                    var mesas = data.datos[0][i][1];
+                                    selectMesas.append('<optgroup label="'+areas.name+'" >');
+                                    for (var i = 0; i < mesas.length; i++) {
+                                        selectMesas.append('<option value="'+mesas[i].id+'">'+mesas[i].name+'</option>');
+                                    }
+                                    selectMesas.append('</optgroup>');
+                                    k++;
+                               }
+                            }
+                            
+                        }
+                    },
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
 
-                totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservation = (precioEstandar*mesas)+mot;
-                totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+
             });
 
             $("#zonas").on('change', function() {
@@ -267,108 +276,9 @@
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+
+
             });
-
-            $(document).on('change', '#jor', function(){
-                let date = new Date($("input[name=fec]").val());
-                var dia = date.getDay();
-                jornada = jornadas[$(this).val()];
-                selectHora(dia);
-            });
-
-            $("input[name=fec]").on('change', function() {
-                let date = new Date($(this).val());
-                var dia = date.getDay();
-                selectHora(dia);
-            });
-
-            function getJornadas(){
-          
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{route('reservation.getHours')}}",
-                    type: 'GET',
-                    success: function (data) {
-                        let selectJornada = $("#jor");
-                        if(data.length>0){
-                            jornadas = data;
-                            jornada = data[0];
-                            $k = 0;
-                            data.forEach(element => {
-                                selectJornada.append('<option value="'+$k+'" >Jornada '+($k+1)+'</option>');
-                                $k++;
-                            });
-                            selectJornada.trigger('change');
-                        }
-                        console.log(data);
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            }
-            getJornadas();
-
-            function selectHora(dia){
-          
-                var min = '6';
-                var max = '20';
-
-                switch (dia) {
-                    case 0:
-                        min = Object.values(jornada)[3];
-                        max = Object.values(jornada)[4];
-                        break;
-                    case 1:
-                        min = Object.values(jornada)[5];
-                        max = Object.values(jornada)[6];
-                        break;
-                    case 2:
-                        min = Object.values(jornada)[7];
-                        max = Object.values(jornada)[8];
-                        break;
-                    case 3:
-                        min = Object.values(jornada)[9];
-                        max = Object.values(jornada)[10];
-                        break;
-                    case 4:
-                        min = Object.values(jornada)[11];
-                        max = Object.values(jornada)[12];
-                        break;
-                    case 5:
-                        min = Object.values(jornada)[13];
-                        max = Object.values(jornada)[14];
-                        break;
-                    case 6:
-                        min = Object.values(jornada)[15];
-                        max = Object.values(jornada)[16];
-                        break;
-                }
-                if(min==null && max==null ){
-                    min = '6';
-                    max = '20';
-                }
-                $('.timepicker').timepicker({
-                    timeFormat: 'h:mm p',
-                    interval: 30,
-                    minTime: min,
-                    maxTime: max,
-                    dynamic: false,
-                    dropdown: true,
-                    scrollbar: true,
-                });
-
-                let timPicker = $('.timepicker');
-                timPicker.timepicker('option', 'maxTime', min);
-                timPicker.timepicker('option', 'maxTime', max);
-            }
-            
-
-
-          
-            
 
             function puntosMil(value){
                 return value.toString().replace(/\D/g, "")
@@ -427,7 +337,6 @@
                 });
             }
 
-           
         
             $(function(){
                 $(".datepickerReserva").datepicker({
@@ -435,7 +344,17 @@
                 });
             });
             
-           
+
+            $('.timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: 30,
+                minTime: '7',
+                maxTime: '20',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+                disabledTime:['7','8','9'],
+            });
 
 
             function revisarOcupacion(){
@@ -474,6 +393,9 @@
 
                 revisarOcupacion();
             });
+
+
+    
 
     
         </script>
