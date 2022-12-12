@@ -38,8 +38,11 @@
                     @endif
                 </td>
                 <td>
+
                     @if($item->active==1)
                         <button class="btn btn-sm  btn-danger liberarMesa" data-item="{{json_encode($item)}}" >Liberar mesa</button> 
+                    @elseif($item->active==2)
+                        <span class="badge badge-info badge-pill">En proceso</span>
                     @else
                         <span class="badge badge-success badge-pill">Terminado</span>
                     @endif

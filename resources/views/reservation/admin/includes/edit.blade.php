@@ -38,6 +38,24 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">N. de mesas</label>
+                                                    <div class="input-group">
+                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="1" type="number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">N. de personas</label>
+                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="1" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_client">Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</label>
                                         <select name="zonas[]" class="form-control" id="zonas" multiple required>
@@ -451,9 +469,11 @@
                 
             }
 
+            $('#mes').val('{{(isset($reservation->mesas)?$reservation->mesas:"0")}}');
+            $('#per').val('{{(isset($reservation->mesas)?$reservation->personas:"0")}}');
             
 
-            var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mesas:"")}}';
+            var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mess:"")}}';
             var mesas = mesasSeleccionadas.split(',');
             for(var i=0;i<mesas.length;i++){
                 $('#zonas option[value='+mesas[i]+']').prop('selected', true);

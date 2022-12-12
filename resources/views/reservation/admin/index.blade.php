@@ -15,8 +15,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#clients" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Solicitudes de reservación</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#accountbanks" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-settings-gear-65"></i> Configuración de reservaciones</a>
                 </li>
+                
 
                 <li class="nav-item">
                     <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#hours" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-tag mr-2"></i>Motivos de reservaciones</a>
@@ -86,6 +91,54 @@
                             </nav>
                             @else
                                 <h4>No tienes reservas...</h4>
+                            @endif
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+                <!-- Tab Managment -->
+                <div class="tab-pane fade show" id="clients" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                    <div class="card bg-secondary shadow">
+                        <div class="card-header bg-white border-0">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    Solicitudes de reservación
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="">
+
+
+                            <div class="table-responsive">
+                                <table class="table align-items-center">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">N. Reserva</th>
+                                            <th scope="col">Fecha y Hora</th>
+                                            <th class="table-web" scope="col">Cliente</th>
+                                            <th scope="col">Motivo</th>
+                                            <th class="table-web" scope="col">Valor</th>
+                                            <th scope="col">Estado</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaReservas" style="background: #ffffff;">
+                                        @include('reservation.admin.includes.tablasolicitudreservaciones')                       
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="card-footer py-4">
+                            @if(count($solicitudes))
+                            <nav class="d-flex justify-content-end" aria-label="...">
+                                {{ $solicitudes->appends(Request::all())->links() }}
+                            </nav>
+                            @else
+                                <h4>No tienes solicitudes de reservas...</h4>
                             @endif
                         </div>
                         

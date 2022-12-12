@@ -41,22 +41,30 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
-                                        <label class="form-control-label" for="name_client">Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</label>
-                                        <select name="zonas[]" class="form-control" id="zonas" multiple required>
-                                           
-                                        </select>
+                                    <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">N. de mesas</label>
+                                                    <div class="input-group">
+                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="1" type="number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">N. de personas</label>
+                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="1" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="email_client">Motivo de reservación</label>
                                         <div class="">
                                             <select name="mot" id="mot" class="form-control form-control-sm" required>
                                                 <option value="" data-price="0" >Seleccionar motivo</option>
-                                                {{--
-                                                   @foreach($motive as $key)
-                                                <option value="{{$key->id}}" data-price="{{$key->price}}">{{$key->name}} ({{number_format($key->price, 2, ",", ".")}} COP) </option>
-                                                @endforeach
-                                                   --}}
                                               
                                             </select>
                                         </div>
@@ -127,10 +135,10 @@
         @section('js')
         <script>
 
-            var precioEstandar = {{(isset($restaurantConfig[0]->standard_price)?$restaurantConfig[0]->standard_price:0)}};
+            var precioEstandar = 0;
             var precioEstandarF = 0;
 
-            var porcentagePayment = {{(isset($restaurantConfig[0]->percentage_payment)?$restaurantConfig[0]->percentage_payment:0)}};
+            var porcentagePayment = 0;
 
          
             $('#valorMesa').html(puntosMil(precioEstandar));
@@ -155,31 +163,6 @@
                     $('.selecuenta2').hide()
                 }
             }
-
-            $(document).on('change', '#check_por', function(){
-                if (this.checked) {
-                    var totalPercentage = (porcentagePayment/100)*totalReservas.totalPriceReservation;
-                    totalReservas.priceReservation = totalPercentage;
-                    totalReservas.priceReservationFormated = puntosMil(totalPercentage);
-
-                    totalReservas.received = totalPercentage;
-                    totalReservas.receivedFormated = puntosMil(totalPercentage);
-
-                    var restanteRes = totalReservas.totalPriceReservation-totalPercentage;
-                    $('#resRes').html(puntosMil(restanteRes));
-                    $('#divPercentage').css('display','block');
-                    
-                }else{
-                    totalReservas.priceReservation = totalReservas.totalPriceReservation;
-                    totalReservas.priceReservationFormated = puntosMil(totalReservas.totalPriceReservation);
-
-                    totalReservas.received = totalReservas.totalPriceReservation;
-                    totalReservas.receivedFormated = puntosMil(totalReservas.totalPriceReservation);
-
-                    $('#resRes').html(0);
-                    $('#divPercentage').css('display','none');
-                }
-            });
 
             
      
@@ -237,24 +220,27 @@
                     url: "{{route('reservation.configRestaurant')}}",
                     type: 'post',
                     success: function (data) {
-                        alert(1);
                         if(data.datos[3]!=null){
                             let selectMesas = $('#zonas');
-                            console.log(data.datos[0].length);
-                            if(data.datos[0]!=null){
-                                var k = 0;
-                               for (var i = 0; i < data.datos[0].length; i++) {
-                                    var areas = data.datos[0][i][0];
-                                    var mesas = data.datos[0][i][1];
-                                    selectMesas.append('<optgroup label="'+areas.name+'" >');
-                                    for (var i = 0; i < mesas.length; i++) {
-                                        selectMesas.append('<option value="'+mesas[i].id+'">'+mesas[i].name+'</option>');
-                                    }
-                                    selectMesas.append('</optgroup>');
-                                    k++;
+                           
+                            if(data.datos[1]!=null){
+                                let selectMotivos= $('#mot');
+                                for (var i = 0; i < data.datos[1].length; i++) {
+                                    var motivo = data.datos[1][i];
+                                    selectMotivos.append('<option value="'+motivo.id+'" data-price="'+motivo.price+'" >'+motivo.name+'</option>');
                                }
                             }
-                            
+
+                            if(data.datos[3]!=null){
+                                var config = data.datos[3];
+                                precioEstandar = config.standard_price;
+                                precioEstandarF = 0;
+                                porcentagePayment = config.percentage_payment;
+
+                                var mesas = $('#mes').val();
+                                $('#valorMesas').html(puntosMil(precioEstandar*mesas));
+
+                            }
                         }
                     },
                     data: formData,
@@ -263,22 +249,47 @@
                     processData: false
                 });
 
-
             });
 
-            $("#zonas").on('change', function() {
+            $("#mot").on('change', function() {
                 var mot = $("#mot option:selected").data('price');
                 var mes = $("#zonas").val();
-                var mesas = mes.length;
+                var mesas = $('#mes').val();
 
+                $('#valorMotivo').html(puntosMil(mot));
+
+                totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
+                totalReservas.priceReservation = (precioEstandar*mesas)+mot;
+                totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+            });
+
+            $("#mes").on('change', function() {
+                var mot = $("#mot option:selected").data('price');
+                var mes = $("#zonas").val();
+                var mesas = $('#mes').val();
+                
                 $('#valorMesas').html(puntosMil(precioEstandar*mesas));
 
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
 
+            });
+            $("#mes").on('keyup', function() {
+                var mot = $("#mot option:selected").data('price');
+                var mes = $("#zonas").val();
+                var mesas = $('#mes').val();
+                
+                $('#valorMesas').html(puntosMil(precioEstandar*mesas));
+
+                totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
+                totalReservas.priceReservation = (precioEstandar*mesas)+mot;
+                totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
 
             });
+
+           
+
 
             function puntosMil(value){
                 return value.toString().replace(/\D/g, "")
@@ -286,63 +297,17 @@
                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
             }
 
-            function pagarReserva(){
-                var formData = new FormData($('#formReserva')[0]);
-                
-                formData.append('met',$('#paymentType').val());
-                formData.append('cuentaid',$('#paymentId').val());
-                formData.append('tipotarjeta',$('#paymentType2').val());
-                formData.append('franquicia',$('#franquicia').val());
-                formData.append('voucher',$('#voucher').val());
-                formData.append('total',totalReservas.totalPriceReservation);
-                formData.append('pagado',totalReservas.priceReservation);
-
-              
-                if($('#check_por').is(':checked')){
-                    var totalPercentage = (porcentagePayment/100)*totalReservas.totalPriceReservation;
-                    var restanteRes = totalReservas.totalPriceReservation-totalPercentage;
-                    formData.append('pendiente',restanteRes);
-                    formData.append('porc',1);
-                }else{
-                    formData.append('pendiente',0);
-                    formData.append('porc',0);
-                }
-                
-                
-                
-                formData.append('img_payment',$('#img_payment')[0].files[0]);
-                
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{route('reservation.store')}}",
-                    type: 'POST',
-                    success: function (data) {
-
-                        $('#modal-payment-reservation').modal('hide');
-
-                        Swal.fire({
-                            title: "Datos Guardados",
-                            text: '',
-                            icon: 'success',
-                        }).then(function() {
-                            window.location.href = "{{route('reservation.index');}}";
-                        });
-                    },
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            }
-
+          
         
             $(function(){
+                alert();
                 $(".datepickerReserva").datepicker({
                     format: 'yyyy-mm-dd',
+                    multidate: false,
+                    minDate: 0,
                 });
             });
+            
             
 
             $('.timepicker').timepicker({
@@ -359,6 +324,7 @@
 
             function revisarOcupacion(){
                 var formData = new FormData();
+                formData.append('restaurant_id',$('#res').val());
                 formData.append('fecha',$('input[name=fec]').val());
                 formData.append('hora',$('input[name=hora]').val());
                 formData.append('mesas[]',$('#zonas').val());
@@ -377,7 +343,42 @@
                             })
                             return false;
                         }else{
-                            $('#modal-payment-reservation').modal('show');
+                            enviarSolitud();
+                        }
+                    },
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+
+            function enviarSolitud(){
+                var formData = new FormData($('#formReserva')[0]);
+                formData.append('total',totalReservas.priceReservation);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{route('reservation.store')}}",
+                    type: 'POST',
+                    success: function (data) {
+                        if(data.datos>0){
+                            Swal.fire({
+                                title: "Solicitud enviada",
+                                text: '',
+                                icon: 'success',
+                            }).then((result) => {
+                                window.location.href = "{{route('reservation.index');}}";
+                            });
+                            return false;
+                        }else{
+                            Swal.fire({
+                                title: "Ocurrio un error al enviar la solicitud",
+                                text: '',
+                                icon: 'error',
+                            })
+                            return false;
                         }
                     },
                     data: formData,

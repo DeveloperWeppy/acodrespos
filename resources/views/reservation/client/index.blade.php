@@ -8,12 +8,7 @@
     <div class="container-fluid">
 
         <div class="nav-wrapper">
-            <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="res_menagment" role="tablist">
-
-                <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0 active " id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
-                </li>
-            </ul>
+           
         </div>
 
     </div>
@@ -88,6 +83,11 @@
         </div>
     </div>
 </div>
+
+<div class="totalreserva">
+    @include('reservation.client.includes.modals')
+</div>
+
 
 
 
