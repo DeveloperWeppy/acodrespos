@@ -8,7 +8,7 @@
 
             <tr>
                 <td>
-                    <a class="btn badge badge-success badge-pill" href="{{route('reservation.edit',[$item->id])}}">#{{$item->id}}</a>
+                    <a class="btn badge badge-success badge-pill" href="#!">#{{$item->id}}</a>
                 </td>
                 <td>
                     <p><small class="text-muted">{{ $item->date_reservation }}</small></p><p>
@@ -24,11 +24,11 @@
                 </td>
                 
                 <td class="table-web">
-                    {{$item->total}}
+                    @money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))
                 </td>
                 <td class="table-web">
                     @if($item->pendiente>0)
-                        <span class="badge badge-danger badge-pill">{{$item->pendiente}}</span>
+                        <span class="badge badge-danger badge-pill" style="font-size: 10px">@money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
                     @else
                         No hay acciones...
                     @endif

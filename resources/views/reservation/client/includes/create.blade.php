@@ -238,7 +238,35 @@
                                 porcentagePayment = config.percentage_payment;
 
                                 var mesas = $('#mes').val();
+
                                 $('#valorMesas').html(puntosMil(precioEstandar*mesas));
+
+                                var nowDate = new Date();
+                               
+                                if(config.minimum_period="dia"){
+                                    nowDate.setDate(nowDate.getDate() + config.condition_period);
+                                }
+                                if(config.minimum_period="hora"){
+                                    let hour = nowDate.getHours().toString();
+                                    let timPicker = $('.timepicker');
+                                    let minH = parseInt(hour)+parseInt(config.condition_period);
+                                    timPicker.timepicker('option', 'minTime', minH);
+                                }
+                                
+                    
+
+                                $(".datepickerReserva").daterangepicker({
+                                    locale: {
+                                        format: 'YYYY-MM-DD',
+                                        daysOfWeek: [ "Dom", "Lun","Mar","Mie","Jue","Vie","Sáb" ],
+                                        monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                                        firstDay: 1,
+                                        applyLabel: "Aplicar",
+                                        cancelLabel: "Cancelar",
+                                    },
+                                    minDate: nowDate,
+                                    singleDatePicker: true,
+                                });
 
                             }
                         }
@@ -300,21 +328,25 @@
           
         
             $(function(){
-                alert();
-                $(".datepickerReserva").datepicker({
-                    format: 'yyyy-mm-dd',
-                    multidate: false,
-                    minDate: 0,
+                $(".datepickerReserva").daterangepicker({
+                    locale: {
+                        format: 'YYYY-MM-DD',
+                        daysOfWeek: [ "Dom", "Lun","Mar","Mie","Jue","Vie","Sáb" ],
+                        monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                        firstDay: 1,
+                        applyLabel: "Aplicar",
+                        cancelLabel: "Cancelar",
+                    },
+                    singleDatePicker: true,
                 });
             });
-            
             
 
             $('.timepicker').timepicker({
                 timeFormat: 'h:mm p',
-                interval: 30,
+                interval: 10,
                 minTime: '7',
-                maxTime: '20',
+                maxTime: '23',
                 dynamic: false,
                 dropdown: true,
                 scrollbar: true,

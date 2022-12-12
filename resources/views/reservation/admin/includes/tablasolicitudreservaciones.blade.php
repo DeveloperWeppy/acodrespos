@@ -23,7 +23,8 @@
                 </td>
                 
                 <td class="table-web">
-                    {{$item->total}}
+                    @money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))
+                
                 </td>
                 <td>
 

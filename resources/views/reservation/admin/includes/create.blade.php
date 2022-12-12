@@ -360,7 +360,7 @@
                 });
 
                 let timPicker = $('.timepicker');
-                timPicker.timepicker('option', 'maxTime', min);
+                timPicker.timepicker('option', 'minTime', min);
                 timPicker.timepicker('option', 'maxTime', max);
             }
             

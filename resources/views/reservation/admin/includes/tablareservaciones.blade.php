@@ -28,11 +28,14 @@
                 </td>
                 
                 <td class="table-web">
-                    {{$item->total}}
+                    @money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))
+            
                 </td>
                 <td class="table-web">
                     @if($item->pendiente>0)
-                    <button data="rejected_by_restaurant" class="btn btn-sm  btn-danger modalPendiente" data-item="{{json_encode($item)}}" >{{$item->pendiente}}</button> 
+                    <button data="rejected_by_restaurant" class="btn btn-sm  btn-danger modalPendiente" data-item="{{json_encode($item)}}" >
+                        @money( $item->pendiente, config('settings.cashier_currency'),config('settings.do_convertion'))
+                    </button> 
                     @else
                     No hay acciones...
                     @endif
