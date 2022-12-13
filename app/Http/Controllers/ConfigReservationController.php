@@ -30,6 +30,7 @@ class ConfigReservationController extends Controller
     public function index()
     {
 
+
         if(auth()->user()->hasRole('owner')){
             $restaurant_id = auth()->user()->restorant->id;
 
