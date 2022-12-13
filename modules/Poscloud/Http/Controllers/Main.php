@@ -23,6 +23,10 @@ use Akaunting\Module\Facade as Module;
 use App\Models\ConfigCuentasBancarias;
 use App\Repositories\Orders\OrderRepoGenerator;
 
+use DB;
+use App\Models\ReservationConfig;
+use App\Models\Reservation;
+
 class Main extends Controller
 {
     /**
@@ -456,6 +460,79 @@ class Main extends Controller
             'message' => __('Order updated'),
             'datas'=>$cs->getAllConfigs()
         ]);
+    }
+
+
+    public function ocupationTable(Request $request){
+        $restaurant_id = auth()->user()->restorant->id;
+
+        $restaurantConfig = DB::table('reservations_config')->where('companie_id', $restaurant_id)->first();
+
+        $error = false;
+
+        $fechaAntesDe = Carbon::now('America/Bogota')->subMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+        $fechaDespuesDe = Carbon::now('America/Bogota')->addMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+
+        
+        $registros = [];
+        if(isset($request->table_id)){
+            $mesas=DB::table('reservations_clients')
+            ->join('reservations','reservations.id','=','reservations_clients.reservation_id')
+            ->where('reservations.active','=','1')->where('table_id','=',$request->table_id)
+            ->whereBetween('reservations_clients.date_reservation',[$fechaAntesDe,$fechaDespuesDe])->orderBy('reservations_clients.date_reservation','asc')->get();
+
+            if(count($mesas)>0){
+                $idr = $mesas[0]->reservation_id;
+
+                $reservation = Reservation::find($idr);
+                $datetime = Carbon::create($reservation->date_reservation)->addMinutes($restaurantConfig->wait_time)->format('g:i A');
+                
+                $cliente=User::role('client')->where('id','=',$reservation->client_id)->first();
+                $registros[0] = $reservation;
+                $registros[1] = $mesas;
+                $registros[2] = $cliente;
+                $registros[3] = $datetime;
+            }
+        }
+        //contar las tablas que estan dentro de ese id y dentro de las mesas que envio.
+        return response()->json(array('error' => $error, 'datos' => $registros)); 
+
+    }
+
+    public function mesasOcupadas(){
+        $restaurant_id = auth()->user()->restorant->id;
+
+        $restaurantConfig = DB::table('reservations_config')->where('companie_id', $restaurant_id)->first();
+
+        $error = false;
+
+        $fechaHoraActual = Carbon::now('America/Bogota')->format('Y-m-d H:i:s');
+        $fechaAntesDe = Carbon::now('America/Bogota')->subMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+        $fechaDespuesDe = Carbon::now('America/Bogota')->addMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+
+        $registros = [];
+        
+        $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) AS idr'))->where('companie_id','=',$restaurant_id)->where('active','=','1')->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->orderBy('date_reservation','asc')->limit(1)->get();
+        
+        if(count($reservation)>0 && $reservation[0]->idr!=""){
+            $idr = explode(",",$reservation[0]->idr);
+            
+            for($i=0;$i<count($idr);$i++){
+                $reserva = Reservation::find($idr[$i]);
+                $fechaVencimiento = Carbon::create($reserva->date_reservation)->addMinutes($restaurantConfig->wait_time)->format('Y-m-d H:i:s');
+
+                if($fechaHoraActual>=$fechaVencimiento){
+                    $reserva->active=0;
+                    $reserva->save();
+                }
+            }
+
+            $registros=DB::table('reservations_clients')->select(DB::raw('group_concat(table_id) AS idm'))->whereIn('reservation_id',$idr)->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->get();
+        }
+
+    
+        //contar las tablas que estan dentro de ese id y dentro de las mesas que envio.
+        return response()->json(array('error' => $error, 'datos' => $registros)); 
     }
 
     /**

@@ -14,9 +14,17 @@
             <i class="fa fa-cutlery" aria-hidden="true" style="font-size:20px"></i> {{ __('Ver Menú') }}
         </a>
     </li>
+
     <li class="nav-item">
         <a class="nav-link" href="{{ route('pqrs.index') }}">
             <i class="fas fa-info-circle text-info" aria-hidden="true" style="font-size:20px"></i> {{ __('Centro de Ayuda') }}
+
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('reservation.index') }}">
+            <i class="fas fa-ticket-alt" aria-hidden="true" style="font-size:20px"></i> Solicitar Reservación
+
         </a>
     </li>
 </ul>
