@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigReservationsTable extends Migration
+class CreateReservationTablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateConfigReservationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('config_reservations', function (Blueprint $table) {
+        Schema::create('reservation_tables', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('companie_id')->references('id')->on('companies');
+            $table->foreignId('table_id')->references('id')->on('tables');
+            $table->string('price', 255);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateConfigReservationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('config_reservations');
+        Schema::dropIfExists('reservation_tables');
     }
 }

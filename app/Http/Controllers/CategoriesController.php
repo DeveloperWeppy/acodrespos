@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
+use App\Models\Log;
 use App\Models\AreaKitchen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriesController extends Controller
 {
@@ -36,6 +38,8 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation($request);
+
         $name_count = Categories::where('name', $request->category_name)->where('restorant_id', $request->restaurant_id)->count();
 
         if ($name_count > 0) {
@@ -54,6 +58,19 @@ class CategoriesController extends Controller
             $category->areakitchen_id = $request->areakitchen_id;
             $category->save();
 
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'MENU',
+                'submodule' => 'CATEGORIA',
+                'action' => 'Registro',
+                'detail' => 'Registro de Categoría Nueva, ' .$request->category_name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
+
             if (auth()->user()->hasRole('admin')) {
                 //Direct to that page directly
                 return redirect()->route('items.admin', ['restorant'=>$request->restaurant_id])->withStatus(__('Category successfully created.'));
@@ -65,11 +82,26 @@ class CategoriesController extends Controller
 
     public function storeareakitchen(Request $request)
     {
+        $function = $this->getIpLocation($request);
+
         $area = new AreaKitchen();
         $area->name = $request->name;
         $area->colorarea = $request->colorarea;
         $area->restorant_id = $request->restaurant_id;
         $area->save();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENU',
+            'submodule' => 'AREA DE COCINA',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nueva área de cocina, ' .$request->category_name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         if (auth()->user()->hasRole('admin')) {
             //Direct to that page directly

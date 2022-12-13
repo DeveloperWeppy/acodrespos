@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Log;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
@@ -15,7 +16,9 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $logs_all = Log::where('created_at', '=', Carbon::now())->get();
+        dd($logs_all);
+        return view('logs.index', compact('logs_all'));
     }
 
     /**

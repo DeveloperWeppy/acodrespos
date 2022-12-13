@@ -6,6 +6,7 @@ use Image;
 use App\Restorant;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\ReservationReason;
 use Illuminate\Support\Facades\Http;
 use Akaunting\Module\Facade as Module;
@@ -23,6 +24,12 @@ class Controller extends BaseController
      * @param {Object} laravel_image_resource, the resource
      * @param {Array} versinos
      */
+    public function getIpLocation(Request $request)
+    {
+        $get_loc = geoip()->getLocation($request->ip());
+
+        return $get_loc;
+    }
     public function saveImageVersions($folder, $laravel_image_resource, $versions,$return_full_url=false)
     {
         //Make UUID

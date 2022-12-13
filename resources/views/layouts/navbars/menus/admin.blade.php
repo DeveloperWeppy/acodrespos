@@ -133,6 +133,12 @@
                 <i class="fas fa-info-circle text-info" aria-hidden="true" style="font-size:20px"></i> {{ __('PQRS') }}
             </a>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('logs.index') }}">
+                <i class="fas fa-clipboard-check text-orange" aria-hidden="true" style="font-size:20px"></i> {{ __('Logs Auditoría') }}
+            </a>
+        </li>
         
         <li class="nav-item">
             <a class="nav-link" href="{{ route('settings.index') }}">

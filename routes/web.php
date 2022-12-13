@@ -184,6 +184,11 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('/store-respuesta', 'PqrsController@storeRespuesta')->name('storeRespuesta');
         });
 
+        #routes for file LOGS
+        Route::prefix('auditoria')->name('logs.')->group(function () {
+            Route::get('/', 'LogController@index')->name('index');
+        });
+
         #routes for config of reservations
         Route::prefix('reservas')->name('reservation.')->group(function () {
             Route::get('/', 'ConfigReservationController@index')->name('index');
