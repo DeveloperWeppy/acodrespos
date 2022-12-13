@@ -79,7 +79,7 @@
                         </div>
                         @else
                         <div class="text-center">
-                            <h3>Parece que no hay ninguna pregunta aún...</h3>
+                            <h3>Parece que no hay ninguna solicitud de PQR aún...</h3>
                         </div>
                     @endif
                 </div>
