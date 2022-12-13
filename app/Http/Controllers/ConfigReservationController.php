@@ -512,7 +512,15 @@ class ConfigReservationController extends Controller
                     $registros = 1;
                 }
             }else{
-                $restaurant_id = auth()->user()->restorant->id;
+                
+                if(auth()->user()->hasRole('owner')){
+                    $restaurant_id = auth()->user()->restorant->id;
+                }
+                if(auth()->user()->hasRole('client')){
+                    $restaurant_id = $request->res;
+                }
+
+               
                 $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids'))->where('companie_id','=',$restaurant_id)->where('date_reservation','=',$fecha)->first();
                 if(isset($reservation) && $reservation->ids!=null && isset($request->mesas)){
                     $ids = explode(",",$reservation->ids);

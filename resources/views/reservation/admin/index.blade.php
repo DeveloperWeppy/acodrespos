@@ -348,9 +348,12 @@
             </div>
             @else
             <div class="row">
-                <div class="col-sm-12">
-                    <p>No has habilitado <strong>Reservación</strong>, ve al módulo de Restaurante y habilita la opción de Reservación para que puedas configurar todos los parámetros de Reservas</p>
-                    <lottie-player src="{{ asset('animations/no_check.json')}}"  background="transparent"  speed="1"  style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                <div class="card bg-secondary shadow p-5">
+                    <div class="col-sm-12">
+                   
+                        <p>No has habilitado <strong>Reservación</strong>, ve al módulo de Restaurante y habilita la opción de Reservación para que puedas configurar todos los parámetros de Reservas</p>
+                        <lottie-player src="{{ asset('animations/no_check.json')}}"  background="transparent"  speed="1"  style="width: 300px; height: 300px;" loop autoplay></lottie-player>
+                    </div>
                 </div>
             </div>
             @endif
