@@ -121,6 +121,7 @@
       var selectClientText="";
       var mesaocupada = false;
       var rerservaId = false;
+      var ocuMesa = 0;
       
    </script>
    <script src="{{ asset('custom') }}/js/cartPOSFunctions.js"></script>
@@ -501,7 +502,12 @@
       
       //console.log(mesaocupada);
       if(EXPEDITION==3){
-        ocupacionMesa();
+        if(ocuMesa==1){
+          ocupacionMesa();
+        }else{
+          ocuparMesa(0);
+        }
+        
       }
      
     }
@@ -616,6 +622,8 @@
 
       //The drag id
       var dragid=event.currentTarget.id;
+      ocuMesa = event.currentTarget.getAttribute("data-ocupado");
+    
       var id=dragid.replace('drag-',"");
       openTable(id,"");
       event.preventDefault()
