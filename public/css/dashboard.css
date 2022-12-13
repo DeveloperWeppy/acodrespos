@@ -174,3 +174,7 @@
   .custom-map-control-button:hover {
     color:black;
   }
+
+  #input-phone{
+    padding-left: 82px !important;
+  }

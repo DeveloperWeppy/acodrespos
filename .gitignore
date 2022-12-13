@@ -3,6 +3,9 @@
 /storage/*.key
 .env
 storage/installed
+storage/app
+storage/framework
+storage/logs
 public/uploads
 public/android-chrome-192x192.png
 public/android-chrome-256x256.png

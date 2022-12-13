@@ -74,5 +74,7 @@ class Kernel extends HttpKernel
         'verifiedSetup' =>  \App\Http\Middleware\EnsureSetupIsDone::class,
         'impersonate' => \App\Http\Middleware\Impersonate::class,
         'ChangePassword' => \App\Http\Middleware\CheckChangePassword::class,
+        'validateAccessPqr' => \App\Http\Middleware\ValidateAccesPqr::class,
+        'okaccespqr' => \App\Http\Middleware\OkAccessPqr::class,
     ];
 }

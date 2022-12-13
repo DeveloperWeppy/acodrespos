@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//comandos
+Route::get('storage-link', function () {
+    Artisan::call('storage:link');
+});
 
 Route::get('/', 'FrontEndController@index')->name('front');
 Route::get('/'.config('settings.url_route').'/{alias}', 'FrontEndController@restorant')->name('vendor');
@@ -34,6 +39,16 @@ Route::get('/pdf/{id?}', 'PdfController@get')->name('pdf');
 Route::get('/selectpay/{order}', 'PaymentController@selectPaymentGateway')->name('selectpay');
 Route::get('/selectedpaymentt/{order}/{payment}', 'PaymentController@selectedPaymentGateway')->name('selectedpaymentt');
 
+//route of pqr
+Route::get('/diligenciar-solicitud', 'PqrsController@index')->name('pqrs.index');
+Route::post('pqrs-guardar', 'PqrsController@store')->name('pqrs.store');
+Route::post('/pqrs-acceso/validar', 'PqrsController@validate_acces')->name('pqrs.validate_acces');
+Route::get('/pqrs-acceso/validacion', function () {
+    return view('pqrs.includes.validateacces');
+})->name('pqrs.validateaccespqr');
+
+    Route::get('/detalle-solicitud/{id}', 'PqrsController@detalle')->middleware('validateAccessPqr')->name('pqrs.detalle');
+    Route::get('/detalle-solicitud-radicada/{id}', 'PqrsController@detalle_radicada')->middleware('okaccespqr')->name('pqrs.detalle_radicada');
 
 Route::group(['middleware' => ['auth','impersonate']], function () {
     Route::group(['middleware' => ['ChangePassword']], function () {
@@ -159,6 +174,14 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::post('guardar', 'ConfigCuentasBancariasController@store')->name('store');
             Route::get('/del/{id}', 'ConfigCuentasBancariasController@destroy')->name('delete');
             Route::post('obtener', 'ConfigCuentasBancariasController@geInfoCuentas')->name('obtener');
+        });
+
+        #routes for file PQR
+        Route::prefix('pqrs')->name('pqrs.')->group(function () {
+            Route::get('/', 'PqrsController@index_admin')->name('index_admin');
+            Route::get('/detalle-pqr/{id}', 'PqrsController@show')->name('show');
+            Route::post('/updateestadopqr', 'PqrsController@updateStatus')->name('updateStatus');
+            Route::post('/store-respuesta', 'PqrsController@storeRespuesta')->name('storeRespuesta');
         });
 
         #routes for config of reservations

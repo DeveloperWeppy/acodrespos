@@ -71,6 +71,7 @@
         "spatie/laravel-translatable": "^4.6",
         "spatie/opening-hours": "^2.10",
         "stripe/stripe-php": "^7.60",
+        "torann/geoip": "^3.0",
         "twilio/sdk": "^6.11",
         "unicodeveloper/laravel-paystack": "^1.0",
         "willvincent/laravel-rateable": "2.3.0"

@@ -129,6 +129,12 @@
         @endforeach
 
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('pqrs.index_admin') }}">
+                <i class="fas fa-info-circle text-info" aria-hidden="true" style="font-size:20px"></i> {{ __('PQRS') }}
+            </a>
+        </li>
+        
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('settings.index') }}">
                 <i class="ni ni-settings text-black"></i> {{ __('Site Settings') }}
             </a>

@@ -229,7 +229,7 @@ return [
         Spatie\CookieConsent\CookieConsentServiceProvider::class,
         Spatie\EloquentSortable\EloquentSortableServiceProvider::class,
         Unicodeveloper\Paystack\PaystackServiceProvider::class,
-
+        \Torann\GeoIP\GeoIPServiceProvider::class,
     ],
 
     /*
@@ -290,8 +290,9 @@ return [
         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
         'Zipper' => Chumper\Zipper\Zipper::class,
         'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
-        'Pusher' => Pusher\Pusher::class
+        'Pusher' => Pusher\Pusher::class,
         //'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class
     ],
 
 ];
