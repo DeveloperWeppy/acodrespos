@@ -36,7 +36,7 @@ class PqrsController extends Controller
     public function index_admin(Request $request)
     {
         $get_loc = geoip()->getLocation($request->ip());
-        dd($get_loc);
+        
         $pqrs_all = Pqrs::paginate(7);
         return view('pqrs.admin.index', compact('pqrs_all'));
     }
