@@ -126,10 +126,9 @@
 
                         </div>
                     </div>
-                    <div class="modal-footer" >
-
-                        <i id="indicator" style="display: none" class="fas fa-spinner fa-spin"></i>
-                        <button type="button" id="pagarReserva" onclick="pagarReserva()" class="btn bg-gradient-primary">
+                    <div class="modal-footer" v-if="(totalPriceRestadoFormated==0)">
+                        
+                        <button type="button"  id="pagarReserva" onclick="pagarReserva()" class="btn bg-gradient-primary">
                             <span class="btn-inner--text">{{ __('Submit')}}</span>
                             <span class="btn-inner--icon"><i class="ni ni-curved-next"></i></span>
                         </button>

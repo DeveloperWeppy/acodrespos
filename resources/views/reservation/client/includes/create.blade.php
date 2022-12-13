@@ -78,18 +78,29 @@
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Jornada</label>
+                                                    <div class="">
+                                                        <select name="jor" id="jor" class="form-control form-control-sm" required>
+                                                            
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="form-control-label">Fecha</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                                         </div>
-                                                        <input name="fec" class="form-control datepickerReserva" required placeholder="Fecha" type="text">
+                                                        <input name="fec" class="form-control datepickerReserva" value="{{$now}}" required placeholder="Fecha" type="text">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="form-control-label">Hora</label>
                                                     <input name="hora" class="form-control timepicker" placeholder="Hora" required type="text">
@@ -140,29 +151,18 @@
 
             var porcentagePayment = 0;
 
+            var minH = 0;
+            var intH = 0;
+
+            var jornadas = [];
+            var jornada = [];
+
          
             $('#valorMesa').html(puntosMil(precioEstandar));
             $('#valorMesas').html("0");
             $('#valorMotivo').html("0");
 
-            function metodoPago(){
-                if ($("#paymentType").val()=='transferencia') {
-                    $('#selecuenta').show()
-                    $('#loadarchivo').show()
-                    $('#seletipocuenta').hide()
-                    $('.selecuenta2').hide()
-                }else if ($("#paymentType").val()=='cardterminal') {
-                    $('#selecuenta').hide()
-                    $('#seletipocuenta').hide()
-                    $('#loadarchivo').hide()
-                    $('.selecuenta2').show()
-                }else {
-                    $('#selecuenta').hide()
-                    $('#seletipocuenta').hide()
-                    $('#loadarchivo').hide()
-                    $('.selecuenta2').hide()
-                }
-            }
+        
 
             
      
@@ -181,7 +181,7 @@
                 },
                 methods: {
                     change: function (event) {
-                        metodoPago();
+                    
                         if(event.target.value=="onlinepayments"||event.target.value=="cardterminal"||event.target.value=="transferencia"){
                             this.received=this.priceReservation;
                             this.receivedFormated = puntosMil(this.priceReservation);
@@ -212,6 +212,15 @@
 
                 var formData = new FormData();
                 formData.append('restaurant_id',$('#res').val());
+
+                Swal.fire({
+                    title: 'Cargando Restaurante',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showCloseButton: false,
+                    showConfirmButton: false,
+                    showCancelButton: false,
+                    });
                 
                 $.ajax({
                     headers: {
@@ -231,6 +240,18 @@
                                }
                             }
 
+                            if(data.datos[2]!=null){
+                                let selectJornada = $("#jor");
+                                jornadas = data.datos[2];
+                                jornada = data.datos[2][0];
+                                $k = 0;
+                                jornadas.forEach(element => {
+                                    selectJornada.append('<option value="'+$k+'" >Jornada '+($k+1)+'</option>');
+                                    $k++;
+                                });
+                                selectJornada.trigger('change');
+                            }
+
                             if(data.datos[3]!=null){
                                 var config = data.datos[3];
                                 precioEstandar = config.standard_price;
@@ -248,9 +269,13 @@
                                 }
                                 if(config.minimum_period="hora"){
                                     let hour = nowDate.getHours().toString();
-                                    let timPicker = $('.timepicker');
-                                    let minH = parseInt(hour)+parseInt(config.condition_period);
-                                    timPicker.timepicker('option', 'minTime', minH);
+                                    
+                                    minH = parseInt(hour)+parseInt(config.condition_period);
+                                    intH = config.interval_time;
+
+                                    let date = new Date($('input[name=fec]').val());
+                                    var dia = date.getDay();
+                                    selectHora(dia);
                                 }
                                 
                     
@@ -316,6 +341,67 @@
 
             });
 
+            $(document).on('change', '#jor', function(){
+                let date = new Date($("input[name=fec]").val());
+                var dia = date.getDay();
+                jornada = jornadas[$(this).val()];
+                selectHora(dia);
+            });
+
+            $("input[name=fec]").on('change', function() {
+                let date = new Date($(this).val());
+                var dia = date.getDay();
+                selectHora(dia);
+            });
+
+            function selectHora(dia){
+          
+                var max = '20';
+
+                switch (dia) {
+                    case 0:
+                        max = Object.values(jornada)[4];
+                        break;
+                    case 1:
+                        max = Object.values(jornada)[6];
+                        break;
+                    case 2:
+                        max = Object.values(jornada)[8];
+                        break;
+                    case 3:
+                        max = Object.values(jornada)[10];
+                        break;
+                    case 4:
+                        max = Object.values(jornada)[12];
+                        break;
+                    case 5:
+                        max = Object.values(jornada)[14];
+                        break;
+                    case 6:
+                        max = Object.values(jornada)[16];
+                        break;
+                }
+                if(minH==null && max==null ){
+                    minH = '6';
+                    max = '20';
+                }
+
+                let timPicker = $('.timepicker');
+                timPicker.timepicker('option', 'minTime', minH.toString());
+                timPicker.timepicker('option', 'maxTime', max);
+                
+            }
+
+            $('.timepicker').timepicker({
+                timeFormat: 'h:mm p',
+                interval: '60',
+                minTime: '8',
+                maxTime: '20',
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true,
+            });
+
            
 
 
@@ -350,7 +436,6 @@
                 dynamic: false,
                 dropdown: true,
                 scrollbar: true,
-                disabledTime:['7','8','9'],
             });
 
 

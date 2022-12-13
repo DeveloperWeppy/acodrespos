@@ -140,8 +140,9 @@ class ConfigReservationController extends Controller
         } 
         if (auth()->user()->hasRole('client')) {
             $restaurant=Restorant::where('active','=','1')->get();
+            $now =Carbon::now('America/Bogota')->format('Y-m-d');
 
-            return view('reservation.client.includes.create',compact('restaurant'));
+            return view('reservation.client.includes.create',compact('restaurant','now'));
 
         }
         return redirect()->route('orders.index')->withStatus(__('No Access'));
@@ -451,10 +452,13 @@ class ConfigReservationController extends Controller
             'standard_price' => strip_tags($_POST['standard_price']),
             'update_price' => strip_tags($_POST['update_price']),
             'check_no_cost' => (isset($_POST['check_no_cost'])?$_POST['check_no_cost']:0),
+            'interval_time' => (isset($_POST['interval'])?$_POST['interval']:0),
             ]
         );
-
+     
         if(isset($request->zonas)){
+
+            ReservationTables::where('companie_id','=',auth()->user()->restorant->id)->delete();
             foreach($request->zonas as $key){
                 $mesas = ReservationTables::updateOrCreate(
                     [
@@ -479,7 +483,7 @@ class ConfigReservationController extends Controller
     }
 
     public function getOcupation(Request $request){
-        $restaurant_id = $request->restaurant_id;
+        
         $error = false;
 
         if(isset($request->fecha,$request->hora,$request->mesas)){
@@ -502,14 +506,16 @@ class ConfigReservationController extends Controller
             $registros = 0;
 
             if(isset($request->reserva_id)){
+                $restaurant_id = $request->restaurant_id;
                 $reservation=DB::table('reservations')->where('companie_id','=',$restaurant_id)->where('date_reservation','=',$fecha)->first();
                 if(isset($reservation) && $reservation->id!=$request->reserva_id){
                     $registros = 1;
                 }
             }else{
-                $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids'))->where('companie_id','=',$restaurant_id)->whereBetween('date_reservation',[$fecha,$fechato])->get();
-                if(isset($reservation) && $reservation[0]->ids!=null && isset($request->mesas)){
-                    $ids = explode(",",$reservation[0]->ids);
+                $restaurant_id = auth()->user()->restorant->id;
+                $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) as ids'))->where('companie_id','=',$restaurant_id)->where('date_reservation','=',$fecha)->first();
+                if(isset($reservation) && $reservation->ids!=null && isset($request->mesas)){
+                    $ids = explode(",",$reservation->ids);
                     $mesas = $request->mesas;
                     $mesas=DB::table('reservations_clients')->select(DB::raw('count(id) contador'))->whereIn('reservation_id',$ids)->whereIn('table_id',$mesas)->get();
     
@@ -666,7 +672,7 @@ class ConfigReservationController extends Controller
 
         $motive = ReservationReason::where('companie_id', $restaurant_id)->where(['active'=>1])->get();
 
-        $jornadas = DB::table('hours')->where('restorant_id', $restaurant_id)->first();
+        $jornadas = DB::table('hours')->where('restorant_id', $restaurant_id)->get();
 
         $registros[0]=$areasMesas;
         $registros[1]=$motive;

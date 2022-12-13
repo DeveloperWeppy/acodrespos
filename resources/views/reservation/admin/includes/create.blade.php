@@ -254,6 +254,9 @@
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+
+                totalReservas.totalPriceRestado=(precioEstandar*mesas)+mot;
+                totalReservas.totalPriceRestadoFormated =  puntosMil((precioEstandar*mesas)+mot);
             });
 
             $("#zonas").on('change', function() {
@@ -266,6 +269,9 @@
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
+
+                totalReservas.totalPriceRestado=(precioEstandar*mesas)+mot;
+                totalReservas.totalPriceRestadoFormated =  puntosMil((precioEstandar*mesas)+mot);
             });
 
             $(document).on('change', '#jor', function(){

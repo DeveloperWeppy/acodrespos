@@ -221,6 +221,17 @@
                                                 value="0">
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="" class="form-control-label">Intervalo de tiempo en minutos entre cada reserva</label>
+                                            </div>
+                                            <input type="number" name="interval" class="form-control " id=""
+                                                value="0">
+                                        </div>
+                                    </div>
+    
     
                                     <div class="col-sm-12 col-12">
                                         <div class="form-group">
@@ -582,6 +593,9 @@
                         $('input[name=anticipation_time]').val(data[0].anticipation_time);
                         $('input[name=standard_price]').val(data[0].standard_price);
                         $('input[name=update_price]').val(data[0].update_price);
+                        $('input[name=interval]').val(data[0].interval);
+
+                        
                         if(data[0].condition_period==1){
                             $('input[name=time_reservation]').prop('checked', true);
                         }
