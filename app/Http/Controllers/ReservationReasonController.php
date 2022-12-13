@@ -5,10 +5,19 @@ namespace App\Http\Controllers;
 use App\Restorant;
 use Illuminate\Http\Request;
 use App\Models\ReservationReason;
+use App\Models\Reservation;
+
 use App\Http\Controllers\Controller;
 
 class ReservationReasonController extends Controller
 {
+
+
+    private function authChecker()
+    {
+        $this->ownerOnly();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,14 +48,27 @@ class ReservationReasonController extends Controller
     {
         $error = false;
         $mensaje = '';
+        $restaurant_id = auth()->user()->restorant->id;
 
-        $numcuenta_validate =  ReservationReason::where('name', $request->name)->where('companie_id', $request->restaurant_id)->exists();
+        $numcuenta_validate =  ReservationReason::where('id', $request->motive_id)->where('companie_id', $restaurant_id)->exists();
 
         if ($numcuenta_validate) {
-            return redirect()->back()->withStatus(__('error','Este motivo de reservación ya se encuentra registrado!'));
+            $register = ReservationReason::where('id',$request->motive_id)->update([
+                'name' => $request->name, 
+                'description' => $request->description, 
+                'price' => $request->price
+            ]);
+
+            if ($register) {
+                $error = false;
+                $mensaje = 'Modifcación de Motivo Exitosa';
+            } else {
+                $error = true;
+                $mensaje = 'Error! Se presento un problema al modificar el motivo de reserva, intenta de nuevo.';
+            }
         } else {
             $register = ReservationReason::create([
-                'companie_id' => $request->restaurant_id, 
+                'companie_id' => $restaurant_id, 
                 'name' => $request->name, 
                 'description' => $request->description, 
                 'price' => $request->price
@@ -64,11 +86,21 @@ class ReservationReasonController extends Controller
     }
 
     
+
+
+    
     public function cargarMotivos()
     {
         $restaurant_id = auth()->user()->restorant->id;
         $motivos = ReservationReason::where('companie_id', $restaurant_id)->get();
         return view('reservation.admin.includes.cargarmotivos', compact('motivos'))->render();
+    }
+
+    public function getMotivos()
+    {
+        $idd = $_POST['motivo_id'];
+        $motivo =  ReservationReason::where('id', $idd)->get();
+        return response()->json($motivo);
     }
 
     /**
@@ -111,8 +143,26 @@ class ReservationReasonController extends Controller
      * @param  \App\Models\ReservationReason  $reservationReason
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReservationReason $reservationReason)
+    public function destroy($id)
     {
-        //
+        $this->authChecker();
+
+        $restaurant_id = auth()->user()->restorant->id;
+
+
+        $contador = Reservation::where('companie_id', $restaurant_id)->where('reservation_reason_id','=',$id)->count();
+
+        if($contador==0){
+            $item = ReservationReason::findOrFail($id);
+            $item->delete();
+            return redirect('/reservas')->with('success','El motivo ha sido removido');
+        }
+        
+        return redirect('/reservas')->with('error','El motivo esta relacionado con algunas reservas');
+
+
+
+        //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
+        
     }
 }

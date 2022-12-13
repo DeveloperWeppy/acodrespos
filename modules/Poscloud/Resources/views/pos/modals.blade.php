@@ -319,3 +319,36 @@
 
 <!-- End POS invoice Modal -->
 
+
+<!-- Mesa reservada -->
+<div class="modal  fade " id="modalMesaReservada" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+    aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default">Mesa reservada</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p>Cliente: <span id="resNom"></span></p>
+                    <p>Identificación: <span id="resDoc"></span></p>
+                    <p>Teléfono: <span id="resTel"></span></p>
+                    <br>
+                    <p>Fecha de reserva: <span id="resFec"></span></p>
+                    <p>Hora de reserva: <span id="resHor"></span></p>
+
+                    <br>
+                    <p>Si el cliente no llega antes de <span id="resMin"></span>, la mesa se desocupará automaticamente.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                <button type="button" class="btn bg-gradient-primary" onclick="ocuparMesa(1)">Confirmar ocupacion de mesa</button>
+            </div>
+        </div>
+    </div>
+</div>
+

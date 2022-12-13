@@ -189,12 +189,28 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
             Route::get('/', 'ConfigReservationController@index')->name('index');
             Route::post('obtener-mesas', 'ConfigReservationController@geInfoMesas')->name('obtener');
             Route::post('guardar', 'ConfigReservationController@store')->name('store');
+            Route::post('storeConfig', 'ConfigReservationController@storeConfig')->name('storeConfig');
+            Route::post('getInfoConfig', 'ConfigReservationController@getInfoConfig')->name('getInfoConfig');
+            Route::get('create', 'ConfigReservationController@create')->name('create');
+            Route::post('store', 'ConfigReservationController@store')->name('store');
+            Route::post('storePendiente', 'ConfigReservationController@storePendiente')->name('storePendiente');
+            Route::post('storeUpdate', 'ConfigReservationController@storeUpdate')->name('storeUpdate');
+            Route::post('getOcupation', 'ConfigReservationController@getOcupation')->name('getOcupation');
+            Route::post('getTables', 'ConfigReservationController@getTables')->name('getTables');
+            Route::get('edit/{id}', 'ConfigReservationController@edit')->name('edit');
+            Route::post('inactiveReservation', 'ConfigReservationController@inactiveReservation')->name('desabilitarReserva');
+            Route::post('configRestaurant', 'ConfigReservationController@configRestaurant')->name('configRestaurant');
+            Route::get('getHours', 'ConfigReservationController@getHours')->name('getHours');
+            Route::get('editsolicitud/{id}', 'ConfigReservationController@editsolicitud')->name('editsolicitud');
+            
         });
 
         #routes for reason of reservations
         Route::prefix('reservas/motivos/')->name('reservationreason.')->group(function () {
             Route::post('guardar', 'ReservationReasonController@store')->name('store');
             Route::get('obtener', 'ReservationReasonController@cargarMotivos')->name('obtener');
+            Route::get('del/{id}', 'ReservationReasonController@destroy')->name('delete');
+            Route::post('getMotivos', 'ReservationReasonController@getMotivos')->name('getMotivos');
         });
         // --------------------------------------------------------------------------------- //
 

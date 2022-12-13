@@ -504,7 +504,7 @@ var Tooltip = (function() {
 //
 // Charts
 //
-
+if($(location).attr('pathname')=='/home'){
 'use strict';
 
 var Charts = (function() {
@@ -1452,17 +1452,18 @@ var RatingsResChart = (function() {
 		$chart.data('chart', ordersChart);
 	}
 
+	
 
-	charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
-	charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
-	charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,0);
-	charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,0);
-	charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,0);
-	charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,0);
+		charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
+		charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
+		charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,0);
+		charData('graf4','chart-hourorder','grafico4','line','','Numero de ordenes','',0,0,0);
+		charData('graf5','chart-orderbyday','grafico5','line','','Numero de ordenes','',0,1,0);
+		charData('graf6','chart-ordertotalbyday','grafico6','line','','Total en pesos','',1,0,0);
 
-	charData('graf7','chart-bycategory','grafico7','pie','','','',1,0,0);
-	charData('','chart-byvendor','grafico8','bar','','','',1,0,0);
-
+		charData('graf7','chart-bycategory','grafico7','pie','','','',1,0,0);
+		charData('','chart-byvendor','grafico8','bar','','','',1,0,0);
+	}
 
 //
 // Charts
