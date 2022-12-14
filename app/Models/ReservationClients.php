@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ReservationClientsController extends Model
+class ReservationClients extends Model
 {
     use HasFactory;
     protected $table = 'reservations_clients';
@@ -13,3 +13,4 @@ class ReservationClientsController extends Model
         'reservation_id', 'client_id','table_id','date_reservation',
     ];
 }
+

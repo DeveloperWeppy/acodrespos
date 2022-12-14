@@ -168,19 +168,7 @@ var js = {
         }
       })
     },
-    modal: function (){
-      $('.modal-content').resizable({
-        minHeight: 300,
-        minWidth: 300
-      });
-      $('.modal-dialog').draggable();
-  
-      $('#myModal').on('show.bs.modal', function() {
-        $(this).find('.modal-body').css({
-          'max-height': '100%'
-        });
-      });
-    },
+    
     select : function(){
       $("select").not(".noselecttwo").each(function( $pos ){
         var $this = $(this);
@@ -188,11 +176,6 @@ var js = {
           $settings = {};
           $this.addClass("select2init");
           
-          $('.select2').addClass('form-control');
-          $('.select2-selection').css('border','0');
-          $('.select2').css('width','100%');
-          $('.select2-selection__arrow').css('top','10px');
-          $('.select2-selection__rendered').css('color','#8898aa');
 
           var $ajax = $this.attr("data-feed");
           if (typeof $ajax !== typeof undefined && $ajax !== false){
@@ -206,6 +189,27 @@ var js = {
   
           $this.select2($settings);
         }
+      });
+
+
+      $('.select2').addClass('form-control');
+      $('.select2').css('width','100%');
+      $('.select2-selection').css('border','0');
+      $('.select2-selection__arrow').css('top','10px');
+      $('.select2-selection__rendered').css('color','#8898aa');
+
+    },
+    modal: function (){
+      $('.modal-content').resizable({
+        minHeight: 300,
+        minWidth: 300
+      });
+      $('.modal-dialog').draggable();
+  
+      $('#myModal').on('show.bs.modal', function() {
+        $(this).find('.modal-body').css({
+          'max-height': '100%'
+        });
       });
     },
 
