@@ -168,26 +168,16 @@ var js = {
         }
       })
     },
-    modal: function (){
-      $('.modal-content').resizable({
-        minHeight: 300,
-        minWidth: 300
-      });
-      $('.modal-dialog').draggable();
-  
-      $('#myModal').on('show.bs.modal', function() {
-        $(this).find('.modal-body').css({
-          'max-height': '100%'
-        });
-      });
-    },
+    
     select : function(){
       $("select").not(".noselecttwo").each(function( $pos ){
         var $this = $(this);
         if (!$this.hasClass("select2init")){
           $settings = {};
           $this.addClass("select2init");
-          
+
+          alert(1);
+
           $('.select2').addClass('form-control');
           $('.select2-selection').css('border','0');
           $('.select2').css('width','100%');
@@ -206,6 +196,19 @@ var js = {
   
           $this.select2($settings);
         }
+      });
+    },
+    modal: function (){
+      $('.modal-content').resizable({
+        minHeight: 300,
+        minWidth: 300
+      });
+      $('.modal-dialog').draggable();
+  
+      $('#myModal').on('show.bs.modal', function() {
+        $(this).find('.modal-body').css({
+          'max-height': '100%'
+        });
       });
     },
 
