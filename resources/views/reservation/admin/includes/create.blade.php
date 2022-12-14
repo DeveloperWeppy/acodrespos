@@ -30,7 +30,7 @@
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_client">{{ __('Client') }}</label>
                                         <div class="">
-                                            <select name="cli" class="form-control form-control-sm" required>
+                                            <select name="cli" class="form-control form-control-sm select2init" required>
                                                 <option value="" >Seleccionar cliente</option>
                                                 @foreach($clients as $key)
                                                 <option value="{{$key->id}}" >{{$key->number_identification}} - {{$key->name}}</option>
@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="name_client">Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</label>
-                                        <select name="zonas[]" class="form-control" id="zonas" multiple required>
+                                        <select name="zonas[]" class="form-control select2init" id="zonas" multiple required>
                                             <option value="">Seleccionar mesas</option>
                                             <?php
                                                 for ($i=0; $i < count($areasMesas) ; $i++) { 
@@ -58,7 +58,7 @@
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                         <label class="form-control-label" for="email_client">Motivo de reservación</label>
                                         <div class="">
-                                            <select name="mot" id="mot" class="form-control form-control-sm" required>
+                                            <select name="mot" id="mot" class="form-control form-control-sm select2init" required>
                                                 <option value="" data-price="0" >Seleccionar motivo</option>
                                                 @foreach($motive as $key)
                                                 <option value="{{$key->id}}" data-price="{{$key->price}}">{{$key->name}} ({{number_format($key->price, 2, ",", ".")}} COP) </option>
@@ -79,7 +79,7 @@
                                                 <div class="form-group">
                                                     <label class="form-control-label">Jornada</label>
                                                     <div class="">
-                                                        <select name="jor" id="jor" class="form-control form-control-sm" required>
+                                                        <select name="jor" id="jor" class="form-control form-control-sm select2init" required>
                                                             
                                                         </select>
                                                     </div>
