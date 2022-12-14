@@ -175,14 +175,7 @@ var js = {
         if (!$this.hasClass("select2init")){
           $settings = {};
           $this.addClass("select2init");
-
- 
-
-          $('.select2').addClass('form-control');
-          $('.select2-selection').css('border','0');
-          $('.select2').css('width','100%');
-          $('.select2-selection__arrow').css('top','10px');
-          $('.select2-selection__rendered').css('color','#8898aa');
+          
 
           var $ajax = $this.attr("data-feed");
           if (typeof $ajax !== typeof undefined && $ajax !== false){
@@ -197,6 +190,14 @@ var js = {
           $this.select2($settings);
         }
       });
+
+
+      $('.select2').addClass('form-control');
+      $('.select2').css('width','100%');
+      $('.select2-selection').css('border','0');
+      $('.select2-selection__arrow').css('top','10px');
+      $('.select2-selection__rendered').css('color','#8898aa');
+
     },
     modal: function (){
       $('.modal-content').resizable({
