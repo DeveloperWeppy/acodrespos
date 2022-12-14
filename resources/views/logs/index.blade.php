@@ -28,21 +28,30 @@
                             <table class="table align-items-center table-flush dataTable-table">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Ip</th>
-                                        <th>Módulo</th>
-                                        <th>Submodule</th>
-                                        <th>Evento</th>
+                                        <th>VER</th>
+                                        <th>Fecha y Hora</th>
                                         <th>Usuario</th>
+                                        <th>Módulo</th>
+                                        <th>Submodulo</th>
+                                        <th>Evento</th>
+                                        <th>Detalle del Evento</th>
                                     </tr>                                    
                                 </thead>
                                 <tbody>
                                     @foreach ($logs_all as $item)
+                                    @php
+                                        $hora = date_format($item->created_at, 'h:i A');
+                                    @endphp
                                     <tr>
-                                        <td>{{$item->ip}}</td>
+                                        <td>
+                                            <button type="button" class="btn badge badge-success badge-pill"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                        <td>{{date_format($item->created_at, 'Y-m-d')}} - {{$hora}}</td>
+                                        <td>{{$item->find($item->id)->usuario->name}}</td>
                                         <td>{{$item->module}}</td>
                                         <td>{{$item->submodule}}</td>
                                         <td>{{$item->action}}</td>
-                                        <td>{{$item->find($item->id)->usuario->name}}</td>
+                                        <td>{{$item->detail}}</td>
                                     </tr>
                                     @endforeach
                                     
@@ -55,7 +64,7 @@
                                 {{ $logs_all->appends(Request::all())->links() }}
                             </nav>
                             @else
-                                <h4>{{ __('You don`t have any orders') }} ...</h4>
+                                <h4>{{ __('No hay resultados') }} ...</h4>
                             @endif
                         </div>
                         @else

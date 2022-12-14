@@ -16,8 +16,8 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs_all = Log::where('created_at', '=', Carbon::now())->get();
-        dd($logs_all);
+        $logs_all = Log::where('created_at', '>=', Carbon::today())->paginate(15);
+        //dd($logs_all);
         return view('logs.index', compact('logs_all'));
     }
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\RestoArea;
 use App\Tables;
+use App\RestoArea;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Akaunting\Module\Facade as Module;
 
 class TablesController extends Controller
@@ -118,6 +120,7 @@ class TablesController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::create([
             'name'=>$request->name,
@@ -126,6 +129,19 @@ class TablesController extends Controller
             'restaurant_id'=>$this->getRestaurant()->id,
         ]);
         $item->save();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MESAS',
+            'submodule' => '',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nueva mesa, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
     }
@@ -180,13 +196,25 @@ class TablesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
         $item->name = $request->name;
         $item->restoarea_id = $request->restoarea_id;
         $item->size = $request->size;
         $item->update();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MESAS',
+            'submodule' => '',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la mesa, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
         return redirect('/tables?do_not_redirect=true')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
@@ -199,10 +227,24 @@ class TablesController extends Controller
      */
     public function destroy($id)
     {
+        $function = $this->getIpLocation();
         //dd($id)
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
+        $name_table = $item->name;
         $item->delete();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MESAS',
+            'submodule' => '',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó la mesa, ' .$name_table,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         //return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
         return redirect('/tables?do_not_redirect=true')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
 

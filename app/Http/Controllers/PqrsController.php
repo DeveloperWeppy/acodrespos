@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\Models\Log;
 use App\Models\Pqrs;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -47,6 +48,7 @@ class PqrsController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $error = false;
         $mensaje = '';
 
@@ -76,6 +78,19 @@ class PqrsController extends Controller
             }
             
             if (Pqrs::create($register_pqr)) {
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'PQR',
+                    'submodule' => '',
+                    'action' => 'Registro',
+                    'detail' => 'Registro de Nueva solicitud de PQR',
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
+
                 $error = false;
                 $mensaje = 'Registro de Pregunta Exitosa!';
             } else {
@@ -87,6 +102,7 @@ class PqrsController extends Controller
 
     public function storeRespuesta(Request $request)
     {
+        $function = $this->getIpLocation();
         $error = false;
         $mensaje = '';
 
@@ -106,6 +122,19 @@ class PqrsController extends Controller
                 $radicat_pqr = Pqrs::find($request->id);
                 $not = new SolicitudPqrNotification($radicat_pqr);
                 $radicat_pqr->notify($not);
+
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'PQR',
+                    'submodule' => '',
+                    'action' => 'Actualización',
+                    'detail' => 'Se dió respuesta a la solicitud con id #'.$request->id,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
 
                 $error = false;
                 $mensaje = 'Registro de Pregunta Exitosa!';
@@ -157,6 +186,7 @@ class PqrsController extends Controller
 
     public function updateStatus(Request $request)
     {
+        $function = $this->getIpLocation();
         $error = false;
         $mensaje = '';
 
@@ -170,7 +200,20 @@ class PqrsController extends Controller
                 $radicat_pqr = Pqrs::find($id_pqr);
                 $not = new SolicitudPqrNotification($radicat_pqr);
                 $radicat_pqr->notify($not);
-                //$radicat_pqr->notify(new SolicitudPqrNotification('En Revisión', $radicat_pqr->name, $radicat_pqr->type_radicate));
+                
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'PQR',
+                    'submodule' => '',
+                    'action' => 'Actualización',
+                    'detail' => 'Se inició la revisión a la solicitud con id #'.$id_pqr,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
+
                 $error = false;
                 $mensaje = '¡Cambio de estado Exitoso!';
             } else {

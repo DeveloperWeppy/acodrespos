@@ -38,7 +38,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $function = $this->getIpLocation($request);
+        $function = $this->getIpLocation();
 
         $name_count = Categories::where('name', $request->category_name)->where('restorant_id', $request->restaurant_id)->count();
 
@@ -82,7 +82,7 @@ class CategoriesController extends Controller
 
     public function storeareakitchen(Request $request)
     {
-        $function = $this->getIpLocation($request);
+        $function = $this->getIpLocation();
 
         $area = new AreaKitchen();
         $area->name = $request->name;
@@ -93,7 +93,7 @@ class CategoriesController extends Controller
         Log::create([
             'user_id' => Auth::user()->id,
             'ip' => $request->ip(),
-            'module' => 'MENU',
+            'module' => 'MENÚ',
             'submodule' => 'AREA DE COCINA',
             'action' => 'Registro',
             'detail' => 'Registro de Nueva área de cocina, ' .$request->category_name,
@@ -142,10 +142,22 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, Categories $category)
     {
+        $function = $this->getIpLocation();
         $category->name = $request->category_name;
         $category->areakitchen_id = $request->areakitchen_idd;
         $category->update();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'CATEGORIA',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la categoría, ' .$request->category_name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->back()->withStatus(__('Category name successfully updated.'));
     }
 
@@ -157,7 +169,21 @@ class CategoriesController extends Controller
      */
     public function destroy(Categories $category)
     {
+        $function = $this->getIpLocation();
+        
         $category->delete();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MENÚ',
+            'submodule' => 'CATEGORIA',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó la categoría, ' .$category->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('items.index')->withStatus(__('Category successfully deleted.'));
     }
 }

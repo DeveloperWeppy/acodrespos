@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\User;
 use Auth;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
+use App\User;
+use App\Models\Log;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -39,8 +40,21 @@ class LoginController extends Controller
      */
     public function redirectTo()
     {
+        $function = $this->getIpLocation();
         $this->redirectTo = auth()->user()->hasRole('kitchen') ? route('live') : route('home');
 
+        Log::create([
+            'user_id' => auth()->user()->id,
+            'ip' => $function->ip,
+            'module' => 'ACCESO',
+            'submodule' => 'LOGIN',
+            'action' => 'Ingreso',
+            'detail' => 'El usuario, ' .auth()->user()->name .' ha accedido a la plataforma',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         //dd($this->redirectTo);
         return $this->redirectTo;
     }

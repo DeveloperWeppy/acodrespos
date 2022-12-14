@@ -1170,6 +1170,7 @@ class ComposerStaticInitfcf63e3f856a2ab45654b2f0214a9500
         'App\\Notifications\\DriverCreated' => __DIR__ . '/../..' . '/app/Notifications/DriverCreated.php',
         'App\\Notifications\\ManagerCreated' => __DIR__ . '/../..' . '/app/Notifications/ManagerCreated.php',
         'App\\Notifications\\OrderNotification' => __DIR__ . '/../..' . '/app/Notifications/OrderNotification.php',
+        'App\\Notifications\\Reservations' => __DIR__ . '/../..' . '/app/Notifications/Reservations.php',
         'App\\Notifications\\RestaurantCreated' => __DIR__ . '/../..' . '/app/Notifications/RestaurantCreated.php',
         'App\\Notifications\\SolicitudPqrNotification' => __DIR__ . '/../..' . '/app/Notifications/SolicitudPqrNotification.php',
         'App\\Notifications\\SystemTest' => __DIR__ . '/../..' . '/app/Notifications/SystemTest.php',

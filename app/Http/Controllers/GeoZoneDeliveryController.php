@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use App\Models\GeoZoneDelivery;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 class GeoZoneDeliveryController extends Controller
 {
     public function get()
@@ -41,14 +44,28 @@ class GeoZoneDeliveryController extends Controller
     }
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $data_zone=array( 'name' => $request->name,'radius' => $request->radius,'price'=>$request->price,'restorant_id'=>auth()->user()->restorant->id, 'colorarea' =>$request->colorarea,'active' =>$request->active);
         if ($d_zone = GeoZoneDelivery::create($data_zone)) {
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'RESTAURANTES',
+                'submodule' => 'AREAS DE ENTREGA',
+                'action' => 'Registro',
+                'detail' => 'Registro de Nueva Área de Entrega, ' .$request->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return array("data"=>$d_zone,"mensaje"=>true);
         }
         return array("mensaje"=>false);
     }
     public function updated($id,Request $request)
     {
+        $function = $this->getIpLocation();
         $data_zone=array( 'name' => $request->name,'price'=>$request->price,'restorant_id'=>auth()->user()->restorant->id, 'colorarea' =>$request->colorarea,'active' =>$request->active);
         if($request->has('radius')) {
             if($request->radius!=null){
@@ -56,11 +73,36 @@ class GeoZoneDeliveryController extends Controller
             }
         }
         GeoZoneDelivery::findOrFail($id)->update($data_zone);
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESTAURANTES',
+            'submodule' => 'AREAS DE ENTREGA',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó el Área de Entrega, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return array("data"=>"","table"=>"","mensaje"=>true);
     }
     public function destroy($id)
     {
+        $function = $this->getIpLocation();
         GeoZoneDelivery::destroy($id);
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => 'AREAS DE ENTREGA',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó el Área de Entrega',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
     }
     public function getgeo(){
     }

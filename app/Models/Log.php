@@ -24,6 +24,6 @@ class Log extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 }

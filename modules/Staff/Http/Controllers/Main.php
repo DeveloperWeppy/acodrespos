@@ -5,10 +5,11 @@ namespace Modules\Staff\Http\Controllers;
 use App\User;
 use App\Tables;
 use App\RestoArea;
+use App\Models\Log;
 use Illuminate\Support\Str;
+
+
 use Illuminate\Http\Request;
-
-
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -132,7 +133,7 @@ class Main extends Controller
      */
     public function store(Request $request)
     {
-        
+        $function = $this->getIpLocation();
 
         if($request->rol=="manager_restorant"){
             $numUser=User::role('manager_restorant')->where('restaurant_id','=',auth()->user()->restorant->id)->count();
@@ -160,6 +161,19 @@ class Main extends Controller
         $item->save();
 
         $item->assignRole($request->rol);
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'PERSONAL',
+            'submodule' => '',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nuevo miembro, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
     }
@@ -235,6 +249,7 @@ class Main extends Controller
      */
     public function update(Request $request, $id)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
         $item->name = $request->name;
@@ -245,7 +260,18 @@ class Main extends Controller
         $item->update();
 
         $item->assignRole($request->rol);
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'PERSONAL',
+            'submodule' => '',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó datos de, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
 
@@ -257,6 +283,7 @@ class Main extends Controller
      */
     public function destroy($id)
     {
+        $function = $this->getIpLocation();
         /* $this->authChecker();
         $item = $this->provider::findOrFail($id);
         if (!$this->getRestaurant()->id==$item->restaurant_id) {
@@ -270,7 +297,7 @@ class Main extends Controller
 
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
-
+        $name_staff = $item->name;
         if (!$this->getRestaurant()->id==$item->restaurant_id) {
             $error = true;
             $mensaje = 'Error! Acción no autorizada';
@@ -278,6 +305,18 @@ class Main extends Controller
         }else{
             $item->delete();
             $error = false;
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'PERSONAL',
+                'submodule' => '',
+                'action' => 'Eliminación',
+                'detail' => 'Se eliminó a, ' .$name_staff,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
         }
 
         echo json_encode(array('error' => $error, 'mensaje' => $mensaje));

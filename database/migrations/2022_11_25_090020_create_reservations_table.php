@@ -15,16 +15,16 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->integer('companie_id', 11);
-            $table->integer('client_id', 11);
-            $table->integer('check_percentage', 11);
+            $table->foreignId('companie_id')->references('id')->on('companies');
+            $table->foreignId('client_id')->references('id')->on('users');
+            $table->integer('check_percentage')->default(0);
             $table->foreignId('reservation_reason_id')->references('id')->on('reservation_reasons');
             $table->longText('description');
-            $table->integer('mesas', 11);
-            $table->integer('personas', 11);
+            $table->integer('mesas')->default(0);
+            $table->integer('personas')->default(0);
             $table->string('payment_status', 255);
-            $table->integer('reservation_status', 11);
-            $table->integer('active', 11);
+            $table->integer('reservation_status')->default(0);
+            $table->integer('active')->default(0);
             $table->string('note', 255);
             $table->longText('observations');
             $table->dateTime('date_reservation');

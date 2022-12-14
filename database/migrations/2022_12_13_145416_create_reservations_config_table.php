@@ -17,14 +17,14 @@ class CreateReservationsConfigTable extends Migration
             $table->id();
             $table->foreignId('companie_id')->references('id')->on('companies');
             $table->string('minimum_period', 250);
-            $table->integer('condition_period', 11);
-            $table->integer('percentage_payment', 11);
+            $table->integer('condition_period')->default(0);
+            $table->integer('percentage_payment')->default(0);
             $table->string('wait_time', 250);
-            $table->integer('anticipation_time', 11);
-            $table->integer('interval_time', 11);
+            $table->integer('anticipation_time')->default(0);
+            $table->integer('interval_time')->default(0);
             $table->string('standard_price', 250);
             $table->string('update_price', 250);
-            $table->integer('check_no_cost', 11);
+            $table->integer('check_no_cost')->default(0);
             $table->timestamps();
         });
     }

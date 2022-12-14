@@ -247,6 +247,7 @@ return array(
     'App\\Notifications\\DriverCreated' => $baseDir . '/app/Notifications/DriverCreated.php',
     'App\\Notifications\\ManagerCreated' => $baseDir . '/app/Notifications/ManagerCreated.php',
     'App\\Notifications\\OrderNotification' => $baseDir . '/app/Notifications/OrderNotification.php',
+    'App\\Notifications\\Reservations' => $baseDir . '/app/Notifications/Reservations.php',
     'App\\Notifications\\RestaurantCreated' => $baseDir . '/app/Notifications/RestaurantCreated.php',
     'App\\Notifications\\SolicitudPqrNotification' => $baseDir . '/app/Notifications/SolicitudPqrNotification.php',
     'App\\Notifications\\SystemTest' => $baseDir . '/app/Notifications/SystemTest.php',

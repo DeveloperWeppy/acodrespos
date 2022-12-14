@@ -7,28 +7,29 @@ use DB;
 use Image;
 use Artisan;
 use App\City;
-use App\Order;
 use App\User;
 use DateTime;
 use App\Hours;
 use App\Items;
+use App\Order;
 use App\Plans;
 use App\Extras;
 use App\Tables;
 use App\Restorant;
 use Carbon\Carbon;
 use App\Categories;
+use App\Models\Log;
 use App\Traits\Fields;
 use App\Models\Options;
 use App\Traits\Modules;
 use App\Events\NewVendor;
 use App\Models\LocalMenu;
-use App\Models\GeoZoneDelivery;
 use App\Events\CallWaiter;
 use Illuminate\Support\Str;
 use App\Imports\RestoImport;
 use Illuminate\Http\Request;
 use Spatie\Geocoder\Geocoder;
+use App\Models\GeoZoneDelivery;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -123,6 +124,7 @@ class RestorantController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         //Validate first
         $request->validate([
             'name' => ['required', 'string', 'unique:companies,name', 'max:255'],
@@ -168,6 +170,18 @@ class RestorantController extends Controller
         $restaurant->invoice_footer= strip_tags($request->invoice_footer.'');
         $restaurant->save();
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESTAURANTES',
+            'submodule' => '',
+            'action' => 'Registro',
+            'detail' => 'Se registró el restaurante, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
        //default hours
        if(!$request->has('cloneWith')){
         $hours = new Hours();
@@ -191,6 +205,19 @@ class RestorantController extends Controller
         $hours->{'6_to'} = config('settings.time_format') == "AM/PM" ? "5:00 PM" : "17:00";
         
         $hours->save();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESTAURANTES',
+            'submodule' => 'HORAS LABORALES',
+            'action' => 'Registro',
+            'detail' => 'Se registró las horas laborales del restaurante, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
        }
 
         $restaurant->setConfig('disable_callwaiter', 0);
@@ -230,11 +257,24 @@ class RestorantController extends Controller
 
     public function addnewshift($restaurantid)
     {
+        $function = $this->getIpLocation();
         $restaurant=Restorant::findOrFail($restaurantid);
         if ($this->verifyAccess($restaurant)) {
             $hours = new Hours();
             $hours->restorant_id = $restaurant->id;
             $hours->save();
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'RESTAURANTES',
+                'submodule' => 'HORAS LABORALES',
+                'action' => 'Registro',
+                'detail' => 'Se registró nueva jornada laboral del restaurante, ' .$restaurant->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return redirect()->route('admin.restaurants.edit', $restaurant->id)->withStatus(__('New shift added!'));
         }else{
             abort(404);
@@ -376,6 +416,8 @@ class RestorantController extends Controller
      */
     public function update(Request $request, $restaurantid)
     {
+        $function = $this->getIpLocation();
+
         $restaurant = Restorant::findOrFail($restaurantid);
         $restaurant->name = strip_tags($request->name);
         $restaurant->address = strip_tags($request->address);
@@ -533,6 +575,18 @@ class RestorantController extends Controller
 
 
         $restaurant->update();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESTAURANTES',
+            'submodule' => '',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó datos del restaurante, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
 
         //Update custom fields
@@ -560,6 +614,7 @@ class RestorantController extends Controller
      */
     public function destroy($restaurantid)
     {
+        $function = $this->getIpLocation();
         $restaurant=Restorant::findOrFail($restaurantid);
         if (! auth()->user()->hasRole('admin')) {
             dd('Not allowed');
@@ -568,11 +623,24 @@ class RestorantController extends Controller
         $restaurant->active = 0;
         $restaurant->save();
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => '',
+            'action' => 'Inactivación',
+            'detail' => 'Se inactivó el restaurante, ' .$restaurant->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('admin.restaurants.index')->withStatus(__('Restaurant successfully deactivated.'));
     }
 
     public function remove($restaurantid)
     {
+        $function = $this->getIpLocation();
         $restaurant=Restorant::findOrFail($restaurantid);
         if (! auth()->user()->hasRole('admin')) {
             dd('Not allowed');
@@ -582,6 +650,19 @@ class RestorantController extends Controller
 
         //delete restaurant
         $user->restorant->delete();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => '',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó el restaurante de, ' .$user,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         if ($user->email != 'owner@example.com') {
             //delete user
@@ -606,10 +687,24 @@ class RestorantController extends Controller
 
     public function updateLocation(Restorant $restaurant, Request $request)
     {
+        $function = $this->getIpLocation();
         $restaurant->lat = $request->lat;
         $restaurant->lng = $request->lng;
 
         $restaurant->update();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => 'UBICACIÓN',
+            'action' => 'Actualización',
+            'detail' => 'El restaurante, ' .$restaurant.' actualizó su ubicación',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return response()->json([
             'status' => true,
@@ -630,8 +725,22 @@ class RestorantController extends Controller
 
     public function updateDeliveryArea(Restorant $restaurant, Request $request)
     {
+        $function = $this->getIpLocation();
         $restaurant->radius = json_decode($request->path);
         $restaurant->update();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESTAURANTES',
+            'submodule' => 'ZONA DE ENTREGA',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la Zona General de Entrega',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return response()->json([
             'status' => true,
@@ -662,17 +771,31 @@ $restaurant=Restorant::findOrFail($restaurantid);
     }
 
     public function workingHoursremove(Hours $hours){
+        $function = $this->getIpLocation();
         if (!$this->verifyAccess($hours->restorant)) {
             abort(404);
         }
 
 
         $hours->delete();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => 'HORAS LABORALES',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó el horario laboral',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('admin.restaurants.edit',  $hours->restorant_id)->withStatus(__('Working hours successfully updated!'));
     }
 
     public function workingHours(Request $request)
     {
+        $function = $this->getIpLocation();
         $hours = Hours::where(['id' => $request->shift_id])->first();
 
         $shift="_shift".$request->shift_id;
@@ -764,6 +887,18 @@ $restaurant=Restorant::findOrFail($restaurantid);
         }
         
         if ($hours->update()) {
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'RESTAURANTES',
+                'submodule' => 'HORAS LABORALES',
+                'action' => 'Actualización',
+                'detail' => 'Se actualizó el horario laboral',
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return redirect()->route('admin.restaurants.edit',  $request->rid)->withStatus(__('Working hours successfully updated!'));
         } 
 
@@ -889,6 +1024,7 @@ $restaurant=Restorant::findOrFail($restaurantid);
             $owner->active = 1;
             $owner->update();
 
+            
             //Send email to the user/owner
             $owner->notify(new RestaurantCreated($generatedPassword, $restaurant, $owner));
         }
@@ -896,9 +1032,22 @@ $restaurant=Restorant::findOrFail($restaurantid);
 
     public function activateRestaurant($restaurantid)
     {
+        $function = $this->getIpLocation();
         $restaurant=Restorant::findOrFail($restaurantid);
         $this->makeRestaurantActive($restaurant);
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'RESTAURANTES',
+            'submodule' => '',
+            'action' => 'Activación',
+            'detail' => 'Se activó el restaurante, ' .$restaurant->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('admin.restaurants.index')->withStatus(__('Restaurant successfully activated.'));
     }
 

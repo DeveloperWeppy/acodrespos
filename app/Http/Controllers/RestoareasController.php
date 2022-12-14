@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\RestoArea;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Akaunting\Module\Facade as Module;
 
 class RestoareasController extends Controller
@@ -107,6 +109,7 @@ class RestoareasController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::create([
             'name'=>$request->name,
@@ -114,6 +117,18 @@ class RestoareasController extends Controller
         ]);
         $item->save();
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'ÁREAS DE RESTAURANTE',
+            'submodule' => '',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nueva área, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
     }
 
@@ -164,11 +179,24 @@ class RestoareasController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::findOrFail($id);
         $item->name = $request->name;
         $item->update();
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'ÁREAS DE RESTAURANTE',
+            'submodule' => '',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó el área, ' .$request->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
 
@@ -180,14 +208,27 @@ class RestoareasController extends Controller
      */
     public function destroy($id)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
         $item = $this->provider::find($id);
-
+        $name_area= $item->name;
        
         if(isset($item->tables)){
             if ($item->tables->count() > 0) {
                 return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_items_associated', ['item'=>__($this->title)]));
             } else {
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $function->ip,
+                    'module' => 'ÁREAS DE RESTAURANTE',
+                    'submodule' => '',
+                    'action' => 'Eliminación',
+                    'detail' => 'Se eliminó el área, ' .$name_area,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
                 $item->delete();
 
                 return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));

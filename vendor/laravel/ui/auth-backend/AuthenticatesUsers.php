@@ -2,8 +2,9 @@
 
 namespace Illuminate\Foundation\Auth;
 
-use Illuminate\Http\JsonResponse;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -165,6 +166,7 @@ trait AuthenticatesUsers
      */
     public function logout(Request $request)
     {
+        //$function = $this->getIpLocation();
         $this->guard()->logout();
 
         $request->session()->invalidate();
@@ -175,6 +177,18 @@ trait AuthenticatesUsers
             return $response;
         }
 
+        /* Log::create([
+            'user_id' => auth()->user()->id,
+            'ip' => $function->ip,
+            'module' => 'ACCESO',
+            'submodule' => 'SESIÓN CERRADA',
+            'action' => 'Salida',
+            'detail' => 'El usuario, ' .auth()->user()->name .' ha cerrado sesión en la plataforma',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]); */
         return $request->wantsJson()
             ? new JsonResponse([], 204)
             : redirect('/');

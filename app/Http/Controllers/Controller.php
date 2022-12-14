@@ -24,8 +24,9 @@ class Controller extends BaseController
      * @param {Object} laravel_image_resource, the resource
      * @param {Array} versinos
      */
-    public function getIpLocation(Request $request)
+    public function getIpLocation( )
     {
+        $request = new Request;
         $get_loc = geoip()->getLocation($request->ip());
 
         return $get_loc;

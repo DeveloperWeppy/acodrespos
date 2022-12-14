@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Categories;
-use App\Extras;
-use App\Imports\ItemsImport;
+use Image;
 use App\Items;
 use App\Plans;
+use App\Extras;
 use App\Restorant;
-use Illuminate\Http\Request;
-use Image;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Services\ConfChanger;
-use Akaunting\Module\Facade as Module;
+use App\Categories;
+use App\Models\Log;
 use App\Models\Allergens;
 use App\Models\AreaKitchen;
-use PayPal\Api\RedirectUrls;
-
 use App\Exports\ItemsExport;
+use App\Imports\ItemsImport;
+use Illuminate\Http\Request;
+use PayPal\Api\RedirectUrls;
+use App\Services\ConfChanger;
+
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Akaunting\Module\Facade as Module;
 
 class ItemsController extends Controller
 {
@@ -170,6 +172,7 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $item = new Items;
         $item->name = strip_tags($request->item_name);
         $item->description = strip_tags($request->item_description);
@@ -195,6 +198,18 @@ class ItemsController extends Controller
             );
         }
         $item->save();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'PRODUCTO',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nuevo Producto, ' .$request->item_name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         //return redirect()->route('items.index')->withStatus(__('Item successfully updated.'));
         //return redirect()->back()->with("retorno", true)->withStatus(__('Item successfully updated.'));
         return redirect('/items#categoria-'.$item->category->name);
@@ -260,6 +275,7 @@ class ItemsController extends Controller
      */
     public function update(Request $request, Items $item)
     {
+        $function = $this->getIpLocation();
         $makeVariantsRecreate=false;
         $item->name = strip_tags($request->item_name);
         $item->description = strip_tags($request->item_description);
@@ -334,6 +350,18 @@ class ItemsController extends Controller
         }
 
         $item->update();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'PRODUCTO',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó el producto, ' .$request->item_name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return redirect()->route('items.edit', $item)->withStatus(__('Item successfully updated.'));
     }
@@ -346,7 +374,21 @@ class ItemsController extends Controller
      */
     public function destroy(Items $item)
     {
+        $function = $this->getIpLocation();
         $item->delete();
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MENÚ',
+            'submodule' => 'PRODUCTO',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó el producto, ' .$item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
         return redirect()->route('items.index')->withStatus(__('Item successfully deleted.'));
     }
@@ -377,6 +419,7 @@ class ItemsController extends Controller
 
     public function storeExtras(Request $request, Items $item)
     {
+        $function = $this->getIpLocation();
         //dd($request->all());
         if ($request->extras_id.'' == '') {
             //New
@@ -386,6 +429,19 @@ class ItemsController extends Controller
             $extras->item_id = $item->id;
 
             $extras->save();
+
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'MENÚ',
+                'submodule' => 'EXTRAS DE PRODUCTO',
+                'action' => 'Registro',
+                'detail' => 'Se registró un nuevo extra ' .$request->extras_name. ' al producto, ' .$item->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
         } else {
             //Update
             $extras = Extras::where(['id'=>$request->extras_id])->get()->first();
@@ -394,6 +450,19 @@ class ItemsController extends Controller
             $extras->price = strip_tags($request->extras_price);
 
             $extras->update();
+
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'MENÚ',
+                'submodule' => 'EXTRAS DE PRODUCTO',
+                'action' => 'Actualización',
+                'detail' => 'Se actualizó el extra ' .$request->extras_name. ' al producto, ' .$item->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
         }
 
         //For variants
@@ -429,8 +498,20 @@ class ItemsController extends Controller
 
     public function deleteExtras(Items $item, Extras $extras)
     {
+        $function = $this->getIpLocation();
         $extras->delete();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MENÚ',
+            'submodule' => 'EXTRAS DE PRODUCTO',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó el extra ' .$extras->name. ' al producto, ' .$item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('items.edit', ['item' => $item, 'restorant' => $item->category->restorant, 'restorant_id' => $item->category->restorant->id])->withStatus(__('Extras successfully deleted.'));
     }
 }
