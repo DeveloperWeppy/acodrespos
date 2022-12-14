@@ -1,3 +1,8 @@
+$('.select2').addClass('form-control');
+$('.select2-selection').css('border','0');
+$('.select2').css('width','100%');
+$('.select2-selection__arrow').css('top','10px');
+$('.select2-selection__rendered').css('color','#8898aa');
 
 var js = {
     window_load : function() {
@@ -176,13 +181,9 @@ var js = {
           $settings = {};
           $this.addClass("select2init");
 
-          alert(1);
+ 
 
-          $('.select2').addClass('form-control');
-          $('.select2-selection').css('border','0');
-          $('.select2').css('width','100%');
-          $('.select2-selection__arrow').css('top','10px');
-          $('.select2-selection__rendered').css('color','#8898aa');
+         
 
           var $ajax = $this.attr("data-feed");
           if (typeof $ajax !== typeof undefined && $ajax !== false){
