@@ -264,10 +264,11 @@
 
                                 var nowDate = new Date();
                                
-                                if(config.minimum_period="dia"){
+                                if(config.minimum_period=="dia"){
                                     nowDate.setDate(nowDate.getDate() + config.condition_period);
+                                    intH = 0;
                                 }
-                                if(config.minimum_period="hora"){
+                                if(config.minimum_period=="hora"){
                                     let hour = nowDate.getHours().toString();
                                     
                                     minH = parseInt(hour)+parseInt(config.condition_period);
@@ -360,30 +361,41 @@
 
                 switch (dia) {
                     case 0:
+                        min = Object.values(jornada)[3];
                         max = Object.values(jornada)[4];
                         break;
                     case 1:
+                        min = Object.values(jornada)[5];
                         max = Object.values(jornada)[6];
                         break;
                     case 2:
+                        min = Object.values(jornada)[7];
                         max = Object.values(jornada)[8];
                         break;
                     case 3:
+                        min = Object.values(jornada)[9];
                         max = Object.values(jornada)[10];
                         break;
                     case 4:
+                        min = Object.values(jornada)[11];
                         max = Object.values(jornada)[12];
                         break;
                     case 5:
+                        min = Object.values(jornada)[13];
                         max = Object.values(jornada)[14];
                         break;
                     case 6:
+                        min = Object.values(jornada)[15];
                         max = Object.values(jornada)[16];
                         break;
                 }
+
                 if(minH==null && max==null ){
                     minH = '6';
                     max = '20';
+                }
+                if(minH==0){
+                    minH = min;
                 }
 
                 let timPicker = $('.timepicker');

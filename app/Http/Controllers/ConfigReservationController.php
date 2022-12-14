@@ -13,7 +13,7 @@ use App\Models\ReservationConfig;
 use App\Models\ReservationTables;
 use App\Models\ConfigCuentasBancarias;
 use App\Models\Reservation;
-use App\Models\ReservationClientsController;
+use App\Models\ReservationClients;
 use DB;
 
 use Carbon\Carbon;
@@ -140,7 +140,7 @@ class ConfigReservationController extends Controller
 
         } 
         if (auth()->user()->hasRole('client')) {
-            $restaurant=Restorant::where('active','=','1')->get();
+            $restaurant=Restorant::where('active','=','1')->where('has_reservation','=',1)->get();
             $now =Carbon::now('America/Bogota')->format('Y-m-d');
 
             return view('reservation.client.includes.create',compact('restaurant','now'));
@@ -215,9 +215,9 @@ class ConfigReservationController extends Controller
             $iddRes = $reservation->id;
 
             if(isset($request->zonas)){
-                ReservationClientsController::where('reservation_id','=',$iddRes)->delete();
+                ReservationClients::where('reservation_id','=',$iddRes)->delete();
                 foreach($request->zonas as $key){
-                    $mesas = ReservationClientsController::updateOrCreate(
+                    $mesas = ReservationClients::updateOrCreate(
                         [
                             'reservation_id' => $iddRes,
                             'client_id' => $request->cli,
@@ -279,9 +279,9 @@ class ConfigReservationController extends Controller
             $iddRes = $reservation->id;
 
             if(isset($request->zonas)){
-                ReservationClientsController::where('reservation_id','=',$iddRes)->delete();
+                ReservationClients::where('reservation_id','=',$iddRes)->delete();
                 foreach($request->zonas as $key){
-                    $mesas = ReservationClientsController::updateOrCreate(
+                    $mesas = ReservationClients::updateOrCreate(
                         [
                             'reservation_id' => $iddRes,
                             'client_id' => auth()->user()->id,
@@ -338,9 +338,9 @@ class ConfigReservationController extends Controller
                 $reservation->active = 1;
 
                 if(isset($request->zonas)){
-                    ReservationClientsController::where('reservation_id','=',$request->reserva_id)->delete();
+                    ReservationClients::where('reservation_id','=',$request->reserva_id)->delete();
                     foreach($request->zonas as $key){
-                        $mesas = ReservationClientsController::updateOrCreate(
+                        $mesas = ReservationClients::updateOrCreate(
                             [
                                 'reservation_id' => $request->reserva_id,
                                 'client_id' => $request->cli,
@@ -492,23 +492,20 @@ class ConfigReservationController extends Controller
             list($hh, $mm) = explode(':', $time);
 
             if($ampm == 'AM' && $hh == 12) {
-                $hhto = '02';
+                $hh = '00';
             } elseif($ampm == 'PM' && $hh < 12) {
                 $hh += 12;
             }
-            $hhto = $hh+2;  //le suma 2 horaas a la hora elegida para comprobar si la mesa esta ocupada la siguiente hora
-            if($hh==23 || $hh===24){
-                $hhto = $hh;
-            }
             
             $fecha = $request->fecha." ".$hh.":".$mm;
-            $fechato = $request->fecha." ".$hhto.":".$mm;
 
             $registros = 0;
 
             if(isset($request->reserva_id)){
-                $restaurant_id = $request->restaurant_id;
-                $reservation=DB::table('reservations')->where('companie_id','=',$restaurant_id)->where('date_reservation','=',$fecha)->first();
+                $reserva_id = $request->reserva_id;
+                $reservation=DB::table('reservations_clients')->select('reservations_clients.*')->join('reservations','reservations.id','=','reservations_clients.reservation_id')
+                ->where('reservations_clients.date_reservation','=',$fecha)->where('reservations.active','=','1')->first();
+
                 if(isset($reservation) && $reservation->id!=$request->reserva_id){
                     $registros = 1;
                 }
@@ -644,7 +641,6 @@ class ConfigReservationController extends Controller
                     }
                 }
             }
-
 
 
             return view('reservation.admin.includes.editsolicitud', compact('clients','areasMesas','motive','configaccountsbanks','restaurantConfig','reservation','now'));

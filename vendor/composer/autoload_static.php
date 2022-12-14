@@ -1151,7 +1151,6 @@ class ComposerStaticInitfcf63e3f856a2ab45654b2f0214a9500
         'App\\Models\\Pqrs' => __DIR__ . '/../..' . '/app/Models/Pqrs.php',
         'App\\Models\\Process' => __DIR__ . '/../..' . '/app/Models/Process.php',
         'App\\Models\\Reservation' => __DIR__ . '/../..' . '/app/Models/Reservation.php',
-        'App\\Models\\ReservationClientsController' => __DIR__ . '/../..' . '/app/Models/ReservationClientsController.php',
         'App\\Models\\ReservationConfig' => __DIR__ . '/../..' . '/app/Models/ReservationConfig.php',
         'App\\Models\\ReservationReason' => __DIR__ . '/../..' . '/app/Models/ReservationReason.php',
         'App\\Models\\ReservationTables' => __DIR__ . '/../..' . '/app/Models/ReservationTables.php',

@@ -228,7 +228,6 @@ return array(
     'App\\Models\\Pqrs' => $baseDir . '/app/Models/Pqrs.php',
     'App\\Models\\Process' => $baseDir . '/app/Models/Process.php',
     'App\\Models\\Reservation' => $baseDir . '/app/Models/Reservation.php',
-    'App\\Models\\ReservationClientsController' => $baseDir . '/app/Models/ReservationClientsController.php',
     'App\\Models\\ReservationConfig' => $baseDir . '/app/Models/ReservationConfig.php',
     'App\\Models\\ReservationReason' => $baseDir . '/app/Models/ReservationReason.php',
     'App\\Models\\ReservationTables' => $baseDir . '/app/Models/ReservationTables.php',
