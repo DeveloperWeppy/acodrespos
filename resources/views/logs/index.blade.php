@@ -69,9 +69,18 @@
             
                                 <div class="col-md-6 offset-md-6">
                                     <div class="row">
-                                            <div class="col-md-8 text-right">
-                                                <a href="http://www.testpost.com/orders?report=true" class="btn btn-md btn-success">Descargar informe</a>
+                                        @if ($_GET)
+                                            <div class="col-md-4">
+                                                <a href="{{ Request::url() }}" class="btn btn-md btn-block">{{ __('Clear Filters') }}</a>
                                             </div>
+                                            <div class="col-md-4">
+                                            <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success btn-block">{{ __('Download report') }}</a>
+                                            </div>
+                                        @else
+                                            <div class="col-md-8 text-right">
+                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
+                                            </div>
+                                        @endif
                                         
                                         <div class="col-md-4">
                                             <button type="submit" class="btn btn-primary btn-md btn-block">Filtrar</button>

@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LogsExport;
+
 class LogController extends Controller
 {
     /**
@@ -27,9 +30,33 @@ class LogController extends Controller
             $logs_all = $logs_all->where('user_id','=',$_GET['client_id']);
         }
 
-        $logs_all = $logs_all->paginate(15);
+       
 
-  
+
+        if (isset($_GET['report'])) {
+            $items=[];
+            $k=1;
+            foreach ($logs_all->get() as $key => $item) {
+
+                $hora = date_format($item->created_at, 'h:i A');
+                $item = [
+                    'numero'=>$k,
+                    'fecha'=>date_format($item->created_at, 'Y-m-d')." - ".$hora,
+                    'usuario'=>$item->find($item->id)->usuario->name,
+                    'modulo'=>$item->module,
+                    'submodulo'=>$item->submodule,
+                    'evento'=>$item->action,
+                    'detalle'=>$item->detail,
+                  ];
+                array_push($items, $item);
+
+                $k++;
+            }
+
+            return Excel::download(new LogsExport($items), 'logs_'.time().'.xlsx');
+        }
+
+        $logs_all = $logs_all->paginate(15);
 
         $users=User::all();
         //dd($logs_all);
