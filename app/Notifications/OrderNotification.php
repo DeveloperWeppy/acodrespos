@@ -284,7 +284,6 @@ class OrderNotification extends Notification
             }else{
                 event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
             }
-           
         }
         return [
             'title'=>$greeting,

@@ -43,6 +43,8 @@ class OrderController extends Controller
         config(['shopping_cart.storage' => \App\Repositories\CartDBStorageRepository::class]); 
         Cart::session($session_id);
     }
+
+
     public function migrateStatuses()
     {
         if (Status::count() < 13) {
@@ -53,6 +55,7 @@ class OrderController extends Controller
         }
     }
 
+
     /**
      * Display a listing of the resource.
      *
@@ -60,6 +63,15 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+
+        /*
+        $order = Order::findOrFail(799);
+        $order->restorant->user->notify((new OrderNotification($order))->locale(strtolower(config('settings.app_locale'))));
+        $employee = User::findOrFail($order->employee_id);
+        $employee->notify(new OrderNotification($order, '4'));
+        */
+
+
         $this->migrateStatuses();
 
         $restorants = Restorant::where(['active'=>1])->get();
@@ -84,8 +96,8 @@ class OrderController extends Controller
 
         //Get client's orders
         if (auth()->user()->hasRole('client')) {
-            $orders = $orders->where(['client_id'=>auth()->user()->id]);
-            
+
+            $orders = $orders->where(['client_id'=>auth()->user()->id]);       
 
         } elseif (auth()->user()->hasRole('driver')) {
             $orders = $orders->where(['driver_id'=>auth()->user()->id]);
@@ -120,6 +132,7 @@ class OrderController extends Controller
         if (isset($_GET['restorant_id'])) {
             $orders->where(['restorant_id'=>$_GET['restorant_id']]);
         }
+        
         //If restorant owner, get his restorant orders only
         if (auth()->user()->hasRole('owner')) {
             //Current restorant id
@@ -980,7 +993,6 @@ class OrderController extends Controller
             $theDriver->update();
         }
         */
-
     
         //Verifica si la orden aun tienen productos pendientes en cocina
 
@@ -998,8 +1010,6 @@ class OrderController extends Controller
                 }
             }
         }
-        
-        
 
        
         

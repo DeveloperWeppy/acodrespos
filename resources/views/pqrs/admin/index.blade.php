@@ -6,7 +6,7 @@
 <div class="container-fluid mt--9">
     <div class="row">
         <div class="col-xl-12 order-xl-1">
-            <div class="card bg-secondary shadow">
+            <div class="card shadow">
                 <div class="card-header bg-white border-0">
                     <div class="row align-items-center">
                         <div class="col-6">
@@ -27,66 +27,136 @@
                             <span class="text-capitalize text-white badge bg-gradient-success">Solucionado</span>
                         </div>
                     </div>
-                    @if(count($pqrs_all)>0)
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-flush dataTable-table">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Nº</th>
-                                        <th>Persona</th>
-                                        <th>Correo</th>
-                                        <th>Tipo de Radicado</th>
-                                        <th>Estado del Radicado</th>
-                                        <th>{{ __('Ver Detalle') }}</th>
-                                    </tr>                                    
-                                </thead>
-                                <tbody>
-                                    @foreach ($pqrs_all as $item)
-                                    @php
-                                        $color = '';
-                                        if ($item->status=='radicado') {
-                                            $color = 'bg-gradient-warning';
-                                        } else if($item->status=='en revision'){
-                                            $color = 'bg-gradient-info';
-                                        }else{
-                                            $color = 'bg-gradient-success';
-                                        }
-                                        
-                                    @endphp
-                                    <tr>
-                                        <td>{{$item->id}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->email}}</td>
-                                        <td>{{$item->type_radicate}}</td>
-                                        <td><span class="text-capitalize text-white badge {{$color}}">{{$item->status}}</span></td>
-                                        <td>
-                                            <a href="{{ route('pqrs.show',$item->id)}}" class="btn btn-xs btn-info"><i class="fas fa-eye"></i></a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+
+                    <form method="GET" class="pb-3" action="{{route('pqrs.index_admin')}}">
+                        <br>
+                        <div class="tab-content orders-filters">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por consecutivo</label>
+            
+                                            <select class="form-control" id="consecutive" name="consecutive" >
+                                                <option d value="" > -- Buscar Consecutivo -- </option>
+                                                @foreach($consecutives as $key)
+                                                    <option value="{{$key->consecutive_case}}" <?php if(isset($_GET['consecutive'])&&$_GET['consecutive'].""==$key->consecutive_case.""){echo "selected";} ?> >{{$key->consecutive_case}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por email</label>
+            
+                                            <select class="form-control" id="email" name="email" >
+                                                <option d value="" > -- Buscar email -- </option>
+                                                @foreach($emails as $key)
+                                                    <option value="{{$key->email}}" <?php if(isset($_GET['email'])&&$_GET['email'].""==$key->email.""){echo "selected";} ?> >{{$key->email}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por tipo</label>
+            
+                                            <select class="form-control" id="category" name="category" >
+                                                <option d value="" > -- Buscar tipo -- </option>
+                                                @foreach($category as $key)
+                                                    <option value="{{$key->type_radicate}}" <?php if(isset($_GET['category'])&&$_GET['category'].""==$key->type_radicate.""){echo "selected";} ?> >{{$key->type_radicate}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+
                                     
-                                </tbody>
-                            </table>
+                                                            
+                                </div>
+            
+                                <div class="col-md-6 offset-md-6">
+                                    <div class="row">
+                                        @if ($_GET)
+                                            <div class="col-md-4">
+                                                <a href="{{ Request::url() }}" class="btn btn-md btn-block">{{ __('Clear Filters') }}</a>
+                                            </div>
+                                            <div class="col-md-4">
+                                            <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success btn-block">{{ __('Download report') }}</a>
+                                            </div>
+                                        @else
+                                            <div class="col-md-8 text-right">
+                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
+                                            </div>
+                                        @endif
+                                        
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-primary btn-md btn-block">Filtrar</button>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
-                        <div class="card-footer py-4">
-                            @if(count($pqrs_all))
-                            <nav class="d-flex justify-content-end" aria-label="...">
-                                {{ $pqrs_all->appends(Request::all())->links() }}
-                            </nav>
-                            @else
-                                <h4>{{ __('You don`t have any orders') }} ...</h4>
-                            @endif
-                        </div>
-                        @else
-                        <div class="text-center">
-                            <h3>Parece que no hay ninguna solicitud de PQR aún...</h3>
-                        </div>
+                    </form>
+                   
+                </div>
+
+                @if(count($pqrs_all)>0)
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush dataTable-table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Nº de Consecutivo</th>
+                                <th>Persona</th>
+                                <th>Correo</th>
+                                <th>Tipo de Radicado</th>
+                                <th>Estado del Radicado</th>
+                                <th>{{ __('Ver Detalle') }}</th>
+                            </tr>                                    
+                        </thead>
+                        <tbody>
+                            @foreach ($pqrs_all as $item)
+                            @php
+                                $color = '';
+                                if ($item->status=='radicado') {
+                                    $color = 'bg-gradient-warning';
+                                } else if($item->status=='en revision'){
+                                    $color = 'bg-gradient-info';
+                                }else{
+                                    $color = 'bg-gradient-success';
+                                }
+                                
+                            @endphp
+                            <tr>
+                                <td>{{$item->consecutive_case}}</td>
+                                <td>{{$item->name}}</td>
+                                <td>{{$item->email}}</td>
+                                <td>{{$item->type_radicate}}</td>
+                                <td><span class="text-capitalize text-white badge {{$color}}">{{$item->status}}</span></td>
+                                <td>
+                                    <a href="{{ route('pqrs.show',$item->id)}}" class="btn btn-xs btn-info"><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                            @endforeach
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer py-4">
+                    @if(count($pqrs_all))
+                        <nav class="d-flex justify-content-end" aria-label="...">
+                            {{ $pqrs_all->appends(Request::all())->links() }}
+                        </nav>
                     @endif
+                </div>
+                @else
+                    <div class="text-center">
+                        <h3>Parece que no hay ninguna solicitud de PQR aún...</h3>
+                    </div>
+                @endif
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 @section('js')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
