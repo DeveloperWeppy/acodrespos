@@ -124,7 +124,7 @@
                                 </div>
                             @endif
                             <!-- detalles de la respuesta de la solicitud --->
-                            @if ($pqr->status == 'Solicitud Respondida')
+                            @if ($pqr->status == 'Solucionado')
                                 <div class="col-sm-12 mt-4">
                                     <h6 class="heading-small text-primary text-uppercase mb-4">
                                         {{ __('Respuesta dada a la Solicitud') }}</h6>
