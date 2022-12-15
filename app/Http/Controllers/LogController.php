@@ -6,6 +6,10 @@ use App\Models\Log;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\User;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LogsExport;
 
 class LogController extends Controller
 {
@@ -16,9 +20,47 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs_all = Log::where('created_at', '>=', Carbon::today())->paginate(15);
+        $logs_all = Log::where('created_at', '<=', Carbon::today());
+
+        if(isset($_GET['fromDate'],$_GET['toDate']) && $_GET['fromDate']!=""){
+            $logs_all = $logs_all->whereDate('created_at',">=",$_GET['fromDate'])->whereDate('created_at',"<=",$_GET['toDate']);
+        }
+
+        if(isset($_GET['client_id']) && $_GET['client_id']!=""){
+            $logs_all = $logs_all->where('user_id','=',$_GET['client_id']);
+        }
+
+       
+
+
+        if (isset($_GET['report'])) {
+            $items=[];
+            $k=1;
+            foreach ($logs_all->get() as $key => $item) {
+
+                $hora = date_format($item->created_at, 'h:i A');
+                $item = [
+                    'numero'=>$k,
+                    'fecha'=>date_format($item->created_at, 'Y-m-d')." - ".$hora,
+                    'usuario'=>$item->find($item->id)->usuario->name,
+                    'modulo'=>$item->module,
+                    'submodulo'=>$item->submodule,
+                    'evento'=>$item->action,
+                    'detalle'=>$item->detail,
+                  ];
+                array_push($items, $item);
+
+                $k++;
+            }
+
+            return Excel::download(new LogsExport($items), 'logs_'.time().'.xlsx');
+        }
+
+        $logs_all = $logs_all->paginate(15);
+
+        $users=User::all();
         //dd($logs_all);
-        return view('logs.index', compact('logs_all'));
+        return view('logs.index', compact('logs_all','users'));
     }
 
     /**

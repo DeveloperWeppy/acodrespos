@@ -8,6 +8,7 @@
         <div class="col-xl-12 order-xl-1">
             <div class="card bg-secondary shadow">
                 <div class="card-header bg-white border-0">
+                    
                     <div class="row align-items-center">
                         <div class="col-6">
                             <h3 class="mb-0 text-capitalize">{{ __('Logs de Auditoría') }}</h3>
@@ -17,6 +18,77 @@
                         </div>
                         
                     </div>
+
+                    <form method="GET" action="{{route('logs.index')}}">
+                        <br>
+                        <div class="tab-content orders-filters">
+                                <div class="row">
+                                    
+                                    <div class="col-md-6">
+                                        <div class="input-daterange datepicker row align-items-center">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Fecha de</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                        </div>
+                                                        <input name="fromDate" class="form-control" placeholder="Fecha de" type="text" value="{{(isset($_GET['fromDate'])?$_GET['fromDate']:"")}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Fecha hasta</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                                        </div>
+                                                        <input name="toDate" class="form-control" placeholder="Fecha hasta" type="text" value="{{(isset($_GET['toDate'])?$_GET['toDate']:"")}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por usuario</label>
+            
+                                            <select class="form-control" id="client_id" name="client_id" >
+                                                <option d value="" > -- Seleccione una opción -- </option>
+                                                @foreach($users as $key)
+                                                    <option value="{{$key->id}}" <?php if(isset($_GET['client_id'])&&$_GET['client_id'].""==$key->id.""){echo "selected";} ?> >{{$key->number_identification}} - {{$key->name}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+                                                             
+                                                            
+                                </div>
+            
+                                <div class="col-md-6 offset-md-6">
+                                    <div class="row">
+                                        @if ($_GET)
+                                            <div class="col-md-4">
+                                                <a href="{{ Request::url() }}" class="btn btn-md btn-block">{{ __('Clear Filters') }}</a>
+                                            </div>
+                                            <div class="col-md-4">
+                                            <a href="{{Request::fullUrl().'&report=true' }}" class="btn btn-md btn-success btn-block">{{ __('Download report') }}</a>
+                                            </div>
+                                        @else
+                                            <div class="col-md-8 text-right">
+                                                <a href="{{Request::fullUrl().'?report=true' }}" class="btn btn-md btn-success">{{ __('Download report') }}</a>
+                                            </div>
+                                        @endif
+                                        
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-primary btn-md btn-block">Filtrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">

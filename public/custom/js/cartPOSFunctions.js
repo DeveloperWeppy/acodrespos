@@ -108,11 +108,21 @@ function updatePrices(net,delivery,expedition){
         //modalPayment updated
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+
+        modalPayment.totalPriceRestado = net-deduct+valor_propi;
+        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+
         $('#spanporcentaje_propina').show();
+
       } else {
+
         modalPayment.totalPrice=net-deduct;
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
+
+        modalPayment.totalPriceRestado = net-deduct;
+        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+
         $('#spanporcentaje_propina').hide();
       }
     });
@@ -128,6 +138,10 @@ function updatePrices(net,delivery,expedition){
         //modalPayment updated
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+
+        modalPayment.totalPriceRestado = net-deduct+valor_propi;
+        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+
         $('#spanporcentaje_propina').show();
         
       } else {
@@ -136,6 +150,10 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct;
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
+
+        modalPayment.totalPriceRestado = net-deduct;
+        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+
         $('#spanporcentaje_propina').hide();
       }
     });
@@ -148,6 +166,10 @@ function updatePrices(net,delivery,expedition){
         //modalPayment updated
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
+
+        modalPayment.totalPriceRestado = net-deduct+valor_propi;
+        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        
       });
     });
    
