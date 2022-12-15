@@ -294,7 +294,7 @@
                                         showConfirmButton: false,
                                         timer: 3000
                                 });
-                                location.reload();
+                                location.href = respuesta.case_id;
                                 
                             } else {
                                 setTimeout(function () {

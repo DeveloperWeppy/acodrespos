@@ -42,6 +42,7 @@ Route::get('/selectedpaymentt/{order}/{payment}', 'PaymentController@selectedPay
 //route of pqr
 Route::get('/diligenciar-solicitud', 'PqrsController@index')->name('pqrs.index');
 Route::post('pqrs-guardar', 'PqrsController@store')->name('pqrs.store');
+Route::get('centro-ayuda/confirmacion-solicitud/{consecutive_case}', 'PqrsController@confirmacion')->name('pqrs.confirmacion');
 Route::post('/pqrs-acceso/validar', 'PqrsController@validate_acces')->name('pqrs.validate_acces');
 Route::get('/pqrs-acceso/validacion', function () {
     return view('pqrs.includes.validateacces');

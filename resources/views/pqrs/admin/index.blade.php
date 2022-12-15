@@ -24,7 +24,7 @@
                         <div class="col-sm-12">
                             <span class="text-capitalize text-white badge bg-gradient-warning">Radicado</span>
                             <span class="text-capitalize text-white badge bg-gradient-info">En Revisión</span>
-                            <span class="text-capitalize text-white badge bg-gradient-success">Solicitud Respondida</span>
+                            <span class="text-capitalize text-white badge bg-gradient-success">Solucionado</span>
                         </div>
                     </div>
                     @if(count($pqrs_all)>0)

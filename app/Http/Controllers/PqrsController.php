@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SolicitudPqrNotification;
+use Carbon\Carbon;
+use ParagonIE\Sodium\Compat;
 
 class PqrsController extends Controller
 {
@@ -48,11 +50,13 @@ class PqrsController extends Controller
      */
     public function store(Request $request)
     {
-        $function = $this->getIpLocation();
         $error = false;
         $mensaje = '';
-
+        $url_confirm = '';
+        $year_actual = date('Y');
+        
             $register_pqr = array(
+                'consecutive_case' => 'Nn',
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -77,29 +81,30 @@ class PqrsController extends Controller
                 $register_pqr['num_order'] = $request->num_order;
             }
             
-            if (Pqrs::create($register_pqr)) {
-                Log::create([
-                    'user_id' => Auth::user()->id,
-                    'ip' => $request->ip(),
-                    'module' => 'PQR',
-                    'submodule' => '',
-                    'action' => 'Registro',
-                    'detail' => 'Registro de Nueva solicitud de PQR',
-                    'country' => $function->country,
-                    'city' =>$function->city,
-                    'lat' =>$function->lat,
-                    'lon' =>$function->lon,
-                ]);
+            if ($pq = Pqrs::create($register_pqr)) {
+                $id_case = $pq->id;
+                $consecutive_case = 'CAIM'.$id_case.'_'.$year_actual;
+                $url_confirm = route('pqrs.confirmacion',$consecutive_case);
 
+                $update_case = array(
+                    'consecutive_case' => $consecutive_case
+                );
+                Pqrs::findOrFail($id_case)->update($update_case);
+                
                 $error = false;
-                $mensaje = 'Registro de Pregunta Exitosa!';
+                $mensaje = 'Registro de Solicitud Exitosa!';
             } else {
                 $error = true;
                 $mensaje = 'Error! Se presento un problema al registrar la pregunta, intenta de nuevo.';
             }
-        echo json_encode(array('error' => $error, 'mensaje' => $mensaje));
+        echo json_encode(array('error' => $error, 'mensaje' => $mensaje, 'case_id' => $url_confirm));
     }
 
+    public function confirmacion($consecutive_case)
+    {
+        $get_pqr = Pqrs::where('consecutive_case', $consecutive_case)->first();
+        return view('pqrs.client.confirmsolicitud', compact('get_pqr'));
+    }
     public function storeRespuesta(Request $request)
     {
         $function = $this->getIpLocation();
@@ -108,7 +113,7 @@ class PqrsController extends Controller
 
             $update_pqr = array(
                 'answer_radicate' => $request->message,
-                'status' => 'Solicitud Respondida'
+                'status' => 'Solucionado'
             );
             # validamos si existe la imagen en el request
             if ($request->file('evidence_answer')) {

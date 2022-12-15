@@ -145,7 +145,7 @@
                                 @endif
                                 <div class="col-sm-12 text-center mb-3">
                                     <span class="text-capitalize  text-white badge bg-gradient-success">Solicitud
-                                        Respondida</span>
+                                        Solucionada</span>
                                 </div>
                             @endif
 

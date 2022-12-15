@@ -31,7 +31,7 @@
                                     @elseif($pqr->status=='en revision')
                                         <span class="text-capitalize text-white badge bg-gradient-info">En Revisión</span>
                                     @else
-                                        <span class="text-capitalize text-white badge bg-gradient-success">Solicitud Respondida</span>
+                                        <span class="text-capitalize text-white badge bg-gradient-success">Solicitud Solucionada</span>
                                     @endif
                                 </h5> 
                             </div>
