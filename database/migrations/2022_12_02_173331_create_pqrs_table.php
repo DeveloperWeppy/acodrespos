@@ -15,6 +15,7 @@ class CreatePqrsTable extends Migration
     {
         Schema::create('pqrs', function (Blueprint $table) {
             $table->id();
+            $table->string('consecutive_case', 200);
             $table->string('name', 250);
             $table->string('email', 250);
             $table->string('phone', 20);

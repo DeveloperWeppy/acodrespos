@@ -96,7 +96,7 @@
                     </div>
                     <div class="col">
                         <form role="form text-left">
-                            <label>{{ __('Received ammount')}}</label>
+                            <label>{{ __('Cantidad recibida')}}</label>
                             <div class="input-group mb-3">
                                 <input type="text" v-model="receivedFormated" v-on:keyup="show" class="form-control" placeholder="0" aria-label="o" autofocus >
                             </div>

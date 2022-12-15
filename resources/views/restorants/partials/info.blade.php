@@ -10,7 +10,7 @@
             ['ftype'=>'input','name'=>"Restaurant Name",'id'=>"name",'placeholder'=>"Restaurant Name",'required'=>true,'value'=>$restorant->name],
             ['ftype'=>'input','name'=>"Restaurant description",'id'=>"description",'placeholder'=>"Restaurant description",'required'=>true,'value'=>$restorant->description],
             ['ftype'=>'input','name'=>"Restaurant address",'id'=>"address",'placeholder'=>"Restaurant address",'required'=>true,'value'=>$restorant->address],
-            ['ftype'=>'input','name'=>"Restaurant phone",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
+            ['ftype'=>'input','name'=>"Teléfono del restaurante",'id'=>"phone",'placeholder'=>"Restaurant phone",'required'=>true,'value'=>$restorant->phone],
             ['ftype'=>'input','name'=>"Nit",'id'=>"nit",'placeholder'=>"Nit",'required'=>true,'value'=>$restorant->nit]
         ]])
         <h6 class="heading-small text-muted mb-4">vínculos sociales</h6>

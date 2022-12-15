@@ -16,7 +16,7 @@
                     @endif
                 @endif
                 <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0 " id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Areas de entrega</a>
+                    <a class="nav-link mb-sm-3 mb-md-0 " id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Áreas de entrega</a>
                 </li>
             </ul>
         </div>
@@ -42,7 +42,7 @@
                                     <thead class="thead-light" >
                                             <tr>
                                                 <th scope="col">Nombre</th>
-                                                <th scope="col">Valor de envio</th>
+                                                <th scope="col">Valor de envío</th>
                                                 <th scope="col">Color</th>
                                                 <th scope="col">Estado</th>
                                                 <th scope="col">Fecha de creación</th>
@@ -71,7 +71,7 @@
       </div>
       <div class="modal-body">
             <div class="form-group">
-                <label for="exampleInputEmail1">Nombre de zona</label>
+                <label for="exampleInputEmail1">Nombre de área de entrega</label>
                 <input type="text" class="form-control" id="fzone-name" aria-describedby="emailHelp" placeholder="Nombre" required>
             </div>
             <div class="form-group">

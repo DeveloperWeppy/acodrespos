@@ -12,6 +12,7 @@ class Pqrs extends Model
     use HasFactory;
 
     protected $fillable = [
+        'consecutive_case',
         'name',
         'email',
         'phone',

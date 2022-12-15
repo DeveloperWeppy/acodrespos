@@ -231,7 +231,7 @@ class OrderController extends Controller
             'orders' => $orders,
             'restorants'=>$restorants,
             'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],
-            ['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'maxlength'=>'10', 'required'=>true],
+            ['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true],
             ['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Tiempo estimado de Entrega(minutos)', 'id'=>'time_delivered', 'placeholder'=>'Seleccione Tiempo en Minutos', 'data'=>$times_delivered, 'required'=>true]],
             'clients'=>$clients,
             'parameters'=>count($_GET) != 0,

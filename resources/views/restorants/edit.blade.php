@@ -907,11 +907,11 @@ $( "#btnerase" ).click(function() {
             $('#fzone-color').val(data[2]);
             $('#fzone-status').val(data[3]);
             $('#fzone-valor').val(data[4]);
-            $('#ftitle').html("Editar zona");
+            $('#ftitle').html("Editar Área de Entrega");
             
         }else{
             typeFormZone=0;
-            $('#ftitle').html("Crear Zona");
+            $('#ftitle').html("Crear Área de Entrega");
             $('#fzone-name').val("");
             $('#fzone-color').val("");
             $('#fzone-status').val(1);
@@ -941,7 +941,7 @@ $( "#btnerase" ).click(function() {
         }); 
         $(".geodelet").on( "click", function() {
             Swal.fire({
-                title: 'Deseas eliminar esta zona?',
+                title: 'Deseas eliminar esta área?',
                 icon: 'warning',
                 showDenyButton: false,
                 showCancelButton: true,
@@ -951,7 +951,7 @@ $( "#btnerase" ).click(function() {
                 if (result.isConfirmed) {
                     $.ajax({method: "get", url: "{{route('geozone.destroy')}}/"+$(this).attr("data-id") })
                     .done(function( msg ) {
-                        Swal.fire('Elimicanado!', '', 'success');
+                        Swal.fire('Área Eliminada!', '', 'success');
                         cargarzona();
                     });
                 
