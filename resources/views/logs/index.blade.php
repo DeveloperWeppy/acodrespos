@@ -63,6 +63,45 @@
                                                 </select>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por módulo</label>
+            
+                                            <select class="form-control" id="module" name="module" >
+                                                <option d value="" > -- Seleccione una opción -- </option>
+                                                @foreach($module as $key)
+                                                    <option value="{{$key->module}}" <?php if(isset($_GET['module'])&&$_GET['module'].""==$key->module.""){echo "selected";} ?> >{{$key->module}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por Submodulo</label>
+            
+                                            <select class="form-control" id="submodule" name="submodule" >
+                                                <option d value="" > -- Seleccione una opción -- </option>
+                                                @foreach($subModule as $key)
+                                                    <option value="{{$key->submodule}}" <?php if(isset($_GET['submodule'])&&$_GET['submodule'].""==$key->submodule.""){echo "selected";} ?> >{{$key->submodule}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por evento</label>
+            
+                                            <select class="form-control" id="action" name="action" >
+                                                <option d value="" > -- Seleccione una opción -- </option>
+                                                @foreach($action as $key)
+                                                    <option value="{{$key->action}}" <?php if(isset($_GET['action'])&&$_GET['action'].""==$key->action.""){echo "selected";} ?> >{{$key->action}}</option>
+                                                @endforeach
+                                                </select>
+                                        </div>
+                                    </div>
                                                              
                                                             
                                 </div>
@@ -113,10 +152,12 @@
                                     @foreach ($logs_all as $item)
                                     @php
                                         $hora = date_format($item->created_at, 'h:i A');
+
+                                        $item->created_format = date_format($item->created_at, 'Y-m-d') ." - ".$hora;
                                     @endphp
                                     <tr>
                                         <td>
-                                            <button type="button" class="btn badge badge-success badge-pill"><i class="fas fa-eye"></i></button>
+                                            <button type="button" class="btn badge badge-success badge-pill modalLogsDetails" data-item="{{$item}}"><i class="fas fa-eye"></i></button>
                                         </td>
                                         <td>{{date_format($item->created_at, 'Y-m-d')}} - {{$hora}}</td>
                                         <td>{{$item->find($item->id)->usuario->name}}</td>
@@ -150,10 +191,30 @@
     </div>
 </div>
 
+@include('logs.partials.modals')
+
 @section('js')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
+
+            $(document).on('click', '.modalLogsDetails', function(){
+                var idd = $(this).data('item');
+                $('#logFec').html(idd.created_format);
+                $('#logMod').html(idd.module);
+                $('#logSub').html(idd.submodule);
+                $('#logEve').html(idd.action);
+                $('#logDet').html(idd.detail);
+                $('#logIpp').html(idd.ip);
+                $('#logPai').html(idd.country);
+                $('#logCiu').html(idd.city);
+                $('#logLat').html(idd.lat);
+                $('#logLon').html(idd.lon);
+
+                $('#modal-logs-details').modal('show');
+            });
+
+            
         });
     </script>
 @endsection

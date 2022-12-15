@@ -30,6 +30,18 @@ class LogController extends Controller
             $logs_all = $logs_all->where('user_id','=',$_GET['client_id']);
         }
 
+        if(isset($_GET['module']) && $_GET['module']!=""){
+            $logs_all = $logs_all->where('module',$_GET['module']);
+        }
+
+        if(isset($_GET['submodule']) && $_GET['submodule']!=""){
+            $logs_all = $logs_all->where('submodule',$_GET['submodule']);
+        }
+
+        if(isset($_GET['action']) && $_GET['action']!=""){
+            $logs_all = $logs_all->where('action',$_GET['action']);
+        }
+
        
 
 
@@ -53,14 +65,20 @@ class LogController extends Controller
                 $k++;
             }
 
-            return Excel::download(new LogsExport($items), 'logs_'.time().'.xlsx');
+            return Excel::download(new LogsExport($items), 'listadoAuditoria_'.time().'.xlsx');
         }
 
         $logs_all = $logs_all->paginate(15);
 
         $users=User::all();
+
+        $module = Log::select('module')->groupBy('module')->get();
+        $subModule = Log::select('submodule')->groupBy('submodule')->get();
+        $action = Log::select('action')->groupBy('action')->get();
+
+
         //dd($logs_all);
-        return view('logs.index', compact('logs_all','users'));
+        return view('logs.index', compact('logs_all','users','module','subModule','action'));
     }
 
     /**

@@ -426,6 +426,8 @@ class RestorantController extends Controller
         $restaurant->instagram = strip_tags($request->instagram);
         $restaurant->youtube = strip_tags($request->youtube);
         $restaurant->nit= strip_tags($request->nit.'');
+
+        $restaurant->prefix_consecutive = $request->prefix_consecutive;
         $ifErrorCon="";
       
         if(intval($request->final_consecutive)<=intval($request->initial_consecutive)){
