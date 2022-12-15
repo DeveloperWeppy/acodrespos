@@ -504,31 +504,36 @@ class Main extends Controller
 
         $restaurantConfig = DB::table('reservations_config')->where('companie_id', $restaurant_id)->first();
 
+        $registros = [];
         $error = false;
 
-        $fechaHoraActual = Carbon::now('America/Bogota')->format('Y-m-d H:i:s');
-        $fechaAntesDe = Carbon::now('America/Bogota')->subMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
-        $fechaDespuesDe = Carbon::now('America/Bogota')->addMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+        if($restaurantConfig){
 
-        $registros = [];
-        
-        $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) AS idr'))->where('companie_id','=',$restaurant_id)->where('active','=','1')->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->orderBy('date_reservation','asc')->limit(1)->get();
-        
-        if(count($reservation)>0 && $reservation[0]->idr!=""){
-            $idr = explode(",",$reservation[0]->idr);
-            
-            for($i=0;$i<count($idr);$i++){
-                $reserva = Reservation::find($idr[$i]);
-                $fechaVencimiento = Carbon::create($reserva->date_reservation)->addMinutes($restaurantConfig->wait_time)->format('Y-m-d H:i:s');
+                $fechaHoraActual = Carbon::now('America/Bogota')->format('Y-m-d H:i:s');
+                $fechaAntesDe = Carbon::now('America/Bogota')->subMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
+                $fechaDespuesDe = Carbon::now('America/Bogota')->addMinutes($restaurantConfig->anticipation_time)->format('Y-m-d H:i:s');
 
-                if($fechaHoraActual>=$fechaVencimiento){
-                    $reserva->active=0;
-                    $reserva->save();
+                $registros = [];
+                
+                $reservation=DB::table('reservations')->select(DB::raw('group_concat(id) AS idr'))->where('companie_id','=',$restaurant_id)->where('active','=','1')->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->orderBy('date_reservation','asc')->limit(1)->get();
+                
+                if(count($reservation)>0 && $reservation[0]->idr!=""){
+                    $idr = explode(",",$reservation[0]->idr);
+                    
+                    for($i=0;$i<count($idr);$i++){
+                        $reserva = Reservation::find($idr[$i]);
+                        $fechaVencimiento = Carbon::create($reserva->date_reservation)->addMinutes($restaurantConfig->wait_time)->format('Y-m-d H:i:s');
+
+                        if($fechaHoraActual>=$fechaVencimiento){
+                            $reserva->active=0;
+                            $reserva->save();
+                        }
+                    }
+
+                    $registros=DB::table('reservations_clients')->select(DB::raw('group_concat(table_id) AS idm'))->whereIn('reservation_id',$idr)->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->get();
                 }
-            }
 
-            $registros=DB::table('reservations_clients')->select(DB::raw('group_concat(table_id) AS idm'))->whereIn('reservation_id',$idr)->whereBetween('date_reservation',[$fechaAntesDe,$fechaDespuesDe])->get();
-        }
+            }
 
     
         //contar las tablas que estan dentro de ese id y dentro de las mesas que envio.

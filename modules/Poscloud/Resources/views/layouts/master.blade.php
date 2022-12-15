@@ -611,6 +611,14 @@
                 }
             });
         }
+
+        $('input[name=valor_propina]').prop('checked',false);
+        $('input[name=edit_propina_check]').prop('checked',false);
+        $('.propi').val(0);
+
+        $('#autoprop').css('display','block');
+        $('#addprop').css('display','none');
+        
         getCartContentAndTotalPrice();
         showOrderDetail(CURRENT_TABLE_ID);
     }
