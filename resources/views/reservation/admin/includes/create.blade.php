@@ -436,10 +436,21 @@
            
         
             $(function(){
-                $(".datepickerReserva").datepicker({
-                    format: 'yyyy-mm-dd',
+                $(".datepickerReserva").daterangepicker({
+                    locale: {
+                        format: 'YYYY-MM-DD',
+                        daysOfWeek: [ "Dom", "Lun","Mar","Mie","Jue","Vie","Sáb" ],
+                        monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                        firstDay: 1,
+                        applyLabel: "Aplicar",
+                        cancelLabel: "Cancelar",
+                    },
+                    minDate: '{{$now}}',
+                    singleDatePicker: true,
                 });
             });
+
+           
             
            
 

@@ -19,9 +19,6 @@
                         <span class="btn-inner--icon"><i class="fa fa-address-book-o"></i></span>
                     </button>
                 </td>
-                <td>
-                    <span class="badge badge-success badge-pill">{{$item->mot}}</span>
-                </td>
                 
                 <td class="table-web">
                     @money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))

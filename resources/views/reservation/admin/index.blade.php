@@ -75,6 +75,7 @@
                                             <th class="table-web" scope="col">Area - Mesa</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>
+                                            <th scope="col">Estado</th>
                                             <th scope="col">Acción</th>
                                             
                                         </tr>
