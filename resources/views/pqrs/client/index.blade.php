@@ -7,7 +7,7 @@
 
 @section('content')
 @include('users.partials.headerpqr', [
-        'title' => "",
+        'title' => "Centro de ayuda",
     ])
 
     <div class="container mt--8">

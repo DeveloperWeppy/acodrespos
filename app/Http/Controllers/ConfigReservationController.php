@@ -51,9 +51,9 @@ class ConfigReservationController extends Controller
                 ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
                 ->where('companie_id', $restaurant_id)->get();
 
-            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->where('reservation_status','=','0')->orWhere('reservation_status','=','3')->orderBy('id','desc')->paginate(10);
+            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->where('reservation_status','=','0')->orWhere('reservation_status','=','3')->orderBy('id','desc')->paginate(10, ['*'], 'reservacion');
             
-            $solicitudes = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->where('reservation_status','!=','0')->orderBy('id','desc')->paginate(10);
+            $solicitudes = DB::table('reservations')->select(DB::raw('reservations.*,(select name from users where id=client_id) as cli,(select name from reservation_reasons where id=reservation_reason_id) as mot,client_id as tab'))->where('companie_id', $restaurant_id)->where('reservation_status','!=','0')->orderBy('id','desc')->paginate(10, ['*'], 'solicitud');
 
             
             return view('reservation.admin.index', compact('restoareas', 'restomesas', 'compani', 'motivos','reservaciones','configaccountsbanks','restaurantConfig','solicitudes'));
