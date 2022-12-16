@@ -21,6 +21,8 @@ use App\Exports\PqrsExport;
 
 use App\Notifications\OrderNotification;
 
+use App\Notifications\General;
+
 
 
 class PqrsController extends Controller
@@ -116,7 +118,7 @@ class PqrsController extends Controller
             'consecutive_case' => 'Nn',
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
+            'phone' => $request->phone1,
             'message' => $request->message,
         );
         # validamos si existe la imagen en el request
@@ -150,10 +152,18 @@ class PqrsController extends Controller
             
             $error = false;
             $mensaje = 'Registro de Solicitud Exitosa!';
+
+             //Notification
+            $itemNotification = Pqrs::find($id_case);
+            $userNotification = User::findOrFail('1');
+            $userNotification->notify(new General($itemNotification, '1','Nueva solicitud PQRS','/pqrs/detalle-pqr','1'));
+            
         } else {
             $error = true;
             $mensaje = 'Error! Se presento un problema al registrar la pregunta, intenta de nuevo.';
         }
+
+       
 
         
         
@@ -283,6 +293,8 @@ class PqrsController extends Controller
 
                 $error = false;
                 $mensaje = '¡Cambio de estado Exitoso!';
+
+
             } else {
                 $error = true;
                 $mensaje = 'Hubo un error al procesar la solicitud!';

@@ -64,14 +64,6 @@ class OrderController extends Controller
     public function index(Request $request)
     {
 
-        /*
-        $order = Order::findOrFail(799);
-        $order->restorant->user->notify((new OrderNotification($order))->locale(strtolower(config('settings.app_locale'))));
-        $employee = User::findOrFail($order->employee_id);
-        $employee->notify(new OrderNotification($order, '4'));
-        */
-
-
         $this->migrateStatuses();
 
         $restorants = Restorant::where(['active'=>1])->get();

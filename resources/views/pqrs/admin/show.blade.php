@@ -150,16 +150,17 @@
                             @endif
 
                         </div>
-                        <div class="card-footer py-4">
-                            <div class="">
-                                @if ($pqr->status == 'radicado')
-                                    <button type="button" class="btn btn-info float-right btn_status"
-                                        id="{{ $pqr->id }}"><i class="fas fa-hourglass-start"></i> Solicitud
-                                        Recibida</button>
-                                @endif
-                            </div>
-
+                        
+                    </div>
+                    <div class="card-footer py-4">
+                        <div class="">
+                            @if ($pqr->status == 'radicado')
+                                <button type="button" class="btn btn-info float-right btn_status"
+                                    id="{{ $pqr->id }}"><i class="fas fa-hourglass-start"></i> Solicitud
+                                    Recibida</button>
+                            @endif
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -19,6 +19,9 @@ use DB;
 use Carbon\Carbon;
 
 
+use App\Notifications\General;
+
+
 
 class ConfigReservationController extends Controller
 {
@@ -292,6 +295,16 @@ class ConfigReservationController extends Controller
                 }
             }
             $registros = 1;
+
+            
+            $restaurant=Restorant::findOrFail($restaurant_id);
+
+            //Notification
+            $itemNotification = Reservation::find($iddRes);
+            $userNotification = User::findOrFail($restaurant->user->id);
+            $userNotification->notify(new General($itemNotification, '4','Nueva solicitud de Reserva','/reservas/editsolicitud',$restaurant->user->id));
+
+
             return response()->json(array('error' => $error, 'datos' => $registros)); 
            
 
@@ -387,6 +400,11 @@ class ConfigReservationController extends Controller
                 }
             }
 
+
+             //Notification
+             $itemNotification = Reservation::find($iddRes);
+             $userNotification = User::findOrFail($request->cli);
+             $userNotification->notify(new General($itemNotification, '1','Solicitud aprobada','/reservas?num',$itemNotification->client_id));
            
 
             echo 1;
