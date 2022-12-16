@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\User;
 use App\Order;
 use App\Models\Log;
 use App\Models\Pqrs;
@@ -14,6 +16,15 @@ use App\Notifications\SolicitudPqrNotification;
 use Carbon\Carbon;
 use ParagonIE\Sodium\Compat;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PqrsExport;
+
+use App\Notifications\OrderNotification;
+
+use App\Notifications\General;
+
+
+
 class PqrsController extends Controller
 {
     /**
@@ -23,6 +34,7 @@ class PqrsController extends Controller
      */
     public function index()
     {
+
         $user = Auth::user();
         if ($user==null) {
             return view('pqrs.client.index');
@@ -38,8 +50,55 @@ class PqrsController extends Controller
 
     public function index_admin(Request $request)
     {
-        $pqrs_all = Pqrs::paginate(7);
-        return view('pqrs.admin.index', compact('pqrs_all'));
+        $pqrs_all = Pqrs::orderBy(DB::raw('FIELD(status, "radicado", "en revision", "soluccionado")'),'desc');
+
+
+        if(isset($_GET['consecutive']) && $_GET['consecutive']!=""){
+            $pqrs_all = $pqrs_all->where('consecutive_case',$_GET['consecutive']);
+        }
+
+        if(isset($_GET['email']) && $_GET['email']!=""){
+            $pqrs_all = $pqrs_all->where('email',$_GET['email']);
+        }
+
+        if(isset($_GET['category']) && $_GET['category']!=""){
+            $pqrs_all = $pqrs_all->where('type_radicate',$_GET['category']);
+        }
+
+
+        if (isset($_GET['report'])) {
+            $items=[];
+            $k=1;
+            foreach ($pqrs_all->get() as $key => $item) {
+
+                $hora = date_format($item->created_at, 'h:i A');
+                $item = [
+                    'fecha'=>date_format($item->created_at, 'Y-m-d')." - ".$hora,
+                    'numero'=>$item->consecutive_case,
+                    'usuario'=>$item->name,
+                    'email'=>$item->email,
+                    'tipo'=>$item->type_radicate,
+                    'estado'=>$item->status,
+                  ];
+                array_push($items, $item);
+
+                $k++;
+            }
+
+            return Excel::download(new PqrsExport($items), 'listadoPqrs_'.time().'.xlsx');
+        }
+
+
+        $pqrs_all=$pqrs_all->paginate(7);
+
+        $allPqrs = Pqrs::where('created_at', '<=', Carbon::today());
+
+        $consecutives = $allPqrs->groupBy('consecutive_case')->get();
+        $emails = $allPqrs->groupBy('email')->get();
+        $category = $allPqrs->groupBy('type_radicate')->get();
+
+
+        return view('pqrs.admin.index', compact('pqrs_all','consecutives','emails','category'));
     }
 
     /**
@@ -55,48 +114,61 @@ class PqrsController extends Controller
         $url_confirm = '';
         $year_actual = date('Y');
         
-            $register_pqr = array(
-                'consecutive_case' => 'Nn',
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'message' => $request->message,
+        $register_pqr = array(
+            'consecutive_case' => 'Nn',
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone1,
+            'message' => $request->message,
+        );
+        # validamos si existe la imagen en el request
+        if ($request->file('evidence')) {
+            $evidence = $request->file('evidence')->store('public/evidence_pqrs');
+            $url = Storage::url($evidence);
+
+            $register_pqr['evidence'] = $url;
+        }
+        if (isset($request->type_radicate)) {
+            $register_pqr['type_radicate'] = $request->type_radicate;
+        } else {
+            $register_pqr['type_radicate'] = "Solicitud Relacionada con un Pedido";
+        }
+        if (isset($request->n_order) && $request->n_order!='otro') {
+            $register_pqr['order_id'] = $request->n_order;
+        }
+        if (isset($request->num_order)) {
+            $register_pqr['num_order'] = $request->num_order;
+        }
+        
+        if ($pq = Pqrs::create($register_pqr)) {
+            $id_case = $pq->id;
+            $consecutive_case = 'CAIM'.$id_case.'_'.$year_actual;
+            $url_confirm = route('pqrs.confirmacion',$consecutive_case);
+
+            $update_case = array(
+                'consecutive_case' => $consecutive_case
             );
-            # validamos si existe la imagen en el request
-            if ($request->file('evidence')) {
-                $evidence = $request->file('evidence')->store('public/evidence_pqrs');
-                $url = Storage::url($evidence);
-
-                $register_pqr['evidence'] = $url;
-            }
-            if (isset($request->type_radicate)) {
-                $register_pqr['type_radicate'] = $request->type_radicate;
-            } else {
-                $register_pqr['type_radicate'] = "Solicitud Relacionada con un Pedido";
-            }
-            if (isset($request->n_order) && $request->n_order!='otro') {
-                $register_pqr['order_id'] = $request->n_order;
-            }
-            if (isset($request->num_order)) {
-                $register_pqr['num_order'] = $request->num_order;
-            }
+            Pqrs::findOrFail($id_case)->update($update_case);
             
-            if ($pq = Pqrs::create($register_pqr)) {
-                $id_case = $pq->id;
-                $consecutive_case = 'CAIM'.$id_case.'_'.$year_actual;
-                $url_confirm = route('pqrs.confirmacion',$consecutive_case);
+            $error = false;
+            $mensaje = 'Registro de Solicitud Exitosa!';
 
-                $update_case = array(
-                    'consecutive_case' => $consecutive_case
-                );
-                Pqrs::findOrFail($id_case)->update($update_case);
-                
-                $error = false;
-                $mensaje = 'Registro de Solicitud Exitosa!';
-            } else {
-                $error = true;
-                $mensaje = 'Error! Se presento un problema al registrar la pregunta, intenta de nuevo.';
-            }
+             //Notification
+            $itemNotification = Pqrs::find($id_case);
+            $userNotification = User::findOrFail('1');
+            $userNotification->notify(new General($itemNotification, '1','Nueva solicitud PQRS','/pqrs/detalle-pqr','1'));
+            
+        } else {
+            $error = true;
+            $mensaje = 'Error! Se presento un problema al registrar la pregunta, intenta de nuevo.';
+        }
+
+       
+
+        
+        
+
+
         echo json_encode(array('error' => $error, 'mensaje' => $mensaje, 'case_id' => $url_confirm));
     }
 
@@ -221,6 +293,8 @@ class PqrsController extends Controller
 
                 $error = false;
                 $mensaje = '¡Cambio de estado Exitoso!';
+
+
             } else {
                 $error = true;
                 $mensaje = 'Hubo un error al procesar la solicitud!';

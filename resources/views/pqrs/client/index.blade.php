@@ -7,7 +7,7 @@
 
 @section('content')
 @include('users.partials.headerpqr', [
-        'title' => "",
+        'title' => "Centro de ayuda",
     ])
 
     <div class="container mt--8">
@@ -30,6 +30,23 @@
     
     @section('js')
     <script>
+
+
+        
+        
+
+
+        window.onload = (event) => {
+            var telephone1 = document.querySelector("#telephone1");
+            var telephone2 = document.querySelector("#telephone2");
+            var iti=window.intlTelInput(telephone1, {
+                separateDialCode:true,
+            });
+            var iti=window.intlTelInput(telephone2, {
+                separateDialCode:true,
+            });
+        };
+
        
         let Checked = null;
         //The class name can vary

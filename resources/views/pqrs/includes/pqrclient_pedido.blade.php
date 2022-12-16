@@ -56,8 +56,8 @@
         </div>
         
         <div class="form-group">
-            <label class="form-control-label" for="input-phone">{{ __('Phone') }}(*)</label>
-            <input type="text" name="phone" id="input-phone" class="form-control form-control-alternative" value="{{Auth::guest()?"":auth()->user()->phone}}" required>
+            <label class="form-control-label" >{{ __('Phone') }}(*)</label>
+            <input type="text" name="phone1"  id="telephone2"  class="form-control form-control-alternative" value="{{Auth::guest()?"":auth()->user()->phone}}" required style="padding-left:0">
         </div>
         
         <div class="form-group">

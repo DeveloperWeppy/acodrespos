@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Notifications;
-use App\Events\NewOrder as PusherNewOrder;
+use App\Events\NewNotification as PusherNewOrder;
 use Akaunting\Money\Currency;
 use Akaunting\Money\Money;
 use Illuminate\Bus\Queueable;
@@ -17,7 +17,7 @@ use NotificationChannels\Twilio\TwilioSmsMessage;
 use App\NotificationChannels\Expo\ExpoChannel;
 use App\NotificationChannels\Expo\ExpoMessage;
 
-class OrderNotification extends Notification
+class General extends Notification
 {
     use Queueable;
 
@@ -29,13 +29,17 @@ class OrderNotification extends Notification
     protected $order;
     protected $status;
     protected $user;
+    protected $title;
+    protected $ruta;
 
-    public function __construct($order, $status = '1',$user=null,$producto=null)
+    public function __construct($order, $status = '1',$title = "",$ruta = null,$user=1,$producto=null)
     {
         $this->order = $order;
         $this->status = $status;
+        $this->title = $title;
         $this->user = $user;
         $this->producto = $producto;
+        $this->ruta = $ruta;
         //ed:1
     }
 
@@ -45,17 +49,20 @@ class OrderNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
+
+   
     public function via($notifiable)
     {
         $notificationClasses = ['database'];
         //ed:2
         //Mail notification on vendor email
+        /*
         if($this->order->restorant->getConfig('enable_email_order_notification',false)){
             array_push($notificationClasses, 'mail');
         }else if(config('settings.send_order_email_to_vendor',false)){
             array_push($notificationClasses, 'mail');
         }
-
+        
         if (config('settings.onesignal_app_id')) {
             array_push($notificationClasses, OneSignalChannel::class);
         }
@@ -64,12 +71,14 @@ class OrderNotification extends Notification
                 array_push($notificationClasses, TwilioChannel::class);
             }
         }
-        if($this->user!=null&&strlen($this->user->expotoken)>3){
+       
+        if($this->user!=null){
             array_push($notificationClasses,ExpoChannel::class);  
         }
+         */
         return $notificationClasses;
     }
-
+ /*
     public function toExpo($notifiable)
     {
        //no
@@ -161,7 +170,7 @@ class OrderNotification extends Notification
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
-     */
+  
     public function toMail($notifiable)
     {
         //Change currency
@@ -216,6 +225,7 @@ class OrderNotification extends Notification
 
         return $message;
     }
+    */
 
     /**
      * Get the array representation of the notification.
@@ -230,65 +240,17 @@ class OrderNotification extends Notification
 
     public function toDatabase($notifiable)
     {
-        
-        if ($this->status.'' == '1') {
-            //Created
-            $greeting = __('There is new order');
-            $line = __('order').' #'.$this->order->id." ".__('You have just received an order');
-        } elseif ($this->status.'' == '3') {
-            //ed:3
-            //Accepted
-            $greeting = __('Your order has been accepted');
-            $line = __('order').' #'.$this->order->id.' '.__('We are now working on it!');
-            
-        } elseif ($this->status.'' == '4') {
-            //Assigned to driver
-            $greeting = __('Tu pedido está en camino.');
-            $line = __('There is new order assigned to you.');
-        } elseif ($this->status.'' == '5') {
-            //Prepared
-            $greeting = __('Your order is ready.');
-            $line = $this->order->delivery_method && $this->order->delivery_method.'' == '1' ?__('order').' #'.$this->order->id." ".__('Your order is ready for delivery. Expect us soon.') : __('order').' #'.$this->order->id." ".__('Your order is ready for pickup. We are expecting you.');
-        } elseif ($this->status.'' == '7') {
-            //ed:3
-            //Accepted
-            $greeting ="Tu pedido ha sido entregado";
-            $line = __('order').' #'.$this->order->id.' Muchas gracias por tu compra';
-            
-        }
-         elseif ($this->status.'' == '9') {
-            //Rejected
-            $greeting = __('Order rejected');
-            $line = __('Unfortunately your order is rejected. There where issues with the order and we need to reject it. Pls contact us for more info.');
-        }
-        elseif ($this->status.'' == '11') {
-            //Rejected
-            $greeting ="El tiempo de entrega fue modificado";
-            $line = __('order').' #'.$this->order->id.' Aumento el tiempo de entrega';
-        }
-        elseif ($this->status.'' == 'cocina'  || $this->status.'' == 'servicio') {
-            //Rejected
-            $greeting = "Cambio el estado del Producto";
-            $line = __('order').' #'.$this->order->id.' El producto '.$this->producto." Esta en preparación";
-            if($this->status.'' == 'servicio' ){
-                $line = __('order').' #'.$this->order->id.' El producto '.$this->producto." Esta listo";
-            }
-           
-        }
-        if($this->status==3 ||$this->status==5 || $this->status==9 || $this->status==7 || $this->status==11 || $this->status==4){
-            event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
-        }
-        if($this->status.'' == 'cocina' || $this->status.'' == 'servicio' ){
-            if(isset($this->order->employee_id)){
-                event(new PusherNewOrder($this->order,$greeting));
-            }else{
-                event(new PusherNewOrder($this->order,$greeting,$this->order->client_id));
-            }
-        }
+
+        $greeting = $this->title;
+        $line = ' #'.$this->order->id." Acabas de recibir una solicitud";
+        event(new PusherNewOrder($this->order,$greeting,$this->ruta,$this->user));
+
         return [
             'title'=>$greeting,
             'body' =>$line,
             'order_id' =>$this->order->id,
+            'url' => $this->ruta,
         ];
     }
 }
+
