@@ -2,18 +2,20 @@
 
 namespace App\Repositories\Orders;
 
-use App\Coupons;
-use App\Order;
-use App\Restorant as Vendor;
 use App\Items;
+use App\Order;
+use App\Coupons;
+use App\Models\Log;
 use App\Models\Variants;
-use App\Models\RestaurantClient;
+use App\Restorant as Vendor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Controller;
-use App\Notifications\OrderNotification;
-use App\Events\NewOrder as PusherNewOrder;
+use App\Models\RestaurantClient;
 use App\Events\OrderAcceptedByAdmin;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Validator;
+use App\Events\NewOrder as PusherNewOrder;
 
 
 class BaseOrderRepository extends Controller
@@ -136,6 +138,8 @@ class BaseOrderRepository extends Controller
     }
 
     private function createOrder(){
+        $function = $this->getIpLocation();
+        
         if($this->order==null){
             $this->order=new Order;
             $this->order->restorant_id=$this->vendor?$this->vendor->id:null;
@@ -163,7 +167,7 @@ class BaseOrderRepository extends Controller
 
             //Save order
             $this->order->save();
-
+            
             $this->order->md=md5($this->order->id);
             if (isset($this->request->id_account_bank)) {
                 $this->order->id_account_bank =$this->request->id_account_bank;

@@ -1,5 +1,11 @@
 @section('js')
     <script src="{{ asset('custom') }}/js/liveorders.js"></script>
+    <script>
+        var urlbaordeslive="{{url('/poscloud/pos');}}";
+        $('#btn_liveorder').on("click", function () {
+            location.href = urlbaordeslive;
+        });
+    </script>
 @endsection
  
 @section('admin_title')
@@ -12,10 +18,10 @@
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
     <div class="container-fluid d-flex align-items-center">
         <div class="row">
-            <div class="col-md-12 {{ $class ?? '' }}">
+            <div class="col-md-12 {{ $class ?? '' }} d-flex align-items-center">
                 <h1 style="display:inline"  class="display-2 text-white">{{ __("Live orders") }}</h1>
 
-
+                <button class="btn btn-info text-right ml-3" id="btn_liveorder" type="button"><i class="fas fa-receipt"></i> Tomar Nuevo Pedido</button>
 
             </div>
         </div>

@@ -15,6 +15,9 @@
                             
                         </div>
                         <div class="col-6 text-right">
+                            <button id="show-hide-filters" class="btn btn-icon btn-1 btn-sm btn-outline-secondary" type="button">
+                                <span class="btn-inner--icon"><i id="button-filters" class="ni ni-bold-down"></i></span>
+                            </button>
                         </div>
                         
                     </div>
@@ -23,7 +26,6 @@
                         <br>
                         <div class="tab-content orders-filters">
                                 <div class="row">
-                                    
                                     <div class="col-md-6">
                                         <div class="input-daterange datepicker row align-items-center">
                                             <div class="col-md-6">
@@ -131,7 +133,7 @@
                 </div>
                 @if(count($logs_all)>0)
                         <div class="table-responsive">
-                            <table class="table align-items-center table-flush dataTable-table">
+                            <table class="table align-items-center table-flush dataTable-table" id="logss">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>VER</th>

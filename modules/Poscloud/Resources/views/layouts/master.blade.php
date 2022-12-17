@@ -160,7 +160,12 @@
 
 
   <script type="text/javascript">
-  
+  var urlbaordeslive="{{url('/live');}}";
+  $('#btn_ordenes').on("click", function () {
+         // $("#posRecipt").printThis(); 
+         location.href = urlbaordeslive;
+  });
+
   $('#client_name').select2({
       width: '100%',
       placeholder: "Nombre o Documento",

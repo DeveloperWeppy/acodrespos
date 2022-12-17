@@ -8,10 +8,12 @@
 
 namespace App\Repositories\Orders;
 
-use App\Notifications\OrderNotification;
-use App\User;
-use Illuminate\Support\Facades\Validator;
 use Cart;
+use App\User;
+use App\Models\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Validator;
 
 class WebServiceOrderRepository extends BaseOrderRepository implements OrderTypeInterface
 {
@@ -26,6 +28,7 @@ class WebServiceOrderRepository extends BaseOrderRepository implements OrderType
     }
 
     public function makeOrder(){
+        //dd("hola");
         //From Parent - Construct the order
         $this->constructOrder();
 
@@ -81,10 +84,23 @@ class WebServiceOrderRepository extends BaseOrderRepository implements OrderType
     }
 
     private function notify(){
+        $function = $this->getIpLocation();
         if (!config('app.order_approve_directly')) {
             //If we don't approve directly, we need to inform admin
             $this->notifyAdmin();
         }else{
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'ORDEN',
+                'submodule' => 'WEB',
+                'action' => 'Registro',
+                'detail' => 'Registro de Nuevo Pedido',
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             //In Case we approve directly, we need to inform owner
             $this->notifyOwner();
         }

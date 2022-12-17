@@ -3,6 +3,7 @@
 
 namespace Modules\Poscloud\Http\Controllers;
 
+use DB;
 use PDO;
 use Cart;
 use App\User;
@@ -11,21 +12,22 @@ use App\Order;
 use App\Tables;
 use App\Restorant;
 use Carbon\Carbon;
+use App\Models\Log;
 use Akaunting\Money\Money;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\SimpleDelivery;
 use App\Models\GeoZoneDelivery;
 use App\Models\CartStorageModel;
+use App\Models\ReservationConfig;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Support\Facades\Auth;
 use Darryldecode\Cart\CartCollection;
 use Akaunting\Module\Facade as Module;
 use App\Models\ConfigCuentasBancarias;
 use App\Repositories\Orders\OrderRepoGenerator;
-
-use DB;
-use App\Models\ReservationConfig;
-use App\Models\Reservation;
 
 class Main extends Controller
 {
@@ -283,7 +285,7 @@ class Main extends Controller
      */
     public function store(Request $request)
     {
-
+        $function = geoip()->getLocation($request->ip());
         //Guarda la imagen de la orden
         if ($request->hasFile('img_payment')) {
             $orderId=$request->orderid;
@@ -295,7 +297,18 @@ class Main extends Controller
             $order->save();
 
             $request->img_payment->move(public_path($path), $nom);
-
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'ORDEN',
+                'submodule' => 'PAGO',
+                'action' => 'Registro',
+                'detail' => 'Registro de pago de la orden '.$order->id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return $order->id;
             die();
         }
@@ -307,7 +320,18 @@ class Main extends Controller
             $order->franquicia = $request->franquicia;
             $order->voucher = $request->voucher;
             $order->save();
-
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'ORDEN',
+                'submodule' => 'PAGO',
+                'action' => 'Registro',
+                'detail' => 'Registro de pago de la orden '.$order->id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return $order->id;
             die();
         }

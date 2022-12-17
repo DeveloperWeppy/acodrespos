@@ -12,7 +12,9 @@
       @endif
     </a>
 
-    <div class="col-auto">
+    <div class="col-auto d-flex align-items-center">
+      
+      <button  type="button" id="btn_ordenes"  class="btn bg-gradient-success my-1 mx-2 me-1 mr-2">{{ __('ORDENES EN VIVO') }}<div style="display: inline-flex; margin: 0px 0px 0px 8px !important;" class="blob red"></div></button>
       <button onclick="showOrders()" type="button" class="btn bg-gradient-primary my-1 me-1">
         <span>{{ __('Active Orders') }}</span>
         <span class="badge badge-md badge-circle badge-floating badge-primary border-white" id="ordersCount">@{{ totalOrders }}</span>
@@ -31,7 +33,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navigation">
       <ul class="navbar-nav navbar-nav-hover ms-auto">
-        <div class="row">
+        <div class="row" style="display: contents;">
           
           <div class="col-auto m-auto">
             
