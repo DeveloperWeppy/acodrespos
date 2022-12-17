@@ -17,7 +17,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#clients" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Solicitudes de reservación</a>
+                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#clients" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Solicitudes de pre-reservación</a>
                 </li>
 
                 <li class="nav-item">
@@ -108,7 +108,7 @@
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    Solicitudes de reservación
+                                    Solicitudes de pre-reservación
                                 </div>
                             </div>
                             

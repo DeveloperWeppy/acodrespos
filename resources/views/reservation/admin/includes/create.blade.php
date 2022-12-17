@@ -26,8 +26,10 @@
                                 <h6 class="heading-small text-muted mb-4">{{ __('Client information') }}</h6>
                                 <div class="pl-lg-4">
 
+                                    <button type="button" data-toggle="modal" data-target="#modalRegister" class="btnFormClient btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius m-2" style="float: right;"><span class="btn-inner--icon btn-cart-icon"><i aria-hidden="true" class="fa fa-plus"></i></span></button>
 
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
+
                                         <label class="form-control-label" for="name_client">{{ __('Client') }}</label>
                                         <div class="">
                                             <select name="cli" class="form-control form-control-sm" required>
@@ -491,6 +493,128 @@
 
                 revisarOcupacion();
             });
+
+
+
+$(document).ready(function() {
+    $("#from-create-client").validate({
+    rules: {
+        name: {
+        required: true,
+        },
+        number_identification: {
+        required: true,
+        },
+        email: {
+        required: true,
+        },
+        phone: {
+        required: true,
+        },
+    },
+    messages: {
+        name: "Por favor ingrese el nombre",
+        number_identification: "Por favor ingrese el documento de identificacion",
+        email: "Por favor ingrese el email",
+        phone: "Por favor el numero de telefono",
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+    },
+   highlight: function (element, errorClass, validClass) {
+        if($(element).attr('id')!="formPhone"){
+            $(element).addClass('is-invalid');
+        }
+   },
+   unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+   },
+   submitHandler: function(form,event){
+    event.preventDefault();
+             var formDataClient=new FormData(form);
+             formDataClient.append( 'password', $( '#fromDocCleint' ).val() );
+             formDataClient.append( 'password_confirmation', $( '#fromDocCleint' ).val() );
+             $.ajax({
+                headers: {
+                       'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                        },
+                type: "post",
+                encoding:"UTF-8",
+                url: "{{route('register')}}",
+                data:formDataClient ,
+                processData: false,
+                contentType: false,
+                dataType:'json',
+                beforeSend:function(){
+
+                 
+                 
+                  $('#modalRegister').modal('hide');
+                  Swal.fire({
+                           title: 'Validando datos, espere por favor...',
+                           button: false,
+                           showConfirmButton: false,
+                           allowOutsideClick: false,
+                           allowEscapeKey: false,
+                           showCancelButton: false,
+                           showConfirmButton: false,
+                           timer: 4000,
+                           timerProgressBar: true,
+                               didOpen: () => {
+                                   Swal.showLoading()
+                               },
+                       });
+                }
+             }).done(function( respuesta ) {
+
+                $.ajax({
+                    method: "GET",
+                    url: "/listclients/select",
+                    dataType:'json',
+                  }).done(function(resp) {
+                    let datalistClient=resp.selectClient;
+                    let datalistPhone=resp.selectTelefono;
+                    $('select[name=cli]').select2({
+                        width: '100%',
+                        placeholder: "Seleccionar Cliente",
+                        data: datalistClient
+                    });
+
+                    $('.select2').addClass('form-control');
+                    $('.select2').css('width','100%');
+                    $('.select2-selection').css('border','0');
+                    $('.select2-selection__arrow').css('top','10px');
+                    $('.select2-selection__rendered').css('color','#8898aa');
+
+                 });
+
+                 Swal.fire({
+                              title: 'Cliente registrado',
+                              icon: 'success',
+                              button: true,
+                              timer: 2000
+                          });
+             }).fail(function( jqXHR,textStatus ) {
+                var mensajeError="";
+                if (typeof jqXHR.responseJSON.errors.email != "undefined"){
+                     mensajeError="El correo electrónico ya se tomó.";
+                }
+                            Swal.fire({
+                              title: 'Los datos proporcionados no son válidos',
+                              text:mensajeError,
+                              icon: 'error',
+                              button: true,
+                              timer: 2000
+                          });
+                setTimeout(() => {
+                   $('#modalRegister').modal('show');
+                }, 2000);
+            });
+   }
+ });
+});
 
     
         </script>
