@@ -14,7 +14,8 @@
                                     <strong>{{ $pqr->name }}</strong>
                                 </h3>
                             </div>
-                            <div class="col-6 text-right">
+                            <div class="col-6 ">
+                                Caso: <strong>{{ $pqr->consecutive_case }}</strong>
                             </div>
 
                         </div>

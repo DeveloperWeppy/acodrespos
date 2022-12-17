@@ -505,8 +505,6 @@ var Tooltip = (function() {
 // Charts
 //
 
-
-
 'use strict';
 
 var Charts = (function() {

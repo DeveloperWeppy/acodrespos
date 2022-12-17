@@ -65,6 +65,10 @@ class PqrsController extends Controller
             $pqrs_all = $pqrs_all->where('type_radicate',$_GET['category']);
         }
 
+        if(isset($_GET['estado']) && $_GET['estado']!=""){
+            $pqrs_all = $pqrs_all->where('status',$_GET['estado']);
+        }
+
 
         if (isset($_GET['report'])) {
             $items=[];
