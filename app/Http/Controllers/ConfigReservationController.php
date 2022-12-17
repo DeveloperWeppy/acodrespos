@@ -443,7 +443,7 @@ class ConfigReservationController extends Controller
              //Notification
              $itemNotification = Reservation::find($iddRes);
              $userNotification = User::findOrFail($itemNotification->client_id);
-             $userNotification->notify(new General($itemNotification, '1','Solicitud aprobada','/reservas?num',$itemNotification->client_id));
+             $userNotification->notify(new General($itemNotification, '1','Solicitud aprobada','/reservas/editsolicitud',$itemNotification->client_id));
            
 
 
