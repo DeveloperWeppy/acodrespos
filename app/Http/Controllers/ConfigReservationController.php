@@ -401,7 +401,7 @@ class ConfigReservationController extends Controller
         
             $reservation->save();
 
-            //$iddRes = $request->reserva_id;
+            $iddRes = $request->reserva_id;
 
             if(isset($request->solicitud)){
                 if ($request->hasFile('img_payment')) {
@@ -441,10 +441,11 @@ class ConfigReservationController extends Controller
             ]);
 
              //Notification
-             $itemNotification = Reservation::find($request->reserva_id);
+             $itemNotification = Reservation::find($iddRes);
              $userNotification = User::findOrFail($request->cli);
              $userNotification->notify(new General($itemNotification, '1','Solicitud aprobada','/reservas?num',$itemNotification->client_id));
            
+
 
             echo 1;
 
