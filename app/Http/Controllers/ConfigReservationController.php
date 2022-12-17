@@ -675,7 +675,7 @@ class ConfigReservationController extends Controller
 
     public function editsolicitud($id)
     {
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner')) {
+        if (auth()->user()->hasRole('owner')) {
 
             $restaurant_id = auth()->user()->restorant->id;
 
@@ -715,9 +715,53 @@ class ConfigReservationController extends Controller
 
             return view('reservation.admin.includes.editsolicitud', compact('clients','areasMesas','motive','configaccountsbanks','restaurantConfig','reservation','now'));
 
-        } else {
-            return redirect()->route('orders.index')->withStatus(__('No Access'));
         }
+        
+        if (auth()->user()->hasRole('client')) {
+
+            $reservation=DB::table('reservations')->select(DB::raw('reservations.*,(select group_concat(table_id) from reservations_clients where reservation_id=reservations.id ) as mess'))->where('id','=',$id)->first();
+
+            $restaurant_id = $reservation->companie_id;
+
+            $now =Carbon::now('America/Bogota')->format('Y-m-d');
+            
+            $clients = User::role('client')->where(['active'=>1])->get();
+
+            $motive = ReservationReason::where('companie_id', $restaurant_id)->where(['active'=>1])->get();
+
+            $vendor=Restorant::findOrFail($restaurant_id);
+            $configaccountsbanks = ConfigCuentasBancarias::where('rid',$vendor->id)->get();
+
+            $restaurantConfig = DB::table('reservations_config')
+            ->select(DB::raw('reservations_config.*,(select group_concat(table_id) from reservation_tables where reservation_tables.companie_id=reservations_config.companie_id ) as mesas'))
+            ->where('companie_id', $restaurant_id)->get();
+
+            
+            
+
+            $areasMesas = [];
+            $mesas = DB::table('reservation_tables')->select(DB::raw('group_concat(table_id) as idm'))->where('companie_id', $restaurant_id)->first();
+            if($mesas->idm!=""){
+                $idm = explode(',',$mesas->idm);
+                $areas = DB::table('tables')->select(DB::raw('group_concat(restoarea_id) as ida'))->where('restaurant_id', $restaurant_id)->whereIn('id',$idm)->first();
+                if($areas->ida!=""){
+                    $ida = explode(',',$areas->ida);
+                    $areas = DB::table('restoareas')->where('restaurant_id', $restaurant_id)->whereIn('id',$ida)->get();
+                    $areasMesas = [];
+                    for($i=0;$i<count($areas);$i++){
+                        $areasMesas[$i][0] = $areas[$i];
+                        $messa = DB::table('tables')->where('restaurant_id', $restaurant_id)->where('restoarea_id', $areas[$i]->id)->whereIn('id',$idm)->get();
+                        $areasMesas[$i][1]=$messa;
+                    }
+                }
+            }
+
+
+            return view('reservation.client.includes.editsolicitud', compact('clients','areasMesas','motive','configaccountsbanks','restaurantConfig','reservation','now'));
+
+        }
+        
+        return redirect()->route('orders.index')->withStatus(__('No Access'));
     }
 
     public function configRestaurant(Request $request){
