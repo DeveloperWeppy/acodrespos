@@ -23,9 +23,6 @@
                         <span class="btn-inner--icon"><i class="fa fa-address-book-o"></i></span>
                     </button>
                 </td>
-                <td>
-                    <span class="badge badge-success badge-pill">{{$item->mot}}</span>
-                </td>
                 
                 <td class="table-web">
                     @money( $item->total, config('settings.cashier_currency'),config('settings.do_convertion'))
@@ -43,11 +40,23 @@
                 <td>
 
                     @if($item->active==1)
+                    <span class="badge badge-warning badge-pill">Agendada</span> 
+                    @elseif($item->active==2)
+                        <span class="badge badge-info badge-pill">En proceso</span>
+                    @else
+                        <span class="badge badge-success badge-pill">Finalizado</span>
+                    @endif
+                   
+                </td>
+
+                <td>
+
+                    @if($item->active==1)
                         <button class="btn btn-sm  btn-danger liberarMesa" data-item="{{json_encode($item)}}" >Liberar mesa</button> 
                     @elseif($item->active==2)
                         <span class="badge badge-info badge-pill">En proceso</span>
                     @else
-                        <span class="badge badge-success badge-pill">Terminado</span>
+                        No hay acciones...
                     @endif
                    
                 </td>

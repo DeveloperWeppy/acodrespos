@@ -15,7 +15,7 @@
 
         <div class="form-group">
             <label class="form-control-label" for="input-phone">{{ __('Phone') }}(*)</label>
-            <input type="text" name="phone" id="input-phone" class="form-control form-control-alternative" value="{{Auth::guest()?"":auth()->user()->phone}}" required>
+            <input type="text" name="phone1" id="telephone1" class="form-control form-control-alternative" value="{{Auth::guest()?"":auth()->user()->phone}}" required>
         </div>
 
         <div class="form-group">

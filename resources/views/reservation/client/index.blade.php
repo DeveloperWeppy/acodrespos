@@ -49,7 +49,6 @@
                                             <th scope="col">N. Reserva</th>
                                             <th scope="col">Fecha y Hora</th>
                                             <th class="table-web" scope="col">Area - Mesa</th>
-                                            <th scope="col">Motivo</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>
                                             <th scope="col">Estado</th>

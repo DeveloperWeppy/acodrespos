@@ -131,12 +131,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-sm-12">
-                        </div>
-                    </div>
-                    @if(count($logs_all)>0)
+                @if(count($logs_all)>0)
                         <div class="table-responsive">
                             <table class="table align-items-center table-flush dataTable-table" id="logss">
                                 <thead class="thead-light">
@@ -150,7 +145,7 @@
                                         <th>Detalle del Evento</th>
                                     </tr>                                    
                                 </thead>
-                                <tbody>
+                                <tbody style="background: #ffffff">
                                     @foreach ($logs_all as $item)
                                     @php
                                         $hora = date_format($item->created_at, 'h:i A');
@@ -173,21 +168,22 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer py-4">
-                            @if(count($logs_all))
-                            <nav class="d-flex justify-content-end" aria-label="...">
-                                {{ $logs_all->appends(Request::all())->links() }}
-                            </nav>
-                            @else
-                                <h4>{{ __('No hay resultados') }} ...</h4>
-                            @endif
-                        </div>
+                        
                         @else
-                        <div class="text-center">
-                            <h3>Parece que no hay registros de Eventos aún...</h3>
-                        </div>
-                    @endif
-                </div>
+                            <div class="text-center">
+                                <h3>Parece que no hay registros de Eventos aún...</h3>
+                            </div>
+                        @endif
+
+                    <div class="card-footer py-4">
+                        @if(count($logs_all))
+                        <nav class="d-flex justify-content-end" aria-label="...">
+                            {{ $logs_all->appends(Request::all())->links() }}
+                        </nav>
+                        @else
+                            <h4>{{ __('No hay resultados') }} ...</h4>
+                        @endif
+                    </div>
             </div>
         </div>
     </div>

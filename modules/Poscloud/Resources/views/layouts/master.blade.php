@@ -687,7 +687,7 @@
         }
     }
     $( ".btnFormClient" ).click(function() {
-    setTimeout(() => {
+        setTimeout(() => {
             initPhone('phone');
         }, 1000);
    });

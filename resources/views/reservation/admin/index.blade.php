@@ -7,12 +7,13 @@
 <div class="header bg-gradient-info pb-6 pt-5 pt-md-8">
     <div class="container-fluid">
 
+        
         <div class="nav-wrapper">
             @if ($compani->has_reservation==1)
             <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="res_menagment" role="tablist">
 
                 <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0 active " id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
+                    <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
                 </li>
 
                 <li class="nav-item">
@@ -72,10 +73,10 @@
                                             <th scope="col">Fecha y Hora</th>
                                             <th class="table-web" scope="col">Cliente</th>
                                             <th class="table-web" scope="col">Area - Mesa</th>
-                                            <th scope="col">Motivo</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>
                                             <th scope="col">Estado</th>
+                                            <th scope="col">Acción</th>
                                             
                                         </tr>
                                     </thead>

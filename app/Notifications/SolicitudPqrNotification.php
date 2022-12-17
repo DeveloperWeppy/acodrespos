@@ -45,14 +45,16 @@ class SolicitudPqrNotification extends Notification
         $estado = '';
         if ($this->radicat_pqr->status=='en revision') {
             $estado = __('La solicitud de '.$this->radicat_pqr->type_radicate. ' se encuentra En Revisión Pronto tendrás respuesta a tu solicitud.');
-        } else if($this->radicat_pqr->status=='Solicitud Respondida'){
+        } else if($this->radicat_pqr->status=='Solucionado'){
             $estado = __('La solicitud de '.$this->radicat_pqr->type_radicate. ' ha sido Respondida y Finalizada Para darle seguimiento a la solicitud de clic en el siguiente enlace.');
         }
+
+        $estado=$estado.'<center><br><div>Consecutivo de Solicitud</div><div><b>'.$this->radicat_pqr->consecutive_case.'</b></div></center>';
         
         return (new MailMessage)
         ->greeting(__('Nueva Notificación de Solicitud en Centro de Ayuda'))
-        ->subject(__( $this->radicat_pqr->name.' tienes una nueva notificación'))
-        ->line($estado)
+        ->subject(__( $this->radicat_pqr->name.' tienes una nueva notificación')."-".$this->radicat_pqr->consecutive_case)
+        ->line(new HtmlString($estado))
         ->action(__('Ver Estado de la solicitud'), url('/detalle-solicitud/'.$this->radicat_pqr->id));
     }
 
