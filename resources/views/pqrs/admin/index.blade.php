@@ -71,6 +71,19 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="client">Filtrar por estado</label>
+            
+                                            <select class="form-control" id="estado" name="estado" >
+                                                <option d value="" > -- Seleccionar estado -- </option>
+                                                <option value="Radicado" <?php if(isset($_GET['estado'])&&$_GET['estado']=="Radicado"){echo "selected";} ?> >Radicado</option>
+                                                <option value="En revision" <?php if(isset($_GET['estado'])&&$_GET['estado']=="En revision"){echo "selected";} ?> >En revision</option>
+                                                <option value="Solucionado" <?php if(isset($_GET['estado'])&&$_GET['estado']=="Solucionado"){echo "selected";} ?> >Solucionado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     
                                                             
                                 </div>
