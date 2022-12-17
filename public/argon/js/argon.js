@@ -504,7 +504,9 @@ var Tooltip = (function() {
 //
 // Charts
 //
-if($(location).attr('pathname')=='/home'){
+
+
+
 'use strict';
 
 var Charts = (function() {
@@ -1453,7 +1455,7 @@ var RatingsResChart = (function() {
 	}
 
 	
-
+	if($(location).attr('pathname')=='/home'){
 		charData('graf1','chart-totres','grafico1','line','','Ventas en pesos','',1,0,0);
 		charData('graf2','chart-tables','grafico2','bar','Mesas','N° de personas','',0,0,0);
 		charData('graf3','chart-timeorder','grafico3','bar','Tipo de pedido','Tiempo en minutos','min',0,1,0);
