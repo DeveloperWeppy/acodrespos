@@ -18,8 +18,11 @@ class ValidateAccesPqr
      */
     public function handle(Request $request, Closure $next)
     {
-       //dd($request->id);
+        $url = str_replace($_SERVER['HTTP_HOST'],'',$_SERVER['REQUEST_URI']);
+        $dato = explode("/", $url);
+        $data = $dato[2];
+        //dd($dato[2]);
         //return $next($request);
-        return redirect('/pqrs-acceso/validacion');
+        return  redirect()->route('pqrs.validateaccespqr', $data);
     }
 }

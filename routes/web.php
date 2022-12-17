@@ -44,12 +44,13 @@ Route::get('/diligenciar-solicitud', 'PqrsController@index')->name('pqrs.index')
 Route::post('pqrs-guardar', 'PqrsController@store')->name('pqrs.store');
 Route::get('centro-ayuda/confirmacion-solicitud/{consecutive_case}', 'PqrsController@confirmacion')->name('pqrs.confirmacion');
 Route::post('/pqrs-acceso/validar', 'PqrsController@validate_acces')->name('pqrs.validate_acces');
-Route::get('/pqrs-acceso/validacion', function () {
+Route::get('/pqrs-acceso/validacion/{consecutive_case}', 'PqrsController@validacion')->name('pqrs.validateaccespqr');
+/* Route::get('/pqrs-acceso/validacion', function () {
     return view('pqrs.includes.validateacces');
-})->name('pqrs.validateaccespqr');
+})->name('pqrs.'); */
 
-    Route::get('/detalle-solicitud/{id}', 'PqrsController@detalle')->middleware('validateAccessPqr')->name('pqrs.detalle');
-    Route::get('/detalle-solicitud-radicada/{id}', 'PqrsController@detalle_radicada')->middleware('okaccespqr')->name('pqrs.detalle_radicada');
+    Route::get('/detalle-solicitud/{consecutive_case}', 'PqrsController@detalle')->middleware('validateAccessPqr')->name('pqrs.detalle');
+    Route::get('/detalle-solicitud-radicada/{consecutive_case}', 'PqrsController@detalle_radicada')->middleware('okaccespqr')->name('pqrs.detalle_radicada');
 
 Route::group(['middleware' => ['auth','impersonate']], function () {
     Route::group(['middleware' => ['ChangePassword']], function () {

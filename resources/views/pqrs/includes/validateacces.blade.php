@@ -25,6 +25,7 @@
                         </div>
                         <form role="form" method="POST" action="{{ route('pqrs.validate_acces') }}">
                             @csrf
+                            <input type="hidden" name="consecutive_key" value="{{$dato}}">
                             <div class="form-group mb-3">
                                 <div class="input-group input-group-alternative">
                                     <div class="input-group-prepend">

@@ -55,7 +55,7 @@ class SolicitudPqrNotification extends Notification
         ->greeting(__('Nueva Notificación de Solicitud en Centro de Ayuda'))
         ->subject(__( $this->radicat_pqr->name.' tienes una nueva notificación')."-".$this->radicat_pqr->consecutive_case)
         ->line(new HtmlString($estado))
-        ->action(__('Ver Estado de la solicitud'), url('/detalle-solicitud/'.$this->radicat_pqr->id));
+        ->action(__('Ver Estado de la solicitud'), url('/detalle-solicitud/'.$this->radicat_pqr->consecutive_case));
     }
 
     /**

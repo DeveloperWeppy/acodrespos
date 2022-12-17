@@ -234,28 +234,22 @@ class PqrsController extends Controller
         return view('pqrs.admin.show', compact('pqr'));
     }
 
-    public function detalle($id)
+    public function detalle($consecutive_case)
     {
         //session('id_pqr', $id);
-        $pqr = Pqrs::find($id);
+        $pqr = Pqrs::where('consecutive_case',$consecutive_case)->first();
         return view('pqrs.show_public', compact('pqr', 'id'));
     }
 
-    public function detalle_radicada($id)
+    public function detalle_radicada($consecutive_case)
     {
-        
-        if (Session::has('succeful_validateaccesspqr')) {
-            $id_flash = Session::get('succeful_validateaccesspqr');
-
-            if ($id==$id_flash) {
-                Session::forget($id_flash);
-                $pqr = Pqrs::find($id);
-                return view('pqrs.show_public', compact('pqr'));
-            } else {
-                return redirect()->route('pqrs.validateaccespqr');
-            }
+        //dd($consecutive_case);
+        if ($consecutive_case) {
+            $pqr = Pqrs::where('consecutive_case',$consecutive_case)->first();
+            return view('pqrs.show_public', compact('pqr'));
         } else {
-            return redirect()->route('pqrs.validateaccespqr');
+            //session()->flash('consecutive_case', $consecutive_case);
+            return redirect()->route('pqrs.validateaccespqr', $consecutive_case);
         }
         
         
@@ -305,18 +299,27 @@ class PqrsController extends Controller
 
     public function validate_acces(Request $request)
     {
-
+        //dd($request);
         $email_user = $request->email;
+        $consecutive_key = $request->consecutive_key;
 
-        $pqr = Pqrs::where('email', $email_user)->exists();
+        $pqr = Pqrs::where('email', $email_user)->where('consecutive_case', $consecutive_key)->exists();
             if ($pqr) {
-                $pqr_info = Pqrs::where('email', $email_user)->first();
-                $id_pqr = $pqr_info->id;
+                $pqr_info = Pqrs::where('email', $email_user)->where('consecutive_case', $consecutive_key)->first();
+                $id_pqr = $pqr_info->consecutive_case;
                 session()->flash('succeful_validateaccesspqr', $id_pqr);
                     return redirect()->route('pqrs.detalle_radicada', $id_pqr);
             }else{
                 return redirect()->back()->with('error', 'El Correo ingresado no es el mismo con el que se radicó la solicitud');
             }
+
+    }
+    public function validacion($consecutive_case)
+    {
+        
+        $dato = $consecutive_case;
+        //dd($dato);
+        return view('pqrs.includes.validateacces')->with('dato', $dato);
 
     }
 }
