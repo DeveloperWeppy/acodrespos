@@ -8,11 +8,13 @@
 
 namespace App\Repositories\Orders;
 
-use Illuminate\Support\Facades\Validator;
 use Cart;
 use App\Order;
 use App\Restorant;
+use App\Models\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Validator;
 
 
 class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterface
@@ -69,9 +71,6 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
         
         $this->order->update();
 
-
-
-        
 
         //From trait - set fee and time slot
         if($this->request->delivery_method=="delivery"){
@@ -165,6 +164,19 @@ class POSOrderRepository extends BaseOrderRepository implements OrderTypeInterfa
     }
 
     private function notify(){
+        $function = $this->getIpLocation();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'ORDEN',
+            'submodule' => 'POS',
+            'action' => 'Registro',
+            'detail' => 'Registro de Nuevo Pedido',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         $this->notifyOwner();
     }
 }

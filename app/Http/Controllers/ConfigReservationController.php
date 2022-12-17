@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\User;
 use App\Tables;
 use App\RestoArea;
 use App\Restorant;
-use App\User;
+use Carbon\Carbon;
+use App\Models\Log;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\ConfigReservation;
-use App\Models\ReservationReason;
 use App\Models\ReservationConfig;
+use App\Models\ReservationReason;
 use App\Models\ReservationTables;
-use App\Models\ConfigCuentasBancarias;
-use App\Models\Reservation;
-use App\Models\ReservationClients;
-use DB;
 
-use Carbon\Carbon;
+use App\Models\ReservationClients;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ConfigCuentasBancarias;
 
 
 
@@ -164,6 +166,7 @@ class ConfigReservationController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         if (auth()->user()->hasRole('owner')) {
             $restaurant_id = auth()->user()->restorant->id;
 
@@ -212,6 +215,19 @@ class ConfigReservationController extends Controller
             $reservation->payment_1 = json_encode($pago1);
             $reservation->save();
 
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'RESERVAS',
+                'submodule' => 'RESTAURANTE',
+                'action' => 'Registro',
+                'detail' => 'Se registró una nueva reserva por parte del restaurante, ' .auth()->user()->restorant->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
+            
             $iddRes = $reservation->id;
 
             if(isset($request->zonas)){
@@ -276,6 +292,18 @@ class ConfigReservationController extends Controller
             $reservation->pendiente = '0';
             $reservation->save();
 
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'RESERVAS',
+                'submodule' => 'PRE-RESERVA CLIENTE',
+                'action' => 'Registro',
+                'detail' => 'El cliente, ' .auth()->user()->name .' registró una nueva pre-reserva',
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             $iddRes = $reservation->id;
 
             if(isset($request->zonas)){
@@ -300,6 +328,7 @@ class ConfigReservationController extends Controller
 
     public function storePendiente(Request $request)
     {
+        $function = $this->getIpLocation();
         if (auth()->user()->hasRole('owner')) {
             $restaurant_id = auth()->user()->restorant->id;
 
@@ -328,7 +357,6 @@ class ConfigReservationController extends Controller
                     $hhto = $hh;
                 }
 
-                $reservation =Reservation::findOrFail($request->reserva_id);
                 $reservation->payment_status = 'paid';
                 $reservation->date_reservation = $request->fec." ".$hh.":".$mm;
                 $reservation->total = $request->total;
@@ -353,7 +381,6 @@ class ConfigReservationController extends Controller
 
 
             }else{
-                $reservation =Reservation::findOrFail($request->reserva_id);
                 $reservation->pendiente = 0;
                 $reservation->payment_2= json_encode($pago2);
                 $reservation->payment_status = 'paid';
@@ -361,33 +388,44 @@ class ConfigReservationController extends Controller
         
             $reservation->save();
 
-            $iddRes = $request->reserva_id;
+            //$iddRes = $request->reserva_id;
 
             if(isset($request->solicitud)){
                 if ($request->hasFile('img_payment')) {
                     $path = 'uploads/reservations/';
-                    $nom = $iddRes.'.png';
+                    $nom = $request->reserva_id.'.png';
 
                     $request->img_payment->move(public_path($path), $nom);
 
-                    $reservation=Reservation::findOrFail($iddRes);
+                   // $reservation=Reservation::findOrFail($request->reserva_id);
                     $reservation->url_payment1 = $path.$nom;
                     $reservation->save();
                 }
             }else{
                 if ($request->hasFile('img_payment')) {
                     $path = 'uploads/reservations/';
-                    $nom = $iddRes.'_2.png';
+                    $nom = $request->reserva_id.'_2.png';
 
                     $request->img_payment->move(public_path($path), $nom);
 
-                    $reservation=Reservation::findOrFail($iddRes);
+                   // $reservation=Reservation::findOrFail($iddRes);
                     $reservation->url_payment2 = $path.$nom;
                     $reservation->save();
                 }
             }
 
-           
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'RESERVAS',
+                'submodule' => 'RESTAURANTE',
+                'action' => 'Actualización',
+                'detail' => 'Se ha actualizado el pago pendiente de la reserva #'.$request->reserva_id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
 
             echo 1;
 
@@ -440,7 +478,7 @@ class ConfigReservationController extends Controller
 
     public function storeConfig(Request $request)
     {
-       
+        $function = $this->getIpLocation();
         
         $usersDriver = ReservationConfig::updateOrCreate(
             ['companie_id' => auth()->user()->restorant->id],
@@ -456,6 +494,18 @@ class ConfigReservationController extends Controller
             'interval_time' => (isset($_POST['interval'])?$_POST['interval']:0),
             ]
         );
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'RESERVAS',
+            'submodule' => 'CONFIGURACIÓN DE RESERVA',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la configuración de reserva por parte del restaurante, ' .auth()->user()->restorant->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
      
         if(isset($request->zonas)){
 

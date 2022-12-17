@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Restorant;
-use Illuminate\Http\Request;
-use App\Models\ReservationReason;
+use App\Models\Log;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
 
+use App\Models\ReservationReason;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationReasonController extends Controller
 {
@@ -46,6 +48,7 @@ class ReservationReasonController extends Controller
      */
     public function store(Request $request)
     {
+        $function = $this->getIpLocation();
         $error = false;
         $mensaje = '';
         $restaurant_id = auth()->user()->restorant->id;
@@ -60,6 +63,18 @@ class ReservationReasonController extends Controller
             ]);
 
             if ($register) {
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'RESERVAS',
+                    'submodule' => 'MOTIVO DE RESERVA',
+                    'action' => 'Actualización',
+                    'detail' => 'Se actualizó el motivo de reservación por parte del restaurante, ' .auth()->user()->restorant->name,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
                 $error = false;
                 $mensaje = 'Modifcación de Motivo Exitosa';
             } else {
@@ -75,6 +90,18 @@ class ReservationReasonController extends Controller
             ]);
 
             if ($register->save()) {
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'RESERVAS',
+                    'submodule' => 'MOTIVO DE RESERVA',
+                    'action' => 'Registro',
+                    'detail' => 'Se registró un nuevo motivo de reservación por parte del restaurante, ' .auth()->user()->restorant->name,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
                 $error = false;
                 $mensaje = 'Registro de Motivo Exitosa';
             } else {
@@ -145,6 +172,7 @@ class ReservationReasonController extends Controller
      */
     public function destroy($id)
     {
+        $function = $this->getIpLocation();
         $this->authChecker();
 
         $restaurant_id = auth()->user()->restorant->id;
@@ -155,6 +183,18 @@ class ReservationReasonController extends Controller
         if($contador==0){
             $item = ReservationReason::findOrFail($id);
             $item->delete();
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'RESERVAS',
+                'submodule' => 'MOTIVO DE RESERVA',
+                'action' => 'Eliminación',
+                'detail' => 'Se eliminó un motivo de reservación por parte del restaurante, ' .auth()->user()->restorant->name,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             return redirect('/reservas')->with('success','El motivo ha sido removido');
         }
         

@@ -20,7 +20,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs_all = Log::where('created_at', '<=', Carbon::today());
+        $logs_all = Log::whereDay('created_at', Carbon::today());
 
         if(isset($_GET['fromDate'],$_GET['toDate']) && $_GET['fromDate']!=""){
             $logs_all = $logs_all->whereDate('created_at',">=",$_GET['fromDate'])->whereDate('created_at',"<=",$_GET['toDate']);
@@ -68,8 +68,7 @@ class LogController extends Controller
             return Excel::download(new LogsExport($items), 'listadoAuditoria_'.time().'.xlsx');
         }
 
-        $logs_all = $logs_all->paginate(15);
-
+        $logs_all = $logs_all->orderByDesc('id')->paginate(15);
         $users=User::all();
 
         $module = Log::select('module')->groupBy('module')->get();

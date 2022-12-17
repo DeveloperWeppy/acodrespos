@@ -10,30 +10,31 @@ use App\Coupons;
 use App\Restorant;
 use Carbon\Carbon;
 use App\Categories;
+use App\Models\Log;
 use App\Models\Orderitems;
+use App\Models\usersDriver;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Exports\OrdersExport;
 use App\Models\EncuestaOrden;
 use App\Services\ConfChanger;
+use App\Models\EncuestaClient;
 use App\Models\SimpleDelivery;
 use App\Models\CartStorageModel;
 use willvincent\Rateable\Rating;
 use Illuminate\Support\Facades\DB;
 use App\Events\OrderAcceptedByAdmin;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Events\OrderAcceptedByVendor;
 use Akaunting\Module\Facade as Module;
+use App\Models\ConfigCuentasBancarias;
 use Illuminate\Support\Facades\Cookie;
 use App\Notifications\OrderNotification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Database\Eloquent\Builder;
 use App\Events\NewOrder as PusherNewOrder;
-use App\Models\EncuestaClient;
 use App\Repositories\Orders\OrderRepoGenerator;
-use App\Models\usersDriver;
-use App\Models\ConfigCuentasBancarias;
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -459,7 +460,7 @@ class OrderController extends Controller
 
     public function statusitemorder(Request $request)
     {
-
+        $function = $this->getIpLocation();
         $class_status = $text_status = '';
         $status = 'cocina';
 
@@ -475,7 +476,18 @@ class OrderController extends Controller
               ->where('id', $id)
               ->update(['item_status' => $active]);
 
-            
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $request->ip(),
+                'module' => 'ORDEN',
+                'submodule' => 'PRODUCTO EN COCINA',
+                'action' => 'Actualización',
+                'detail' => 'Se actualizó el estado al producto por, -'.$active. '- de la orden #' .$item->order_id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
             $order = Order::findOrFail($item->order_id);
             if ($order->employee_id != null) {
                 if(Auth::user()->id!=$order->employee_id){
@@ -653,6 +665,7 @@ class OrderController extends Controller
      */
     public function update(Request $request,Order $order)
     {
+        $function = $this->getIpLocation();
         if (auth()->user()->hasRole('owner') && auth()->user()->id == $order->restorant->user->id ||
             auth()->user()->hasRole('staff') && auth()->user()->restaurant_id == $order->restorant->id || 
             auth()->user()->hasRole('admin')
@@ -665,6 +678,19 @@ class OrderController extends Controller
                         $order->delivery_pickup_interval=$interEntrega[0]."_".$aumentartiempo;
                         $order->update();
                         $order->client->notify(new OrderNotification($order,11));
+
+                        Log::create([
+                            'user_id' => Auth::user()->id,
+                            'ip' => $request->ip(),
+                            'module' => 'ORDEN',
+                            'submodule' => '',
+                            'action' => 'Actualización',
+                            'detail' => 'Se actualizó la orden, #' .$order->id,
+                            'country' => $function->country,
+                            'city' =>$function->city,
+                            'lat' =>$function->lat,
+                            'lon' =>$function->lon,
+                        ]);
                     }
                 }
                 
@@ -695,7 +721,18 @@ class OrderController extends Controller
                         $oi=Orderitems::findOrFail($item->pivot->id);
                         $oi->qty=$request->item_qty;
                         $oi->update();
-                        
+                        Log::create([
+                            'user_id' => Auth::user()->id,
+                            'ip' => $request->ip(),
+                            'module' => 'ORDEN',
+                            'submodule' => 'PRODUCTO',
+                            'action' => 'Actualización',
+                            'detail' => 'Se actualizó el producto, ' .$item->name. ' de la orden #'.$order->id,
+                            'country' => $function->country,
+                            'city' =>$function->city,
+                            'lat' =>$function->lat,
+                            'lon' =>$function->lon,
+                        ]);
                         //$order->items()->updateExistingPivot($item, array('qty' => $request->item_qty), false);
                         $totalRecaluclatedVAT = $request->item_qty * ($item->vat > 0?$item->pivot->variant_price * ($item->vat / 100):0);
                         
@@ -716,6 +753,18 @@ class OrderController extends Controller
                 $order->vatvalue=$total_order_vat;
                 $order->update();
 
+                Log::create([
+                    'user_id' => Auth::user()->id,
+                    'ip' => $request->ip(),
+                    'module' => 'ORDEN',
+                    'submodule' => '',
+                    'action' => 'Actualización',
+                    'detail' => 'Se actualizó el precio de la orden, #' .$order->id . ' a ' .$order_price,
+                    'country' => $function->country,
+                    'city' =>$function->city,
+                    'lat' =>$function->lat,
+                    'lon' =>$function->lon,
+                ]);
                 //If this order have discount, recaluclate deduct, it can be percentage based
                 if(strlen($order->coupon)>0){
                     $coupon = Coupons::where(['code' => $order->coupon])->get()->first();
@@ -955,7 +1004,7 @@ class OrderController extends Controller
 
     public function updateStatus($alias, Order $order,$motivo="")
     {
-
+        $function = $this->getIpLocation();
         if($alias=="accepted_by_restaurant"){
             if((intval($order->restorant->current_consecutive)>intval($order->restorant->final_consecutive)) && $order->consecutive=="" ){
                 return redirect()->route('orders.index')->with("error","! Error Actualiza el  consecutivo de factura");
@@ -1012,11 +1061,35 @@ class OrderController extends Controller
                 'time_delivered' => strip_tags($_GET['time_delivered'])
                 ]
             );
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'DOMICILIARIO',
+                'submodule' => 'PEDIDO',
+                'action' => 'Registro',
+                'detail' => 'Se asignó el domiciliario, ' .strip_tags($_GET['nom']). ' a la orden #'.$order->id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
         }
 
         if (isset($_GET['time_to_prepare'])) {
             $order->time_to_prepare = $_GET['time_to_prepare'];
             $order->update();
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'ip' => $function->ip,
+                'module' => 'ORDEN',
+                'submodule' => 'TIEMPO DE PREPARACIÓN',
+                'action' => 'Registro',
+                'detail' => 'Se registró , ' .strip_tags($_GET['time_to_prepare']). ' min. de preparación a la orden #'.$order->id,
+                'country' => $function->country,
+                'city' =>$function->city,
+                'lat' =>$function->lat,
+                'lon' =>$function->lon,
+            ]);
         }
 
         $status_id_to_attach = Status::where('alias', $alias)->value('id');
@@ -1167,7 +1240,39 @@ class OrderController extends Controller
             
             OrderAcceptedByAdmin::dispatch($order);
         }
-
+        $text = '';
+        if ($alias=="accepted_by_restaurant") {
+            $text = 'Aceptado por el restaurante';
+        } else if ($alias=="assigned_to_driver"){
+            $text = 'Asignado al domiciliario';
+        } else if ($alias=="prepared"){
+            $text = 'Preparado';
+        } else if ($alias=="picked_up"){
+            $text = 'Recogido';
+        } else if ($alias=="delivered"){
+            $text = 'Entregado';
+        } else if ($alias=="rejected_by_admin"){
+            $text = 'Rechazado por el administrador';
+        } else if ($alias=="rejected_by_restaurant"){
+            $text = 'Rechazado por el restaurante';
+        } else if ($alias=="updated"){
+            $text = 'Actualizado';
+        } else if ($alias=="closed"){
+            $text = 'Cerrado';
+        }
+        
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'ORDEN',
+            'submodule' => 'ACTUALIZACIÓN DE ESTADO',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la orden , #' .$order->id . ' a '.$text,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
 
       return redirect()->route('orders.index')->withStatus(__('Order status succesfully changed.'));
     }
