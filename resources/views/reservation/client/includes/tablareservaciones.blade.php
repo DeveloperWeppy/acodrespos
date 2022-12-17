@@ -8,7 +8,7 @@
 
             <tr>
                 <td>
-                    <a class="btn badge badge-success badge-pill" href="#!">#{{$item->id}}</a>
+                    <a class="btn badge badge-success badge-pill" href="{{route('reservation.editsolicitud',[$item->id])}}">#{{$item->id}}</a>
                 </td>
                 <td>
                     <p><small class="text-muted">{{ $item->date_reservation }}</small></p><p>

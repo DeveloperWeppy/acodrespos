@@ -25,23 +25,28 @@
                                 
                                 <h6 class="heading-small text-muted mb-4">{{ __('Client information') }}</h6>
                                 <div class="pl-lg-4">
-
-                                    <button type="button" data-toggle="modal" data-target="#modalRegister" class="btnFormClient btn btn-outline-primary btn-icon btn-sm page-link btn-cart-radius m-2" style="float: right;"><span class="btn-inner--icon btn-cart-icon"><i aria-hidden="true" class="fa fa-plus"></i></span></button>
-
-                                    <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
-
-                                        <label class="form-control-label" for="name_client">{{ __('Client') }}</label>
-                                        <div class="">
-                                            <select name="cli" class="form-control form-control-sm" required>
-                                                <option value="" >Seleccionar cliente</option>
-                                                @foreach($clients as $key)
-                                                <option value="{{$key->id}}" >{{$key->number_identification}} - {{$key->name}}</option>
-                                                @endforeach
-                                            </select>
+                                    <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <h4 class="form-control-label"><strong>N. de mesas:</strong></h4>
+                                                    <div class="input-group">
+                                                        <label class="form-control-label" id="mes">0</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <h4 class="form-control-label"><strong>N. de personas:</strong></h4>
+                                                    <div class="input-group">
+                                                        <label class="form-control-label" id="per">0</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group{{ $errors->has('name_client') ? ' has-danger' : '' }}">
-                                        <label class="form-control-label" for="name_client">Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</label>
+                                        <h4 class="form-control-label"><strong>Mesas a reservar ( Valor por mesa: <span id="valorMesa"></span> COP)</strong></h4>
                                         <select name="zonas[]" class="form-control" id="zonas" multiple required>
                                             <option value="">Seleccionar mesas</option>
                                             <?php
@@ -58,7 +63,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
-                                        <label class="form-control-label" for="email_client">Motivo de reservación</label>
+                                        <h4 class="form-control-label"><strong>Motivo de reservación:</strong></h4>
                                         <div class="">
                                             <select name="mot" id="mot" class="form-control form-control-sm" required>
                                                 <option value="" data-price="0" >Seleccionar motivo</option>
@@ -70,39 +75,22 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('phone_client') ? ' has-danger' : '' }}">
-                                        <label class="form-control-label" for="phone_client">Comentario</label>
-                                        <textarea class="form-control" name="com" ></textarea>
+                                        <h4 class="form-control-label"><strong>Comentario:</strong></h4>
+                                        <div class="input-group">
+                                            <label class="form-control-label" id="com"></label>
+                                        </div>
                                     </div>
 
                                     <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}">
                                 
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Jornada</label>
-                                                    <div class="">
-                                                        <select name="jor" id="jor" class="form-control form-control-sm" required>
-                                                            
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             
-                                            <div class="col-md-4">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="form-control-label">Fecha</label>
+                                                    <h4 class="form-control-label"><strong>Fecha:</strong></h4>
                                                     <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
-                                                        </div>
-                                                        <input name="fec" class="form-control datepickerReserva" value="{{$now}}" required placeholder="Fecha" type="text">
+                                                        <label class="form-control-label" id="fec"></label>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="form-control-label">Hora</label>
-                                                    <input name="hora" class="form-control timepicker" placeholder="Hora" required type="text">
                                                 </div>
                                             </div>
                                         </div>
@@ -129,8 +117,6 @@
                         </div>
                         <div class="card-footer py-4">
                             <nav class="d-flex justify-content-end" aria-label="...">
-                            
-                                <button type="submit" class="btn btn-md btn-primary float-left" >Guardar Reserva</button>
                             </nav>
                         </div>
                     </form>
@@ -138,7 +124,6 @@
                 </div>
             </div>
         </div>
-        @include('layouts.footers.auth')
     </div>
      
 
@@ -257,9 +242,6 @@
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
-
-                totalReservas.totalPriceRestado=(precioEstandar*mesas)+mot;
-                totalReservas.totalPriceRestadoFormated =  puntosMil((precioEstandar*mesas)+mot);
             });
 
             $("#zonas").on('change', function() {
@@ -272,9 +254,6 @@
                 totalReservas.totalPriceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservation = (precioEstandar*mesas)+mot;
                 totalReservas.priceReservationFormated = puntosMil((precioEstandar*mesas)+mot);
-
-                totalReservas.totalPriceRestado=(precioEstandar*mesas)+mot;
-                totalReservas.totalPriceRestadoFormated =  puntosMil((precioEstandar*mesas)+mot);
             });
 
             $(document).on('change', '#jor', function(){
@@ -369,7 +348,7 @@
                 });
 
                 let timPicker = $('.timepicker');
-                timPicker.timepicker('option', 'minTime', min);
+                timPicker.timepicker('option', 'maxTime', min);
                 timPicker.timepicker('option', 'maxTime', max);
             }
             
@@ -386,7 +365,7 @@
 
             function pagarReserva(){
                 var formData = new FormData($('#formReserva')[0]);
-                
+                formData.append('reserva_id',{{(isset($reservation->id)?$reservation->id:0)}});
                 formData.append('met',$('#paymentType').val());
                 formData.append('cuentaid',$('#paymentId').val());
                 formData.append('tipotarjeta',$('#paymentType2').val());
@@ -394,6 +373,8 @@
                 formData.append('voucher',$('#voucher').val());
                 formData.append('total',totalReservas.totalPriceReservation);
                 formData.append('pagado',totalReservas.priceReservation);
+                formData.append('solicitud',3);
+                formData.append('mesas[]',$('#zonas').val());
 
               
                 if($('#check_por').is(':checked')){
@@ -414,7 +395,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{route('reservation.store')}}",
+                    url: "{{route('reservation.storePendiente')}}",
                     type: 'POST',
                     success: function (data) {
 
@@ -438,27 +419,17 @@
            
         
             $(function(){
-                $(".datepickerReserva").daterangepicker({
-                    locale: {
-                        format: 'YYYY-MM-DD',
-                        daysOfWeek: [ "Dom", "Lun","Mar","Mie","Jue","Vie","Sáb" ],
-                        monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
-                        firstDay: 1,
-                        applyLabel: "Aplicar",
-                        cancelLabel: "Cancelar",
-                    },
-                    minDate: '{{$now}}',
-                    singleDatePicker: true,
+                $(".datepickerReserva").datepicker({
+                    format: 'yyyy-mm-dd',
                 });
             });
-
-           
             
            
 
 
             function revisarOcupacion(){
                 var formData = new FormData();
+                formData.append('reserva_id',{{(isset($reservation->id)?$reservation->id:0)}});
                 formData.append('fecha',$('input[name=fec]').val());
                 formData.append('hora',$('input[name=hora]').val());
                 formData.append('mesas[]',$('#zonas').val());
@@ -494,134 +465,48 @@
                 revisarOcupacion();
             });
 
+            window.onload = function() {
+
+                $('select[name=mot]').val('{{(isset($reservation->reservation_reason_id)?$reservation->reservation_reason_id:"")}}');
+                $('select[name=mot]').trigger('change');
+
+                $('#com').html('{{(isset($reservation->description)?$reservation->description:"")}}');
+
+                var fecha = '{{(isset($reservation->date_reservation)?$reservation->date_reservation:"")}}';
+
+                $('#fec').html(fecha);
+                
+
+                $('#mes').html('{{(isset($reservation->mesas)?$reservation->mesas:"0")}}');
+                $('#per').html('{{(isset($reservation->mesas)?$reservation->personas:"0")}}');
 
 
-$(document).ready(function() {
-    $("#from-create-client").validate({
-    rules: {
-        name: {
-        required: true,
-        },
-        number_identification: {
-        required: true,
-        },
-        email: {
-        required: true,
-        },
-        phone: {
-        required: true,
-        },
-    },
-    messages: {
-        name: "Por favor ingrese el nombre",
-        number_identification: "Por favor ingrese el documento de identificacion",
-        email: "Por favor ingrese el email",
-        phone: "Por favor el numero de telefono",
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-    },
-   highlight: function (element, errorClass, validClass) {
-        if($(element).attr('id')!="formPhone"){
-            $(element).addClass('is-invalid');
-        }
-   },
-   unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-   },
-   submitHandler: function(form,event){
-    event.preventDefault();
-             var formDataClient=new FormData(form);
-             formDataClient.append( 'password', $( '#fromDocCleint' ).val() );
-             formDataClient.append( 'password_confirmation', $( '#fromDocCleint' ).val() );
-             $.ajax({
-                headers: {
-                       'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                        },
-                type: "post",
-                encoding:"UTF-8",
-                url: "{{route('register')}}",
-                data:formDataClient ,
-                processData: false,
-                contentType: false,
-                dataType:'json',
-                beforeSend:function(){
+                var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mess:"")}}';
+                var mesas = mesasSeleccionadas.split(',');
+                for(var i=0;i<mesas.length;i++){
+                    $('#zonas option[value='+mesas[i]+']').prop('selected', true);
 
-                 
-                 
-                  $('#modalRegister').modal('hide');
-                  Swal.fire({
-                           title: 'Validando datos, espere por favor...',
-                           button: false,
-                           showConfirmButton: false,
-                           allowOutsideClick: false,
-                           allowEscapeKey: false,
-                           showCancelButton: false,
-                           showConfirmButton: false,
-                           timer: 4000,
-                           timerProgressBar: true,
-                               didOpen: () => {
-                                   Swal.showLoading()
-                               },
-                       });
+                    $('#zonas').trigger('change');
                 }
-             }).done(function( respuesta ) {
 
-                $.ajax({
-                    method: "GET",
-                    url: "/listclients/select",
-                    dataType:'json',
-                  }).done(function(resp) {
-                    let datalistClient=resp.selectClient;
-                    let datalistPhone=resp.selectTelefono;
-                    $('select[name=cli]').select2({
-                        width: '100%',
-                        placeholder: "Seleccionar Cliente",
-                        data: datalistClient
-                    });
+                $('#zonas').prop("disabled", true);
+                $('select[name=mot]').prop("disabled", true);
+                $('.select2').css("background", "#eee");
+                 
+                
+            }
 
-                    $('.select2').addClass('form-control');
-                    $('.select2').css('width','100%');
-                    $('.select2-selection').css('border','0');
-                    $('.select2-selection__arrow').css('top','10px');
-                    $('.select2-selection__rendered').css('color','#8898aa');
-
-                 });
-
-                 Swal.fire({
-                              title: 'Cliente registrado',
-                              icon: 'success',
-                              button: true,
-                              timer: 2000
-                          });
-             }).fail(function( jqXHR,textStatus ) {
-                var mensajeError="";
-                if (typeof jqXHR.responseJSON.errors.email != "undefined"){
-                     mensajeError="El correo electrónico ya se tomó.";
-                }
-                            Swal.fire({
-                              title: 'Los datos proporcionados no son válidos',
-                              text:mensajeError,
-                              icon: 'error',
-                              button: true,
-                              timer: 2000
-                          });
-                setTimeout(() => {
-                   $('#modalRegister').modal('show');
-                }, 2000);
-            });
-   }
- });
-});
-
-    
+            function formatTime(timeString) {
+                const [hourString, minute] = timeString.split(":");
+                const hour = +hourString % 24;
+                return (hour % 12 || 12) + ":" + minute + (hour < 12 ? " AM" : " PM");
+            }
+                
         </script>
         @endsection
 
 
-       
+        @include('layouts.footers.auth')
 
 
         
