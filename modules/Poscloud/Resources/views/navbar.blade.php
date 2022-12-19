@@ -1,4 +1,10 @@
   <!-- Navbar Dark -->
+
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
   <nav
   class="navbar navbar-expand-lg navbar-dark bg-gradient-dark z-index-4 py-3">
   <div class="container">
@@ -17,7 +23,7 @@
       <button  type="button" id="btn_ordenes"  class="btn bg-gradient-success my-1 mx-2 me-1 mr-2">{{ __('ORDENES EN VIVO') }}<div style="display: inline-flex; margin: 0px 0px 0px 8px !important;" class="blob red"></div></button>
       <button onclick="showOrders()" type="button" class="btn bg-gradient-primary my-1 me-1">
         <span>{{ __('Active Orders') }}</span>
-        <span class="badge badge-md badge-circle badge-floating badge-primary border-white" id="ordersCount">@{{ totalOrders }}</span>
+        <span class="badge badge-md badge-circle badge-floating badge-primary border-white" id="ordersCount" v-cloak >@{{ totalOrders }}</span>
       </button>
     
       <button onclick="showFloor()" type="button" class="btn bg-gradient-info my-1 mx-2 me-1">{{ __('áreas') }}</button>

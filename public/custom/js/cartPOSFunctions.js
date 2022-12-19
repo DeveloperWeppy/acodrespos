@@ -102,6 +102,7 @@ function updatePrices(net,delivery,expedition){
         $('#addprop').hide();
         $('#edit_propina_check').prop('checked',false);
 
+        
         valor_propi = ((net-deduct)*porcentaj_propina)/100;
         modalPayment.totalPropinaFormat=formatter.format(valor_propi);
 
@@ -109,8 +110,18 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+       
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').show();
 
@@ -120,8 +131,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
 
-        modalPayment.totalPriceRestado = net-deduct;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated = formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').hide();
       }
@@ -139,8 +159,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').show();
         
@@ -151,8 +180,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
 
-        modalPayment.totalPriceRestado = net-deduct;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').hide();
       }
@@ -167,8 +205,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
         
       });
     });

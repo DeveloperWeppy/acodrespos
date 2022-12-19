@@ -44,14 +44,14 @@
                                                 <div class="form-group">
                                                     <label class="form-control-label">N. de mesas</label>
                                                     <div class="input-group">
-                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="1" type="number">
+                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="0" type="number">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">N. de personas</label>
-                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="1" type="number">
+                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="0" type="number">
                                                 </div>
                                             </div>
                                         </div>
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group{{ $errors->has('email_client') ? ' has-danger' : '' }}" >
+                                    <div class="form-group" >
 
                                         <label class="form-control-label" for="email_client">Detalles de reserva</label>
                                         <div class="">
@@ -135,6 +135,125 @@
                                         <div class="">
                                             <p class="h1">@{{priceReservationFormated}} COP</p>
                                         </div>
+                                    </div>
+
+
+                                    <br>
+                                    
+                                    <div class="form-group" >
+                                        <?php
+                                        if($reservation->payment_1!=""){
+                                            $payment1 = json_decode($reservation->payment_1);
+                                        ?>
+                                        <label class="form-control-label" for="email_client">Detalles de pago</label>
+                                        <div class="">
+                                            <p class="h4"><strong>Método de pago:</strong> {{$payment1->metodo}}</p>
+
+                                            @if($payment1->metodo=="cardterminal")
+                                                <p class="h4"><strong>Tipo de tarjeta:</strong> {{($payment1->tarjeta==""?"Ninguna":$payment1->tarjeta)}}</p>
+                                                <p class="h4"><strong>Franquicia:</strong> {{($payment1->franquicia==""?"Ninguna":$payment1->franquicia)}}</p>
+                                                <p class="h4"><strong>Comprobante voucher:</strong> {{($payment1->voucher==""?"Ninguna":$payment1->voucher)}}</p>
+                                            @endif
+
+                                            @if($payment1->metodo=="transferencia")
+                                                <?php 
+                                                foreach ($configaccountsbanks as $key) {
+                                                    if($payment1->cuenta_id==$key->id){
+                                                        echo '<p class="h4"><strong>Cuenta:</strong> '.$key->name_bank.'</p>';
+                                                    }
+                                                }
+                                                ?>
+                                            @endif
+                                            
+                                            @if($reservation->url_payment1!="")
+                                            <p class="h4"><strong>Evidencia de pago:</strong>
+                                                <button type="button" onclick="Swal.fire({ imageUrl: '{{asset($reservation->url_payment1)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="ni ni-image"></i>    
+                                                    </span>
+                                                </button>
+                                            </p>
+                                            @endif
+                                            <p class="h4"><strong>Total pago:</strong>  @money( $payment1->total, config('settings.cashier_currency'),config('settings.do_convertion')) COP</p>
+                                        </div>
+                                        <?php } ?>
+
+                                        <br>
+                                        <?php
+                                        if($reservation->payment_2!=""){
+                                            $payment2 = json_decode($reservation->payment_2);
+                                        ?>
+                                        <label class="form-control-label" for="email_client">Detalles de pago porcentaje</label>
+                                        <div class="">
+                                            <p class="h4"><strong>Método de pago:</strong> {{$payment2->metodo}}</p>
+
+                                            @if($payment2->metodo=="cardterminal")
+                                                <p class="h4"><strong>Tipo de tarjeta:</strong> {{($payment2->tarjeta==""?"Ninguna":$payment2->tarjeta)}}</p>
+                                                <p class="h4"><strong>Franquicia:</strong> {{($payment2->franquicia==""?"Ninguna":$payment2->franquicia)}}</p>
+                                                <p class="h4"><strong>Comprobante voucher:</strong> {{($payment2->voucher==""?"Ninguna":$payment2->voucher)}}</p>
+                                            @endif
+
+                                            @if($payment2->metodo=="transferencia")
+                                                <?php 
+                                                foreach ($configaccountsbanks as $key) {
+                                                    if($payment2->cuenta_id==$key->id){
+                                                        echo '<p class="h4"><strong>Cuenta:</strong> '.$key->name_bank.'</p>';
+                                                    }
+                                                }
+                                                ?>
+                                            @endif
+                                            
+                                            @if($reservation->url_payment2!="")
+                                            <p class="h4"><strong>Evidencia de pago:</strong>
+                                                <button type="button" onclick="Swal.fire({ imageUrl: '{{asset($reservation->url_payment2)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="ni ni-image"></i>    
+                                                    </span>
+                                                </button>
+                                            </p>
+                                            @endif
+                                            <p class="h4"><strong>Total pago:</strong>  @money( $payment2->total, config('settings.cashier_currency'),config('settings.do_convertion')) COP</p>
+                                        </div>
+                                        <?php } ?>
+
+
+                                        <br>
+                                        <?php
+                                        if($reservation->payment_3!=""){
+                                            $payment3 = json_decode($reservation->payment_3);
+                                        ?>
+                                        <label class="form-control-label" for="email_client">Detalles de pago por modificación</label>
+                                        <div class="">
+                                            <p class="h4"><strong>Método de pago:</strong> {{$payment3->metodo}}</p>
+
+                                            @if($payment3->metodo=="cardterminal")
+                                                <p class="h4"><strong>Tipo de tarjeta:</strong> {{($payment3->tarjeta==""?"Ninguna":$payment3->tarjeta)}}</p>
+                                                <p class="h4"><strong>Franquicia:</strong> {{($payment3->franquicia==""?"Ninguna":$payment3->franquicia)}}</p>
+                                                <p class="h4"><strong>Comprobante voucher:</strong> {{($payment3->voucher==""?"Ninguna":$payment3->voucher)}}</p>
+                                            @endif
+
+                                            @if($payment3->metodo=="transferencia")
+                                                <?php 
+                                                foreach ($configaccountsbanks as $key) {
+                                                    if($payment3->cuenta_id==$key->id){
+                                                        echo '<p class="h4"><strong>Cuenta:</strong> '.$key->name_bank.'</p>';
+                                                    }
+                                                }
+                                                ?>
+                                            @endif
+                                            
+                                            @if($reservation->url_payment3!="")
+                                            <p class="h4"><strong>Evidencia de pago:</strong>
+                                                <button type="button" onclick="Swal.fire({ imageUrl: '{{asset($reservation->url_payment3)}}', imageWidth: '100%',imageHeight: 'auto',imageAlt: 'Custom image'})" class="btn btn-outline-success btn-sm">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="ni ni-image"></i>    
+                                                    </span>
+                                                </button>
+                                            </p>
+                                            @endif
+                                            <p class="h4"><strong>Total pago:</strong>  @money( $payment3->total, config('settings.cashier_currency'),config('settings.do_convertion')) COP</p>
+                                        </div>
+                                        <?php } ?>
                                     </div>
 
 
@@ -466,15 +585,15 @@
                 $('input[name=fec]').val(fechaHora[0]);
             }
             if(fechaHora[1]!=undefined){
-                let timPicker1 = $('.timepicker').val(fechaHora[1]);
+                let timPicker1 = $('.timepicker').val(formatTime(fechaHora[1]));
                 
             }
 
-            $('#mes').val('{{(isset($reservation->mesas)?$reservation->mesas:"0")}}');
-            $('#per').val('{{(isset($reservation->mesas)?$reservation->personas:"0")}}');
+            $('#mes').val('{{(isset($reservation->mesas)?$reservation->mesas:"1")}}');
+            $('#per').val('{{(isset($reservation->personas)?$reservation->personas:"1")}}');
             
 
-            var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mess:"")}}';
+            var mesasSeleccionadas = '{{(isset($reservation->mess)?$reservation->mess:"")}}';
             var mesas = mesasSeleccionadas.split(',');
             for(var i=0;i<mesas.length;i++){
                 $('#zonas option[value='+mesas[i]+']').prop('selected', true);
@@ -483,6 +602,12 @@
             }
         }
             
+
+        function formatTime(timeString) {
+            const [hourString, minute] = timeString.split(":");
+            const hour = +hourString % 24;
+            return (hour % 12 || 12) + ":" + minute + (hour < 12 ? " AM" : " PM");
+        }
         </script>
         @endsection
 
