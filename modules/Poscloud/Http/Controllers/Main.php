@@ -66,13 +66,46 @@ class Main extends Controller
             $timeSlots = $this->getTimieSlots($vendor);
 
 
-            $geoZoneDelivery=GeoZoneDelivery::where('restorant_id',$vendor->id)->get();
+            $geoZoneDelivery=GeoZoneDelivery::where( [['restorant_id', '=',$vendor->id],  ['active', '=',1]])->get();
             $deliveryAreas=SimpleDelivery::where('restaurant_id',$vendor->id)->get();
             //$deliveryAreasCost=SimpleDelivery::where('restaurant_id',$vendor->id)->pluck('cost','id')->toArray();
             $deliveryAreasCost=array();
+            $resta=Restorant::where('id', $vendor->id)->first();
+            $polygon2 = json_decode(json_encode($resta->radius));
+            $numItems2 = $resta->radius ? count($resta->radius) : 0;
+            $temGeoZoneDelivery=array();
             foreach ($geoZoneDelivery as $clave => $zona) {
-                $deliveryAreasCost[$zona->id]=$zona->price;
+                $geoZone=array();
+                $ifinRadius=true;
+                $arrayzonat=json_decode($zona->radius);
+                if(isset($arrayzonat->cd)){
+                    $geoZone=$arrayzonat->cd;
+                }else{
+                    $arraykey= array_keys((array) $arrayzonat);
+                    $geoZone=$arraykey[0];
+                    $geoZone= $arrayzonat->$geoZone;
+                }
+                $arrayzonat=$geoZone;
+                for ($i = 0; $i <count($arrayzonat); $i++) {
+                    $point =$arrayzonat[$i];
+                    if (! empty($polygon2)) {
+                        if (isset($polygon2[0]) && $this->withinArea($point, $polygon2,$numItems2)) {
+                            //$ifinRadius = true;
+                        } else {
+                            $ifinRadius = false;
+                        }
+                    } else {
+                        //$ifinRadius = true;
+                    } 
+                }
+                if($ifinRadius){
+                    $deliveryAreasCost[$zona->id]=$zona->price;
+                    array_push($temGeoZoneDelivery, $zona);
+                }
+               
             }
+            $geoZoneDelivery=$temGeoZoneDelivery;
+           
             $listClient=User::role('client')->where('active','1')->get();
             $selectClient=array();
             $selectTelefono=array();
@@ -100,6 +133,29 @@ class Main extends Controller
         
     }
 
+    private function withinArea($point, $polygon, $n)
+    {
+        if ($polygon[0] != $polygon[$n - 1]) {
+            $polygon[$n] = $polygon[0];
+        }
+        $j = 0;
+        $oddNodes = false;
+        $x = $point->lng;
+        $y = $point->lat;
+        for ($i = 0; $i < $n; $i++) {
+            $j++;
+            if ($j == $n) {
+                $j = 0;
+            }
+            if ((($polygon[$i]->lat < $y) && ($polygon[$j]->lat >= $y)) || (($polygon[$j]->lat < $y) && ($polygon[$i]->lat >= $y))) {
+                if ($polygon[$i]->lng + ($y - $polygon[$i]->lat) / ($polygon[$j]->lat - $polygon[$i]->lat) * ($polygon[$j]->lng - $polygon[$i]->lng) < $x) {
+                    $oddNodes = ! $oddNodes;
+                }
+            }
+        }
+
+        return $oddNodes;
+    }
     public function moveOrder($tableFrom,$tableTo){
         $order=CartStorageModel::where('vendor_id',auth()->user()->restaurant_id)->where('id',$tableFrom."_cart_items")->first();
         if($order){
