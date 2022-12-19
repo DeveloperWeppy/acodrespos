@@ -44,14 +44,14 @@
                                                 <div class="form-group">
                                                     <label class="form-control-label">N. de mesas</label>
                                                     <div class="input-group">
-                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="1" type="number">
+                                                        <input id="mes" name="mes" class="form-control" required placeholder="N. de mesas" value="1" min="0" type="number">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-control-label">N. de personas</label>
-                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="1" type="number">
+                                                    <input id="per" name="per" class="form-control" placeholder="N. de personas" required value="1" min="0" type="number">
                                                 </div>
                                             </div>
                                         </div>
@@ -156,6 +156,7 @@
                 </div>
             </div>
         </div>
+        @include('layouts.footers.auth')
     </div>
      
 
@@ -396,6 +397,9 @@
             }
 
             function pagarReserva(){
+
+                $('#pagarReserva').prop('disabled', true);
+
                 var formData = new FormData($('#formReserva')[0]);
                 formData.append('reserva_id',{{(isset($reservation->id)?$reservation->id:0)}});
                 formData.append('met',$('#paymentType').val());
@@ -517,11 +521,11 @@
                     let timPicker = $('.timepicker').val(formatTime(fechaHora[1]));
                 }
 
-                $('#mes').val('{{(isset($reservation->mesas)?$reservation->mesas:"0")}}');
-                $('#per').val('{{(isset($reservation->mesas)?$reservation->personas:"0")}}');
+                $('#mes').val('{{(isset($reservation->mesas)?$reservation->mesas:"1")}}');
+                $('#per').val('{{(isset($reservation->personas)?$reservation->personas:"1")}}');
 
 
-                var mesasSeleccionadas = '{{(isset($reservation->mesas)?$reservation->mess:"")}}';
+                var mesasSeleccionadas = '{{(isset($reservation->mess)?$reservation->mess:"")}}';
                 var mesas = mesasSeleccionadas.split(',');
                 for(var i=0;i<mesas.length;i++){
                     $('#zonas option[value='+mesas[i]+']').prop('selected', true);
@@ -540,7 +544,7 @@
         @endsection
 
 
-        @include('layouts.footers.auth')
+      
 
 
         

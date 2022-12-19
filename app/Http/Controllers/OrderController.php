@@ -238,7 +238,7 @@ class OrderController extends Controller
             'restorants'=>$restorants,
             'fields'=>[['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Nombre del Conductor', 'id'=>'nom', 'placeholder'=>'Nombre del Conductor', 'data'=>null, 'required'=>true],
             ['class'=>'col-12', 'class'=>'', 'ftype'=>'input', 'name'=>'Teléfono del Conductor', 'id'=>'tel', 'placeholder'=>'Teléfono del Conductor', 'data'=>null, 'required'=>true],
-            ['class'=>'col-12', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Tiempo estimado de Entrega(minutos)', 'id'=>'time_delivered', 'placeholder'=>'Seleccione Tiempo en Minutos', 'data'=>$times_delivered, 'required'=>true]],
+            ['class'=>'', 'classselect'=>'noselecttwo', 'ftype'=>'select', 'name'=>'Tiempo estimado de Entrega(minutos)', 'id'=>'time_delivered', 'placeholder'=>'Seleccione Tiempo en Minutos', 'data'=>$times_delivered, 'required'=>true]],
             'clients'=>$clients,
             'parameters'=>count($_GET) != 0,
         ]);
@@ -1045,11 +1045,12 @@ class OrderController extends Controller
     
         //Verifica si la orden aun tienen productos pendientes en cocina
 
-        if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('kitchen')) {
+        if($alias=="prepared"){
+
             $datos = auth()->user()->restorant->has_kitchen;
         
             if($datos==1){
-                if($alias=="prepared"){
+                if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('kitchen') || auth()->user()->hasRole('staff') ) {
 
                     $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
 

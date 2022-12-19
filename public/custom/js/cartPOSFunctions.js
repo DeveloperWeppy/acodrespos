@@ -55,6 +55,7 @@ function updatePrices(net,delivery,expedition){
   modalPayment.totalPriceRestadoFormated = formatter.format(net+delivery-deduct);
 
   modalPayment.totalCambioFormated=formatter.format(0);
+  modalPayment.totalPriceRestadoFormated = formatter.format(0);
   
   if(expedition==1){
     //Delivery
@@ -95,6 +96,7 @@ function updatePrices(net,delivery,expedition){
     modalPayment.received=0;
     modalPayment.receivedFormated=0;
     modalPayment.totalCambioFormated=formatter.format(0);
+    modalPayment.totalPriceRestadoFormated = formatter.format(0);
 
     $('#ask_propina_check').change(function() {
       if (this.checked) {
@@ -102,6 +104,7 @@ function updatePrices(net,delivery,expedition){
         $('#addprop').hide();
         $('#edit_propina_check').prop('checked',false);
 
+        
         valor_propi = ((net-deduct)*porcentaj_propina)/100;
         modalPayment.totalPropinaFormat=formatter.format(valor_propi);
 
@@ -109,8 +112,18 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+       
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').show();
 
@@ -120,8 +133,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
 
-        modalPayment.totalPriceRestado = net-deduct;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated = formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').hide();
       }
@@ -139,8 +161,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').show();
         
@@ -151,8 +182,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPriceFormat=formatter.format(net-deduct);
         modalPayment.totalPropinaFormat=formatter.format(0);
 
-        modalPayment.totalPriceRestado = net-deduct;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
 
         $('#spanporcentaje_propina').hide();
       }
@@ -167,8 +207,17 @@ function updatePrices(net,delivery,expedition){
         modalPayment.totalPrice=net-deduct+valor_propi;
         modalPayment.totalPriceFormat=formatter.format(net-deduct+valor_propi);
 
-        modalPayment.totalPriceRestado = net-deduct+valor_propi;
-        modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi);
+        if(net-deduct+valor_propi-modalPayment.received>0){
+          modalPayment.totalPriceRestado = net-deduct+valor_propi-modalPayment.received;
+          modalPayment.totalPriceRestadoFormated = formatter.format(net-deduct+valor_propi-modalPayment.received);
+        }else{
+          modalPayment.totalPriceRestado = 0;
+          modalPayment.totalPriceRestadoFormated = formatter.format(0);
+        }
+
+        if(modalPayment.received-modalPayment.totalPrice>0){
+          modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }
         
       });
     });
@@ -582,6 +631,8 @@ function submitOrderPOS(tipo=0){
 
     //subir imagen factura
     submitImage(response.data.id);
+
+    $('#actualizarPedido').prop('disabled', false);
 
    
     $('#submitOrderPOS').show();

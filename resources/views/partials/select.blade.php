@@ -8,7 +8,7 @@
 
     <label class="form-control-label">{{ __($name) }}</label><br />
 
-    <select @isset($disabled) {{ "disabled" }} @endisset  class="form-control form-control-alternative   @isset($classselect) {{$classselect}} @endisset"  name="{{ $id }}" id="{{  $id }}">
+    <select @isset($disabled) {{ "disabled" }} @endisset  class="form-control form-control   @isset($classselect) {{$classselect}} @endisset"  name="{{ $id }}" id="{{  $id }}">
         <option disabled selected value> {{ __('Select')." ".__($name)}} </option>
         @foreach ($data as $key => $item)
 

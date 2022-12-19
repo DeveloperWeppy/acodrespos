@@ -11,7 +11,7 @@
                     <a class="btn badge badge-success badge-pill" href="{{route('reservation.edit',[$item->id])}}">#{{$item->id}}</a>
                 </td>
                 <td>
-                    <p><small class="text-muted">{{ $item->date_reservation }}</small></p><p>
+                    <p><small class="text-muted">{{ Carbon\Carbon::parse($item->date_reservation)->format(config('settings.datetime_display_format')) }}</small></p><p>
                 </p></td>
                 
                 <td class="table-web">

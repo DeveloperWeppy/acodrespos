@@ -1,4 +1,4 @@
-@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('driver') || auth()->user()->hasRole('kitchen'))
+@if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('kitchen') || auth()->user()->hasRole('staff'))
 <?php
 $lastStatusAlisas=$order->status->pluck('alias')->last();
 ?>
@@ -6,7 +6,7 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
     <h6 class="heading-small text-muted mb-4">{{ __('Actions') }}</h6   >
     <nav class="justify-content-end" aria-label="...">
         <!---- actions for admin ---->
-    @if(auth()->user()->hasRole('admin'))
+    @if(auth()->user()->hasRole('admin') )
         <script>
             function setSelectedOrderId(id){
                 $("#form-assing-driver").attr("action", "/updatestatus/delivered/"+id);
@@ -27,7 +27,7 @@ $lastStatusAlisas=$order->status->pluck('alias')->last();
        @endif
     @endif
     <!---- actions for owner or driver ---->
-    @if(auth()->user()->hasRole('owner')||auth()->user()->hasRole('driver'))
+    @if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('staff'))
         @include('orders.partials.actions.actions')
     @endif
 
