@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Items;
 
-use App\Extras;
-use App\Http\Controllers\Controller;
 use App\Items;
+use App\Extras;
+use App\Models\Log;
 use App\Models\Variants;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class VariantsController extends Controller
 {
@@ -101,12 +103,25 @@ class VariantsController extends Controller
      */
     public function store(Items $item, Request $request)
     {
+        $function = $this->getIpLocation();
         $variant = Variants::create([
             'price'=>$request->price,
             'item_id'=>$item->id,
             'options'=>json_encode($request->option),
         ]);
         $variant->save();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'VARIANTE DE PRODUCTO',
+            'action' => 'Registro',
+            'detail' => 'Registro de la nueva variante "' .$request->name .'", al producto '.$item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         $this->doUpdateOfSystemVariants($variant->item);
 
         return redirect()->route('items.variants.index', ['item'=>$item->id])->withStatus(__('Variant has been added'));
@@ -170,10 +185,22 @@ class VariantsController extends Controller
      */
     public function update(Request $request, Variants $variant)
     {
+        $function = $this->getIpLocation();
         $variant->price = $request->price;
         $variant->options = json_encode($request->option);
         $variant->update();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'VARIANTE DE PRODUCTO',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la variante "' .$request->name .'", al producto '.$variant->item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         $this->doUpdateOfSystemVariants($variant->item);
 
         return redirect()->route('items.variants.index', ['item'=>$variant->item->id])->withStatus(__('Variant has been updated'));
@@ -188,6 +215,19 @@ class VariantsController extends Controller
     public function destroy(Variants $variant)
     {
         $item=$variant->item;
+        $function = $this->getIpLocation();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MENÚ',
+            'submodule' => 'OPCIÓN DE PRODUCTO',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó la opción, "' .$variant->name .'" del producto '.$variant->item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         $variant->delete();
         $this->doUpdateOfSystemVariants($item);
 

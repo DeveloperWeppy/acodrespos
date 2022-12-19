@@ -1,25 +1,27 @@
 <?php
 
 namespace App\Http\Controllers;
-use Akaunting\Module\Facade as Module;
-use App\Address;
-use App\Categories;
-use App\Extras;
-use App\Items;
-use App\Models\LocalMenu;
-use App\Models\Options;
-use App\Notifications\SystemTest;
-use App\Restorant;
-use App\Settings;
 use File;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Image;
-use Illuminate\Support\Facades\Artisan;
+use App\Items;
+use App\Extras;
+use App\Address;
+use App\Settings;
+use App\Restorant;
+use App\Categories;
+use App\Models\Log;
+use App\Models\Options;
+use App\Models\LocalMenu;
+use Illuminate\Http\Request;
+use App\Notifications\SystemTest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
+use Akaunting\Module\Facade as Module;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -449,6 +451,7 @@ class SettingsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $function = $this->getIpLocation();
         if (config('settings.is_demo') | config('settings.is_demo')) {
             //Demo, don;t allow
             return redirect()->route('settings.index')->withStatus(__('Settings not allowed to be updated in DEMO mode!'));
@@ -476,7 +479,18 @@ class SettingsController extends Controller
         $settings->order_fields=$request->order_fields;
         $settings->update();
         
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'CONFIGURACIÓN',
+            'submodule' => '',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la información de la configuración ',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         fwrite(fopen(__DIR__.'/../../../public/byadmin/front.js', 'w'), str_replace('tagscript', 'script', $request->jsfront));
         fwrite(fopen(__DIR__.'/../../../public/byadmin/back.js', 'w'), str_replace('tagscript', 'script', $request->jsback));
         fwrite(fopen(__DIR__.'/../../../public/byadmin/front.css', 'w'), str_replace('tagscript', 'script',$request->cssfront) );
