@@ -91,7 +91,7 @@
             </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Modificar</button>
+        <button type="submit" id="btn-edit-zone" class="btn btn-primary">Modificar</button>
        
       </div>
     </form>

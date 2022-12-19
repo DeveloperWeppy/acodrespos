@@ -327,7 +327,6 @@
         }
 
         function changeLocation(lat, lng){
-            alert("11");
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -499,7 +498,9 @@
             arraypoly[indexpoly].setMap(map_area2);
             cargarzona();
         }
-        function addLatLng(latLng) {
+        var markIni=-1;
+        var arrayLocatio2=[];
+        function addLatLng(latLng,simular=false) {
             if (isClosed2) return;
             markerIndex2 = arraypoly[indexpoly].getPath().length;
             var ifcrear=0;
@@ -512,22 +513,35 @@
                 icona=start;
             }else{
                 if(arrayLocatio.length>2){
-                    markers2[markers2.length-2]=new google.maps.Marker({ map: map_area2, position: arrayLocatio[arrayLocatio.length-2], draggable: false, icon: area });
+                    markers2[markers2.length-1].setMap(null);
+                    markers2[markers2.length-1]=new google.maps.Marker({ map: map_area2, position: arrayLocatio[arrayLocatio.length-2], draggable: false, icon: area });
                 }
                 icona="/images/blue_pin2.png";
-                
-                
+            }
+            if(markIni==-1){
+                markIni=markers2.length;
             }
            // markerIndex2 = poly2.getPath().length;
             var isFirstMarker = markerIndex2 === 0;
             markerArea2 = new google.maps.Marker({ map: map_area2, position: latLng, draggable: false, icon: icona });
 
-            //push markers
+            if(icona=="/images/blue_pin2.png"){
+                markerArea2.addListener("rightclick", () => {
+                    borrapositionmark();
+                });
+            }
+            if(arrayLocatio.length==1){
+                markerArea2.addListener("rightclick", () => {
+                    $( "#btnerase" ).click();
+                });
+            }
             markers2.push(markerArea2);
 
             if(isFirstMarker) {
                 google.maps.event.addListener(markerArea2, 'click', function () {
                     if (isClosed2) return;
+                    markers2[markIni].setIcon(area);
+                    markers2[markers2.length-1].setIcon(area);
                     path2f = arraypoly[indexpoly].getPath();
                     arraypoly[indexpoly].setMap(null);
                     arrayLocatio=[];
@@ -544,6 +558,16 @@
             google.maps.event.addListener(markerArea2, 'drag', function (dragEvent) {
                 arraypoly[indexpoly].getPath().setAt(markerIndex2, dragEvent.latLng);
             });
+            if(simular){
+                if (isClosed2) return;
+                    markers2[markIni].setIcon(area);
+                    markers2[markers2.length-1].setIcon(area);
+                    path2f = arraypoly[indexpoly].getPath();
+                    arraypoly[indexpoly].setMap(null);
+                    arrayLocatio=[];
+                    $( "#btnsave" ).show();
+            }
+            arrayLocatio2=arrayLocatio;
             arraypoly[indexpoly].getPath().push(latLng);
            
         }
@@ -566,17 +590,46 @@ function borrarmarkply(index,tipo=0){
     }
     arraypoly[index] .setMap(null);
     arraypoly[index] .setPath([]);
-    arraypoly[index]  = new google.maps.Polyline({ map: map_area2, path: [], strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2 });
+    arraypoly[index]  = new google.maps.Polyline({ map: map_area2, path: [], strokeColor:"blue", strokeOpacity: 1.0, strokeWeight: 2 });
     path2f = arraypoly[index].getPath();
     
     isClosed2 = false;
     $("#btnerase").hide();
     $( "#btnsave" ).hide();
 }
+function borrapositionmark(){
+    if (isClosed2) return;
+   
+    markers2[markers2.length-1].setMap(null);
+    markers2=markers2.slice(0,markers2.length-1);
+    arrayLocatio=arrayLocatio.slice(0,arrayLocatio.length-1);
+    arraypoly[indexpoly].setPath(arrayLocatio);
+  
+    if(arrayLocatio.length>1){
+        markers2[markers2.length-1].setMap(null);
+        var markertemp=new google.maps.Marker({ map: map_area2, position: arrayLocatio[arrayLocatio.length-1], draggable: false, icon: "/images/blue_pin2.png" });
+        markertemp.addListener("rightclick", () => {
+                    borrapositionmark();
+    });
+    markers2[markers2.length-1]=markertemp;
+    }
+}
 $( "#btnerase" ).click(function() {
+    for(var i = markIni; i<markers2.length; i++) {
+        markers2[i].setMap(null);
+    }
     arrayLocatio=[];
-    var index=indexpoly;
-    borrarmarkply(index,1);
+    var indexpt=indexpoly;
+    if(isClosed2){
+        indexpt--;
+    }
+    arraypoly[indexpt] .setMap(null);
+    arraypoly[indexpt] .setPath([]);
+    arraypoly[indexpt]  = new google.maps.Polyline({ map: map_area2, path: [], strokeColor: "blue", strokeOpacity: 1.0, strokeWeight: 2 });
+    path2f = arraypoly[indexpt].getPath();
+    isClosed2 = false;
+    $("#btnerase").hide();
+    $( "#btnsave" ).hide();
 });
         function getLatLngFromPoly(path){
             //borra 2
@@ -879,16 +932,26 @@ $( "#btnerase" ).click(function() {
         }
      var typeFormZone=0;
      function cargarzona(){
+        markIni=-1;
+        var arrayLocatio3=arrayLocatio2;
+        arrayLocatio=[];
+        var ifcerrar=isClosed2;
         for(var i = 0; i < datazone.length; i++) {
             borrarmarkply(i);
         }
+       markers2=[];
 
-       $.ajax({method: "get", url: "{{route('geozone.get')}}", dataType: "json" })
+       $.ajax({method: "get", url: "{{route('geozone.get')}}", dataType: "json",data: { "_token": "{{ csrf_token() }}"} })
         .done(function( resp ) {
             $("#tgeozone").html(resp.table);
             $("#btnsave").hide();
             $("#btnerase").hide(); 
             $( "#btncancel" ).hide();
+            for(var i = 0; i < arraypoly.length; i++) {
+                arraypoly[i].setMap(null);
+                arraypoly[i].setPath([]);
+            }
+            arraypoly=[];
             for(var i = 0; i < resp.data.length; i++) {
                 initialize_existing_area2(resp.data[i].radius,i,resp.data[i].color);
             }
@@ -897,7 +960,21 @@ $( "#btnerase" ).click(function() {
             arraypoly[indexpoly] =  new google.maps.Polyline({strokeColor: "blue",strokeOpacity: 1.0,strokeWeight: 3});
             arraypoly[indexpoly].setMap(map_area2);
             eventosgepzone();
-           
+            arrayLocatio2=[];
+            var indexpt=indexpoly;
+            if(arrayLocatio3.length>0){
+                for(var i = 0; i <arrayLocatio3.length; i++) {
+                    if(ifcerrar && i==(arrayLocatio3.length-1)){
+                        addLatLng(arrayLocatio3[i],true); 
+                    }else{
+                        addLatLng(arrayLocatio3[i]); 
+                    }
+                }
+                if(ifcerrar){
+                    arraypoly[indexpoly] = new google.maps.Polygon({ map: map_area2, path: arrayLocatio3, strokeColor: "yellow", strokeOpacity: 0.8, strokeWeight: 2, fillColor: "green", fillOpacity: 0.35, editable: false });
+                   
+                }
+            } 
         });
      }
      function modalZone(data=0){
@@ -908,6 +985,7 @@ $( "#btnerase" ).click(function() {
             $('#fzone-status').val(data[3]);
             $('#fzone-valor').val(data[4]);
             $('#ftitle').html("Editar zona");
+            $('#btn-edit-zone').html("Modificar");
             
         }else{
             typeFormZone=0;
@@ -915,6 +993,8 @@ $( "#btnerase" ).click(function() {
             $('#fzone-name').val("");
             $('#fzone-color').val("");
             $('#fzone-status').val(1);
+            $('#btn-edit-zone').html("Guardar");
+           
         }
         $('#modal-edit-zone').modal('show');
      }
@@ -941,7 +1021,7 @@ $( "#btnerase" ).click(function() {
         }); 
         $(".geodelet").on( "click", function() {
             Swal.fire({
-                title: 'Deseas eliminar esta zona?',
+                title: 'Deseas eliminar esta area?',
                 icon: 'warning',
                 showDenyButton: false,
                 showCancelButton: true,
@@ -949,9 +1029,9 @@ $( "#btnerase" ).click(function() {
                 cancelButtonText: "Cancelar",
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({method: "get", url: "{{route('geozone.destroy')}}/"+$(this).attr("data-id") })
+                    $.ajax({method: "get", headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},url: "{{route('geozone.destroy')}}/"+$(this).attr("data-id") })
                     .done(function( msg ) {
-                        Swal.fire('Elimicanado!', '', 'success');
+                        Swal.fire('Eliminado!', '', 'success');
                         cargarzona();
                     });
                 
@@ -988,6 +1068,7 @@ $( "#btnerase" ).click(function() {
         $.ajax({
             type:"POST",
             url: urlf,
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             data:{ name:$('#fzone-name').val(),radius:radiusform,price:$('#fzone-valor').val(),colorarea:$('#fzone-color').val(),active: $('#fzone-status').val()} ,
             dataType: "json",
             success: function (data) {
@@ -1001,10 +1082,11 @@ $( "#btnerase" ).click(function() {
                     $("#btnsave").hide();
                     $("#btnerase").hide(); 
                     $( "#btncancel" ).hide();
+                    arrayLocatio2=[];
                     eventosgepzone();
                     cargarzona();
                     path2f=null;
-
+                    markIni=-1;
                  }else{
                     Swal.fire({
                         icon: 'error',

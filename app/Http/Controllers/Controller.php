@@ -277,6 +277,9 @@ class Controller extends BaseController
         $arrayzonep=array();
         $arrayaddress=array();
         $geoZone=array();
+        $resta=Restorant::where('id', $restaurant[0]->restorant_id)->first();
+        $polygon2 = json_decode(json_encode($resta->radius));
+        $numItems2 = $resta->radius ? count($resta->radius) : 0;
         foreach ($restaurant as $clave => $zona) {
             $jzone=json_decode($zona->radius);
             if(isset($jzone->cd)){
@@ -298,6 +301,16 @@ class Controller extends BaseController
                 $indexMasCercano=0;
                 $valorm=100000000000;
                 $ifzone = false;
+                $ifinRadius=false;
+                if (! empty($polygon2)) {
+                    if (isset($polygon2[0]) && $this->withinArea($point, $polygon2,$numItems2)) {
+                        $ifinRadius = true;
+                    } else {
+                        $ifinRadius = false;
+                    }
+                } else {
+                    $ifinRadius = true;
+                }  
                 if (! array_key_exists($address->id, $addresses)) {
                     for ($i = 0; $i < count($arrayzonep); $i++) {
                         $polygon=$arrayzonep[$i];
@@ -323,9 +336,9 @@ class Controller extends BaseController
                       
                     }
                     if($ifzone){
-                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>true,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>0));
+                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>$ifinRadius,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>0));
                     }else{
-                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>true,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>1));
+                        array_push($arrayaddress,(object) array("id"=>$address->id,"cost_total"=>$valorEnvio, "cost_per_km"=>$valorEnvio,"inRadius"=>$ifinRadius,"address"=>$address->address,"zona"=>$nameZone,"tipo"=>1));
                     }
                 }
 
