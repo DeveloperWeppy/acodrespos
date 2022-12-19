@@ -106,7 +106,7 @@ class OrderController extends Controller
             //Change currency
             ConfChanger::switchCurrency(auth()->user()->restaurant);
 
-            $orders = $orders->where(['restorant_id'=>auth()->user()->restaurant_id]);
+            $orders = $orders->where(['restorant_id'=>auth()->user()->restaurant_id])->where('employee_id', auth()->user()->id);
         }elseif (auth()->user()->hasRole('kitchen')) {
              
             //Change currency
@@ -809,10 +809,10 @@ class OrderController extends Controller
 
         //Today only
         $orders = Order::where('created_at', '>=', Carbon::today())->orderBy('created_at', 'desc');
-
+        $resto=auth()->user()->restorant;
         //If owner, only from his restorant
-        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('staff')||auth()->user()->hasRole('kitchen')) {
-            $resto=auth()->user()->restorant;
+        if (auth()->user()->hasRole('owner')||auth()->user()->hasRole('kitchen')) {
+            
             
             $orders = $orders->where(['restorant_id'=>$resto->id]);
             
@@ -824,6 +824,14 @@ class OrderController extends Controller
 
             //Change language
             //ConfChanger::switchLanguage($order->restorant);
+        }else if(auth()->user()->hasRole('staff')){
+            $orders = $orders->where(['restorant_id'=>$resto->id])->where('employee_id', auth()->user()->id);
+            
+            //Change currency
+            ConfChanger::switchCurrency($resto);
+
+            //Set config based on restaurant
+            config(['app.timezone' => $resto->getConfig('time_zone',config('app.timezone'))]);
         }
         $orders = $orders->with(['status', 'client', 'restorant', 'table.restoarea'])->get()->toArray();
 

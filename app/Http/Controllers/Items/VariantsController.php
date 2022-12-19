@@ -29,7 +29,7 @@ class VariantsController extends Controller
     private function getFields(Items $item)
     {
         return array_merge([
-            ['ftype'=>'input', 'type'=>'number', 'name'=>'Price', 'id'=>'price', 'placeholder'=>'Enter variant price', 'required'=>true],
+            ['ftype'=>'input', 'type'=>'number', 'name'=>'Price', 'id'=>'price', 'placeholder'=>'Ingrese el precio de la variante', 'required'=>true],
         ], $this->getOptionsForItem($item));
     }
 
