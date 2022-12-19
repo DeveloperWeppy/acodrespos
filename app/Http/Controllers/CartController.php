@@ -248,7 +248,7 @@ class CartController extends Controller
             $ifAreaDelivery=false;
             if (config('app.isft')) {
                 //$addresses = $this->getAccessibleAddresses($restaurant, auth()->user()->addresses->reverse());
-                $restaurantzona=GeoZoneDelivery::where('restorant_id',$restaurant->id)->get();
+                $restaurantzona=GeoZoneDelivery::where( [['restorant_id', '=',$restaurant->id],  ['active', '=',1]])->get();
                
                 if(count($restaurantzona)>0){
                     $addresses =$this->getAccessibleAddresses2($restaurantzona,auth()->user()->addresses->reverse());
