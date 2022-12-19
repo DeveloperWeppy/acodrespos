@@ -232,7 +232,7 @@
                                                                 @csrf
                                                                 @method('delete')
 
-                                                                <button type="button" class="dropdown-item" onclick="confirm('{{ __("Are you sure you want to delete this extras?") }}') ? this.parentElement.submit() : ''">
+                                                                <button type="button" class="dropdown-item" onclick="Swal.fire({title: '¿Estás seguro de eliminar esta opción extra?',showDenyButton: false,showCancelButton: true,confirmButtonText: 'Confirmar', }).then((result) => {if (result.isConfirmed) {this.parentElement.submit();} })">
                                                                     {{ __('Delete') }}
                                                                 </button>
                                                             </form>
@@ -289,5 +289,23 @@
                 }
             );
         }
+
+        function eliminarVariante(url){
+            Swal.fire({
+            title: '¿Estás seguro de eliminar la variante?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            }).then((result) => {
+                
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+            })
+        }
+
     </script>
+
+
 @endsection
