@@ -32,6 +32,10 @@
                             <button type="button" id="clear_area" class="btn btn-danger btn-sm btn-block">{{ __("Clear Delivery Area")}}</button>
                     </div>
                     <div class="tab-pane fade"  id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+                            <div class="alert alert-success" role="alert">
+                                <strong>Nota:</strong> Recuerda que puedes hacer un encerrado por cada área de entrega dando clic izquierdo sobre el mapa, si te equivocas en el marcaje de un punto, da clic derecho sobre el
+                                punto último marcado y este se borrará!
+                            </div>
                              <div id="map_area2" class="form-control form-control-alternative" style="height: 500px !important;"></div>
                              <br/>
                             <button type="button" id="btnerase" class="btn btn-danger btn-sm btn-block" style="display:none">Borrar</button>

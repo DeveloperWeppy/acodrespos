@@ -352,7 +352,7 @@
         function changeDeliveryArea(path){
             var mensaje="La zona ha sido borrada";
             if(path.length>0){
-                mensaje="La Zona de entrega se a gurdado"; 
+                mensaje="La Zona de entrega se a guardado"; 
             }
             Swal.fire({
                 icon: 'warning',
