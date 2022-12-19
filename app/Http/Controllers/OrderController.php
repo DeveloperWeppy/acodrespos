@@ -1037,11 +1037,12 @@ class OrderController extends Controller
     
         //Verifica si la orden aun tienen productos pendientes en cocina
 
-        if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('kitchen')) {
+        if($alias=="prepared"){
+
             $datos = auth()->user()->restorant->has_kitchen;
         
             if($datos==1){
-                if($alias=="prepared"){
+                if(auth()->user()->hasRole('owner') || auth()->user()->hasRole('manager_restorant') || auth()->user()->hasRole('kitchen') || auth()->user()->hasRole('staff') ) {
 
                     $numPre = DB::table('order_has_items')->where('order_id',$order->id)->where('item_status','cocina')->count();
 
