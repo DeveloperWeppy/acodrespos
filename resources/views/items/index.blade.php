@@ -239,5 +239,10 @@
     $('#cat_name').val(name);
     $("#form-edit-category").attr("action", "/categories/"+id);
 })
+
+
+
 </script>
+
+
 @endsection

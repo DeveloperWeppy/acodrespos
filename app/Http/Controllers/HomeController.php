@@ -1091,8 +1091,7 @@ class HomeController extends Controller
 
                 if($Request->grafico=="grafico3"){
                     $orders = Order::orderBy('delivery_method', 'desc')
-                    ->select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=3 limit 1) as fecAceptado,(select created_at from order_has_status where order_id=orders.id and status_id=5) as fecPreparado'))
-                    ->whereNotNull('restorant_id')
+                    ->select(DB::raw('orders.*,(select created_at from order_has_status where order_id=orders.id and status_id=3 limit 1) as fecAceptado,(select created_at from order_has_status where order_id=orders.id and status_id=5 limit 1) as fecPreparado'))
                     ->where(['restorant_id'=>auth()->user()->restorant->id])
                     ->where('orders.created_at', '>', $last30days)
                     ->where('payment_status', 'paid');

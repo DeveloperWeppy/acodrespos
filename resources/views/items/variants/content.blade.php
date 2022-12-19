@@ -10,8 +10,11 @@
     <td>
         {{ $item->optionsList }}
     </td>
-    <td><a href="{{ route("items.variants.edit",["variant"=>$item->id]) }}" class="btn btn-primary btn-sm">{{ __('Edit') }}</a><a href="{{ route("items.variants.delete",["variant"=>$item->id]) }}" class="btn btn-danger btn-sm">{{ __('Delete') }}</a></td>
+    <td><a href="{{ route("items.variants.edit",["variant"=>$item->id]) }}" class="btn btn-primary btn-sm">{{ __('Edit') }}</a><button class="btn btn-danger btn-sm" onclick="eliminarVariante('{{ route('items.variants.delete',['variant'=>$item->id]) }}')">{{ __('Delete') }}</button></td>
 </tr> 
 @endforeach
 
+
+
 @endsection
+
