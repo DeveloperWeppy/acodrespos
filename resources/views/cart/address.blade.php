@@ -15,7 +15,7 @@
                         @if(config('settings.enable_cost_per_distance'))
                             <option data-cost={{ $address->cost_per_km}} id="{{ 'address'.$address->id }}"  <?php if(!$address->inRadius){echo "disabled";} ?> value={{ $address->id }}>{{$address->address." - ".money( $address->cost_per_km, config('settings.cashier_currency'),config('settings.do_convertion')) }} @if (!$address->inRadius)- {{ __('Not in range') }}@endif</option>
                         @else
-                    <option data-cost={{ config('global.delivery')}} id="{{ 'address'.$address->id }}"  <?php if(!$address->inRadius){echo "disabled";} ?> value={{ $address->id }}>{{$address->address}} @if (!$address->inRadius)- {{ __('Not in range') }}@endif</option>
+                            <option data-cost={{ config('global.delivery')}} id="{{ 'address'.$address->id }}"  <?php if(!$address->inRadius){echo "disabled";} ?> value={{ $address->id }}>{{$address->address}} @if (!$address->inRadius)- {{ __('Not in range') }}@endif</option>
                         @endif
                     @endforeach
                 </select>
