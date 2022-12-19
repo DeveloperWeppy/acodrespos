@@ -116,7 +116,7 @@
         }
 
         $("#submitNewAddress").on("click",function() {
-            //saveLocation(lat, lng);
+            saveLocation(lat, lng);
         });
 
         function saveLocation(lat, lng){
