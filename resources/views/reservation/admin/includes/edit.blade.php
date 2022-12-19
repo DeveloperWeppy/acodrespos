@@ -485,6 +485,7 @@
             }
 
             function pagarReserva(){
+                $('#pagarReserva').prop('disabled', true);
                 var formData = new FormData($('#formReserva')[0]);
                 formData.append('reserva_id',reserva_id);
                 formData.append('met',$('#paymentType').val());
