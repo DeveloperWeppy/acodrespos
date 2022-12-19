@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Items;
 
-use App\Http\Controllers\Controller;
 use App\Items;
+use App\Models\Log;
 use App\Models\Options;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class OptionsController extends Controller
 {
@@ -69,13 +71,25 @@ class OptionsController extends Controller
      */
     public function store(Items $item, Request $request)
     {
+        $function = $this->getIpLocation();
         $option = Options::create([
             'name'=>$request->name,
             'options'=> str_replace(', ', ',', $this->replace_spec_char($request->options)),
             'item_id'=>$item->id,
         ]);
         $option->save();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'OPCIÓN DE PRODUCTO',
+            'action' => 'Registro',
+            'detail' => 'Registro de nueva opción "' .$request->name .'", al producto '.$item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('items.options.index', ['item'=>$item->id])->withStatus(__('Option has been added'));
     }
 
@@ -127,10 +141,22 @@ class OptionsController extends Controller
      */
     public function update(Request $request, Options $option)
     {
+        $function = $this->getIpLocation();
         $option->name = $request->name;
         $option->options = str_replace(', ', ',', $this->replace_spec_char($request->options));
         $option->update();
-
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $request->ip(),
+            'module' => 'MENÚ',
+            'submodule' => 'OPCIÓN DE PRODUCTO',
+            'action' => 'Actualización',
+            'detail' => 'Se actualizó la opción "' .$request->name .'", del producto '.$option->item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         return redirect()->route('items.options.index', ['item'=>$option->item->id])->withStatus(__('Option has been updated'));
     }
 
@@ -142,8 +168,21 @@ class OptionsController extends Controller
      */
     public function destroy(Options $option)
     {
-        
+        $function = $this->getIpLocation();
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'ip' => $function->ip,
+            'module' => 'MENÚ',
+            'submodule' => 'OPCIÓN DE PRODUCTO',
+            'action' => 'Eliminación',
+            'detail' => 'Se eliminó la opción, "' .$option->name .'" del producto '.$option->item->name,
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
+        ]);
         $option->delete();
+        
         return redirect()->route('items.options.index', ['item'=>$option->item->id])->withStatus(__('Option has been removed'));
     }
 }

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Notifications\ClientRegistered;
-use App\Notifications\WelcomeNotification;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Log;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Notifications\ClientRegistered;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\WelcomeNotification;
+use Illuminate\Foundation\Auth\RegistersUsers;
+
 class RegisterController extends Controller
 {
     /*
@@ -84,6 +86,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $function = $this->getIpLocation();
         $user = User::create([
             'name' => $data['name'],
             'number_identification' => $data['number_identification'],
@@ -92,6 +95,18 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'api_token' => Str::random(80),
             'birth_date' => isset($data['birth_date']) ? $data['birth_date'] : '',
+        ]);
+        Log::create([
+            'user_id' => $user->id,
+            'ip' => $function->ip,
+            'module' => 'REGISTRO DE CLIENTE',
+            'submodule' => '',
+            'action' => 'Registro',
+            'detail' => 'Se registró el cliente "' .$data['name'] .'", en la plataforma.',
+            'country' => $function->country,
+            'city' =>$function->city,
+            'lat' =>$function->lat,
+            'lon' =>$function->lon,
         ]);
 
         $user->assignRole('client');
