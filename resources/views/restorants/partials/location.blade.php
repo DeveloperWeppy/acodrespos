@@ -1,6 +1,6 @@
 <div class="card card-profile shadow">
     <div class="card-header">
-        <h5 class="h3 mb-0">{{ ucfirst(config('settings.url_route'))." ".__("Location")}}</h5>
+        <h5 class="h3 mb-0">Ubicación y áreas de entrega del Restaurante</h5>
     </div>
     <div class="card-body">
         <div class="nav-wrapper">
