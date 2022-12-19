@@ -67,7 +67,6 @@
 
         <div class="form-group">
             <label class="form-control-label" for="input-file">{{ __('Subir evidencia') }}(opcional)</label>
-            <p><small>Si su PQRS está relacionado con una orden en especifico, indique el número de la orden.</small>
             </p>
             <input type="file" name="evidence" id="input-file" class="form-control form-control-alternative"
                 onchange="return validarExtensionArchivo()">

@@ -82,8 +82,8 @@
         "use strict";
         var map, infoWindow, marker, lng, lat;
         function initMapA() {
-            map = new google.maps.Map(document.getElementById('map2'), {center: {lat: -34.397, lng: 150.644}, zoom: 15 });
-            marker = new google.maps.Marker({ position: {lat: -34.397, lng: 150.644}, map: map, title: 'Click to zoom'});
+            map = new google.maps.Map(document.getElementById('map2'), {center: {lat: 4.6486259, lng: -74.2478945}, zoom: 15 });
+            marker = new google.maps.Marker({ position: {lat: 4.6486259, lng: -74.2478945}, map: map, title: 'Click to zoom'});
             infoWindow = new google.maps.InfoWindow;
             const locationButton = document.createElement("button");
 
