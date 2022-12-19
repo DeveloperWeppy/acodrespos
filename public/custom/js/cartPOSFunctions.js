@@ -574,9 +574,11 @@ function ocultarbtn(){
   if(EXPEDITION!=3){
     $('.ckpropina').hide();
     $('.input-persona').hide();
+    $('#addprop').hide();
   }else{
     $('.ckpropina').show();
     $('.input-persona').show();
+    $('#addprop').show();
   }
 }
 
@@ -639,6 +641,7 @@ function submitOrderPOS(tipo=0){
 
   axios.post(withSession('/poscloud/order'), dataToSubmit).then(function (response) {
 
+    $('#addprop').hide();
     //subir imagen factura
     submitImage(response.data.id);
 
@@ -664,6 +667,10 @@ function submitOrderPOS(tipo=0){
     getCartContentAndTotalPrice();
 
     if(response.data.status){
+
+      
+
+
       $('textarea#order_comment').val("");
       
       window.showOrders();
@@ -690,6 +697,22 @@ function submitOrderPOS(tipo=0){
         }
         
       }
+
+      
+
+      modalPayment.totalPrice=0;
+      modalPayment.minimalOrder=0;
+      modalPayment.totalPriceFormat="";
+      modalPayment.totalPropinaFormat="";
+      modalPayment.deliveryPriceFormated="";
+      modalPayment.delivery=true;
+      modalPayment.valid=false;
+      modalPayment.received=0;
+      modalPayment.receivedFormated="";
+      modalPayment.totalPriceRestado=0;
+      modalPayment.totalPriceRestadoFormated="";
+      modalPayment.totalCambioFormated="";
+
     }else{
       js.notify(response.data.message, "warning");
     }
