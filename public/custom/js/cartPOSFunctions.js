@@ -122,6 +122,8 @@ function updatePrices(net,delivery,expedition){
 
         if(modalPayment.received-modalPayment.totalPrice>0){
           modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }else{
+          modalPayment.totalCambioFormated =formatter.format(0);
         }
 
         $('#spanporcentaje_propina').show();
@@ -144,6 +146,8 @@ function updatePrices(net,delivery,expedition){
 
         if(modalPayment.received-modalPayment.totalPrice>0){
           modalPayment.totalCambioFormated = formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }else{
+          modalPayment.totalCambioFormated =formatter.format(0);
         }
         
 
@@ -173,6 +177,8 @@ function updatePrices(net,delivery,expedition){
 
         if(modalPayment.received-modalPayment.totalPrice>0){
           modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }else{
+          modalPayment.totalCambioFormated =formatter.format(0);
         }
 
         $('#spanporcentaje_propina').show();
@@ -194,6 +200,8 @@ function updatePrices(net,delivery,expedition){
 
         if(modalPayment.received-modalPayment.totalPrice>0){
           modalPayment.totalCambioFormated =formatter.format(modalPayment.received-modalPayment.totalPrice);
+        }else{
+          modalPayment.totalCambioFormated =formatter.format(0);
         }
 
         $('#spanporcentaje_propina').hide();
