@@ -156,6 +156,7 @@
                 </div>
             </div>
         </div>
+        @include('layouts.footers.auth')
     </div>
      
 
@@ -398,7 +399,7 @@
             function pagarReserva(){
 
                 $('#pagarReserva').prop('disabled', true);
-                
+
                 var formData = new FormData($('#formReserva')[0]);
                 formData.append('reserva_id',{{(isset($reservation->id)?$reservation->id:0)}});
                 formData.append('met',$('#paymentType').val());
@@ -543,7 +544,7 @@
         @endsection
 
 
-        @include('layouts.footers.auth')
+      
 
 
         
