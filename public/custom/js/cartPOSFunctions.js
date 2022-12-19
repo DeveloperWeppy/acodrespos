@@ -632,6 +632,8 @@ function submitOrderPOS(tipo=0){
     //subir imagen factura
     submitImage(response.data.id);
 
+    $('#actualizarPedido').prop('disabled', false);
+
    
     $('#submitOrderPOS').show();
     $('#indicator').hide();
