@@ -372,8 +372,10 @@
                 type:'POST',
                 url: '/updateres/delivery/'+$('#rid').val(),
                 dataType: 'json',
+                headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
                 data: {
-                    //path: JSON.stringify(path.i)
                     path: JSON.stringify(path)
                 },
                 success:function(response){
@@ -597,6 +599,24 @@ function borrarmarkply(index,tipo=0){
     $("#btnerase").hide();
     $( "#btnsave" ).hide();
 }
+function borrapositionmark2(index){
+    
+    if (isClosed) return;
+    if (index<markers.length) return;
+    var arrayp=JSON.parse(JSON.stringify(poly.getPath()));
+    var keyi= Object.keys(arrayp);
+    var arrayn=poly.getPath();
+    arrayn=arrayn[keyi[0]];
+    arrayn=arrayn.slice(0,arrayn.length-1);
+    poly.setPath(arrayn);
+    
+    path = poly.getPath();
+    markers[markers.length-1].setMap(null);
+    markers=markers.slice(0,markers.length-1);
+   
+   
+   
+}
 function borrapositionmark(){
     if (isClosed2) return;
    
@@ -655,9 +675,13 @@ $( "#btnerase" ).click(function() {
             var isFirstMarker = markerIndex === 0;
             markerArea = new google.maps.Marker({ map: map_area, position: latLng, draggable: false, icon: area });
 
+           
             //push markers
             markers.push(markerArea);
-
+            var pos=markers.length;
+            google.maps.event.addListener(markerArea, 'rightclick', function (evt) { 
+                  borrapositionmark2(pos);
+            });
             if(isFirstMarker) {
                 google.maps.event.addListener(markerArea, 'click', function () {
                     if (isClosed) return;

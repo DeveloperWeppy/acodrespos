@@ -318,7 +318,7 @@ class Controller extends BaseController
                         $ifinRadius = false;
                     }
                 } else {
-                    $ifinRadius = true;
+                    //$ifinRadius = true;
                 }  
                 if (! array_key_exists($address->id, $addresses)) {
                     for ($i = 0; $i < count($arrayzonep); $i++) {
