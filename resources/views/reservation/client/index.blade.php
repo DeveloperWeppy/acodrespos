@@ -48,6 +48,7 @@
                                         <tr>
                                             <th scope="col">N. Reserva</th>
                                             <th scope="col">Fecha y Hora</th>
+                                            <th class="table-web" scope="col">Restaurante</th>
                                             <th class="table-web" scope="col">Area - Mesa</th>
                                             <th class="table-web" scope="col">Valor</th>
                                             <th scope="col">Pendiente</th>

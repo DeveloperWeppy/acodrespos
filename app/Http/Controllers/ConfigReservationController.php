@@ -63,7 +63,7 @@ class ConfigReservationController extends Controller
 
         if(auth()->user()->hasRole('client')){
     
-            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from reservation_reasons where id=reservation_reason_id) as mot'))->where('client_id', auth()->user()->id)->orderBy('id','desc')->paginate(10);
+            $reservaciones = DB::table('reservations')->select(DB::raw('reservations.*,(select name from reservation_reasons where id=reservation_reason_id) as mot,(select name from companies where id=companie_id) as comp'))->where('client_id', auth()->user()->id)->orderBy('id','desc')->paginate(10);
             
             return view('reservation.client.index', compact('reservaciones'));
             

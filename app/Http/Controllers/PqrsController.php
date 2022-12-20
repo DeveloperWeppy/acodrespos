@@ -97,11 +97,10 @@ class PqrsController extends Controller
 
         $pqrs_all=$pqrs_all->orderBy(DB::raw('FIELD(status,  "en revision", "radicado", "soluccionado")'),'desc')->paginate(7);
 
-        $allPqrs = Pqrs::where('created_at', '<=', $now);
 
-        $consecutives = $allPqrs->groupBy('consecutive_case')->get();
-        $emails = $allPqrs->groupBy('email')->get();
-        $category = $allPqrs->groupBy('type_radicate')->get();
+        $consecutives = Pqrs::groupBy('consecutive_case')->get();
+        $emails = Pqrs::groupBy('email')->get();
+        $category = Pqrs::groupBy('type_radicate')->get();
 
 
         return view('pqrs.admin.index', compact('pqrs_all','consecutives','emails','category'));
