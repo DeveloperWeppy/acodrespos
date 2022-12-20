@@ -50,7 +50,7 @@ class PqrsController extends Controller
 
     public function index_admin(Request $request)
     {
-        $now = Carbon::now('America/Bogota')->format('Y-m-d H:m:s');
+        $now = Carbon::now()->addDay()->format('Y-m-d H:m:s');
         $pqrs_all = Pqrs::where('created_at', '<=', $now);
 
 
