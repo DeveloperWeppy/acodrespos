@@ -50,7 +50,8 @@ class PqrsController extends Controller
 
     public function index_admin(Request $request)
     {
-        $pqrs_all = Pqrs::where('created_at', '<=', Carbon::today());
+        $now = Carbon::now('America/Bogota')->format('Y-m-d H:m:s');
+        $pqrs_all = Pqrs::where('created_at', '<=', $now);
 
 
         if(isset($_GET['consecutive']) && $_GET['consecutive']!=""){
@@ -96,7 +97,7 @@ class PqrsController extends Controller
 
         $pqrs_all=$pqrs_all->orderBy(DB::raw('FIELD(status,  "en revision", "radicado", "soluccionado")'),'desc')->paginate(7);
 
-        $allPqrs = Pqrs::where('created_at', '<=', Carbon::today());
+        $allPqrs = Pqrs::where('created_at', '<=', $now);
 
         $consecutives = $allPqrs->groupBy('consecutive_case')->get();
         $emails = $allPqrs->groupBy('email')->get();
