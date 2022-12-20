@@ -1057,7 +1057,7 @@ $( "#btnerase" ).click(function() {
                     $.ajax({method: "get", headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},url: "{{route('geozone.destroy')}}/"+$(this).attr("data-id") })
                     .done(function( msg ) {
 
-                        Swal.fire('Área Eliminada!', '', 'success');
+                        Swal.fire('Area eliminada!', '', 'success');
 
                         cargarzona();
                     });
