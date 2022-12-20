@@ -50,7 +50,7 @@ class PqrsController extends Controller
 
     public function index_admin(Request $request)
     {
-        $pqrs_all = Pqrs::orderBy(DB::raw('FIELD(status, "radicado", "en revision", "soluccionado")'),'desc');
+        $pqrs_all = Pqrs::where('created_at', '<=', Carbon::today());
 
 
         if(isset($_GET['consecutive']) && $_GET['consecutive']!=""){
@@ -73,6 +73,7 @@ class PqrsController extends Controller
         if (isset($_GET['report'])) {
             $items=[];
             $k=1;
+            $pqrs_all=$pqrs_all->orderBy(DB::raw('FIELD(status,  "en revision", "radicado", "soluccionado")'),'desc');
             foreach ($pqrs_all->get() as $key => $item) {
 
                 $hora = date_format($item->created_at, 'h:i A');
@@ -93,7 +94,7 @@ class PqrsController extends Controller
         }
 
 
-        $pqrs_all=$pqrs_all->paginate(7);
+        $pqrs_all=$pqrs_all->orderBy(DB::raw('FIELD(status,  "en revision", "radicado", "soluccionado")'),'desc')->paginate(7);
 
         $allPqrs = Pqrs::where('created_at', '<=', Carbon::today());
 
