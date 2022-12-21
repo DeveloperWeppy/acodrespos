@@ -328,6 +328,13 @@ class ItemsController extends Controller
             }
         }
 
+        $item->has_featured = $request->exists('has_featured');
+        if(!$item->has_featured){
+            $item->has_featured=0;
+        }else{
+            $item->has_featured=1;
+        }
+
         if ($request->hasFile('item_image')) {
             $request->validate([
                 'item_image' => ['dimensions:max_width=2000'],

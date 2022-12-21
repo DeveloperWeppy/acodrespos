@@ -49,12 +49,12 @@
 
                         <!-- statuses -->
                         <div class="col-md-3">
-                            @include('partials.select', ['name'=>"Last status",'id'=>"status_id",'placeholder'=>"Select status",'data'=>$statuses,'required'=>false, 'value'=>''])
+                            @include('partials.select', ['name'=>"Last status",'id'=>"status_id",'placeholder'=>"Seleccionar estado",'data'=>$statuses,'required'=>false, 'value'=>''])
                         </div>
 
                         <!-- statuses -->
                         <div class="col-md-3">
-                            @include('partials.select', ['name'=>"Payment status",'id'=>"payment_status",'placeholder'=>"Select status",'data'=>['paid'=>__("Paid"),'unpaid'=>("Unpaid")],'required'=>false, 'value'=>''])
+                            @include('partials.select', ['name'=>"Payment status",'id'=>"payment_status",'placeholder'=>"Select estado",'data'=>['paid'=>__("Paid"),'unpaid'=>("Unpaid")],'required'=>false, 'value'=>''])
                         </div>
                         
 

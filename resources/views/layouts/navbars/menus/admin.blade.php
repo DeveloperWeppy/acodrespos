@@ -146,7 +146,7 @@
             </a>
         </li>
 
-        {{--
+         {{--  
         @if(!config('settings.hideApps'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('apps.index') }}">
@@ -154,9 +154,9 @@
                 </a>
             </li>
         @endif
-        --}}
+    
 
-        {{--  
+      
         <li class="nav-item">
             <a class="nav-link" href="{{ route('settings.cloudupdate') }}">
                 <i class="ni ni-cloud-download-95 text-blue"></i> {{ __('Updates') }}

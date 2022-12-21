@@ -33,23 +33,23 @@ class CouponsController extends Controller
     /**
      * Title of this crud.
      */
-    private $title = 'coupon';
+    private $title = 'cupón';
 
     /**
      * Title of this crud in plural.
      */
-    private $titlePlural = 'coupons';
+    private $titlePlural = 'cupones';
 
     private function getFields()
     {
         return [
-            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Enter code name', 'required'=>true],
-            ['class'=>'col-md-4', 'ftype'=>'input', 'type'=>'number', 'name'=>'Code', 'id'=>'size', 'placeholder'=>'Enter table person size, ex 4', 'required'=>true],
-            ['ftype'=>'select', 'name'=>'Price', 'id'=>'type', 'placeholder'=>'Select type', 'data'=>['Fixed', 'Percentage'], 'required'=>true],
-            ['ftype'=>'select', 'name'=>'Active from', 'id'=>'type', 'placeholder'=>'Select type', 'data'=>['Fixed', 'Percentage'], 'required'=>true],
-            ['ftype'=>'select', 'name'=>'Active to', 'id'=>'type', 'placeholder'=>'Select type', 'data'=>['Fixed', 'Percentage'], 'required'=>true],
-            ['ftype'=>'select', 'name'=>'Limit number', 'id'=>'type', 'placeholder'=>'Select type', 'data'=>['Fixed', 'Percentage'], 'required'=>true],
-            ['ftype'=>'select', 'name'=>'Used from', 'id'=>'type', 'placeholder'=>'Select type', 'data'=>['Fixed', 'Percentage'], 'required'=>true],
+            ['class'=>'col-md-4', 'ftype'=>'input', 'name'=>'Name', 'id'=>'name', 'placeholder'=>'Código del cupón', 'required'=>true],
+            ['class'=>'col-md-4', 'ftype'=>'input', 'type'=>'number', 'name'=>'Code', 'id'=>'size', 'placeholder'=>'Ingrese el tamaño de la persona de la mesa, ej. 4', 'required'=>true],
+            ['ftype'=>'select', 'name'=>'Price', 'id'=>'type', 'placeholder'=>'Tipo de cupón', 'data'=>['Precio Fijo', 'Porcentaje'], 'required'=>true],
+            ['ftype'=>'select', 'name'=>'Active from', 'id'=>'type', 'required'=>true],
+            ['ftype'=>'select', 'name'=>'Active to', 'id'=>'type', 'required'=>true],
+            ['ftype'=>'select', 'name'=>'Limite de usuarios', 'id'=>'type',  'required'=>true],
+            ['ftype'=>'select', 'name'=>'Usado', 'id'=>'type', 'required'=>true],
         ];
     }
 

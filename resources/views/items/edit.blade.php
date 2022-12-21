@@ -122,6 +122,7 @@
                                         @include('partials.images',$image)
                                         @include('partials.toggle',['id'=>'itemAvailable','name'=>'Item available','checked'=>($item->available == 1)])
                                         @include('partials.toggle',['id'=>'has_variants','name'=>'Habilitar Variantes','checked'=>($item->has_variants==1)])
+                                        @include('partials.toggle',['id'=>'has_featured','name'=>'Plato destacado','checked'=>($item->has_featured==1)])
                                         @if($item->has_variants==1)
                                             @include('partials.toggle',['additionalInfo'=>' Las variantes faltantes tendrán el mismo precio que el artículo','id'=>'enable_system_variants','name'=>'Habilitar variantes del sistema','checked'=>($item->enable_system_variants==1)])
                                         @else

@@ -134,14 +134,14 @@
             </a>
         </li>
 
-        @if ( in_array("coupons", config('global.modules',[]))   )
+       
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.restaurant.coupons.index') }}">
                     <i class="ni ni-tag text-pink"></i> {{ __('Coupons') }}
                 </a>
             </li>
-        @endif
+       
 
 
     @if (!config('settings.is_pos_cloud_mode')&&!config('app.issd'))

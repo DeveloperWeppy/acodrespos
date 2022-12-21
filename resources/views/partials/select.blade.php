@@ -9,7 +9,7 @@
     <label class="form-control-label">{{ __($name) }}</label><br />
 
     <select @isset($disabled) {{ "disabled" }} @endisset  class="form-control form-control   @isset($classselect) {{$classselect}} @endisset"  name="{{ $id }}" id="{{  $id }}">
-        <option disabled selected value> {{ __('Select')." ".__($name)}} </option>
+        <option disabled selected value> {{ (isset($placeholder)?$placeholder:__('Select')." ".__($name))}} </option>
         @foreach ($data as $key => $item)
 
             @if (is_array(__($item)))

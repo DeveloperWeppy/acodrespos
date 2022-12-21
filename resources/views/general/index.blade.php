@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8 mt--4">
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
        @isset($breadcrumbs)
            @include('general.breadcrumbs')
        @endisset
@@ -109,8 +109,8 @@
     @section('js')
         <script src="{{ asset('js') }}/showpassword.js"></script>
         <script>
-            $('.input-group-addon').hide();
-            $("#show_hide_password").removeClass("input-group");
+            //$('.input-group-addon').hide();
+            //$("#show_hide_password").removeClass("input-group");
         </script>
     @endsection
 @endsection
