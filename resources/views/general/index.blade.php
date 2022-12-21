@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8 mt--4">
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
        @isset($breadcrumbs)
            @include('general.breadcrumbs')
        @endisset
