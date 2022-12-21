@@ -20,7 +20,9 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs_all = Log::whereDay('created_at', Carbon::today());
+
+        $now = Carbon::now()->addDay()->format('Y-m-d H:m:s');
+        $logs_all = Log::whereDay('created_at', $now );
 
         if(isset($_GET['fromDate'],$_GET['toDate']) && $_GET['fromDate']!=""){
             $logs_all = $logs_all->whereDate('created_at',">=",$_GET['fromDate'])->whereDate('created_at',"<=",$_GET['toDate']);
