@@ -9,9 +9,9 @@
     </div>
     <div class="col-md-3">
         @if(isset($coupon))
-            @include('partials.select', ['class'=>"col-12",'name'=>"Type",'id'=>"type",'placeholder'=>"Tipo de cupón",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true, 'value'=>$coupon->type])
+            @include('partials.select', ['class'=>"col-12",'name'=>"Tipo de cupón",'id'=>"type",'placeholder'=>"Tipo de cupón",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true, 'value'=>$coupon->type])
         @else
-            @include('partials.select', ['class'=>"col-12",'name'=>"Type",'id'=>"type",'placeholder'=>"Tipo de cupón",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true])
+            @include('partials.select', ['class'=>"col-12",'name'=>"Tipo de cupón",'id'=>"type",'placeholder'=>"Tipo de cupón",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true])
         @endif
     </div>
     <div class="col-md-3">

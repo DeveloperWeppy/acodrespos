@@ -7,17 +7,30 @@
 <div class="header bg-gradient-info pb-6 pt-5 pt-md-8">
     <div class="container-fluid">
 
+        <?php 
+            
+            $menuActivo = "reservacion";
+            if(isset($_GET)){
+               $object = (object) $_GET;
+               foreach ($object as $clave=>$valor) {
+                    $menuActivo = $clave;
+                }
+            }
+            
+            
+        ?>
+
         
         <div class="nav-wrapper">
             @if ($compani->has_reservation==1)
             <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="res_menagment" role="tablist">
 
                 <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
+                    <a class="nav-link mb-sm-3 mb-md-0 {{ ($menuActivo=='reservacion' ?'active':'') }}" id="tabs-menagment-main" data-toggle="tab" href="#menagment" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Reservaciones</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link mb-sm-3 mb-md-0" id="tabs-menagment-main" data-toggle="tab" href="#clients" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Solicitudes de pre-reservación</a>
+                    <a class="nav-link mb-sm-3 mb-md-0 {{ ($menuActivo=='solicitud' ?'active':'') }}" id="tabs-menagment-main" data-toggle="tab" href="#clients" role="tab" aria-controls="tabs-menagment" aria-selected="true"><i class="ni ni-badge mr-2"></i>Solicitudes de pre-reservación</a>
                 </li>
 
                 <li class="nav-item">
@@ -50,7 +63,7 @@
 
 
                 <!-- Tab Managment -->
-                <div class="tab-pane fade show active" id="menagment" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                <div class="tab-pane fade show {{ ($menuActivo=='reservacion' ?'active':'') }}" id="menagment" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">
@@ -103,7 +116,7 @@
 
 
                 <!-- Tab Managment -->
-                <div class="tab-pane fade show" id="clients" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                <div class="tab-pane fade show {{ ($menuActivo=='solicitud' ?'active':'') }}" id="clients" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                     <div class="card bg-secondary shadow">
                         <div class="card-header bg-white border-0">
                             <div class="row align-items-center">

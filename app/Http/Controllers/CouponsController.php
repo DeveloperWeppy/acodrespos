@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Coupons;
+use App\Items;
 use Carbon\Carbon;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
+use App\Models\Discount;
+use App\Models\DiscountItems;
+
+use App\Categories;
 
 class CouponsController extends Controller
 {
@@ -74,7 +81,8 @@ class CouponsController extends Controller
             'title'=>__('crud.item_managment', ['item'=>__($this->titlePlural)]),
             'action_link'=>route($this->webroute_path.'create'),
             'action_name'=>__('crud.add_new_item', ['item'=>__($this->title)]),
-            'items'=>$this->getRestaurant()->coupons()->paginate(config('settings.paginate')),
+            'items'=>$this->getRestaurant()->coupons()->paginate(10, ['*'], 'cupones'),
+            'discounts'=>Discount::where('companie_id',auth()->user()->restaurant_id)->orderBy('id','desc')->paginate(10, ['*'], 'descuentos'),
             'item_names'=>$this->titlePlural,
             'webroute_path'=>$this->webroute_path,
             'fields'=>$this->getFields(),
@@ -92,6 +100,29 @@ class CouponsController extends Controller
         $this->authChecker();
 
         return view('coupons.create');
+    }
+
+    public function createDiscount()
+    {
+        $this->authChecker();
+
+        $productos = [];
+        $categorias = Categories::where('restorant_id',auth()->user()->restaurant_id)->get();
+
+        foreach ($categorias as $index => $category){
+            foreach ( $category->items as $item){
+                $item = [
+                    'id'=>$item->id,
+                    'name'=>$item->name,
+                    'category'=>$category->name,
+                    'price'=>$item->price,
+                    'date-created'=>$item->created_at,
+                ];
+                array_push($productos, $item);
+            }
+        }
+
+        return view('coupons.creatediscount',compact('productos','categorias'));
     }
 
     /**
@@ -119,6 +150,54 @@ class CouponsController extends Controller
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
     }
 
+    public function storeDiscount(Request $request)
+    {
+        $this->authChecker();
+        $item = Discount::create([
+            'name' => $request->name,
+            'type' => $request->type,
+            'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
+            'active_from' => $request->active_from,
+            'active_to' => $request->active_to,
+            'opcion_discount' => $request->typ2,
+            'companie_id' => $this->getRestaurant()->id,
+        ]);
+
+        $item->save();
+
+        if($request->typ2=="Productos"){
+            if(isset($request->prod)){
+                DiscountItems::where('discount_id','=',$item->id)->delete();
+                foreach($request->prod as $key){
+                    $mesas = DiscountItems::updateOrCreate(
+                        [
+                            'discount_id' => $item->id,
+                            'item_id' => $key,
+                        ],
+                    );
+                }
+            }
+        }
+
+        if($request->typ2=="Categorias"){
+            if(isset($request->catt)){
+                DiscountItems::where('discount_id','=',$item->id)->delete();
+                foreach($request->catt as $key){
+                    $mesas = DiscountItems::updateOrCreate(
+                        [
+                            'discount_id' => $item->id,
+                            'item_id' => $key,
+                        ],
+                    );
+                }
+            }
+        }
+        
+
+
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento creado', ['item'=>__($this->title)]));
+    }
+
     /**
      * Display the specified resource.
      *
@@ -136,9 +215,32 @@ class CouponsController extends Controller
      * @param  \App\Coupons  $coupons
      * @return \Illuminate\Http\Response
      */
-    public function edit(Coupons $coupon)
+    public function edit(Discount $coupon)
     {
         return view('coupons.create', ['coupon' => $coupon]);
+    }
+
+    public function editDiscount(Discount $coupon)
+    {
+        $productos = [];
+        $categorias = Categories::where('restorant_id',auth()->user()->restaurant_id)->get();
+
+        foreach ($categorias as $index => $category){
+            foreach ( $category->items as $item){
+                $item = [
+                    'id'=>$item->id,
+                    'name'=>$item->name,
+                    'category'=>$category->name,
+                    'price'=>$item->price,
+                    'date-created'=>$item->created_at,
+                ];
+                array_push($productos, $item);
+            }
+        }
+
+        $itemsSeleccionados=DiscountItems::select(DB::raw('group_concat(item_id) as idi'))->where('discount_id','=',$coupon->id)->first();
+
+        return view('coupons.creatediscount', compact('coupon','productos','categorias','itemsSeleccionados'));
     }
 
     /**
@@ -164,6 +266,57 @@ class CouponsController extends Controller
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
+    public function updateDiscount(Request $request, $id)
+    {
+        $this->authChecker();
+        $item = Discount::updateOrCreate(
+            [
+                'id'=>$id
+            ],
+            [
+            'name' => $request->name,
+            'type' => $request->type,
+            'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
+            'active_from' => $request->active_from,
+            'active_to' => $request->active_to,
+            'opcion_discount' => $request->typ2,
+            ]
+        );
+
+        $item->save();
+
+        if($request->typ2=="Productos"){
+            if(isset($request->prod)){
+                DiscountItems::where('discount_id','=',$id)->delete();
+                foreach($request->prod as $key){
+                    $mesas = DiscountItems::updateOrCreate(
+                        [
+                            'discount_id' => $id,
+                            'item_id' => $key,
+                        ],
+                    );
+                }
+            }
+        }
+
+        if($request->typ2=="Categorias"){
+            if(isset($request->catt)){
+                DiscountItems::where('discount_id','=',$id)->delete();
+                foreach($request->catt as $key){
+                    $mesas = DiscountItems::updateOrCreate(
+                        [
+                            'discount_id' => $id,
+                            'item_id' => $key,
+                        ],
+                    );
+                }
+            }
+        }
+        
+
+
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento creado', ['item'=>__($this->title)]));
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -178,6 +331,16 @@ class CouponsController extends Controller
         $item->delete();
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
     }
+
+    public function destroyDiscount($id)
+    {
+        $this->authChecker();
+        $item = Discount::findOrFail($id);
+        $item->delete();
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('Desciento removido', ['item'=>__($this->title)]));
+    }
+
+
 
     public function apply(Request $request)
     {
