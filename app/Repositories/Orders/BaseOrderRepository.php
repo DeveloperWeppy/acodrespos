@@ -226,12 +226,16 @@ class BaseOrderRepository extends Controller
             }
 
             //Descuento vigente del producto
-            $dsc = Vendor::applyDiscount($theItem->discount_id,$theItem->price);
+            $dsc = 0;
+            if($variantName==""){
+                $dsc = Vendor::applyDiscount($theItem->discount_id,$theItem->price);
+            }
+            
           
 
             
             //Total vat on this item
-            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?$itemSelectedPrice * ($theItem->vat / 100):0);
+            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?($itemSelectedPrice-$dsc) * ($theItem->vat / 100):0);
             $cart_item_id=0;
             $item_observacion="";
             if(isset($item['cart_item_id'])){

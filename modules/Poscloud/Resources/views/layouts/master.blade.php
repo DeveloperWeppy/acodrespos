@@ -238,7 +238,8 @@
 
         $('select').on('change', function() {
           if(this.id=="itemsSelect"&&this.value!=""){
-            setCurrentItem( this.value );
+            var price = $(this).find(':selected').data('price');
+            setCurrentItem( this.value,price );
           }
           
         });

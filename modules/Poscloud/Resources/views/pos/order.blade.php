@@ -32,7 +32,10 @@ function clean($string)
                                             @if (!$category->items->isEmpty())
                                                 <optgroup label="{{ $category->name }}">
                                                     @foreach ($category->aitems as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                        <?php
+                                                            $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
+                                                        ?>
+                                                        <option value="{{ $item->id }}" data-price="@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))">{{ $item->name }}</option>
                                                     @endforeach
 
 
@@ -71,7 +74,10 @@ function clean($string)
 
 
                         @foreach ($category->aitems as $item)
-                            <div onClick="setCurrentItem({{ $item->id }})" class="col-xl-3 col-md-6 mb-3 mt-3">
+                            <?php
+                            $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
+                            ?>
+                            <div onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" class="col-xl-3 col-md-6 mb-3 mt-3">
                                 <div class="card">
                                     <div class="position-relative">
                                         <a class="d-block shadow-xl border-radius-xl">
@@ -80,9 +86,7 @@ function clean($string)
                                         </a>
                                     </div>
                                     <div class="card-body px-2 pb-1">
-                                        <?php
-                                        $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
-                                        ?>
+                                        
                                         <span class="badge bg-gradient-light" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span>
                                         <span class="badge bg-gradient-light">@money($item->price-$dsc, config('settings.cashier_currency'), config('settings.do_convertion'))</span><br />
                                         

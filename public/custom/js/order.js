@@ -241,7 +241,6 @@ function setCurrentItem(id,price){
 
     var item=items[id];
 
-    console.log(item);
     currentItem=item;
     previouslySelected=[];
     $('#modalTitle').text(item.name);
