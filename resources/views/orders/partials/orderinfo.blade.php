@@ -350,6 +350,13 @@
             </a>
         </h3>
     @endif
+    <h3>Imprimir comanda
+        <a class="btn btn-outline-success btn-sm" onclick="printcommand('{{$order->id}}')">
+            <span class="btn-inner--icon">
+                <i class="ni ni-cloud-download-95"></i>
+            </span>
+        </a>
+    </h3>
   
      {{-- @if(isset($custom_data)&&count($custom_data)>0)
         <hr />

@@ -81,6 +81,7 @@
             @include('layouts.footers.guest')
         @endguest
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
         <!-- Commented because navtabs includes same script -->
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="{{ asset('vendor') }}/jasny/js/jasny-bootstrap.min.js"></script>
@@ -148,6 +149,32 @@
         
 
         <script>
+           var urlbasse="{{url('/pdf');}}";
+            function printcommand(id){
+                const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    denyButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
+                }); 
+                swalWithBootstrapButtons.fire({
+                    title: 'Comanda de productos',
+                    icon: 'question',
+                    iconHtml: '?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Nuevos',
+                    denyButtonText:"Todos",
+                }).then((result) => {
+                
+                if (result.isConfirmed) {
+                   printJS(urlbasse+"/"+id+"/1");
+                } else if (result.isDenied) {
+                   printJS(urlbasse+"/"+id+"/2");
+                }
+                });
+              
+            }
             var ONESIGNAL_APP_ID = "{{ config('settings.onesignal_app_id') }}";
             var USER_ID = '{{  auth()->user()&&auth()->user()?auth()->user()->id:"" }}';
             var PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
