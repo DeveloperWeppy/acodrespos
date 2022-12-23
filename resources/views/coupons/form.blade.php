@@ -37,9 +37,9 @@
                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                     </div>
                     @if(isset($coupon))
-                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" value="{{ old('active_from', $coupon->active_from) }}" type="text">
+                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" value="{{ old('active_from', $coupon->active_from) }}" type="text" required>
                     @else
-                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text">
+                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text" required>
                     @endif
                 </div>
             </div>
@@ -54,9 +54,9 @@
                         <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                     </div>
                     @if(isset($coupon))
-                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" value="{{ old('active_to', $coupon->active_to) }}" type="text">
+                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" value="{{ old('active_to', $coupon->active_to) }}" type="text" required>
                     @else
-                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text">
+                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text" required>
                     @endif
                 </div>
             </div>

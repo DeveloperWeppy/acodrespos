@@ -138,9 +138,6 @@
             
             @endif
 
-            
-
-
             @if(!$restorant->categories->isEmpty())
             @foreach ( $restorant->categories as $key => $category)
                 @if(!$category->aitems->isEmpty())
@@ -150,26 +147,31 @@
                 @endif
                 <div class="row {{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
                     @foreach ($category->aitems as $item)
+                    
+                    <?php 
+                    $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                    ?>
+
                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                             <div class="strip">
                                 @if(!empty($item->image))
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @else
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @endif
-                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)">{{ $item->name }}</a></b></div>
                                 <div class="res_description">{{ $item->short_description}}</div>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="res_mimimum">
-                                            @if ($item->discounted_price>0)
-                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->discounted_price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                            @if ($dsc>0)
+                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
                                             @endif
-                                            @money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                            @money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                         </div>
                                     </div>
                                     <div class="col-6">

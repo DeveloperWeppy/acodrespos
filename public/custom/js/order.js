@@ -236,15 +236,17 @@ function setVariants(){
 }
 
 
-function setCurrentItem(id){
+function setCurrentItem(id,price){
 
 
     var item=items[id];
+
+    console.log(item);
     currentItem=item;
     previouslySelected=[];
     $('#modalTitle').text(item.name);
     $('#modalName').text(item.name);
-    $('#modalPrice').html(item.price);
+    $('#modalPrice').html(price);
     $('#modalID').text(item.id);
     $('#quantity').val(1);
     

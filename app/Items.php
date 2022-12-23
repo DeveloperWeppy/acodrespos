@@ -17,7 +17,7 @@ class Items extends TranslateAwareModel
 
     protected $table = 'items';
     protected $appends = ['logom', 'icon', 'short_description'];
-    protected $fillable = ['name', 'description', 'image', 'price','discounted_price', 'category_id', 'vat','enable_system_variants'];
+    protected $fillable = ['name', 'description', 'image', 'price','discounted_price', 'category_id', 'vat','enable_system_variants','discount_id'];
     protected $imagePath = '/uploads/restorants/';
 
     protected function getImge($imageValue, $default, $version = '_large.jpg')

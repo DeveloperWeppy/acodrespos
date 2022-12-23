@@ -81,7 +81,7 @@ class CouponsController extends Controller
             'title'=>__('crud.item_managment', ['item'=>__($this->titlePlural)]),
             'action_link'=>route($this->webroute_path.'create'),
             'action_name'=>__('crud.add_new_item', ['item'=>__($this->title)]),
-            'items'=>$this->getRestaurant()->coupons()->paginate(10, ['*'], 'cupones'),
+            'items'=>$this->getRestaurant()->coupons()->orderBy('id','desc')->paginate(10, ['*'], 'cupones'),
             'discounts'=>Discount::where('companie_id',auth()->user()->restaurant_id)->orderBy('id','desc')->paginate(10, ['*'], 'descuentos'),
             'item_names'=>$this->titlePlural,
             'webroute_path'=>$this->webroute_path,
@@ -143,6 +143,7 @@ class CouponsController extends Controller
             'active_to' => $request->active_to,
             'limit_to_num_uses' => $request->limit_to_num_uses,
             'restaurant_id' => $this->getRestaurant()->id,
+            'active'=>1
         ]);
 
         $item->save();
@@ -153,6 +154,14 @@ class CouponsController extends Controller
     public function storeDiscount(Request $request)
     {
         $this->authChecker();
+
+        $idss = "";
+        if(isset($request->prod)){
+            $idss = implode(',',$request->prod);
+        }
+        if(isset($request->catt)){
+            $idss = implode(',',$request->catt);
+        }
         $item = Discount::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -161,33 +170,56 @@ class CouponsController extends Controller
             'active_to' => $request->active_to,
             'opcion_discount' => $request->typ2,
             'companie_id' => $this->getRestaurant()->id,
+            'items_ids'=>$idss,
+            'active'=>1
         ]);
 
         $item->save();
 
-        if($request->typ2=="Productos"){
-            if(isset($request->prod)){
-                DiscountItems::where('discount_id','=',$item->id)->delete();
-                foreach($request->prod as $key){
-                    $mesas = DiscountItems::updateOrCreate(
+        if($request->typ2==0){
+            $categories=auth()->user()->restorant->categories;
+            foreach ($categories as $index => $category){
+                foreach ( $category->items as $product){
+                    $mesas = Items::updateOrCreate(
                         [
-                            'discount_id' => $item->id,
-                            'item_id' => $key,
+                            'id' => $product->id,
                         ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
                     );
                 }
             }
         }
 
-        if($request->typ2=="Categorias"){
-            if(isset($request->catt)){
-                DiscountItems::where('discount_id','=',$item->id)->delete();
-                foreach($request->catt as $key){
-                    $mesas = DiscountItems::updateOrCreate(
+        if($request->typ2==1){
+            if(isset($request->prod)){
+                foreach($request->prod as $key){
+                    $mesas = Items::updateOrCreate(
                         [
-                            'discount_id' => $item->id,
-                            'item_id' => $key,
+                            'id' => $key,
                         ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->catt)){
+                foreach($request->catt as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'category_id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
                     );
                 }
             }
@@ -215,7 +247,7 @@ class CouponsController extends Controller
      * @param  \App\Coupons  $coupons
      * @return \Illuminate\Http\Response
      */
-    public function edit(Discount $coupon)
+    public function edit(Coupons $coupon)
     {
         return view('coupons.create', ['coupon' => $coupon]);
     }
@@ -238,9 +270,7 @@ class CouponsController extends Controller
             }
         }
 
-        $itemsSeleccionados=DiscountItems::select(DB::raw('group_concat(item_id) as idi'))->where('discount_id','=',$coupon->id)->first();
-
-        return view('coupons.creatediscount', compact('coupon','productos','categorias','itemsSeleccionados'));
+        return view('coupons.creatediscount', compact('coupon','productos','categorias'));
     }
 
     /**
@@ -269,6 +299,14 @@ class CouponsController extends Controller
     public function updateDiscount(Request $request, $id)
     {
         $this->authChecker();
+
+        $idss = "";
+        if(isset($request->prod)){
+            $idss = implode(',',$request->prod);
+        }
+        if(isset($request->catt)){
+            $idss = implode(',',$request->catt);
+        }
         $item = Discount::updateOrCreate(
             [
                 'id'=>$id
@@ -280,34 +318,56 @@ class CouponsController extends Controller
             'active_from' => $request->active_from,
             'active_to' => $request->active_to,
             'opcion_discount' => $request->typ2,
+            'items_ids'=>$idss,
             ]
         );
 
         $item->save();
 
-        if($request->typ2=="Productos"){
-            if(isset($request->prod)){
-                DiscountItems::where('discount_id','=',$id)->delete();
-                foreach($request->prod as $key){
-                    $mesas = DiscountItems::updateOrCreate(
+        if($request->typ2==0){
+            $categories=auth()->user()->restorant->categories;
+            foreach ($categories as $index => $category){
+                foreach ( $category->items as $product){
+                    $mesas = Items::updateOrCreate(
                         [
-                            'discount_id' => $id,
-                            'item_id' => $key,
+                            'id' => $product->id,
                         ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
                     );
                 }
             }
         }
 
-        if($request->typ2=="Categorias"){
-            if(isset($request->catt)){
-                DiscountItems::where('discount_id','=',$id)->delete();
-                foreach($request->catt as $key){
-                    $mesas = DiscountItems::updateOrCreate(
+        if($request->typ2==1){
+            if(isset($request->prod)){
+                foreach($request->prod as $key){
+                    $mesas = Items::updateOrCreate(
                         [
-                            'discount_id' => $id,
-                            'item_id' => $key,
+                            'id' => $key,
                         ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->catt)){
+                foreach($request->catt as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'category_id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
                     );
                 }
             }
@@ -337,7 +397,7 @@ class CouponsController extends Controller
         $this->authChecker();
         $item = Discount::findOrFail($id);
         $item->delete();
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('Desciento removido', ['item'=>__($this->title)]));
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento removido', ['item'=>__($this->title)]));
     }
 
 
@@ -362,4 +422,6 @@ class CouponsController extends Controller
             'msg' => __('The coupon promotion code has been expired or the limit is exceeded.'),
         ]);
     }
+
+  
 }

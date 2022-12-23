@@ -80,6 +80,7 @@
                                             <th class="table-web" scope="col">Hasta</th>
                                             <th scope="col">Cupones disponibles</th>
                                             <th scope="col">Usados</th>
+                                            <th scope="col" hidden>Estado</th>
                                             <th scope="col">Acción</th>
                                             
                                         </tr>
@@ -130,6 +131,7 @@
                                             <th class="table-web" scope="col">Desde</th>
                                             <th class="table-web" scope="col">Hasta</th>
                                             <th scope="col">Descuento por</th>
+                                            <th scope="col" hidden>Estado</th>
                                             <th scope="col">Acción</th>
                                         </tr>
                                     </thead>

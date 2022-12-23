@@ -80,7 +80,12 @@ function clean($string)
                                         </a>
                                     </div>
                                     <div class="card-body px-2 pb-1">
-                                        <span class="badge bg-gradient-light">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span><br />
+                                        <?php
+                                        $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
+                                        ?>
+                                        <span class="badge bg-gradient-light" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span>
+                                        <span class="badge bg-gradient-light">@money($item->price-$dsc, config('settings.cashier_currency'), config('settings.do_convertion'))</span><br />
+                                        
                                         <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
 
                                     </div>

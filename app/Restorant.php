@@ -9,6 +9,8 @@ use Spatie\OpeningHours\OpeningHours;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Discount;
+
 class Restorant extends MyModel
 {
     use SoftDeletes;
@@ -306,4 +308,19 @@ class Restorant extends MyModel
             }
         });
     }
+
+    public function applyDiscount($idd,$price)
+    {
+        $discount = Discount::where(['id' => $idd,'active' => 1])->get()->first();
+        if($discount){
+            $deduct=$discount->calculateDeduct($price);
+            if($deduct){
+                //$coupon->decrement('limit_to_num_uses');
+                //$coupon->increment('used_count');
+                return $deduct;
+            }
+        }
+        return 0;
+    }
+
 }

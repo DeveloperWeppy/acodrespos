@@ -33,11 +33,11 @@
                     @endif
                     <div class="pl-lg-4">
                         @if(isset($coupon))
-                            <form method="post" action="{{ route('admin.restaurant.coupons.updateDiscount', $coupon->id) }}" autocomplete="off" enctype="multipart/form-data">
+                            <form method="post" id="formDiscount"  action="{{ route('admin.restaurant.coupons.updateDiscount', $coupon->id) }}" autocomplete="off" enctype="multipart/form-data">
                             @csrf
                             @method('put')
                         @else
-                            <form method="post" action="{{ route('admin.restaurant.coupons.storeDiscount') }}" autocomplete="off" enctype="multipart/form-data">
+                            <form method="post" id="formDiscount" action="{{ route('admin.restaurant.coupons.storeDiscount') }}" autocomplete="off" enctype="multipart/form-data">
                             @csrf
                         @endif
                             <div class="row">
@@ -55,13 +55,13 @@
                         <div class="col-md-3">
                             @if(isset($coupon) && $coupon->type == 0)
                                 @include('partials.input',['class'=>"col-12", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual', 'value'=>$coupon->price])
+                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual', 'value'=>$coupon->price])
                             @elseif(isset($coupon) && $coupon->type == 1)
-                            @include('partials.input',['class'=>"col-12", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual','value'=>$coupon->price])
+                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en '.config('settings.cashier_currency'), 'value'=>$coupon->price])
+                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual','value'=>$coupon->price])
                             @else
                                 @include('partials.input',['class'=>"col-12", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency')])
-                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual'])
+                                @include('partials.input',['class'=>"col-12", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual'])
                             @endif
                         </div>
                     </div>
@@ -75,9 +75,9 @@
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
                                         @if(isset($coupon))
-                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" value="{{ old('active_from', $coupon->active_from) }}" type="text">
+                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" value="{{ old('active_from', $coupon->active_from) }}" type="text" required>
                                         @else
-                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text">
+                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text" required>
                                         @endif
                                     </div>
                                 </div>
@@ -92,9 +92,9 @@
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
                                         @if(isset($coupon))
-                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" value="{{ old('active_to', $coupon->active_to) }}" type="text">
+                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" value="{{ old('active_to', $coupon->active_to) }}" type="text" required>
                                         @else
-                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text">
+                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text" required>
                                         @endif
                                     </div>
                                 </div>
@@ -111,16 +111,14 @@
                         <div class="col-md-3">
                      
                             <div id="form-group-name" class="form-group col-12">
-                        
-
-                            <label class="form-control-label">Aplicar descuento a</label>
-                            <select class="form-control col-sm" id="typ2" name="typ2">
-                                <option disabled value> Seleccionar producto</option>
-                                <option value="Todos" {{(isset($coupon)?($coupon->opcion_discount=="Todos"?"selected":""):"")}}>Todos los productos</option>
-                                <option value="Productos" {{(isset($coupon)?($coupon->opcion_discount=="Productos"?"selected":""):"")}}>Productos especificos</option>
-                                <option value="Categorias" {{(isset($coupon)?($coupon->opcion_discount=="Categorias"?"selected":""):"")}}>Categorias</option>
-                            </select>
-                        </div>
+                                <label class="form-control-label">Aplicar por</label>
+                                <select class="form-control col-sm" id="typ2" name="typ2">
+                                    <option disabled value> Seleccionar producto</option>
+                                    <option value="0" {{(isset($coupon)?($coupon->opcion_discount=="0"?"selected":""):"")}}>Todos los productos</option>
+                                    <option value="1" {{(isset($coupon)?($coupon->opcion_discount=="1"?"selected":""):"")}}>Productos especificos</option>
+                                    <option value="2" {{(isset($coupon)?($coupon->opcion_discount=="2"?"selected":""):"")}}>Categorias</option>
+                                </select>
+                            </div>
                         </div>
                     <div class="col-md-12"   id="prod" hidden >
                      
@@ -193,9 +191,9 @@
 
                             <div>
                                 @if(isset($coupon))
-                                    <button type="submit" class="btn btn-primary mt-4">{{ __('Update')}}</button>
+                                    <button type="button" onclick="submitForm()" class="btn btn-primary mt-4">{{ __('Update')}}</button>
                                 @else
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
+                                    <button type="button" onclick="submitForm()" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 @endif
                             </div>
                         </form>
@@ -214,6 +212,26 @@
 
 <script>
 
+
+function submitForm(){
+
+    Swal.fire({
+        title: 'Aplicar el descuento',
+        text: 'El descuento se aplicara a todos los productos relacionados\n¿aplicar el descuento?',
+        showDenyButton: true,
+        showCancelButton: true,
+        showDenyButton:false,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $( "#formDiscount" ).submit();
+        } else if (result.isDenied) {
+            return false;
+        }
+    });
+}
+
 $(function(){
     $('.select2').css('height','auto');
 });
@@ -225,15 +243,15 @@ $( "#typ2" ).change(function() {
 
 mostrarMultiple();
 function mostrarMultiple(){
-    if($( "#typ2" ).val()=="Todos"){
+    if($( "#typ2" ).val()=="0"){
         $("#prod").attr('hidden',true);
         $("#catt").attr('hidden',true);
     }
-    if($( "#typ2" ).val()=="Productos"){
+    if($( "#typ2" ).val()=="1"){
         $("#prod").attr('hidden',false);
         $("#catt").attr('hidden',true);
     }
-    if($( "#typ2" ).val()=="Categorias"){
+    if($( "#typ2" ).val()=="2"){
         $("#prod").attr('hidden',true);
         $("#catt").attr('hidden',false);
     }
@@ -279,17 +297,12 @@ function mostrarMultiple(){
             }
         });
 
-            var itemseleccionado = '{{(isset($itemsSeleccionados->idi)?$itemsSeleccionados->idi:"")}}';
-            var items = itemseleccionado.split(',');
-            for(var i=0;i<items.length;i++){
-                if($( "#typ2" ).val()=="Productos"){
-                    $('#pro option[value='+items[i]+']').prop('selected', true);
-                    $('#pro').trigger('change');
-                }
-                if($( "#typ2" ).val()=="Categorias"){
-                    $('#cat option[value='+items[i]+']').prop('selected', true);
-                    $('#cat').trigger('change');
-                }
-            }
+        if($( "#typ2" ).val()=="1"){
+            $("#pro").val([{{(isset($coupon->items_ids)?$coupon->items_ids:"")}}]).trigger('change');
+        }
+        if($( "#typ2" ).val()=="2"){
+            $("#cat").val([{{(isset($coupon->items_ids)?$coupon->items_ids:"")}}]).trigger('change');
+        }
+            
     </script>
 @endsection
