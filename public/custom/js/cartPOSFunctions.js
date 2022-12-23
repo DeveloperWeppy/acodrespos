@@ -1102,7 +1102,7 @@ window.onload = function () {
 
         this.receivedFormated = puntosMil(this.receivedFormated);
 
-        this.received = this.receivedFormated.replace(".", "");
+        this.received = this.receivedFormated.replaceAll(".", "");
 
             this.totalPriceRestado=(this.totalPrice-this.received);
 
