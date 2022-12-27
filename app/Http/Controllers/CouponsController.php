@@ -77,12 +77,15 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
+        $cupones = $this->getRestaurant()->coupons()->orderBy('id','desc')->paginate(10, ['*'], 'cupones');
+        $descuentos = Discount::where('companie_id',auth()->user()->restaurant_id)->orderBy('id','desc')->paginate(10, ['*'], 'descuentos');
+
         return view($this->view_path.'index', ['setup' => [
             'title'=>__('crud.item_managment', ['item'=>__($this->titlePlural)]),
             'action_link'=>route($this->webroute_path.'create'),
             'action_name'=>__('crud.add_new_item', ['item'=>__($this->title)]),
-            'items'=>$this->getRestaurant()->coupons()->orderBy('id','desc')->paginate(10, ['*'], 'cupones'),
-            'discounts'=>Discount::where('companie_id',auth()->user()->restaurant_id)->orderBy('id','desc')->paginate(10, ['*'], 'descuentos'),
+            'items'=>$cupones,
+            'discounts'=>$descuentos,
             'item_names'=>$this->titlePlural,
             'webroute_path'=>$this->webroute_path,
             'fields'=>$this->getFields(),
@@ -155,6 +158,23 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
+        list($time, $ampm) = explode(' ', $request->hora1);
+        list($hh1, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh1 == 12) {
+            $hh1 = '00';
+        } elseif($ampm == 'PM' && $hh1 < 12) {
+            $hh1 += 12;
+        }
+
+        list($time, $ampm) = explode(' ', $request->hora2);
+        list($hh2, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh2 == 12) {
+            $hh2 = '00';
+        } elseif($ampm == 'PM' && $hh2 < 12) {
+            $hh2 += 12;
+        }
+        
+
         $idss = "";
         if(isset($request->prod)){
             $idss = implode(',',$request->prod);
@@ -166,8 +186,8 @@ class CouponsController extends Controller
             'name' => $request->name,
             'type' => $request->type,
             'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
-            'active_from' => $request->active_from,
-            'active_to' => $request->active_to,
+            'active_from' => $request->active_from." ".$hh1.":".$mm,
+            'active_to' => $request->active_to." ".$hh2.":".$mm,
             'opcion_discount' => $request->typ2,
             'companie_id' => $this->getRestaurant()->id,
             'items_ids'=>$idss,
@@ -227,7 +247,7 @@ class CouponsController extends Controller
         
 
 
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento creado', ['item'=>__($this->title)]));
+        return 1;
     }
 
     /**
@@ -270,7 +290,7 @@ class CouponsController extends Controller
             }
         }
 
-        return view('coupons.creatediscount', compact('coupon','productos','categorias'));
+        return view('coupons.editdiscount', compact('coupon','productos','categorias'));
     }
 
     /**
@@ -300,6 +320,22 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
+        list($time, $ampm) = explode(' ', $request->hora1);
+        list($hh1, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh1 == 12) {
+            $hh1 = '00';
+        } elseif($ampm == 'PM' && $hh1 < 12) {
+            $hh1 += 12;
+        }
+
+        list($time, $ampm) = explode(' ', $request->hora2);
+        list($hh2, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh2 == 12) {
+            $hh2 = '00';
+        } elseif($ampm == 'PM' && $hh2 < 12) {
+            $hh2 += 12;
+        }
+
         $idss = "";
         if(isset($request->prod)){
             $idss = implode(',',$request->prod);
@@ -315,8 +351,8 @@ class CouponsController extends Controller
             'name' => $request->name,
             'type' => $request->type,
             'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
-            'active_from' => $request->active_from,
-            'active_to' => $request->active_to,
+            'active_from' => $request->active_from." ".$hh1.":".$mm,
+            'active_to' => $request->active_to." ".$hh2.":".$mm,
             'opcion_discount' => $request->typ2,
             'items_ids'=>$idss,
             ]
@@ -375,7 +411,7 @@ class CouponsController extends Controller
         
 
 
-        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento creado', ['item'=>__($this->title)]));
+        return 1;
     }
 
     /**

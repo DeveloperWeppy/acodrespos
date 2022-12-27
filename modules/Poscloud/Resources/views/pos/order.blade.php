@@ -179,7 +179,9 @@ function clean($string)
                             <div onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" class="col-xl-3 col-md-6 mb-3 mt-3">
                                 <div class="card containerItem">
                                     @if ($dsc>0 && $dsc!=null)
-                                        <div class="stack-top" style="--d:12px;--w:144px;--c:orange;z-index: 11;">Descuento</div>
+                                    <div class="wrap">
+                                        <span class="ribbon6">Descuento</span>
+                                   </div>
                                     @endif
                                     <div class="position-relative">
                                         <a class="d-block shadow-xl border-radius-xl">

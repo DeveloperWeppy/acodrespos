@@ -197,6 +197,7 @@ class ConfigReservationController extends Controller
             } elseif($ampm == 'PM' && $hh < 12) {
                 $hh += 12;
             }
+            
             if(!isset($request->com)){
                 $request->com = "";
             }

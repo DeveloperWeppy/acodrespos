@@ -245,7 +245,12 @@ function setCurrentItem(id,price){
     previouslySelected=[];
     $('#modalTitle').text(item.name);
     $('#modalName').text(item.name);
+    $('#modalDesc').show();
+    if(price==item.price){
+        $('#modalDesc').hide();
+    }
     $('#modalPrice').html(price);
+    $('#modalDesc').html(item.price);
     $('#modalID').text(item.id);
     $('#quantity').val(1);
     
@@ -432,15 +437,20 @@ window.onload = function () {
 $(".nav-item-category").on('click', function() {
     $.each(categories, function( index, value ) {
         $("."+value).show();
+        $(".destacados0").show();
     });
 
     var id = $(this).attr("id");
     var category_id = id.substr(id.indexOf("_")+1, id.length);
 
+    
     $.each(categories, function( index, value ) {
         if(value != category_id){
             $("."+value).hide();
+            $(".destacados0").hide();
         }
     });
+
+    $("."+category_id).show();
 });
 

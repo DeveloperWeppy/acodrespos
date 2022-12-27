@@ -176,6 +176,9 @@
                     <li class="nav-item nav-item-category ">
                         <a class="nav-link  mb-sm-3 mb-md-0 active" data-toggle="tab" role="tab" href="">{{ __('All categories') }}</a>
                     </li>
+                    <li class="nav-item nav-item-category" id="{{ 'cat_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
+                        <a class="nav-link mb-sm-3 mb-md-0" data-toggle="tab" role="tab" id="{{ 'nav_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}" href="#{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">Destacados</a>
+                    </li>
                     @foreach ( $restorant->categories as $key => $category)
                         @if(!$category->aitems->isEmpty())
                             <li class="nav-item nav-item-category" id="{{ 'cat_'.clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
@@ -197,7 +200,7 @@
                     </div>
                 @endif
             
-                <div class="row {{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
+                <div class="row {{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
                     @foreach ( $restorant->categories as $key => $category)
                     @foreach ($category->aitemsFeatured as $item)
                         <?php 

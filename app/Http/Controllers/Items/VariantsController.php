@@ -124,7 +124,9 @@ class VariantsController extends Controller
         ]);
         $this->doUpdateOfSystemVariants($variant->item);
 
-        return redirect()->route('items.variants.index', ['item'=>$item->id])->withStatus(__('Variant has been added'));
+        return redirect()->route('items.edit', $item->id)->withStatus(__('Item successfully updated.'));
+
+        //return redirect()->route('items.variants.index', ['item'=>$item->id])->withStatus(__('Variant has been added'));
     }
 
     /**
@@ -203,7 +205,8 @@ class VariantsController extends Controller
         ]);
         $this->doUpdateOfSystemVariants($variant->item);
 
-        return redirect()->route('items.variants.index', ['item'=>$variant->item->id])->withStatus(__('Variant has been updated'));
+        return redirect()->route('items.edit', $variant->item->id)->withStatus(__('Variant has been updated'));
+        //return redirect()->route('items.variants.index', ['item'=>$variant->item->id])->withStatus(__('Variant has been updated'));
     }
 
     /**
@@ -215,6 +218,7 @@ class VariantsController extends Controller
     public function destroy(Variants $variant)
     {
         $item=$variant->item;
+        $iteId = $variant->item->id;
         $function = $this->getIpLocation();
         Log::create([
             'user_id' => Auth::user()->id,
@@ -231,7 +235,9 @@ class VariantsController extends Controller
         $variant->delete();
         $this->doUpdateOfSystemVariants($item);
 
-        return redirect()->route('items.variants.index', ['item'=>$variant->item->id])->withStatus(__('Variant has been removed'));
+        return redirect()->route('items.edit', $iteId)->withStatus(__('Variant has been removed'));
+
+        //return redirect()->route('items.variants.index', ['item'=>$variant->item->id])->withStatus(__('Variant has been removed'));
     }
 
     private function doUpdateOfSystemVariants(Items $item){

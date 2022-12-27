@@ -34,7 +34,6 @@
                     <div class="pl-lg-4">
                         <form method="post" id="formDiscount" autocomplete="off" enctype="multipart/form-data">
                             @csrf
-
                             <div class="row">
                      
                       
@@ -70,11 +69,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        @if(isset($coupon))
-                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" value="{{ old('active_from', $coupon->active_from) }}" type="text" required>
-                                        @else
-                                            <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text" required>
-                                        @endif
+                                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text" required>
                                     </div>
                                 </div>
                             </div>
@@ -94,11 +89,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        @if(isset($coupon))
-                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" value="{{ old('active_to', $coupon->active_to) }}" type="text" required>
-                                        @else
-                                            <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text" required>
-                                        @endif
+                                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text" required>
                                     </div>
                                 </div>
                             </div>
@@ -126,50 +117,53 @@
                                 <option value="1" {{(isset($coupon)?($coupon->opcion_discount=="1"?"selected":""):"")}}>Productos especificos</option>
                                 <option value="2" {{(isset($coupon)?($coupon->opcion_discount=="2"?"selected":""):"")}}>Categorias</option>
                             </select>
-                        </div>
+                            </div>
                         </div>
 
                     <div class="col-md-12"   id="prod" hidden >
                      
-                        <div id="form-group-name" class="form-group">
+                        <div class="form-group">
                             <label class="form-control-label">Productos</label>
-                                <select class="form-control col-sm" name="prod[]" multiple>
-                                    <option disabled value> Seleccionar producto</option>
-                                    @foreach ($productos as $key)
-                                        @if (isset($select['value'])&&$key==$select['value'])
-                                            <option value="{{ $key }}" selected>{{$item }}</option>
-                                        @else
-                                            <option value="{{ $key['id'] }}">{{$key['name'] }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
+                            <select class="form-control col-sm" id="pro" name="prod[]" multiple>
+                                <option disabled value> Seleccionar producto</option>
+                                @foreach ($productos as $key)
+                                    @if (isset($select['value'])&&$key==$select['value'])
+                                        <option value="{{ $key }}" selected>{{$item }}</option>
+                                    @else
+                                        <option value="{{ $key['id'] }}">{{$key['name'] }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-md-12" id="catt" hidden>
 
                      
-                        <div id="form-group-name" class="form-group">
+                        <div class="form-group">
                     
 
-                        <label class="form-control-label">Categorias</label>
-                        <select class="form-control col-sm" id="cat" name="catt[]" multiple>
-                            <option disabled value> Seleccionar producto</option>
-                            @foreach ($categorias as $key)
-                                @if (isset($select['value'])&&$key==$select['value'])
-                                    <option value="{{ $key }}" selected>{{$item }}</option>
-                                @else
-                                    <option value="{{ $key->id }}">{{$key->name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
+                            <label class="form-control-label">Categorias</label>
+                            <select class="form-control col-sm" id="cat"  name="catt[]" multiple>
+                                <option disabled value> Seleccionar producto</option>
+                                @foreach ($categorias as $key)
+                                    @if (isset($select['value'])&&$key==$select['value'])
+                                        <option value="{{ $key }}" selected>{{$item }}</option>
+                                    @else
+                                        <option value="{{ $key->id }}">{{$key->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+
+
                     </div>
                     </div>
 
                     </div>
 
                             <div>
-                                <button type="submit" class="btn btn-success mt-4 submitForm">{{ __('Save') }}</button>
+                                    <button type="submit" class="btn btn-primary mt-4 submitForm">{{ __('Update')}}</button>
+                              
                             </div>
                         </form>
                     </div>
@@ -197,52 +191,80 @@ $('.timepicker').timepicker({
 });
 
 
- 	
-
 $( "#formDiscount" ).submit(function( event ) {
 
-        event.preventDefault();
+    event.preventDefault();
 
-        Swal.fire({
-            title: 'Aplicar el descuento',
-            text: 'El descuento se aplicara a todos los productos relacionados\n¿aplicar el descuento?',
-            showDenyButton: true,
-            showCancelButton: true,
-            showDenyButton:false,
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                enviarForm();
-            } else if (result.isDenied) {
-                return false;
-            }
-        });
+    Swal.fire({
+        title: 'Aplicar el descuento',
+        text: 'El descuento se aplicara a todos los productos relacionados\n¿aplicar el descuento?',
+        showDenyButton: true,
+        showCancelButton: true,
+        showDenyButton:false,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            enviarForm();
+        } else if (result.isDenied) {
+            return false;
+        }
+    });
 });
 
-function enviarForm(){
-    var formData = new FormData($( "#formDiscount" )[0]);
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "{{ route('admin.restaurant.coupons.storeDiscount') }}",
-        type: 'POST',
-        success: function (data) {
-            Swal.fire({
-                title: "Datos Guardados",
-                text: '',
-                icon: 'success',
-            }).then(function() {
-                $(location).attr('href','/coupons');
-            });
-        },
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false
-    });
-}
+    function enviarForm(){
+        var formData = new FormData($( "#formDiscount" )[0]);
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{ route('admin.restaurant.coupons.updateDiscount', $coupon->id) }}",
+            type: 'POST',
+            success: function (data) {
+                Swal.fire({
+                    title: "Datos Guardados",
+                    text: '',
+                    icon: 'success',
+                }).then(function() {
+                    $(location).attr('href','/coupons');
+                });
+            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    var fecha1 = '{{(isset($coupon->active_from)?$coupon->active_from:"")}}';
+    var fecha2 = '{{(isset($coupon->active_to)?$coupon->active_to:"")}}';
+            
+    var fechaHora1 = fecha1.split(' ');
+
+ 
+    
+    if(fechaHora1[0]!=undefined){
+        $('input[name=active_from]').val(fechaHora1[0]);
+    }
+    if(fechaHora1[1]!=undefined){
+        $('input[name=hora1]').val(formatTime(fechaHora1[1]));
+    }
+
+    var fechaHora2 = fecha2.split(' ');
+    if(fechaHora2[0]!=undefined){
+        $('input[name=active_to]').val(fechaHora2[0]);
+    }
+    if(fechaHora2[1]!=undefined){
+        $('input[name=hora2]').val(formatTime(fechaHora2[1]));
+    }
+
+
+    function formatTime(timeString) {
+        const [hourString, minute] = timeString.split(":");
+        const hour = +hourString % 24;
+        return (hour % 12 || 12) + ":" + minute + (hour < 12 ? " AM" : " PM");
+    }
 
 $(function(){
     $('.select2').css('height','auto');
