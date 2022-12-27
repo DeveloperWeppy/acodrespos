@@ -9,6 +9,58 @@ function clean($string)
     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 ?>
+
+<style>
+
+.wrap {
+  width: 100%;
+  height: 188px;
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.wrap:before, .wrap:after {
+  content: ""; 
+  position: absolute;
+}
+.wrap:before {
+  width: 40px;
+  height: 8px;
+  right: 100px;
+  background: #a15415;
+  border-radius: 8px 8px 0px 0px;
+}
+.wrap:after {
+  width: 8px;
+  height: 40px;
+  right: 0px;
+  top: 100px;
+  background: #a15415;
+  border-radius: 0px 8px 8px 0px;
+}
+.ribbon6 {
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  top: 30px;
+  right: -50px;
+  z-index: 2;
+  overflow: hidden;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border: 1px dashed;
+  box-shadow:0 0 0 3px orange,  0px 21px 5px -18px rgba(0,0,0,0.6);
+  background: orange;
+  text-align: center;
+  color:#ffffff;
+}
+
+</style>
+
+    
 <div style="display: none" class="container-fluid py-2" id="orderDetails">
 
     <div class="row" style="height: calc(100vh - 110px);">
@@ -61,6 +113,53 @@ function clean($string)
             <!-- End Navbar -->
 
             <div class="row mt-3 px-5" style="height:90%; overflow:auto;">
+
+                @if (!$vendor->categories->isEmpty())
+
+        
+                @if((count($vendor->categories[0]->aitemsFeatured)>0))
+                <div class="mt-4"
+                id="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}"
+                class="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}">
+                    <h1>Destacado</h1>
+                </div>
+                @endif
+
+                    @foreach ($vendor->categories as $key => $category)
+                        @foreach ($category->aitemsFeatured as $item)
+                            <?php
+                            $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
+                            ?>
+                            <div onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" class="col-xl-3 col-md-6 mb-3 mt-3">
+                                <div class="card containerItem">
+                                    @if ($dsc>0 && $dsc!=null)
+                                    <div class="wrap">
+                                        <span class="ribbon6">Descuento</span>
+                                   </div>
+                                    @endif
+                                    <div class="position-relative">
+                                        <a class="d-block shadow-xl border-radius-xl">
+                                            <img src="{{ $item->logom }}" alt="img-blur-shadow"
+                                                class="img-fluid shadow border-radius-xl">
+                                        </a>
+                                    </div>
+                                    <div class="card-body px-2 pb-1">
+                                        
+                                        @if ($dsc>0 && $dsc!=null)
+                                            <span class="badge bg-gradient-light" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span>
+                                        @endif
+                                        <span class="badge bg-gradient-light">@money($item->price-$dsc, config('settings.cashier_currency'), config('settings.do_convertion'))</span><br />
+                                        
+                                        <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
+
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
+                @endif
+
+
                 @if (!$vendor->categories->isEmpty())
 
                     @foreach ($vendor->categories as $key => $category)
@@ -78,7 +177,10 @@ function clean($string)
                             $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
                             ?>
                             <div onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" class="col-xl-3 col-md-6 mb-3 mt-3">
-                                <div class="card">
+                                <div class="card containerItem">
+                                    @if ($dsc>0 && $dsc!=null)
+                                        <div class="stack-top" style="--d:12px;--w:144px;--c:orange;z-index: 11;">Descuento</div>
+                                    @endif
                                     <div class="position-relative">
                                         <a class="d-block shadow-xl border-radius-xl">
                                             <img src="{{ $item->logom }}" alt="img-blur-shadow"
@@ -87,7 +189,9 @@ function clean($string)
                                     </div>
                                     <div class="card-body px-2 pb-1">
                                         
-                                        <span class="badge bg-gradient-light" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span>
+                                        @if ($dsc>0 && $dsc!=null)
+                                            <span class="badge bg-gradient-light" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'), config('settings.do_convertion'))</span>
+                                        @endif
                                         <span class="badge bg-gradient-light">@money($item->price-$dsc, config('settings.cashier_currency'), config('settings.do_convertion'))</span><br />
                                         
                                         <strong class="text-dark mb-2 text">{{ $item->name }}</strong>

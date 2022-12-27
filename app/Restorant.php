@@ -315,8 +315,6 @@ class Restorant extends MyModel
         if($discount){
             $deduct=$discount->calculateDeduct($price);
             if($deduct){
-                //$coupon->decrement('limit_to_num_uses');
-                //$coupon->increment('used_count');
                 return $deduct;
             }
         }

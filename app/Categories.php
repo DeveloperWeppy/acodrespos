@@ -35,9 +35,19 @@ class Categories extends TranslateAwareModel implements Sortable
         return $this->hasMany(\App\Items::class, 'category_id', 'id');
     }
 
+    public function itemsFeatured()
+    {
+        return $this->hasMany(\App\Items::class, 'category_id', 'id')->where(['has_featured'=>1]);
+    }
+
     public function aitems()
     {
-        return $this->hasMany(\App\Items::class, 'category_id', 'id')->where(['items.available'=>1]);
+        return $this->hasMany(\App\Items::class, 'category_id', 'id')->where(['items.available'=>1,'has_featured'=>0]);
+    }
+
+    public function aitemsFeatured()
+    {
+        return $this->hasMany(\App\Items::class, 'category_id', 'id')->where(['items.available'=>1,'has_featured'=>1]);
     }
 
     public function restorant()
