@@ -102,7 +102,9 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
-        return view('coupons.createcupon');
+        $codeCupon = strtoupper(substr($this->getRestaurant()->name, 0, 2).(Str::random(6)));
+
+        return view('coupons.createcupon',compact('codeCupon'));
     }
 
     public function createDiscount()
@@ -137,14 +139,20 @@ class CouponsController extends Controller
     public function store(Request $request)
     {
         $this->authChecker();
+
         $item = $this->provider::create([
             'name' => $request->name,
-            'code' => strtoupper(substr($this->getRestaurant()->name, 0, 2).(Str::random(6))),
-            'type' => $request->type,
-            'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
-            'active_from' => $request->active_from,
-            'active_to' => $request->active_to,
+            'code' => $request->code,
+            'type' => isset($request->type) ? $request->type : 0,
+            'price' => isset($request->price) ? $request->price : null,
+            'active_from' => isset($request->active_from) ? $request->active_from : '',
+            'active_to' =>isset($request->active_to) ? $request->active_to : '',
             'limit_to_num_uses' => $request->limit_to_num_uses,
+            'redemption' => $request->red,
+            'min_price_cart' => $request->min_price,
+            'has_ilimited' => $request->has_ilimited=="true" ? 1: 0,
+            'has_free_delivery' => $request->has_free_delivery=="true" ? 1: 0,
+            'has_discount' => $request->has_discount=="true" ? 1 : 0,
             'restaurant_id' => $this->getRestaurant()->id,
             'active'=>1
         ]);
@@ -152,6 +160,7 @@ class CouponsController extends Controller
         $item->save();
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
+        
     }
 
     public function storeDiscount(Request $request)
@@ -269,7 +278,7 @@ class CouponsController extends Controller
      */
     public function edit(Coupons $coupon)
     {
-        return view('coupons.create', ['coupon' => $coupon]);
+        return view('coupons.editcupon', ['coupon' => $coupon]);
     }
 
     public function editDiscount(Discount $coupon)
@@ -303,16 +312,27 @@ class CouponsController extends Controller
     public function update(Request $request, $id)
     {
         $this->authChecker();
-        $item = $this->provider::findOrFail($id);
-        $item->name = $request->name;
-        $item->code = $request->code;
-        $item->type = $request->type;
-        $item->price = $request->type == 0 ? $request->price_fixed : $request->price_percentage;
-        $item->active_from = $request->active_from;
-        $item->active_to = $request->active_to;
-        $item->limit_to_num_uses = $request->limit_to_num_uses;
-
-        $item->update();
+       
+        $item = $this->provider::updateOrCreate(
+            [
+                'id' => $id,
+            ],
+            [
+                'name' => $request->name,
+                'code' => $request->code,
+                'type' => isset($request->type) ? $request->type : 0,
+                'price' => isset($request->price) ? $request->price : null,
+                'active_from' => isset($request->active_from) ? $request->active_from : '',
+                'active_to' =>isset($request->active_to) ? $request->active_to : '',
+                'limit_to_num_uses' => $request->limit_to_num_uses,
+                'redemption' => $request->red,
+                'min_price_cart' => $request->min_price,
+                'has_ilimited' => $request->has_ilimited=="true" ? 1: 0,
+                'has_free_delivery' => $request->has_free_delivery=="true" ? 1: 0,
+                'has_discount' => $request->has_discount=="true" ? 1 : 0,
+                'restaurant_id' => $this->getRestaurant()->id,
+                'active'=>1
+            ]);
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
@@ -444,6 +464,22 @@ class CouponsController extends Controller
         if($coupon){
             $deduct=$coupon->calculateDeduct($request->cartValue);
             if($deduct){
+
+                if($deduct == 1){
+                    if($request->cartDiscount==1){
+                        return response()->json([
+                            'status' => false,
+                            'msg' => __('El cupón solo aplica para compras sin descuentos'),
+                        ]);
+                    }
+                    if($request->cartDelivery==0){
+                        return response()->json([
+                            'status' => false,
+                            'msg' => __('El cupón solo aplica para costos de envio, debe seleccionar una dirección de entrega'),
+                        ]);
+                    }
+                    $deduct = $request->cartDelivery;
+                }
                 //$coupon->decrement('limit_to_num_uses');
                 //$coupon->increment('used_count');
                 return response()->json([

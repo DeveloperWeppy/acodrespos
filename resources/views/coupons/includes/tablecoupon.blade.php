@@ -2,9 +2,9 @@
     <tr>
         <td>{{ $item->name }}</td>
         <td>{{ $item->code }}</td>
-        <td>{{ $item->type == 0 ? $item->price." ".config('settings.cashier_currency') : $item->price." %"}}</td>
-        <td>{{ $item->active_from }}</td>
-        <td>{{ $item->active_to }}</td>
+        <td>{{ $item->has_free_delivery==1?"Envío gratis":($item->type == 0 ? $item->price." ".config('settings.cashier_currency') : $item->price." %")}}</td>
+        <td>{{ $item->active_from=="0000-00-00"?"Sin límite":$item->active_from }}</td>
+        <td>{{ $item->active_to=="0000-00-00"?"Sin límite":$item->active_to }}</td>
         <td>{{ $item->limit_to_num_uses }}</td>
         <td>{{ $item->used_count }}</td>
         <td hidden> 

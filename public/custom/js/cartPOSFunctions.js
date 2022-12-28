@@ -520,9 +520,7 @@ function getCartContentAndTotalPrice(){
 function applyDiscount(){
   var code = $('#coupon_code').val();
 
-  
-
-  axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice}).then(function (response) {
+  axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice,cartDelivery:cartTotal.deliveryPrice}).then(function (response) {
       if(response.data.status){
           //$("#promo_code_btn").attr("disabled",true);
           //$("#promo_code_btn").attr("readonly");

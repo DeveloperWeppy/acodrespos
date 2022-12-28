@@ -205,6 +205,8 @@
                     @foreach ($category->aitemsFeatured as $item)
                         <?php 
                         $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+
+                        
                         ?>
                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
                             <div class="strip containerItem">

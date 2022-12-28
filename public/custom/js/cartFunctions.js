@@ -36,6 +36,13 @@ function updatePrices(net,delivery,enableDelivery){
   cartTotal.totalPrice=net;
   cartTotal.totalPriceFormat=formatter.format(net);
 
+  if(cartTotal.totalPrice==0){
+    localStorage.setItem('conDes',0);
+  }
+  if(localStorage.getItem("conDes")!=undefined){
+    cartTotal.discountOrder =  localStorage.getItem("conDes");
+  }
+
   if(enableDelivery){
     //Delivery
     cartTotal.delivery=true;
@@ -105,8 +112,9 @@ function getCartContentAndTotalPrice(){
 
 $("#promo_code_btn").on('click',function() {
     var code = $('#coupon_code').val();
-
-    axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice}).then(function (response) {
+    
+  
+    axios.post('/coupons/apply', {code: code,cartValue:cartTotal.totalPrice,cartDelivery:cartTotal.deliveryPrice,cartDiscount:cartTotal.discountOrder}).then(function (response) {
         if(response.data.status){
             $("#promo_code_btn").attr("disabled",true);
             $("#promo_code_btn").attr("readonly");
@@ -477,6 +485,7 @@ window.onload = function () {
       deduct:0,
       deductFormat:"",
       minimalOrder:0,
+      discountOrder:0,
       totalPriceFormat:"",
       deliveryPriceFormated:"",
       withDeliveryFormat:"",
@@ -532,7 +541,10 @@ window.onload = function () {
     el:'#addToCart1',
     methods: {
         addToCartAct() {
-          //mostrarAlert();
+            if(localStorage.getItem("conDes")!=undefined){
+              cartTotal.discountOrder =  localStorage.getItem("conDes");
+            }
+            
             axios.post('/cart-add', {
                 id: $('#modalID').text(),
                 quantity: $('#quantity').val(),

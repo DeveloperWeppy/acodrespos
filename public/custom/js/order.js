@@ -253,6 +253,11 @@ function setCurrentItem(id,price){
     $('#modalDesc').html(item.price);
     $('#modalID').text(item.id);
     $('#quantity').val(1);
+
+    if(price!=item.price){
+        localStorage.setItem('conDes',1);
+    }
+    
     
     var mesa = $('#mesaid').val();
     var getlocal = JSON.parse(localStorage.getItem(mesa));
