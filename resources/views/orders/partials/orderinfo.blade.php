@@ -92,7 +92,7 @@
      <ul id="order-items">
         @foreach($order->items as $item)
              <?php 
-                 $theItemPrice= ($item->pivot->variant_price?$item->pivot->variant_price:$item->price);
+                 $theItemPrice= ($item->pivot->variant_price?$item->pivot->variant_price-$item->pivot->discount:$item->price-$item->pivot->discount);
              ?>
             @if ( $item->pivot->qty>0)
             <li><h4>{{ $item->pivot->qty." X ".$item->name }} -  @money($theItemPrice, $currency,$convert)  =  ( @money( $item->pivot->qty*$theItemPrice, $currency,true) )

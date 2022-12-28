@@ -87,6 +87,7 @@ class ItemsController extends Controller
             
 
             //Since 2.1.7 - there is sorting. 
+            $restorant=auth()->user()->restorant;
             $categories=auth()->user()->restorant->categories;
 
             $areas_kitchen = AreaKitchen::where('restorant_id', auth()->user()->restorant->id)->get();
@@ -95,15 +96,12 @@ class ItemsController extends Controller
             //If first item order starts with 0
             if($categories->first()&&$categories->first()->order_index==0){
                 Categories::setNewOrder($categories->pluck('id')->toArray());
-
                 //Re-get categories
                 $categories=auth()->user()->restorant->categories;
             }
 
 
-            
-
-            
+        
             //reporte excel de items
             if (isset($_GET['report'])) {
 
@@ -132,6 +130,7 @@ class ItemsController extends Controller
             return view('items.index', [
                 'hasMenuPDf'=>Module::has('menupdf'),
                 'canAdd'=>$canAdd,
+                'restorant'=>$restorant,
                 'categories' => $categories,
                 'areas_kitchen' => $areas_kitchen,
                 'restorant_id' => auth()->user()->restorant->id,

@@ -4,6 +4,58 @@
 @endsection
 @section('content')
     @include('items.partials.modals', ['restorant_id' => $restorant_id])
+
+    <style>
+
+
+        .wrap {
+          width: 100%;
+          height: 188px;
+          position: absolute;
+          top: -8px;
+          left: 8px;
+          overflow: hidden;
+          pointer-events: none;
+        }
+        .wrap:before, .wrap:after {
+          content: ""; 
+          position: absolute;
+        }
+        .wrap:before {
+          width: 40px;
+          height: 8px;
+          right: 100px;
+          background: #a15415;
+          border-radius: 8px 8px 0px 0px;
+        }
+        .wrap:after {
+          width: 8px;
+          height: 40px;
+          right: 0px;
+          top: 100px;
+          background: #a15415;
+          border-radius: 0px 8px 8px 0px;
+        }
+        .ribbon6 {
+          width: 200px;
+          height: 40px;
+          line-height: 40px;
+          position: absolute;
+          top: 30px;
+          right: -50px;
+          z-index: 2;
+          overflow: hidden;
+          -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+          border: 1px dashed;
+          box-shadow:0 0 0 3px orange,  0px 21px 5px -18px rgba(0,0,0,0.6);
+          background: orange;
+          text-align: center;
+          color:#ffffff;
+        }
+        
+        </style>
+        
     
     <div class="header bg-gradient-primary pb-7 pt-5 pt-md-8">
         <div class="container-fluid">
@@ -84,7 +136,78 @@
                                 <br />
                             </div>
                         @endif
+
+
                        
+                        @if((count($categories[0]->aitemsFeatured)>0))
+                            <div class="alert alert-default" id="categoria-{{str_replace(' ', '-', "Destacados")}}">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="h1 font-weight-bold mb-0 text-white">Destacados</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12">
+                                    <div class="row row-grid">
+                                        @foreach ($categories as $index => $category)
+                                        @foreach ( $category->itemsFeatured as $item)
+                                            <?php 
+                                                $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                                            ?>
+                                            <div class="col-lg-3">
+                                                <a href="{{ route('items.edit', $item) }}">
+                                                    <div class="card containerItem">
+                                                        @if ($dsc>0 && $dsc!=null)
+                                                        <div class="wrap">
+                                                            <span class="ribbon6">Descuento</span>
+                                                       </div>
+                                                        @endif
+                                                        <img class="card-img-top" src="{{ $item->logom }}" alt="...">
+                                                        <div class="card-body">
+                                                            <h3 class="card-title text-primary text-uppercase">{{ $item->name }}</h3>
+                                                            <p class="card-text description mt-3">{{ $item->description }}</p>
+                                                            @if ($dsc>0 && $dsc!=null)
+                                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                                            @endif
+                                                            <span class="badge badge-primary badge-pill">@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+
+                                                            <p class="mt-3 mb-0 text-sm">
+                                                                @if($item->available == 1)
+                                                                <span class="text-success mr-2">{{ __("AVAILABLE") }}</span>
+                                                                @else
+                                                                <span class="text-danger mr-2">{{ __("UNAVAILABLE") }}</span>
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                   
+                        
+
+                        {{--***********************************************--}}
+                       
+
+
+
+
+
+
+
+
+
+
+
+
                         @foreach ($categories as $index => $category)
                         @if($category->active == 1)
                         <div class="alert alert-default" id="categoria-{{str_replace(' ', '-', $category->name)}}">
@@ -164,49 +287,61 @@
                         </div>
                         @endif
                         @if($category->active == 1)
-                        <div class="row justify-content-center">
-                            <div class="col-lg-12">
-                                <div class="row row-grid">
-                                    @foreach ( $category->items as $item)
-                                        <div class="col-lg-3">
-                                            <a href="{{ route('items.edit', $item) }}">
-                                                <div class="card">
-                                                    <img class="card-img-top" src="{{ $item->logom }}" alt="...">
-                                                    <div class="card-body">
-                                                        <h3 class="card-title text-primary text-uppercase">{{ $item->name }}</h3>
-                                                        <p class="card-text description mt-3">{{ $item->description }}</p>
-
-                                                        <span class="badge badge-primary badge-pill">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
-
-                                                        <p class="mt-3 mb-0 text-sm">
-                                                            @if($item->available == 1)
-                                                            <span class="text-success mr-2">{{ __("AVAILABLE") }}</span>
-                                                            @else
-                                                            <span class="text-danger mr-2">{{ __("UNAVAILABLE") }}</span>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12">
+                                    <div class="row row-grid">
+                                        @foreach ( $category->items as $item)
+                                            @if($item->has_featured==0)
+                                            <?php 
+                                                $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                                            ?>
+                                            <div class="col-lg-3">
+                                                <a href="{{ route('items.edit', $item) }}">
+                                                    <div class="card containerItem">
+                                                        @if ($dsc>0 && $dsc!=null)
+                                                        <div class="wrap">
+                                                            <span class="ribbon6">Descuento</span>
+                                                       </div>
+                                                        @endif
+                                                        <img class="card-img-top" src="{{ $item->logom }}" alt="...">
+                                                        <div class="card-body">
+                                                            <h3 class="card-title text-primary text-uppercase">{{ $item->name }}</h3>
+                                                            <p class="card-text description mt-3">{{ $item->description }}</p>
+                                                            @if ($dsc>0 && $dsc!=null)
+                                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
                                                             @endif
-                                                        </p>
+                                                            <span class="badge badge-primary badge-pill">@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+
+                                                            <p class="mt-3 mb-0 text-sm">
+                                                                @if($item->available == 1)
+                                                                <span class="text-success mr-2">{{ __("AVAILABLE") }}</span>
+                                                                @else
+                                                                <span class="text-danger mr-2">{{ __("UNAVAILABLE") }}</span>
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </a>
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                        @if($canAdd)
+                                        <div class="col-lg-3" >
+                                            <a   data-toggle="modal" data-target="#modal-new-item" data-toggle="tooltip" data-placement="top" href="javascript:void(0);" onclick=(setSelectedCategoryId({{ $category->id }}))>
+                                                <div class="card">
+                                                    <img class="card-img-top" src="{{ asset('images') }}/default/add_new_item.jpg" alt="...">
+                                                    <div class="card-body">
+                                                        <h3 class="card-title text-primary text-uppercase">{{ __('Add item') }}</h3>
                                                     </div>
                                                 </div>
-                                                <br/>
                                             </a>
+                                            <br />
                                         </div>
-                                    @endforeach
-                                    @if($canAdd)
-                                    <div class="col-lg-3" >
-                                        <a   data-toggle="modal" data-target="#modal-new-item" data-toggle="tooltip" data-placement="top" href="javascript:void(0);" onclick=(setSelectedCategoryId({{ $category->id }}))>
-                                            <div class="card">
-                                                <img class="card-img-top" src="{{ asset('images') }}/default/add_new_item.jpg" alt="...">
-                                                <div class="card-body">
-                                                    <h3 class="card-title text-primary text-uppercase">{{ __('Add item') }}</h3>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <br />
+                                        @endif
                                     </div>
-                                    @endif
                                 </div>
                             </div>
-                        </div>
                         @endif
                         @endforeach
                     </div>

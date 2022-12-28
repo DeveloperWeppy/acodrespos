@@ -194,6 +194,7 @@ var js = {
 
       $('.select2').addClass('form-control');
       $('.select2').css('width','100%');
+     
       $('.select2-selection').css('border','0');
       $('.select2-selection__arrow').css('top','10px');
       $('.select2-selection__rendered').css('color','#8898aa');

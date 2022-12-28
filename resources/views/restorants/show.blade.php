@@ -11,6 +11,59 @@
 @if (\Akaunting\Module\Facade::has('googleanalytics'))
     @include('googleanalytics::index') 
 @endif
+
+<style>
+
+
+.wrap {
+  width: 100%;
+  height: 188px;
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.wrap:before, .wrap:after {
+  content: ""; 
+  position: absolute;
+}
+.wrap:before {
+  width: 40px;
+  height: 8px;
+  right: 100px;
+  background: #a15415;
+  border-radius: 8px 8px 0px 0px;
+}
+.wrap:after {
+  width: 8px;
+  height: 40px;
+  right: 0px;
+  top: 100px;
+  background: #a15415;
+  border-radius: 0px 8px 8px 0px;
+}
+.ribbon6 {
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  top: 30px;
+  right: -50px;
+  z-index: 2;
+  overflow: hidden;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border: 1px dashed;
+  box-shadow:0 0 0 3px orange,  0px 21px 5px -18px rgba(0,0,0,0.6);
+  background: orange;
+  text-align: center;
+  color:#ffffff;
+}
+
+</style>
+
+
 @endsection
 
 @section('content')
@@ -118,10 +171,13 @@
             
             
             @if(!$restorant->categories->isEmpty())
-        <nav class="tabbable sticky" style="top: {{ config('app.isqrsaas') ? 64:88 }}px;">
+            <nav class="tabbable sticky" style="top: {{ config('app.isqrsaas') ? 64:88 }}px;">
                 <ul class="nav nav-pills bg-white mb-2">
                     <li class="nav-item nav-item-category ">
                         <a class="nav-link  mb-sm-3 mb-md-0 active" data-toggle="tab" role="tab" href="">{{ __('All categories') }}</a>
+                    </li>
+                    <li class="nav-item nav-item-category" id="{{ 'cat_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
+                        <a class="nav-link mb-sm-3 mb-md-0" data-toggle="tab" role="tab" id="{{ 'nav_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}" href="#{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">Destacados</a>
                     </li>
                     @foreach ( $restorant->categories as $key => $category)
                         @if(!$category->aitems->isEmpty())
@@ -131,45 +187,50 @@
                         @endif
                     @endforeach
                 </ul>
-
-                
             </nav>
-
-            
             @endif
 
-            
 
 
             @if(!$restorant->categories->isEmpty())
-            @foreach ( $restorant->categories as $key => $category)
-                @if(!$category->aitems->isEmpty())
-                <div id="{{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}" class="{{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
-                    <h1>{{ $category->name }}</h1><br />
-                </div>
+
+                @if((count($restorant->categories[0]->aitemsFeatured)>0))
+                    <div id="{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}" class="{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
+                        <h1>Destacados</h1><br />
+                    </div>
                 @endif
-                <div class="row {{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
-                    @foreach ($category->aitems as $item)
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                            <div class="strip">
+            
+                <div class="row {{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
+                    @foreach ( $restorant->categories as $key => $category)
+                    @foreach ($category->aitemsFeatured as $item)
+                        <?php 
+                        $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                        ?>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
+                            <div class="strip containerItem">
+                                @if ($dsc>0 && $dsc!=null)
+                                    <div class="wrap">
+                                        <span class="ribbon6">Descuento</span>
+                                   </div>
+                                @endif
                                 @if(!empty($item->image))
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @else
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @endif
-                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)">{{ $item->name }}</a></b></div>
                                 <div class="res_description">{{ $item->short_description}}</div>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="res_mimimum">
-                                            @if ($item->discounted_price>0)
-                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->discounted_price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                            @if ($dsc>0 && $dsc!=null)
+                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
                                             @endif
-                                            @money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                            @money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -183,14 +244,76 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-                           
+                            </div>
+                        </div>
+                    @endforeach
+                    @endforeach
+                </div>
+            @endif
+
+            
+
+            @if(!$restorant->categories->isEmpty())
+            @foreach ( $restorant->categories as $key => $category)
+                @if(!$category->aitems->isEmpty())
+                <div id="{{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}" class="{{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
+                    <h1>{{ $category->name }}</h1><br />
+                </div>
+                @endif
+                <div class="row {{ clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
+                    @foreach ($category->aitems as $item)
+                    
+                    <?php 
+                    $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                    ?>
+
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
+                            
+                            
+                            <div class="strip containerItem">
+                                @if ($dsc>0 && $dsc!=null)
+                                <div class="wrap">
+                                    <span class="ribbon6">Descuento</span>
+                               </div>
+                                @endif
+                                @if(!empty($item->image))
+                                <figure>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                </figure>
+                                @else
+                                <figure>
+                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                </figure>
+                                @endif
+                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                <div class="res_description">{{ $item->short_description}}</div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="res_mimimum">
+                                            @if ($dsc>0 && $dsc!=null)
+                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                            @endif
+                                            @money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="allergens" style="text-align: right;">
+                                            @foreach ($item->allergens as $allergen)
+                                             <div class='allergen' data-toggle="tooltip" data-placement="bottom" title="{{$allergen->title}}" >
+                                                 <img  src="{{$allergen->image_link}}" />
+                                             </div>
+                                            @endforeach
+                                             
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @endforeach
+
+
             @else
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">

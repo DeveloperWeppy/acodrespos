@@ -35,6 +35,7 @@
         "akaunting/module": "^2.0",
         "akaunting/money": "^1.1",
         "biscolab/laravel-recaptcha": "^5.0",
+        "chillerlan/php-qrcode": "^4.3",
         "cmixin/business-time": "^1.11",
         "codedge/laravel-selfupdater": "@dev",
         "darryldecode/cart": "~4.0",

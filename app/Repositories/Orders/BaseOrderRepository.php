@@ -162,6 +162,8 @@ class BaseOrderRepository extends Controller
                 }
             }
 
+             
+
             $this->order->order_price=0;
             $this->order->vatvalue=0;
 
@@ -222,9 +224,18 @@ class BaseOrderRepository extends Controller
                 $itemSelectedPrice+=$theExtra->price;
                 array_push($extras, $theExtra->name.' + '.money($theExtra->price, config('settings.cashier_currency'), config('settings.do_convertion')));
             }
+
+            //Descuento vigente del producto
+            $dsc = 0;
+            if($variantName==""){
+                $dsc = Vendor::applyDiscount($theItem->discount_id,$theItem->price);
+            }
+            
+          
+
             
             //Total vat on this item
-            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?$itemSelectedPrice * ($theItem->vat / 100):0);
+            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?($itemSelectedPrice-$dsc) * ($theItem->vat / 100):0);
             $cart_item_id=0;
             $item_observacion="";
             if(isset($item['cart_item_id'])){
@@ -242,7 +253,8 @@ class BaseOrderRepository extends Controller
                 'variant_price'=>$itemSelectedPrice,
                 'item_status'=>'cocina',
                 'item_observacion'=>$item_observacion,
-                'cart_item_id'=>$cart_item_id
+                'cart_item_id'=>$cart_item_id,
+                'discount'=>$dsc
             ]);
         } 
 
@@ -251,12 +263,13 @@ class BaseOrderRepository extends Controller
         $order_price=0;
         $total_order_vat=0;
         foreach ($this->order->items()->get() as $key => $item) {
-            $order_price+=$item->pivot->qty*$item->pivot->variant_price;
+            $order_price+=$item->pivot->qty*($item->pivot->variant_price-$item->pivot->discount);
             $total_order_vat+=$item->pivot->vatvalue;
         }
         $this->order->order_price=$order_price;
         $this->order->vatvalue=$total_order_vat;
 
+        
         //Set coupons
         if($this->request->has('coupon_code')&&strlen($this->request->coupon_code)>0){
             $coupon = Coupons::where(['code' => $this->request->coupon_code])->where('restaurant_id',$this->vendor->id)->get()->first();
@@ -278,6 +291,9 @@ class BaseOrderRepository extends Controller
                 }
             }
         }
+
+        
+
         
 
         //Update the order with the item

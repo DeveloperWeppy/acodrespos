@@ -65,7 +65,13 @@ class CartController extends Controller
             $cartItemName = $item->name;
             $theElement = '';
 
-            //Is there a varaint
+
+            //Descuento vigente del producto
+            $discount = $restaurant->applyDiscount($item->discount_id,$item->price);
+            if($discount>0){
+                $cartItemPrice = $item->price-$discount;
+            }
+
 
             //variantID
             if ($request->variantID) {

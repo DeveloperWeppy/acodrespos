@@ -1215,7 +1215,7 @@
                 
             });
     };
-   
+
     </script>
     @endif
 @endpush

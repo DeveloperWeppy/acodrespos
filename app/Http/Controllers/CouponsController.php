@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Coupons;
+use App\Items;
 use Carbon\Carbon;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
+use App\Models\Discount;
+use App\Models\DiscountItems;
+
+use App\Categories;
 
 class CouponsController extends Controller
 {
@@ -70,11 +77,15 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
+        $cupones = $this->getRestaurant()->coupons()->orderBy('id','desc')->paginate(10, ['*'], 'cupones');
+        $descuentos = Discount::where('companie_id',auth()->user()->restaurant_id)->orderBy('id','desc')->paginate(10, ['*'], 'descuentos');
+
         return view($this->view_path.'index', ['setup' => [
             'title'=>__('crud.item_managment', ['item'=>__($this->titlePlural)]),
             'action_link'=>route($this->webroute_path.'create'),
             'action_name'=>__('crud.add_new_item', ['item'=>__($this->title)]),
-            'items'=>$this->getRestaurant()->coupons()->paginate(config('settings.paginate')),
+            'items'=>$cupones,
+            'discounts'=>$descuentos,
             'item_names'=>$this->titlePlural,
             'webroute_path'=>$this->webroute_path,
             'fields'=>$this->getFields(),
@@ -91,7 +102,30 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
-        return view('coupons.create');
+        return view('coupons.createcupon');
+    }
+
+    public function createDiscount()
+    {
+        $this->authChecker();
+
+        $productos = [];
+        $categorias = Categories::where('restorant_id',auth()->user()->restaurant_id)->get();
+
+        foreach ($categorias as $index => $category){
+            foreach ( $category->items as $item){
+                $item = [
+                    'id'=>$item->id,
+                    'name'=>$item->name,
+                    'category'=>$category->name,
+                    'price'=>$item->price,
+                    'date-created'=>$item->created_at,
+                ];
+                array_push($productos, $item);
+            }
+        }
+
+        return view('coupons.creatediscount',compact('productos','categorias'));
     }
 
     /**
@@ -112,11 +146,108 @@ class CouponsController extends Controller
             'active_to' => $request->active_to,
             'limit_to_num_uses' => $request->limit_to_num_uses,
             'restaurant_id' => $this->getRestaurant()->id,
+            'active'=>1
         ]);
 
         $item->save();
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_added', ['item'=>__($this->title)]));
+    }
+
+    public function storeDiscount(Request $request)
+    {
+        $this->authChecker();
+
+        list($time, $ampm) = explode(' ', $request->hora1);
+        list($hh1, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh1 == 12) {
+            $hh1 = '00';
+        } elseif($ampm == 'PM' && $hh1 < 12) {
+            $hh1 += 12;
+        }
+
+        list($time, $ampm) = explode(' ', $request->hora2);
+        list($hh2, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh2 == 12) {
+            $hh2 = '00';
+        } elseif($ampm == 'PM' && $hh2 < 12) {
+            $hh2 += 12;
+        }
+        
+
+        $idss = "";
+        if(isset($request->prod)){
+            $idss = implode(',',$request->prod);
+        }
+        if(isset($request->catt)){
+            $idss = implode(',',$request->catt);
+        }
+        $item = Discount::create([
+            'name' => $request->name,
+            'type' => $request->type,
+            'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
+            'active_from' => $request->active_from." ".$hh1.":".$mm,
+            'active_to' => $request->active_to." ".$hh2.":".$mm,
+            'opcion_discount' => $request->typ2,
+            'companie_id' => $this->getRestaurant()->id,
+            'items_ids'=>$idss,
+            'active'=>1
+        ]);
+
+        $item->save();
+
+        if($request->typ2==0){
+            $categories=auth()->user()->restorant->categories;
+            foreach ($categories as $index => $category){
+                foreach ( $category->items as $product){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'id' => $product->id,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->prod)){
+                foreach($request->prod as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->catt)){
+                foreach($request->catt as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'category_id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+        
+
+
+        return 1;
     }
 
     /**
@@ -139,6 +270,27 @@ class CouponsController extends Controller
     public function edit(Coupons $coupon)
     {
         return view('coupons.create', ['coupon' => $coupon]);
+    }
+
+    public function editDiscount(Discount $coupon)
+    {
+        $productos = [];
+        $categorias = Categories::where('restorant_id',auth()->user()->restaurant_id)->get();
+
+        foreach ($categorias as $index => $category){
+            foreach ( $category->items as $item){
+                $item = [
+                    'id'=>$item->id,
+                    'name'=>$item->name,
+                    'category'=>$category->name,
+                    'price'=>$item->price,
+                    'date-created'=>$item->created_at,
+                ];
+                array_push($productos, $item);
+            }
+        }
+
+        return view('coupons.editdiscount', compact('coupon','productos','categorias'));
     }
 
     /**
@@ -164,6 +316,103 @@ class CouponsController extends Controller
 
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_updated', ['item'=>__($this->title)]));
     }
+    public function updateDiscount(Request $request, $id)
+    {
+        $this->authChecker();
+
+        list($time, $ampm) = explode(' ', $request->hora1);
+        list($hh1, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh1 == 12) {
+            $hh1 = '00';
+        } elseif($ampm == 'PM' && $hh1 < 12) {
+            $hh1 += 12;
+        }
+
+        list($time, $ampm) = explode(' ', $request->hora2);
+        list($hh2, $mm) = explode(':', $time);
+        if($ampm == 'AM' && $hh2 == 12) {
+            $hh2 = '00';
+        } elseif($ampm == 'PM' && $hh2 < 12) {
+            $hh2 += 12;
+        }
+
+        $idss = "";
+        if(isset($request->prod)){
+            $idss = implode(',',$request->prod);
+        }
+        if(isset($request->catt)){
+            $idss = implode(',',$request->catt);
+        }
+        $item = Discount::updateOrCreate(
+            [
+                'id'=>$id
+            ],
+            [
+            'name' => $request->name,
+            'type' => $request->type,
+            'price' => $request->type == 0 ? $request->price_fixed : $request->price_percentage,
+            'active_from' => $request->active_from." ".$hh1.":".$mm,
+            'active_to' => $request->active_to." ".$hh2.":".$mm,
+            'opcion_discount' => $request->typ2,
+            'items_ids'=>$idss,
+            ]
+        );
+
+        $item->save();
+
+        if($request->typ2==0){
+            $categories=auth()->user()->restorant->categories;
+            foreach ($categories as $index => $category){
+                foreach ( $category->items as $product){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'id' => $product->id,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->prod)){
+                foreach($request->prod as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->typ2==1){
+            if(isset($request->catt)){
+                foreach($request->catt as $key){
+                    $mesas = Items::updateOrCreate(
+                        [
+                            'category_id' => $key,
+                        ],
+                        [
+                            'discounted_price'=>$request->type == 0 ? $request->price_fixed : $request->price_percentage,
+                            'discount_id'=>$item->id,
+                        ]
+                    );
+                }
+            }
+        }
+        
+
+
+        return 1;
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -178,6 +427,16 @@ class CouponsController extends Controller
         $item->delete();
         return redirect()->route($this->webroute_path.'index')->withStatus(__('crud.item_has_been_removed', ['item'=>__($this->title)]));
     }
+
+    public function destroyDiscount($id)
+    {
+        $this->authChecker();
+        $item = Discount::findOrFail($id);
+        $item->delete();
+        return redirect()->route($this->webroute_path.'index')->withStatus(__('Descuento removido', ['item'=>__($this->title)]));
+    }
+
+
 
     public function apply(Request $request)
     {
@@ -199,4 +458,6 @@ class CouponsController extends Controller
             'msg' => __('The coupon promotion code has been expired or the limit is exceeded.'),
         ]);
     }
+
+  
 }

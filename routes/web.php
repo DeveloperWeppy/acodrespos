@@ -158,7 +158,11 @@ Route::group(['middleware' => ['auth','impersonate']], function () {
                 Route::post('coupons', 'CouponsController@store')->name('coupons.store');
                 Route::put('coupons/{coupon}', 'CouponsController@update')->name('coupons.update');
                 Route::get('coupons/del/{coupon}', 'CouponsController@destroy')->name('coupons.delete');
-
+                Route::get('coupons/createDiscount', 'CouponsController@createDiscount')->name('coupons.createDiscount');
+                Route::post('coupons/storeDiscount', 'CouponsController@storeDiscount')->name('coupons.storeDiscount');
+                Route::get('coupons/{coupon}/editDiscount', 'CouponsController@editDiscount')->name('coupons.editDiscount');
+                Route::post('coupons/{coupon}/updateDiscount', 'CouponsController@updateDiscount')->name('coupons.updateDiscount');
+                Route::get('coupons/deleteDiscount/{coupon}', 'CouponsController@destroyDiscount')->name('coupons.deleteDiscount');
             
 
                 //Banners

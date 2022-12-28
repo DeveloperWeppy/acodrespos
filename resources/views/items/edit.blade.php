@@ -109,7 +109,7 @@
                                                 </span>
                                             @endif
                                         </div>
-                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Precio Descontado'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number'])
+                                        @include('partials.input',['id'=>'discounted_price','name'=>__('Precio Descontado'),'placeholder'=>__('0'),'value'=>$item->discounted_price,'required'=>false,'type'=>'number', 'class'=>'d-none'])
 
                                         @if ($restorant->getConfig('hide_tax_input',"false")!="false")
                                             <!-- Hidden -->
@@ -220,7 +220,7 @@
                                             <tr>
                                                 <th scope="row">{{ $extra->name }}</th>
                                                 <td class="budget">@money( $extra->price, config('settings.cashier_currency'),config('settings.do_convertion'))</td>
-                                                @if ($item->has_variants==1)<td class="budget">{{ $extra->extra_for_all_variants?__('All variants'):__('Selected') }}</td>@endif
+                                                @if ($item->has_variants==1)<td class="budget">{{ $extra->extra_for_all_variants?__('All variants'):"Seleccionadas" }}</td>@endif
                                                 <td class="text-right">
                                                     <div class="dropdown">
                                                         <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

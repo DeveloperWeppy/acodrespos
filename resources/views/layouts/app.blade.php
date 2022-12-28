@@ -94,7 +94,7 @@
         
         <script>
             var t="<?php echo 'translations'.App::getLocale() ?>";
-           window.translations = {!! Cache::get('translations'.App::getLocale(),"[]") !!};
+            window.translations = {!! Cache::get('translations'.App::getLocale(),"[]") !!};
            
            
         </script>
