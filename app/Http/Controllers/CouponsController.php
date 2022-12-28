@@ -102,7 +102,7 @@ class CouponsController extends Controller
     {
         $this->authChecker();
 
-        return view('coupons.create');
+        return view('coupons.createcupon');
     }
 
     public function createDiscount()

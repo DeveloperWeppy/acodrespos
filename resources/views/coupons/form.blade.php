@@ -1,9 +1,9 @@
 <div class="row">
-    @if(isset($coupon))
+   
        
-            @include('partials.input',['class'=>"col-12 col-md-3", 'ftype'=>'input','name'=>"Code",'id'=>"code",'placeholder'=>"",'required'=>true, 'value'=>$coupon->code])
+        @include('partials.input',['class'=>"col-12 col-md-3", 'ftype'=>'input','name'=>"Code",'id'=>"code",'placeholder'=>"",'required'=>true])
         
-    @endif
+ 
    
         @include('partials.input',['class'=>"col-12 col-md-3", 'ftype'=>'input','name'=>"Name",'id'=>"name",'placeholder'=>"Introduzca el código",'required'=>true, 'value'=>isset($coupon)&&$coupon->name?$coupon->name:""])
    
@@ -16,14 +16,14 @@
    
   
         @if(isset($coupon) && $coupon->type == 0)
-            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual', 'value'=>$coupon->price])
+            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Valor",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency'), 'value'=>$coupon->price])
+            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Valor",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual', 'value'=>$coupon->price])
         @elseif(isset($coupon) && $coupon->type == 1)
-        @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual','value'=>$coupon->price])
+        @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Valor",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en '.config('settings.cashier_currency'), 'value'=>$coupon->price])
+            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Valor",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual','value'=>$coupon->price])
         @else
-            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency')])
-            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual'])
+            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Valor",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency')])
+            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'max'=>'100', 'name'=>"Valor",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual'])
         @endif
 
 </div>
@@ -63,10 +63,23 @@
         </div>
     </div>
 
+
+
         @if(isset($coupon))
             @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number','name'=>"Número límite",'id'=>"limit_to_num_uses",'placeholder'=>"Número límite",'required'=>true, 'value'=>$coupon->limit_to_num_uses, 'step'=>1])
         @else
             @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number','name'=>"Número límite",'id'=>"limit_to_num_uses",'placeholder'=>"Número límite",'required'=>true, 'step'=>1])
         @endif
- 
+
+        @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number','name'=>"Redención por usuario",'id'=>"red",'placeholder'=>"Número límite",'required'=>true, 'step'=>1])
+
+</div>
+
+<div class="row">
+    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón ilimitado",'id'=>"has_ilimited",'placeholder'=>"",'required'=>true, 'value'=>isset($coupon)&&$coupon->has_ilimited?$coupon->has_ilimited:"",])
+
+    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón Envio Gratis",'id'=>"has_free_delivery",'placeholder'=>"",'required'=>true, 'value'=>isset($coupon)&&$coupon->has_free_delivery?$coupon->has_free_delivery:"",])
+    
+    @include('partials.bool',['class'=>"col-12 col-md-3", 'type'=>'number','name'=>"Aplicar a productos en descuento",'id'=>"has_descount",'placeholder'=>"Número límite",'required'=>true, 'step'=>1])
+
 </div>
