@@ -308,6 +308,12 @@
 
 
                 <div class="modal-footer">
+                    <div class="custom-control custom-control-alternative custom-checkbox" style="width:100%">
+                        <input class="custom-control-input" name="valor" id="qr_invoice_check" type="checkbox">
+                        <label class="custom-control-label" for="qr_invoice_check">
+                            <span class="text-muted">QR orden</span>
+                        </label>
+                    </div>
                     <button data-bs-dismiss="modal" class="btn bg-gradient-default">{{ __('Cerrar') }}</button>
                     <button id="printPos" class="btn bg-gradient-primary">{{ __('Print') }}</button>
                 </div>

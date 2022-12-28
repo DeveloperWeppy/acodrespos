@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Restorant;
+use App\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class QRController extends Controller
@@ -35,4 +37,26 @@ class QRController extends Controller
 
         return view('qrsaas.qrgen')->with('data', json_encode($dataToPass));
     }
+    public function showOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('qr.order')->with('data',$order);
+    }
+    public function orders($restorant,$id=0)
+    {
+        $data= array();
+        if($id!=0){
+           $data = Order::findOrFail($id);
+           $data->finalstate= $data->status->pluck('alias')->last();
+    
+        }else{
+            $rest = Restorant::where(['subdomain'=>$restorant])->get();
+            if(count($rest)>0){
+                $data = Order::where(['restorant_id'=>$rest[0]->id])->where('created_at', '>=', Carbon::today())->orderBy('created_at', 'desc'); 
+            }
+           
+        }
+        return json_encode($data);
+    }
+    
 }

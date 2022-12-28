@@ -20,7 +20,7 @@ class PdfController extends Controller
         $maxPrint=0;
         $newItem=array();
         $arrayId=array();
-        if($tipo>0){
+        if($tipo>0 && $tipo<5){
             foreach ($items as $item) {
                 if($item->pivot->print==0){
                   $ifprint=false;
@@ -62,7 +62,7 @@ class PdfController extends Controller
         if(isset($mesero->name)){
             $mesero=$mesero->name;
         }
-        if($tipo>0){
+        if($tipo>0 &&  $tipo<5){
             $dompdf->loadHtml(view('pdf.command.'.$order->restorant->invoice_size,array("order"=> $order,"mesero"=>$mesero,"items"=>$items)));
         }else{
             $dompdf->loadHtml(view('pdf.invoice.'.$order->restorant->invoice_size,array("order"=> $order,"mesero"=>$mesero,"items"=>$items)));

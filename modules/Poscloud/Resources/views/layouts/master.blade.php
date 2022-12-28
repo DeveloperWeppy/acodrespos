@@ -188,8 +188,12 @@
       $(function() {
 
         $('#printPos').on("click", function () {
-         // $("#posRecipt").printThis(); 
-         printJS(urlbasse+"/"+$('#modalPOSInvoice').attr('data-id'));
+         var urltem=urlbasse+"/"+$('#modalPOSInvoice').attr('data-id');
+         if( $('#qr_invoice_check').is(':checked') ) {
+          urltem+="/5";   
+          alert(urltem);  
+         }
+         printJS(urltem);
         });
 
         $("#paymentType").on('change', function() {
