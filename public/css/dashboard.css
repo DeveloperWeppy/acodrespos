@@ -4,6 +4,11 @@
 .cardAdd{
     border: 1px solid rgb(152 245 255);
 }
+.btn-success, .btn.bg-gradient-success {
+  color: #fff;
+  margin-right: 10px;
+}
+
 .input-group-text2 {
     font-size: 1rem;
     font-weight: 400;

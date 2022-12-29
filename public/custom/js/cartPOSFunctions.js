@@ -349,9 +349,6 @@ function withSession(endpoint){
       showConfirmButton: false,
       timer: 1000,
       timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading()
-        },
     });
 
 
@@ -385,7 +382,7 @@ function getCartContentAndTotalPrice(){
              ordenId=response.data.order_id;
              commentOrd=response.data.comment;
             $('textarea#order_comment').val(response.data.comment);
-            $("#orderId").html('Numero de orden: <a style="background-color: #28a745;" class="btn badge badge-success badge-pill" href="../orders/'+response.data.order_id+'">#'+response.data.order_id+'</a>');
+            $("#orderId").html('Numero de orden: <a style="background-color: #28a745;" class="btn badge badge-success badge-pill " href="../orders/'+response.data.order_id+'">#'+response.data.order_id+'</a>   <a class="btn badge badge-success badge-pill bg-gradient-info" style="margin-left:5px" onclick="printcommand2('+response.data.order_id+')"><span class="btn-inner--icon"><i aria-hidden="true" class="fa fa-print"></i></span></a>');
             $("#orderId").show();
             $("#orderNumber").hide();
           }else{
@@ -581,7 +578,41 @@ function ocultarbtn(){
     $('#addprop').show();
   }
 }
-
+var urlbasse="{{url('/pdf');}}";
+function printcommand2(id,tipo=0){
+    var mensajeim="Comanda de productos";
+    var btntext="Nuevos";
+    var btntext2="Todos";
+    if(tipo==1){
+       mensajeim="Deseas imprimir comanda?";
+       btntext="SI";
+       btntext2="No";
+    }
+    const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+        confirmButton: 'btn btn-success',
+        denyButton: 'btn btn-primary'
+    },
+    buttonsStyling: false
+    }); 
+    swalWithBootstrapButtons.fire({
+        title: mensajeim,
+        icon: 'question',
+        iconHtml: '?',
+        showDenyButton: true,
+        confirmButtonText: btntext,
+        denyButtonText:btntext2,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        printJS(urlbasse+"/"+id+"/1");
+      } else if (result.isDenied) {
+        if(tipo==0){
+          printJS(urlbasse+"/"+id+"/2");
+        }
+      }
+    });
+  
+}
 
 function submitOrderPOS(tipo=0){
 
@@ -692,13 +723,13 @@ function submitOrderPOS(tipo=0){
       }else{
         if(tipo==2){
           js.notify('Orden Actualizada', "success");
+          printcommand2(response.data.order.id);
         }else{
           js.notify('Orden registrada', "success");
+          printcommand2(response.data.order.id,1);
         }
         
       }
-
-      
 
       modalPayment.totalPrice=0;
       modalPayment.minimalOrder=0;

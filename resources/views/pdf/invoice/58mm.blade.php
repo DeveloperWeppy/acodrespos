@@ -71,6 +71,8 @@
         </tr>
     </table> 
     <br>
-    
-    <div >{{strtoupper($order->restorant->invoice_footer)}}</div>
+    @if( $qrcode!="")
+        <div style="text-align: center;"><img src="{{$qrcode}}" style="width:65px;heigth:auto;"></div>
+    @endif
+        <div style="text-align: center;">{{strtoupper($order->restorant->invoice_footer)}}</div>
 </div>

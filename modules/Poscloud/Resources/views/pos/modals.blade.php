@@ -315,6 +315,7 @@
                         </label>
                     </div>
                     <button data-bs-dismiss="modal" class="btn bg-gradient-default">{{ __('Cerrar') }}</button>
+                    <button id="printComand" class="btn bg-gradient-info">Imprimir comanda</button>
                     <button id="printPos" class="btn bg-gradient-primary">{{ __('Print') }}</button>
                 </div>
             </div>

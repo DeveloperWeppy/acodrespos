@@ -34,32 +34,33 @@
     <hr>
     <table>
         <tr>
-          <td style="text-align: left;">CANT</td> 
+          <td style="text-align: left;width:40px">CANT</td> 
           <td style="text-align: left;">DESCRIPCION</td>
         </tr>
     </table>
     
-        @foreach ($items as $item)
-          <table>
-          <?php 
-              $theItemPrice= ($item->pivot->variant_price?$item->pivot->variant_price:$item->price);
-          ?>
-          <tr>
-               <td>{{$item->pivot->qty}}</td>
-               <td>{{strtoupper($item->name)}}</td>
-          </tr> 
-          </table>
-          <?php if($item->pivot->item_observacion!=""){ ?>
-            <div >OBSER: {{strtoupper($item->pivot->item_observacion)}}</div>
-          <?php  }?>
-        @endforeach
-        <?php if($order->comment!=""){ ?>
-          <div >OBSER GEN: {{strtoupper($order->comment)}}</div>
-        <?php  }?>
-    </table> 
-   
-    
+    @foreach ($items as $item)
+    <?php 
+    ?>
+    <table>
+      <tr>
+        <td style="text-align: left;width:40px">{{$item->pivot->qty}}</td>
+        <?php  if(($maxPrint==$item->pivot->print && $ifprint) || ($item->pivot->print==0 && $ifprint==false)){?>
+          
+          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : '';}}">{{strtoupper($item->name)}}</td> 
+        <?php }else{ ?>
+          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : 'text-decoration:underline;';}}">{{strtoupper($item->name)}}</td>
+        <?php }?>
+       
+      </tr>
+    </table>
+
+    <?php if($item->pivot->item_observacion!=""){ ?>
+    <div >OBSER: {{strtoupper($item->pivot->item_observacion)}}</div>
+    <?php  }?>
+    @endforeach
+    <?php if($order->comment!=""){ ?>
+    <div >OBSER GEN: {{strtoupper($order->comment)}}</div>
+    <?php  }?>
     <br>
-    
- 
 </div>

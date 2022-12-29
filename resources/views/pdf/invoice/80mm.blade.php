@@ -33,6 +33,7 @@
       <div>MESA: {{strtoupper($order->table->name)}}</div>
       <div>PERSONAS: {{$order->number_people}}</div>
     @endif
+
     <div>ORDEN: #{{$order->id}}</div>
     <div>FECHA: {{$order->created_at}}</div>
     <div>MESERO: {{strtoupper($mesero)}}</div>
@@ -70,6 +71,8 @@
         </tr>
     </table> 
     <br>
-    
-    <div >{{strtoupper($order->restorant->invoice_footer)}}</div>
+    @if( $qrcode!="")
+        <div style="text-align: center;"><img src="{{$qrcode}}" style="width:65px;heigth:auto;"></div>
+    @endif
+        <div style="text-align: center;">{{strtoupper($order->restorant->invoice_footer)}}</div>
 </div>

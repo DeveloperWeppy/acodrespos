@@ -191,11 +191,13 @@
          var urltem=urlbasse+"/"+$('#modalPOSInvoice').attr('data-id');
          if( $('#qr_invoice_check').is(':checked') ) {
           urltem+="/5";   
-          alert(urltem);  
          }
          printJS(urltem);
         });
-
+        $('#printComand').on("click", function () {
+           var urltem=urlbasse+"/"+$('#modalPOSInvoice').attr('data-id');
+           printJS(urltem+"/2");
+        });
         $("#paymentType").on('change', function() {
           
           if ($(this).val()=='transferencia') {

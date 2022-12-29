@@ -345,18 +345,21 @@
         <h3>Factura de venta No.{{strtoupper($order->prefix_consecutive.$order->consecutive)}} 
             <a class="btn btn-outline-success btn-sm" target="_blank"  href="{{ route('pdf',$order->id) }}">
                 <span class="btn-inner--icon">
-                    <i class="ni ni-cloud-download-95"></i>
+                    <i aria-hidden="true" class="fa fa-print"></i>
                 </span>
             </a>
         </h3>
     @endif
+    @hasrole('admin|staff|owner|manager_restorant')
     <h3>Imprimir comanda
-        <a class="btn btn-outline-success btn-sm" onclick="printcommand('{{$order->id}}')">
+        <button   type="button"  class="btn btn-outline-success btn-sm" onclick="printcommand('{{$order->id}}')">
             <span class="btn-inner--icon">
-                <i class="ni ni-cloud-download-95"></i>
+                <i aria-hidden="true" class="fa fa-print"></i>
             </span>
-        </a>
+        </button>
     </h3>
+  
+    @endhasrole
   
      {{-- @if(isset($custom_data)&&count($custom_data)>0)
         <hr />
