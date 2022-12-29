@@ -146,6 +146,7 @@ function clean($string)
                                             - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                             @endif
                                         </span>
+                                        <br>
                                 
 
                                         <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
@@ -218,7 +219,7 @@ function clean($string)
                                             - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                             @endif
                                         </span>
-
+                                        <br>
                                         <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
 
                                     </div>

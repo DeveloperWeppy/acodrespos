@@ -213,7 +213,7 @@ $( "#formDiscount" ).submit(function( event ) {
                     icon: 'success',
                 }).then(function() {
                     
-                    $(location).attr('href','/coupons');
+                    $(location).attr('href','/coupons?cupones=1&descuentos=1');
                 });
             },
             data: formData,
