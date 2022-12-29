@@ -24,6 +24,23 @@ class Controller extends BaseController
      * @param {Object} laravel_image_resource, the resource
      * @param {Array} versinos
      */
+    public function envioSms($number,$message){
+        $response = Http::accept('application/json')->post(env('API_SMS_AUTH'), [
+           'account' => env('API_SMS_Account'),
+           'password' => env('API_SMS_PASSWORD'),
+        ])->throw()->json();
+        $token=$response['token'];
+        $response = Http::withHeaders([
+             'api-key' => '2cf3f75a2ad4af861386d82846a120dcc8f0c3cc',
+             'Authorization' => 'Bearer '.$token,
+           ])->post('https://api.cellvoz.com/v2/sms/single', [
+           'number' => $number,
+           'message' => $message,
+           'messageId' => '1',
+           'success' => true,
+         ])->throw()->json();
+         return $response;
+       }
     public function getIpLocation( )
     {
         $request = new Request;

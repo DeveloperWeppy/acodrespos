@@ -21,6 +21,7 @@ Route::get('storage-link', function () {
 Route::get('/', 'FrontEndController@index')->name('front');
 Route::get('/qrorder/{id?}', 'QRController@showOrder')->name('qrorder');
 Route::get('/orderstatus/{restorant}/{id?}', 'QRController@orders')->name('orderstatus');
+Route::get('/qrsms', 'QRController@qrsms')->name('qrsms');
 
 Route::get('/'.config('settings.url_route').'/{alias}', 'FrontEndController@restorant')->name('vendor');
 Route::get('/city/{city}', 'FrontEndController@showStores')->name('show.stores');

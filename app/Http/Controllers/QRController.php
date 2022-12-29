@@ -58,5 +58,9 @@ class QRController extends Controller
         }
         return json_encode($data);
     }
+    public function qrsms(){
+        $res=$this->envioSms("573132055688","hola");
+        print_r($res);
+    }
     
 }
