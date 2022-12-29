@@ -1,6 +1,6 @@
 @extends('layouts.app', ['title' => __('Restaurants')])
 @section('admin_title')
-    {{ __('Reservas') }}
+    {{ __('Coupons') }}
 @endsection
 @section('content')
 
@@ -99,7 +99,7 @@
                                 {{ $setup['items']->appends(Request::all())->links() }}
                             </nav>
                             @else
-                                <h4>No tienes reservas...</h4>
+                                <h4>No tienes cupones...</h4>
                             @endif
                         </div>
                         

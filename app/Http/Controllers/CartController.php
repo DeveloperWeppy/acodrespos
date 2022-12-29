@@ -80,7 +80,7 @@ class CartController extends Controller
 
                 //Validate is this variant is from the current item
                 if ($variant->item->id == $item->id) {
-                    $cartItemPrice = $variant->price;
+                    $cartItemPrice = $variant->price-$discount;
 
                     //For each option, find the option on the
                     $cartItemName = $item->name.' '.$variant->optionsList;

@@ -7,6 +7,7 @@ var previouslySelected=[];
 var extrasSelected=[];
 var variantID=null;
 var debug=true;
+var desc=0;
 
 function debugMe(title,message){
     if(debug){
@@ -72,10 +73,11 @@ function loadExtras(variant_id){
  * */
 function setSelectedVariant(element){
 
-    $('#modalPrice').html(formatPrice(element.price));
+    $('#modalDesc').html(formatPrice(element.price));
+    $('#modalPrice').html(formatPrice(element.price-desc));
 
     //Set current item price
-    currentItemSelectedPrice=element.price;
+    currentItemSelectedPrice=element.price-desc;
 
     //Show QTY
     $('.quantity-area').show();
@@ -184,7 +186,7 @@ function optionChanged(option_id,name){
 }
 
 function appendOptionValue(name,value,enabled,option_id){
-    $('#variants-area-inside-'+option_id).append('<label style="opacity: '+(enabled?1:0.5)+'" class="btn btn-outline-primary"><input  onchange="optionChanged('+option_id+',\''+value+'\')"  '+ (enabled?"":"disabled") +' type="radio" name="option_'+option_id+'" value="option_'+option_id+"_"+name+'" autocomplete="off" />'+js.trans(name)+'</label>')
+    $('#variants-area-inside-'+option_id).append('<label style="opacity: '+(enabled?1:0.5)+'" class="btn btn-outline-primary checkvariable"><input  onchange="optionChanged('+option_id+',\''+value+'\')"  '+ (enabled?"":"disabled") +' type="radio" name="option_'+option_id+'" value="option_'+option_id+"_"+name+'" autocomplete="off" style="appearance: none;" />'+js.trans(name)+'</label>')
 }
 
 function setVariants(){
@@ -236,23 +238,31 @@ function setVariants(){
 }
 
 
-function setCurrentItem(id,price){
+function setCurrentItem(id,dsc){
 
 
     var item=items[id];
+    desc = dsc
+
+    console.log(item);
 
     currentItem=item;
     previouslySelected=[];
     $('#modalTitle').text(item.name);
     $('#modalName').text(item.name);
     $('#modalDesc').show();
-    if(price==item.price){
+    if(dsc==0){
         $('#modalDesc').hide();
     }
-    $('#modalPrice').html(price);
+    $('#modalPrice').html("$"+formatPrice(item.priceNotFormated-dsc));
     $('#modalDesc').html(item.price);
     $('#modalID').text(item.id);
     $('#quantity').val(1);
+
+    if(dsc>0){
+        localStorage.setItem('conDes',1);
+    }
+    
     
     var mesa = $('#mesaid').val();
     var getlocal = JSON.parse(localStorage.getItem(mesa));
@@ -343,6 +353,8 @@ function setCurrentItem(id,price){
 }
 
 function recalculatePrice(id,value){
+
+  
     var mainPrice=parseFloat(currentItemSelectedPrice);
     extrasSelected=[];
 

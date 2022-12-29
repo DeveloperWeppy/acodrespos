@@ -17,6 +17,9 @@ use App\Notifications\OrderNotification;
 use Illuminate\Support\Facades\Validator;
 use App\Events\NewOrder as PusherNewOrder;
 
+use App\Models\GeoZoneDelivery;
+use App\Address;
+
 
 class BaseOrderRepository extends Controller
 {
@@ -205,16 +208,18 @@ class BaseOrderRepository extends Controller
 
             //List of extras
             $extras = [];
+
+            $dsc = Vendor::applyDiscount($theItem->discount_id,$theItem->price);
             
             //The price of the item or variant
-            $itemSelectedPrice = $theItem->price;
+            $itemSelectedPrice = $theItem->price-$dsc;
 
             //Find the variant
             $variantName = '';
             if ($item['variant']) {
                 //Find the variant
                 $variant = Variants::findOrFail($item['variant']);
-                $itemSelectedPrice = $variant->price;
+                $itemSelectedPrice = $variant->price-$dsc;
                 $variantName = $variant->optionsList;
             }
 
@@ -226,16 +231,14 @@ class BaseOrderRepository extends Controller
             }
 
             //Descuento vigente del producto
-            $dsc = 0;
-            if($variantName==""){
-                $dsc = Vendor::applyDiscount($theItem->discount_id,$theItem->price);
-            }
+           
+            
             
           
 
             
             //Total vat on this item
-            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?($itemSelectedPrice-$dsc) * ($theItem->vat / 100):0);
+            $totalCalculatedVAT = $item['qty'] * ($theItem->vat > 0?($itemSelectedPrice) * ($theItem->vat / 100):0);
             $cart_item_id=0;
             $item_observacion="";
             if(isset($item['cart_item_id'])){
@@ -274,8 +277,36 @@ class BaseOrderRepository extends Controller
         if($this->request->has('coupon_code')&&strlen($this->request->coupon_code)>0){
             $coupon = Coupons::where(['code' => $this->request->coupon_code])->where('restaurant_id',$this->vendor->id)->get()->first();
             if($coupon){
-                $deduct=$coupon->calculateDeduct($this->order->order_price);
-                if($deduct){
+
+                $deduct = 0;
+
+                if($coupon->has_free_delivery==1){
+                    $addresss = Address::findOrFail($this->request->address_id);
+                    $restaurantzona=GeoZoneDelivery::where('restorant_id',$this->vendor->id)->get();
+                    $addressesWithFees =$this->getAccessibleAddresses2($restaurantzona, [$addresss]);
+                    $cost_total=0;
+                    foreach ($addressesWithFees as $key => $addressWithFee) {
+                        $cost_total=$addressWithFee->cost_total;
+                    }
+                    $deduct = $cost_total;
+                }
+
+                if($coupon->has_free_delivery==0){
+                    $deduct=$coupon->calculateDeduct($this->order->order_price);
+                }
+
+                if($order_price<$coupon->min_price_cart){
+                    $deduct = 0;
+                }
+
+                if($coupon->redemption!=0){
+                    $redemption = Order::where(['coupon'=> $this->request->coupon_code, 'client_id'=>auth()->user()->id])->count();
+                    if($redemption>=$coupon->redemption){
+                        $deduct = 0;
+                    }
+                }
+                
+                if($deduct!=0){
                     $coupon->decrement('limit_to_num_uses');
                     $coupon->increment('used_count');
                     $this->order->coupon=$this->request->coupon_code;
@@ -287,7 +318,6 @@ class BaseOrderRepository extends Controller
                     }else{
                         $this->order->discount=$deduct;
                     }
-                    
                 }
             }
         }

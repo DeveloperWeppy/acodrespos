@@ -11,10 +11,10 @@ class Discount extends Model
 {
     use HasFactory;
     protected $table = 'discount';
-    protected $fillable = [ 'companie_id','name', 'opcion_discount', 'type', 'price', 'active_from', 'active_to', 'used_count','active','items_ids'];
+    protected $fillable = [ 'companie_id','name', 'opcion_discount', 'type', 'price', 'active_from', 'active_to', 'used_count','active','items_ids','has_ilimited'];
 
     public function calculateDeduct($currentCartValue){
-        if( Carbon::now()->between(new Carbon($this->active_from),new Carbon($this->active_to))){
+        if( Carbon::now()->between(new Carbon($this->active_from),new Carbon($this->active_to)) || $this->has_ilimited==1){
             if ($this->type == 0) {
                 if($this->price>$currentCartValue){
                     return 0;

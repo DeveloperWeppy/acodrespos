@@ -13,52 +13,27 @@
 @endif
 
 <style>
+@import url(https://fonts.googleapis.com/css?family=Lato:700);
 
 
-.wrap {
-  width: 100%;
-  height: 188px;
-  position: absolute;
-  top: -8px;
-  left: 8px;
-  overflow: hidden;
-  pointer-events: none;
-}
-.wrap:before, .wrap:after {
-  content: ""; 
-  position: absolute;
-}
-.wrap:before {
-  width: 40px;
-  height: 8px;
-  right: 100px;
-  background: #a15415;
-  border-radius: 8px 8px 0px 0px;
-}
-.wrap:after {
-  width: 8px;
-  height: 40px;
-  right: 0px;
-  top: 100px;
-  background: #a15415;
-  border-radius: 0px 8px 8px 0px;
-}
-.ribbon6 {
-  width: 200px;
-  height: 40px;
-  line-height: 40px;
-  position: absolute;
-  top: 30px;
-  right: -50px;
-  z-index: 2;
-  overflow: hidden;
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-  border: 1px dashed;
-  box-shadow:0 0 0 3px orange,  0px 21px 5px -18px rgba(0,0,0,0.6);
-  background: orange;
-  text-align: center;
-  color:#ffffff;
+.wdp-ribbon{
+	display: inline-block;
+    padding: 2px 15px;
+	position: absolute;
+    right: 0px;
+    top: 20px;
+    line-height: 24px;
+	height:24px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+	border-radius: 0;
+    text-shadow: none;
+    font-weight: normal;
+    background-color: #e6750b !important;
+    z-index: 2;
+    color: #ffffff;
 }
 
 </style>
@@ -205,32 +180,62 @@
                     @foreach ($category->aitemsFeatured as $item)
                         <?php 
                         $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+
+                        $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
+                        
                         ?>
                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
                             <div class="strip containerItem">
                                 @if ($dsc>0 && $dsc!=null)
-                                    <div class="wrap">
-                                        <span class="ribbon6">Descuento</span>
-                                   </div>
+                                    @if(isset($item->variants) && $item->variants->count()>0)
+                                        <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                    @else
+                                        <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                    @endif
                                 @endif
                                 @if(!empty($item->image))
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @else
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @endif
-                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
                                 <div class="res_description">{{ $item->short_description}}</div>
                                 <div class="row">
                                     <div class="col-6">
+                                      
                                         <div class="res_mimimum">
+
+                                            <?php 
+                                                $variante1 = $item->price;
+                                                unset($variante2);
+                                                if(isset($item->variants)){
+                                                    if($item->variants->count()>0){
+                                                        $variante1 = $item->variants[0]->price;
+                                                        $idv = $item->variants->count()-1;
+                                                        $variante2 = $item->variants[$idv]->price;
+                                                    }
+                                                }
+                                            ?>
+
                                             @if ($dsc>0 && $dsc!=null)
-                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                                <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
+                                                    @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @if(isset($variante2))
+                                                    - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @endif
+                                                </span>
                                             @endif
-                                            @money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                            <span style="white-space: nowrap;">
+                                                @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                @if(isset($variante2))
+                                                - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                @endif
+                                            </span>
+                                           
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -244,6 +249,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+                             
+
+                        
                             </div>
                         </div>
                     @endforeach
@@ -265,6 +274,7 @@
                     
                     <?php 
                     $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                    $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
                     ?>
 
                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
@@ -272,28 +282,54 @@
                             
                             <div class="strip containerItem">
                                 @if ($dsc>0 && $dsc!=null)
-                                <div class="wrap">
-                                    <span class="ribbon6">Descuento</span>
-                               </div>
+                                    @if(isset($item->variants) && $item->variants->count()>0)
+                                        <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                    @else
+                                        <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                    @endif
                                 @endif
                                 @if(!empty($item->image))
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @else
                                 <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
                                 </figure>
                                 @endif
-                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},'@money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))')" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
                                 <div class="res_description">{{ $item->short_description}}</div>
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="res_mimimum">
+
+                                            <?php 
+                                                $variante1 = $item->price;
+                                                unset($variante2);
+                                                if(isset($item->variants)){
+                                                    if($item->variants->count()>0){
+                                                        $variante1 = $item->variants[0]->price;
+                                                        $idv = $item->variants->count()-1;
+                                                        $variante2 = $item->variants[$idv]->price;
+                                                    }
+                                                }
+                                            ?>
+
                                             @if ($dsc>0 && $dsc!=null)
-                                                <span class="text-muted" style="text-decoration: line-through;">@money($item->price, config('settings.cashier_currency'),config('settings.do_convertion'))</span>
+                                                <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
+                                                    @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @if(isset($variante2))
+                                                    - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @endif
+                                                </span>
                                             @endif
-                                            @money($item->price-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                            <span style="white-space: nowrap;">
+                                                @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                @if(isset($variante2))
+                                                - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                @endif
+                                            </span>
+                                           
                                         </div>
                                     </div>
                                     <div class="col-6">
