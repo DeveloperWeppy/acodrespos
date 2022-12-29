@@ -42,7 +42,7 @@
                      
                         @include('partials.select', ['class'=>"col-12 col-md-3",'name'=>"Tipo de descuento",'id'=>"type",'placeholder'=>"Tipo de descuento",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true])
 
-                        @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price",'placeholder'=>"Ingrese el precio",'required'=>false])
+                        @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Valor",'id'=>"price",'placeholder'=>"Ingrese el precio",'required'=>false])
 
                     
                     </div>
