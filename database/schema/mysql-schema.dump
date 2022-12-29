@@ -96,6 +96,12 @@ CREATE TABLE `coupons` (
   `active_to` date NOT NULL,
   `limit_to_num_uses` int NOT NULL,
   `used_count` int NOT NULL,
+  `redemption` int NOT NULL,
+  `has_ilimited` int NOT NULL,
+  `min_price_cart` double(8,2) NOT NULL,
+  `has_free_delivery` int NOT NULL,
+  `has_discount` int NOT NULL,
+  `active` int NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -103,6 +109,24 @@ CREATE TABLE `coupons` (
   KEY `coupons_restaurant_id_foreign` (`restaurant_id`),
   CONSTRAINT `coupons_restaurant_id_foreign` FOREIGN KEY (`restaurant_id`) REFERENCES `restorants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS `discount`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `discount` (
+  `id` bigint(20) NOT NULL,
+  `companie_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `type` int(11) NOT NULL,
+  `price` varchar(255) NOT NULL,
+  `active_from` datetime NOT NULL,
+  `active_to` datetime NOT NULL,
+  `opcion_discount` int(11) NOT NULL,
+  `items_ids` varchar(255) NOT NULL,
+  `has_ilimited` int(11) NOT NULL,
+  `active` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `extras`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -162,8 +186,12 @@ CREATE TABLE `items` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `available` int NOT NULL DEFAULT '1',
   `has_variants` int NOT NULL DEFAULT '0',
+  `has_featured` int NOT NULL DEFAULT '0',
   `vat` double(8,2) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
+  `enable_system_variants` int NOT NULL DEFAULT '0',
+  `discount_id` int NOT NULL DEFAULT '0',
+  `discounted_price` double(8,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `items_category_id_foreign` (`category_id`),
   CONSTRAINT `items_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
@@ -282,6 +310,7 @@ CREATE TABLE `order_has_items` (
   `vatvalue` double(8,2) DEFAULT '0.00',
   `variant_price` double(8,2) DEFAULT NULL,
   `variant_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `discount` double(8,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `order_has_items_order_id_foreign` (`order_id`),
   KEY `order_has_items_item_id_foreign` (`item_id`),

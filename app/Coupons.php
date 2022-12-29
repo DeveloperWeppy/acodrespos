@@ -15,11 +15,6 @@ class Coupons extends Model
 
     public function calculateDeduct($currentCartValue){
         if( (Carbon::now()->between(new Carbon($this->active_from),new Carbon($this->active_to)) && $this->limit_to_num_uses >0 && $currentCartValue>=$this->min_price_cart) || ($this->has_ilimited==1 && $this->limit_to_num_uses >0 && $currentCartValue>=$this->min_price_cart)){
-          
-            if($this->has_discount==1 || $this->has_free_delivery==1){
-                return 1;
-            }
-            
             if ($this->type == 0) {
                 return $this->price;
             }else{

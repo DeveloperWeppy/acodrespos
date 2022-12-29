@@ -37,26 +37,13 @@
                             <div class="row">
                      
                       
-                        @include('partials.input',['class'=>"col-12 col-md-3", 'ftype'=>'input','name'=>"Name",'id'=>"name",'placeholder'=>"Digite el nombre",'required'=>true, 'value'=>isset($coupon)&&$coupon->name?$coupon->name:""])
+                            @include('partials.input',['class'=>"col-12 col-md-3", 'ftype'=>'input','name'=>"Name",'id'=>"name",'placeholder'=>"Digite el nombre",'required'=>true, 'value'=>isset($coupon)&&$coupon->name?$coupon->name:""])
                      
                         
-                        @if(isset($coupon))
                             @include('partials.select', ['class'=>"col-12 col-md-3",'name'=>"Tipo de descuento",'id'=>"type",'placeholder'=>"Tipo de descuento",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true, 'value'=>$coupon->type])
-                        @else
-                            @include('partials.select', ['class'=>"col-12 col-md-3",'name'=>"Tipo de descuento",'id'=>"type",'placeholder'=>"Tipo de descuento",'data'=>['Precio Fijo', 'Porcentaje'],'required'=>true])
-                        @endif
                         
                      
-                        @if(isset($coupon) && $coupon->type == 0)
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual', 'value'=>$coupon->price])
-                        @elseif(isset($coupon) && $coupon->type == 1)
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en '.config('settings.cashier_currency'), 'value'=>$coupon->price])
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual','value'=>$coupon->price])
-                        @else
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price_fixed",'placeholder'=>"Ingrese el precio",'required'=>false, 'additionalInfo'=>'Precio en  '.config('settings.cashier_currency')])
-                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'min'=>'1', 'name'=>"Price",'id'=>"price_percentage",'placeholder'=>"Ingrese el porcentaje",'required'=>false, 'additionalInfo'=>'Valor porcentual'])
-                        @endif
+                            @include('partials.input',['class'=>"col-12 col-md-3", 'type'=>'number', 'name'=>"Price",'id'=>"price",'placeholder'=>"Ingrese el precio",'required'=>false, 'value'=>$coupon->price])
                     
                     </div>
                     <div class="row">
@@ -69,7 +56,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input name="active_from" class="form-control" placeholder="{{ __('Active from') }}" type="text" required>
+                                        <input name="active_from" class="form-control tiempo" placeholder="{{ __('Active from') }}" type="text" required>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +64,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="form-control-label">Hora</label>
-                                <input name="hora1" class="form-control timepicker" placeholder="Hora" required type="text">
+                                <input name="hora1" class="form-control timepicker tiempo" placeholder="Hora" required type="text">
                             </div>
                         </div>
 
@@ -89,7 +76,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                         </div>
-                                        <input name="active_to" class="form-control" placeholder="{{ __('Active to') }}" type="text" required>
+                                        <input name="active_to" class="form-control tiempo" placeholder="{{ __('Active to') }}" type="text" required>
                                     </div>
                                 </div>
                             </div>
@@ -97,7 +84,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="form-control-label">Hora</label>
-                                <input name="hora2" class="form-control timepicker" placeholder="Hora" required type="text">
+                                <input name="hora2" class="form-control timepicker tiempo" placeholder="Hora" required type="text">
                             </div>
                         </div>
 
@@ -138,11 +125,7 @@
                     </div>
 
                     <div class="col-md-12" id="catt" hidden>
-
-                     
                         <div class="form-group">
-                    
-
                             <label class="form-control-label">Categorias</label>
                             <select class="form-control col-sm" id="cat"  name="catt[]" multiple>
                                 <option disabled value> Seleccionar producto</option>
@@ -154,10 +137,11 @@
                                     @endif
                                 @endforeach
                             </select>
-
-
+                        </div>
                     </div>
-                    </div>
+
+                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"", 'value'=>'0',])
+
 
                     </div>
 
@@ -180,7 +164,7 @@
 @section('js')
 
 <script>
-    
+
 
 $('.timepicker').timepicker({
     timeFormat: 'h:mm p',
@@ -213,6 +197,7 @@ $( "#formDiscount" ).submit(function( event ) {
 });
 
     function enviarForm(){
+        
         var formData = new FormData($( "#formDiscount" )[0]);
 
         $.ajax({
@@ -227,6 +212,7 @@ $( "#formDiscount" ).submit(function( event ) {
                     text: '',
                     icon: 'success',
                 }).then(function() {
+                    
                     $(location).attr('href','/coupons');
                 });
             },
@@ -310,20 +296,23 @@ function mostrarMultiple(){
             }
         }
 
+        $('#form-group-price').hide();
+
+        if($('#type').val()!=undefined){
+            $('#form-group-price').show();
+        }
+
         $('#type').on('change', function() {
+            $('#form-group-price').show();
+            $("#price").attr("required",true);
             if(this.value == 0){
-                $("#price_percentage").attr("required",false);
-                $('#form-group-price_percentage').hide();
-
-                $('#form-group-price_fixed').show();
-                $("#price_fixed").attr("required",true);
-
+                $("#price").attr("placeholder","Ingrese el valor COP");
+                $("#price").removeAttr("min");
+                $("#price").removeAttr("max");
             }else{
-                $('#form-group-price_fixed').hide();
-                $("#price_fixed").attr("required",false);
-
-                $('#form-group-price_percentage').show();
-                $("#price_percentage").attr("required",true);
+                $("#price").attr("placeholder","Ingrese el valor en porcentaje");
+                $("#price").attr("min","0");
+                $("#price").attr("max","100");
             }
         });
 
@@ -333,6 +322,17 @@ function mostrarMultiple(){
         if($( "#typ2" ).val()=="2"){
             $("#cat").val([{{(isset($coupon->items_ids)?$coupon->items_ids:"")}}]).trigger('change');
         }
+            
+
+        $('#has_ilimited').change(function() {
+            if(this.checked) {
+                $('.form-group-date').hide();
+                $(".tiempo").attr("required",false);
+            }else{
+                $('.form-group-date').show();
+                $(".tiempo").attr("required",true);
+            }     
+        });
             
     </script>
 @endsection

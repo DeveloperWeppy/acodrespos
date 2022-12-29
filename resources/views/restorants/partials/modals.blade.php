@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-sm col-md col-lg col-lg" id="modalItemDetailsPart">
                                 <input id="modalID" type="hidden"></input>
-                                <span id="modalDesc" class="new-desc" style="text-decoration: line-through;"></span><br>
+                                <span id="modalDesc" class="new-desc text-danger" style="text-decoration: line-through;"></span><br>
                                 <span id="modalPrice" class="new-price"></span>
                                 <p id="modalDescription"></p>
                                 <div id="variants-area">
