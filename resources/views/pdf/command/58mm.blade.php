@@ -34,7 +34,7 @@
     <hr>
     <table>
         <tr>
-          <td style="text-align: left;width:40px">CANT</td> 
+          <td style="text-align: left;width:22px">CANT</td> 
           <td style="text-align: left;">DESCRIPCION</td>
         </tr>
     </table>
@@ -44,12 +44,12 @@
     ?>
     <table>
       <tr>
-        <td style="text-align: left;width:40px">{{$item->pivot->qty}}</td>
+        <td style="text-align: left;width:22px">{{$item->pivot->qty}}</td>
         <?php  if(($maxPrint==$item->pivot->print && $ifprint) || ($item->pivot->print==0 && $ifprint==false)){?>
           
-          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : '';}}">{{strtoupper($item->name)}}</td> 
+          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : 'font-weight: bold;';}}">{{strtoupper($item->name)}}</td> 
         <?php }else{ ?>
-          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : 'text-decoration:underline;';}}">{{strtoupper($item->name)}}</td>
+          <td  style="text-align: left;{{$item->pivot->item_status == 'servicio' ? 'text-decoration:line-through;' : '';}}">{{strtoupper($item->name)}}</td>
         <?php }?>
        
       </tr>
