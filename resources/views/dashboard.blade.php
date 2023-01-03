@@ -217,13 +217,10 @@
                         <div class="row">
                             <div class="col-12 col-sm-12">
                                 <!-- Chart -->
-                                @if(count($salesValue)>0)
-                                    <div class="chart">
-                                        <canvas id="chart-byvendor" class="chart-canvas"></canvas>
-                                    </div>
-                                @else
-                                    <p>{{ __('No expenses right now!') }}</p>
-                                @endif
+                         
+                                <div class="chart">
+                                    <canvas id="chart-byvendor" class="chart-canvas"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
