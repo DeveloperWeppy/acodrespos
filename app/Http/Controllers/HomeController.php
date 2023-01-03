@@ -1080,7 +1080,7 @@ class HomeController extends Controller
                     ->orderBy('nump','desc');
 
                     //FILTER BY date
-                    if(isset($mesaMasCaliente[0]->nomt)){
+                    if($mesaMasCaliente){
                         if(isset($Request->tinicio,$Request->tfin) && $Request->tinicio!=""){
                             $ini = $Request->tinicio;
                             $fin = $Request->tfin;
