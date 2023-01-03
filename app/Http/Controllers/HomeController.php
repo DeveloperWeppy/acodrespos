@@ -1069,6 +1069,7 @@ class HomeController extends Controller
                     }
 
                     //consulta la mesa mas ocupada 
+                    $
                     $mesaMasCaliente = DB::table('orders')
                     ->select('tables.restoarea_id','tables.name as nomt',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
                     ->join('tables', 'tables.id', '=', 'orders.table_id')
@@ -1079,14 +1080,17 @@ class HomeController extends Controller
                     ->orderBy('nump','desc');
 
                     //FILTER BY date
-                    if(isset($Request->tinicio,$Request->tfin) && $Request->tinicio!=""){
-                        $ini = $Request->tinicio;
-                        $fin = $Request->tfin;
-                        $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first();
-                    }
-                    $mesaMasCaliente=$mesaMasCaliente->get();
+                    if(isset($mesaMasCaliente[0]->nomt)){
+                        if(isset($Request->tinicio,$Request->tfin) && $Request->tinicio!=""){
+                            $ini = $Request->tinicio;
+                            $fin = $Request->tfin;
+                            $mesaMasCaliente->whereDate('orders.created_at',">=","$ini")->whereDate('orders.created_at',"<=","$fin")->first();
+                        }
+                        $mesaMasCaliente=$mesaMasCaliente->get();
 
-                    $aditional = 'La mesa mas caliente es <b>'.$mesaMasCaliente[0]->nomt.'</b> con <b>'.$mesaMasCaliente[0]->nump.'</b> personas';
+                        $aditional = 'La mesa mas caliente es <b>'.$mesaMasCaliente[0]->nomt.'</b> con <b>'.$mesaMasCaliente[0]->nump.'</b> personas';
+                    }
+                    
                 }
 
                 if($Request->grafico=="grafico3"){
