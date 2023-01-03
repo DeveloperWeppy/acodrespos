@@ -14,6 +14,8 @@
         {{-- <th class="table-web" scope="col">{{ __('Net Price + VAT') }}</th>
         <th class="table-web" scope="col">{{ __('VAT') }}</th> --}}
         <th class="table-web" scope="col">{{ __('Net Price') }}</th>
+
+        <th class="table-web" scope="col">{{ __('Discount') }}</th>
         
         
         <th class="table-web" scope="col">{{ __('Total Price') }}</th>
@@ -78,11 +80,13 @@
         @money( $order->vatvalue, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td> --}}
     <td class="table-web">
-        @money( $order->order_price_with_discount-($order->fee_value+$order->static_fee)-$order->vatvalue, config('settings.cashier_currency'),config('settings.do_convertion'))
+        @money( $order->order_price, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
 
-    
-   
+    <td class="table-web">
+        @money( $order->discount, config('settings.cashier_currency'),config('settings.do_convertion'))
+    </td>
+
     <td class="table-web">
         @money( $order->order_price_with_discount+$order->delivery_price, config('settings.cashier_currency'),config('settings.do_convertion'))
     </td>
