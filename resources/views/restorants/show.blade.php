@@ -190,7 +190,7 @@
                                 <div class="strip containerItem">
                                     @if ($dsc>0 && $dsc!=null)
                                         @if(isset($item->variants) && $item->variants->count()>0)
-                                            <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                            <span class="wdp-ribbon wdp-ribbon-three">PROMO</span>
                                         @else
                                             <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
                                         @endif

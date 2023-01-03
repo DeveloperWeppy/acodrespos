@@ -138,7 +138,7 @@
                     </div>
 
 
-                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"", 'value'=>'0',])
+                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Descuento sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"", 'value'=>'0',])
 
 
 

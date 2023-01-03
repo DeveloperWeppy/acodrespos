@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"",'value'=>(isset($coupon->has_ilimited)&&$coupon->has_ilimited==true)?true:false,])
+                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Descuento sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"",'value'=>(isset($coupon->has_ilimited)&&$coupon->has_ilimited==true)?true:false,])
 
 
                     </div>

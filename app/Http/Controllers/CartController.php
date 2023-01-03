@@ -114,7 +114,18 @@ class CartController extends Controller
         if(isset($_GET['session_id'])){
             $this->setSessionID($_GET['session_id']);
         }
+        /* 
+        $cartObj=json_decode(json_encode(Cart::getContent()),true);
+        $cartKey=array_keys($cartObj);
 
+        $idr = $cartObj[$cartKey[0]]['attributes']['restorant_id'];
+        $restorant = Restorant::find($idr);
+        foreach ($cartKey as $key => $item) {
+            $tItems=$cartObj[$item];
+            $tItems['discount']=$restorant->applyDiscount($item->discount_id,$item->price);
+            $arrayItem[$item]=$tItems;
+        }
+       */
         return response()->json([
             'data' => Cart::getContent(),
             'total' => Cart::getSubTotal(),
