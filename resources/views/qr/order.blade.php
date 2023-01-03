@@ -23,7 +23,7 @@
                   <lottie-player  class="lottieactiva" src="{{asset('animations/delivered.json');}}" background="transparent" speed="1" style=" height: 200px;" loop  autoplay=""></lottie-player>
                 @endif
             </div>
-            <h2 class="display-2 titlestatus">¡{{__($data->status->pluck('name')->last()) }}!</h2>
+            <h2 class="display-2 titlestatus justify-content-center" style="max-width:100%;width:674px;word-wrap: break-word ;text-align:center">¡{{__($data->status->pluck('name')->last()) }}!</h2>
             <h1 class="mb-4">
                 <span class="badge badge-primary">{{ __('Orden')." #".$data->id }}</span>
             </h1>
@@ -60,7 +60,7 @@
 </div>
 
 <script>
-    
+   
     const player = document.querySelector("lottie-player");
     var statusini="{{$data->status->pluck('alias')->last()}}";
     var arrayorderstarus={
@@ -72,7 +72,7 @@
              delivered:{lottie:"{{asset('animations/delivered.json');}}",text:"Finalizo el pedido, ha sido entregado ",title:"Entregado"},
         };
     function orderStatus(){
-        var audio = new Audio('https://soundbible.com/mp3/old-fashioned-door-bell-daniel_simon.mp3');
+        //var audio = new Audio('https://soundbible.com/mp3/old-fashioned-door-bell-daniel_simon.mp3');
         $.ajax({
                 type:'get',
                 url:' {{ route('orderstatus',['restorant'=>$data->restorant->subdomain,"id"=>$data->id]) }}',
@@ -87,7 +87,7 @@
                             $(".titlestatus").html(arrayorderstarus[statusini].title);
                             $(".textstatus").html(arrayorderstarus[statusini].text);
                             player.load(arrayorderstarus[statusini].lottie);
-                            audio.play();
+                            //audio.play();
                         }
 
                     }

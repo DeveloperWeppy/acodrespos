@@ -1183,6 +1183,15 @@ class OrderController extends Controller
                 $res=new OrderNotification($order, $status_id_to_attach);
                
                 $order->client->notify( $res);
+                if( $order->getExpeditionType()=="Recogida" && strlen($order->client->phone )<14 && strlen($order->client->phone )>9 && $status_id_to_attach.'' == '5'){
+                    if(substr($order->client->phone , 0, 1) === "+"){
+                        $resmsm=$this->envioSms(substr($order->client->phone ,1,strlen($order->client->phone )),"Tu pedido #".$order->id. " esta listo,acercate al mostrador");
+                    }else{
+                       if(strlen($order->client->phone)==12){
+                         $resmsm=$this->envioSms($order->client->phone,"Tu pedido #".$order->id. " esta listo,acercate al mostrador");
+                       }
+                    }
+                }
             }
 
             if ($status_id_to_attach.'' == '4') {

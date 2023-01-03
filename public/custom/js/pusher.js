@@ -1,9 +1,29 @@
 
 var notificacionIndes=1;
 var arraynotificacion=[];
+Notification.requestPermission();
+if (typeof SW_JS !== 'undefined') {
+ navigator.serviceWorker.register(SW_JS);
+}
 if(typeof urlNotificacion === 'undefined'){
   var urlNotificacion="notificacion";
 }
+async function validarPermisNoti(){
+  if (!('Notification' in window)) {
+    console.log("This browser does not support notifications.");
+    return false;
+  } else{
+    await Notification.requestPermission().then((result) => {
+       if(result=="granted"){
+         
+          return true;
+       }
+     return false;
+    });
+  }
+   return false;
+}
+validarPermisNoti();
 function notifivisto(){
   
  $.ajax({
@@ -154,8 +174,8 @@ $(document).ready(function() {
             if($("#listNotif").length > 0 ) {
                 listNotificacionAumenta(1);
             }
+           
             if(!data.order.ifclient){
-
               var ruta = "/orders";
                 var prefijo = "Orden";
                 if(data.order.ruta!=null && data.order.ruta!=undefined){
@@ -166,6 +186,9 @@ $(document).ready(function() {
                 js.notify(data.msg + ". "+prefijo+" #" + data.order.id,"primary","onclick='javascript:location.href="+'"/orders/'+data.order.id+'"'+"'");
                 $(".notifyjs-arrow").html('<i class="fas fa-times-circle" style="position:absolute; text-align:right;top:-7px;color:#8965e0;"></i>');
                 $(".notifyjs-arrow").css('right','16px');
+                if(validarPermisNoti()){
+                   const notification = new Notification('Estado de pedido #'+data.order.id, { body: data.msg, icon: SITE_LOGO });
+                }
             }else{
                 var type="";
                 if(data.msg=="Pedido rechazado"){
@@ -178,8 +201,36 @@ $(document).ready(function() {
                    ruta = data.order.ruta;
                    prefijo = "Solicitud";
                 }
-
-                js.notify(data.msg + ". "+prefijo+" #" + data.order.id,type,"onclick='javascript:location.href="+'"'+ruta+'/'+data.order.id+'"'+"'");  
+                
+                if(validarPermisNoti()){
+                    ruta= "/orders/"+data.order.id;
+                    if (typeof SW_JS != 'undefined') {
+                         if (typeof SW_TYPE_N !== 'undefined') {
+                            if(SW_TYPE_N==1){
+                                ruta=SW_JS.substring(0, SW_JS.length - 8)+"qrorder/"+data.order.id;
+                            }
+                         }
+                         navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                            registrations[0].showNotification('Estado de pedido #'+data.order.id, {
+                              body:data.msg,
+                              icon: SITE_LOGO ,
+                              vibrate: [200, 100, 200, 100, 200, 100, 200],
+                              data : {url:ruta},
+                              tag: "vibration-sample",
+                          });
+                       });  
+                    }else{
+                            const notification = new Notification('Estado de pedido #'+data.order.id, { body: data.msg, icon:SITE_LOGO });
+                            notification.onclick = function(event) {
+                              event.preventDefault(); 
+                              window.open(ruta, '_blank');
+                            }
+                    }
+                    if( typeof orderStatus !== 'undefined'){
+                          orderStatus();
+                    }
+                 
+                }  
                 $(".notifyjs-arrow").html('<i class="fas fa-times-circle" style="position:absolute; text-align:right;top:-7px;color:#8965e0;"></i>');
                 $(".notifyjs-arrow").css('right','16px');
             }
