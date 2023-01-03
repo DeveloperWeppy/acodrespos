@@ -187,6 +187,8 @@ Coded by www.creative-tim.com
         window.translations = {!! Cache::get('translations'.App::getLocale()) !!};
         
         $('#open_preferences_center').hide(); 
+
+        
     </script>
 
 </body>

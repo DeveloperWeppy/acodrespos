@@ -48,7 +48,7 @@
                     </div>
                     <div class="row">
 
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-3 form-group-date">
                             <div class="input-daterange datepicker align-items-center">
                             <div class="form-group">
                                     <label class="form-control-label">{{ __('Active from') }}</label>
@@ -61,14 +61,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 form-group-date">
                             <div class="form-group">
                                 <label class="form-control-label">Hora</label>
                                 <input name="hora1" class="form-control timepicker tiempo" placeholder="Hora" required type="text">
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3 form-group-date">
                             <div class="input-daterange datepicker align-items-center">
                             <div class="form-group">
                                     <label class="form-control-label">{{ __('Active to') }}</label>
@@ -81,15 +81,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 form-group-date">
                             <div class="form-group">
                                 <label class="form-control-label">Hora</label>
                                 <input name="hora2" class="form-control timepicker tiempo" placeholder="Hora" required type="text">
                             </div>
                         </div>
-
-                        
-
 
                     </div>
 
@@ -140,7 +137,7 @@
                         </div>
                     </div>
 
-                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"", 'value'=>'0',])
+                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón sin fecha límite",'id'=>"has_ilimited",'placeholder'=>"",'value'=>(isset($coupon->has_ilimited)&&$coupon->has_ilimited==true)?true:false,])
 
 
                     </div>
@@ -231,7 +228,9 @@ $( "#formDiscount" ).submit(function( event ) {
  
     
     if(fechaHora1[0]!=undefined){
-        $('input[name=active_from]').val(fechaHora1[0]);
+        if(fechaHora1[0]!="0000-00-00"){
+            $('input[name=active_from]').val(fechaHora1[0]);
+        }
     }
     if(fechaHora1[1]!=undefined){
         $('input[name=hora1]').val(formatTime(fechaHora1[1]));
@@ -239,7 +238,9 @@ $( "#formDiscount" ).submit(function( event ) {
 
     var fechaHora2 = fecha2.split(' ');
     if(fechaHora2[0]!=undefined){
-        $('input[name=active_to]').val(fechaHora2[0]);
+        if(fechaHora2[0]!="0000-00-00"){
+            $('input[name=active_to]').val(fechaHora2[0]);
+        }
     }
     if(fechaHora2[1]!=undefined){
         $('input[name=hora2]').val(formatTime(fechaHora2[1]));
@@ -334,5 +335,9 @@ function mostrarMultiple(){
             }     
         });
             
+        if($('#has_ilimited').is(':checked')){
+            $('.form-group-date').hide();
+            $(".tiempo").attr("required",false);
+        }
     </script>
 @endsection

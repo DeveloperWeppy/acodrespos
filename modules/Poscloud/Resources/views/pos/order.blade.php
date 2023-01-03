@@ -88,74 +88,73 @@ function clean($string)
             <div class="row mt-3 px-5" style="height:90%; overflow:auto;">
 
                 @if (!$vendor->categories->isEmpty())
+                    @if(isset($vendor->categories[0]->aitemsFeatured) && count($vendor->categories[0]->aitemsFeatured)>0)
+                        <div class="mt-4"
+                        id="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}"
+                        class="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}">
+                            <h1>Destacado</h1>
+                        </div>
+                
 
-        
-                @if((count($vendor->categories[0]->aitemsFeatured)>0))
-                <div class="mt-4"
-                id="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}"
-                class="{{ clean(str_replace(' ', '', strtolower("Destacado")) . strval(0)) }}">
-                    <h1>Destacado</h1>
-                </div>
-                @endif
-
-                    @foreach ($vendor->categories as $key => $category)
-                        @foreach ($category->aitemsFeatured as $item)
-                            <?php
-                            $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
-                            $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
-                            ?>
-                            <div onClick="setCurrentItem({{ $item->id }},{{$dsc}})" class="col-xl-3 col-md-6 mb-3 mt-3">
-                                <div class="card containerItem">
-                                    @if ($dsc>0 && $dsc!=null)
-                                        @if(isset($item->variants) && $item->variants->count()>0)
-                                            <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
-                                        @else
-                                            <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
-                                        @endif
-                                    @endif
-                                    <div class="position-relative">
-                                        <a class="d-block shadow-xl border-radius-xl">
-                                            <img src="{{ $item->logom }}" alt="img-blur-shadow"
-                                                class="img-fluid shadow border-radius-xl">
-                                        </a>
-                                    </div>
-                                    <div class="card-body px-2 pb-1">
-                                        <?php 
-                                            $variante1 = $item->price;
-                                            unset($variante2);
-                                            if(isset($item->variants)){
-                                                if($item->variants->count()>0){
-                                                    $variante1 = $item->variants[0]->price;
-                                                    $idv = $item->variants->count()-1;
-                                                    $variante2 = $item->variants[$idv]->price;
-                                                }
-                                            }
-                                        ?>
-
+                        @foreach ($vendor->categories as $key => $category)
+                            @foreach ($category->aitemsFeatured as $item)
+                                <?php
+                                $dsc =  $restorant->applyDiscount($item->discount_id,$item->price);
+                                $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
+                                ?>
+                                <div onClick="setCurrentItem({{ $item->id }},{{$dsc}})" class="col-xl-3 col-md-6 mb-3 mt-3">
+                                    <div class="card containerItem">
                                         @if ($dsc>0 && $dsc!=null)
-                                        <span class="badge bg-gradient-danger" style="text-decoration: line-through;">
-                                                @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                            @if(isset($item->variants) && $item->variants->count()>0)
+                                                <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                            @else
+                                                <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                            @endif
+                                        @endif
+                                        <div class="position-relative">
+                                            <a class="d-block shadow-xl border-radius-xl">
+                                                <img src="{{ $item->logom }}" alt="img-blur-shadow"
+                                                    class="img-fluid shadow border-radius-xl">
+                                            </a>
+                                        </div>
+                                        <div class="card-body px-2 pb-1">
+                                            <?php 
+                                                $variante1 = $item->price;
+                                                unset($variante2);
+                                                if(isset($item->variants)){
+                                                    if($item->variants->count()>0){
+                                                        $variante1 = $item->variants[0]->price;
+                                                        $idv = $item->variants->count()-1;
+                                                        $variante2 = $item->variants[$idv]->price;
+                                                    }
+                                                }
+                                            ?>
+
+                                            @if ($dsc>0 && $dsc!=null)
+                                            <span class="badge bg-gradient-danger" style="text-decoration: line-through;">
+                                                    @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @if(isset($variante2))
+                                                    - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    @endif
+                                                </span>
+                                            @endif
+                                            <span class="badge bg-gradient-dark">
+                                                @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                 @if(isset($variante2))
-                                                - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                 @endif
                                             </span>
-                                        @endif
-                                        <span class="badge bg-gradient-dark">
-                                            @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
-                                            @if(isset($variante2))
-                                            - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
-                                            @endif
-                                        </span>
-                                        <br>
-                                
+                                            <br>
+                                    
 
-                                        <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
+                                            <strong class="text-dark mb-2 text">{{ $item->name }}</strong>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         @endforeach
-                    @endforeach
+                    @endif
                 @endif
 
 

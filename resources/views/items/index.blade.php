@@ -8,51 +8,27 @@
     <style>
 
 
-        .wrap {
-          width: 100%;
-          height: 188px;
-          position: absolute;
-          top: -8px;
-          left: 8px;
-          overflow: hidden;
-          pointer-events: none;
+            
+        .wdp-ribbon{
+            display: inline-block;
+            padding: 2px 15px;
+            position: absolute;
+            right: 0px;
+            top: 20px;
+            line-height: 24px;
+            height:24px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+            border-radius: 0;
+            text-shadow: none;
+            font-weight: normal;
+            background-color: #e6750b !important;
+            z-index: 2;
+            color: #ffffff;
         }
-        .wrap:before, .wrap:after {
-          content: ""; 
-          position: absolute;
-        }
-        .wrap:before {
-          width: 40px;
-          height: 8px;
-          right: 100px;
-          background: #a15415;
-          border-radius: 8px 8px 0px 0px;
-        }
-        .wrap:after {
-          width: 8px;
-          height: 40px;
-          right: 0px;
-          top: 100px;
-          background: #a15415;
-          border-radius: 0px 8px 8px 0px;
-        }
-        .ribbon6 {
-          width: 200px;
-          height: 40px;
-          line-height: 40px;
-          position: absolute;
-          top: 30px;
-          right: -50px;
-          z-index: 2;
-          overflow: hidden;
-          -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
-          border: 1px dashed;
-          box-shadow:0 0 0 3px orange,  0px 21px 5px -18px rgba(0,0,0,0.6);
-          background: orange;
-          text-align: center;
-          color:#ffffff;
-        }
+
         
         </style>
         
@@ -139,7 +115,7 @@
 
 
                        
-                        @if((count($categories[0]->aitemsFeatured)>0))
+                        @if(isset($categories[0]->aitemsFeatured) && count($categories[0]->aitemsFeatured)>0)
                             <div class="alert alert-default" id="categoria-{{str_replace(' ', '-', "Destacados")}}">
                                 <div class="row">
                                     <div class="col">
@@ -155,14 +131,17 @@
                                         @foreach ( $category->itemsFeatured as $item)
                                             <?php 
                                                 $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                                                $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
                                             ?>
                                             <div class="col-lg-3">
                                                 <a href="{{ route('items.edit', $item) }}">
                                                     <div class="card containerItem">
                                                         @if ($dsc>0 && $dsc!=null)
-                                                        <div class="wrap">
-                                                            <span class="ribbon6">Descuento</span>
-                                                       </div>
+                                                            @if(isset($item->variants) && $item->variants->count()>0)
+                                                                <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                                            @else
+                                                                <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                                            @endif
                                                         @endif
                                                         <img class="card-img-top" src="{{ $item->logom }}" alt="...">
                                                         <div class="card-body">
@@ -196,15 +175,6 @@
 
                         {{--***********************************************--}}
                        
-
-
-
-
-
-
-
-
-
 
 
 
@@ -294,14 +264,17 @@
                                             @if($item->has_featured==0)
                                             <?php 
                                                 $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                                                $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
                                             ?>
                                             <div class="col-lg-3">
                                                 <a href="{{ route('items.edit', $item) }}">
                                                     <div class="card containerItem">
                                                         @if ($dsc>0 && $dsc!=null)
-                                                        <div class="wrap">
-                                                            <span class="ribbon6">Descuento</span>
-                                                       </div>
+                                                            @if(isset($item->variants) && $item->variants->count()>0)
+                                                                <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                                            @else
+                                                                <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                                            @endif
                                                         @endif
                                                         <img class="card-img-top" src="{{ $item->logom }}" alt="...">
                                                         <div class="card-body">
