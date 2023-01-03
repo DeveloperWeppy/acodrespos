@@ -85,7 +85,7 @@
                                 
                                     @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Cupón Envio Gratis",'id'=>"has_free_delivery",'placeholder'=>"", 'value'=>"0",])
                                     
-                                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"Aplicar a productos en descuento",'id'=>"has_discount", 'value'=>"0"])
+                                    @include('partials.bool',['class'=>"col-12", 'ftype'=>'input','name'=>"No plicar a productos en descuento",'id'=>"has_discount", 'value'=>"0", 'additionalInfo'=>'El cupon no se aplicará si hay productos en descuento en el carrito '])
                                 
                                 </div>
 

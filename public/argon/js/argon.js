@@ -1245,10 +1245,17 @@ var RatingsResChart = (function() {
 
 
 	function graficoLinea(canvaId,chartlabels,chartvalues,labelx,labely,addtag="",formatNumber,theme=0) {
-		
 	
+		
+
+
 		if(theme==0){ var colorLabels = "#32325d";}
 		if(theme==1){ var colorLabels = "#ffffff";}
+
+		if(chartlabels.length==0){
+			$('#'+canvaId).parent().replaceWith('<p style="color:'+colorLabels+'" >No hay registros en este momento!</p>');
+			return;
+		}
 	
 		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
 
@@ -1331,6 +1338,11 @@ var RatingsResChart = (function() {
 		
 		if(theme==0){ var colorLabels = "#32325d";}
 		if(theme==1){ var colorLabels = "#ffffff";}
+
+		if(chartlabels.length==0){
+			$('#'+canvaId).parent().replaceWith('<p style="color:'+colorLabels+'" >No hay registros en este momento!</p>');
+			return;
+		}
 	
 		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
 
@@ -1413,6 +1425,11 @@ var RatingsResChart = (function() {
 		
 		if(theme==0){ var colorLabels = "#32325d";}
 		if(theme==1){ var colorLabels = "#ffffff";}
+
+		if(chartlabels.length==0){
+			$('#'+canvaId).parent().replaceWith('<p style="color:'+colorLabels+'" >No hay registros en este momento!</p>');
+			return;
+		}
 	
 		$('#'+canvaId).replaceWith('<canvas id="'+canvaId+'" class="chart-canvas"></canvas>');
 

@@ -2,9 +2,11 @@
     <tr>
         <td>{{ $item->name }}</td>
         <td>{{ $item->type == 0 ? $item->price." ".config('settings.cashier_currency') : $item->price." %"}}</td>
-        <td>{{ $item->active_from }}</td>
-        <td>{{ $item->active_to }}</td>
+
        
+        <td>{{ $item->has_ilimited==1?"Sin límite":Carbon\Carbon::parse($item->active_from)->format(config('settings.datetime_display_format'))}}</td>
+        <td>{{ $item->has_ilimited==1?"Sin límite":Carbon\Carbon::parse($item->active_to)->format(config('settings.datetime_display_format')) }}</td>
+
         <td> 
             @if($item->opcion_discount==0)
             <span class="">Todo el restaurante</span>

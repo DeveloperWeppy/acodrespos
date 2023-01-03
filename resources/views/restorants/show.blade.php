@@ -151,9 +151,11 @@
                     <li class="nav-item nav-item-category ">
                         <a class="nav-link  mb-sm-3 mb-md-0 active" data-toggle="tab" role="tab" href="">{{ __('All categories') }}</a>
                     </li>
+                    @if(isset($restorant->categories[0]->aitemsFeatured) && count($restorant->categories[0]->aitemsFeatured)>0)
                     <li class="nav-item nav-item-category" id="{{ 'cat_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
                         <a class="nav-link mb-sm-3 mb-md-0" data-toggle="tab" role="tab" id="{{ 'nav_'.clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}" href="#{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">Destacados</a>
                     </li>
+                    @endif
                     @foreach ( $restorant->categories as $key => $category)
                         @if(!$category->aitems->isEmpty())
                             <li class="nav-item nav-item-category" id="{{ 'cat_'.clean(str_replace(' ', '', strtolower($category->name)).strval($key)) }}">
@@ -169,95 +171,97 @@
 
             @if(!$restorant->categories->isEmpty())
 
-                @if((count($restorant->categories[0]->aitemsFeatured)>0))
+                @if(isset($restorant->categories[0]->aitemsFeatured) && count($restorant->categories[0]->aitemsFeatured)>0)
                     <div id="{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}" class="{{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
                         <h1>Destacados</h1><br />
                     </div>
-                @endif
+                
             
-                <div class="row {{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
-                    @foreach ( $restorant->categories as $key => $category)
-                    @foreach ($category->aitemsFeatured as $item)
-                        <?php 
-                        $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
+                    <div class="row {{ clean(str_replace(' ', '', strtolower("Destacados")).strval(0)) }}">
+                        @foreach ( $restorant->categories as $key => $category)
+                        @foreach ($category->aitemsFeatured as $item)
+                            <?php 
+                            $dsc = $restorant->applyDiscount($item->discount_id,$item->price);
 
-                        $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
-                        
-                        ?>
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
-                            <div class="strip containerItem">
-                                @if ($dsc>0 && $dsc!=null)
-                                    @if(isset($item->variants) && $item->variants->count()>0)
-                                        <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
-                                    @else
-                                        <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                            $textDesc = 100-number_format((($item->price-$dsc)*100)/$item->price,0);
+                            
+                            ?>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 ">
+                                <div class="strip containerItem">
+                                    @if ($dsc>0 && $dsc!=null)
+                                        @if(isset($item->variants) && $item->variants->count()>0)
+                                            <span class="wdp-ribbon wdp-ribbon-three">Dto %</span>
+                                        @else
+                                            <span class="wdp-ribbon wdp-ribbon-three">{{$textDesc}}%</span>
+                                        @endif
                                     @endif
-                                @endif
-                                @if(!empty($item->image))
-                                <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
-                                </figure>
-                                @else
-                                <figure>
-                                    <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
-                                </figure>
-                                @endif
-                                <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
-                                <div class="res_description">{{ $item->short_description}}</div>
-                                <div class="row">
-                                    <div class="col-6">
-                                      
-                                        <div class="res_mimimum">
+                                    @if(!empty($item->image))
+                                    <figure>
+                                        <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{ $item->logom }}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    </figure>
+                                    @else
+                                    <figure>
+                                        <a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)"><img src="{{asset('images/default/Imagen-No-DIsponible.jpg')}}" loading="lazy" data-src="{{ config('global.restorant_details_image') }}" class="img-fluid lazy" alt=""></a>
+                                    </figure>
+                                    @endif
+                                    <div class="res_title"><b><a onClick="setCurrentItem({{ $item->id }},{{$dsc}})" href="javascript:void(0)">{{ $item->name }}</a></b></div>
+                                    <div class="res_description">{{ $item->short_description}}</div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                        
+                                            <div class="res_mimimum">
 
-                                            <?php 
-                                                $variante1 = $item->price;
-                                                unset($variante2);
-                                                if(isset($item->variants)){
-                                                    if($item->variants->count()>0){
-                                                        $variante1 = $item->variants[0]->price;
-                                                        $idv = $item->variants->count()-1;
-                                                        $variante2 = $item->variants[$idv]->price;
+                                                <?php 
+                                                    $variante1 = $item->price;
+                                                    unset($variante2);
+                                                    if(isset($item->variants)){
+                                                        if($item->variants->count()>0){
+                                                            $variante1 = $item->variants[0]->price;
+                                                            $idv = $item->variants->count()-1;
+                                                            $variante2 = $item->variants[$idv]->price;
+                                                        }
                                                     }
-                                                }
-                                            ?>
+                                                ?>
 
-                                            @if ($dsc>0 && $dsc!=null)
-                                                <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
-                                                    @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                @if ($dsc>0 && $dsc!=null)
+                                                    <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
+                                                        @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                        @if(isset($variante2))
+                                                        - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                        @endif
+                                                    </span>
+                                                @endif
+                                                <span style="white-space: nowrap;">
+                                                    @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                     @if(isset($variante2))
-                                                    - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
+                                                    - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                     @endif
                                                 </span>
-                                            @endif
-                                            <span style="white-space: nowrap;">
-                                                @money($variante1-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
-                                                @if(isset($variante2))
-                                                - @money($variante2-$dsc, config('settings.cashier_currency'),config('settings.do_convertion'))
-                                                @endif
-                                            </span>
-                                           
+                                            
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="allergens" style="text-align: right;">
+                                                @foreach ($item->allergens as $allergen)
+                                                <div class='allergen' data-toggle="tooltip" data-placement="bottom" title="{{$allergen->title}}" >
+                                                    <img  src="{{$allergen->image_link}}" />
+                                                </div>
+                                                @endforeach
+                                                
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="allergens" style="text-align: right;">
-                                            @foreach ($item->allergens as $allergen)
-                                             <div class='allergen' data-toggle="tooltip" data-placement="bottom" title="{{$allergen->title}}" >
-                                                 <img  src="{{$allergen->image_link}}" />
-                                             </div>
-                                            @endforeach
-                                             
-                                        </div>
-                                    </div>
+
+                                
+
+                            
                                 </div>
-
-                             
-
-                        
                             </div>
-                        </div>
-                    @endforeach
-                    @endforeach
-                </div>
+                        @endforeach
+                        @endforeach
+                    </div>
+
+                @endif
             @endif
 
             

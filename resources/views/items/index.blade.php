@@ -139,7 +139,7 @@
 
 
                        
-                        @if((count($categories[0]->aitemsFeatured)>0))
+                        @if(isset($categories[0]->aitemsFeatured) && count($categories[0]->aitemsFeatured)>0)
                             <div class="alert alert-default" id="categoria-{{str_replace(' ', '-', "Destacados")}}">
                                 <div class="row">
                                     <div class="col">
@@ -196,15 +196,6 @@
 
                         {{--***********************************************--}}
                        
-
-
-
-
-
-
-
-
-
 
 
 
