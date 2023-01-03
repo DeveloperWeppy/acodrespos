@@ -999,7 +999,7 @@ class HomeController extends Controller
         
         $chartLabels=[];
         $chartValues=[];
-        $aditional=[];
+        $aditional="";
 
         if(isset($Request) && $Request->grafico!=""){
 
@@ -1069,7 +1069,7 @@ class HomeController extends Controller
                     }
 
                     //consulta la mesa mas ocupada 
-                    $
+                    
                     $mesaMasCaliente = DB::table('orders')
                     ->select('tables.restoarea_id','tables.name as nomt',DB::raw('count(orders.table_id) as numt'),DB::raw('sum(orders.number_people) as nump'))
                     ->join('tables', 'tables.id', '=', 'orders.table_id')
