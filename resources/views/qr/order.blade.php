@@ -1,4 +1,4 @@
-@extends('layouts.frontqr', ['title' => ''])
+@extends('layouts.frontqr', ['data' => $data->client])
 @section('content')
 <div class="row justify-content-center">
     <div class="card shadow border-0 mt-8">
@@ -58,13 +58,15 @@
         </div>
     </div>
 </div>
+
 <script>
+    
     const player = document.querySelector("lottie-player");
     var statusini="{{$data->status->pluck('alias')->last()}}";
     var arrayorderstarus={
              accepted_by_admin:{lottie:"{{asset('animations/received.json');}}",text:"Su pedido está creado. Se le notificará para obtener más información.",title:"Aceptado por el administrador"},
              accepted_by_restaurant:{lottie:"{{asset('animations/preparing.json');}}",text:"El pedido esta en preparacion .",title:"Aceptado por el restaurante"},
-             prepared:{lottie:"{{asset('animations/serving.json');}}",text:"El pedido esta preparado",title:"Preparado"},
+             prepared:{lottie:"{{asset('animations/serving.json');}}",text:"La espera término, acercate al mostrador.",title:"Preparado"},
              rejected_by_restaurant:{lottie:"{{asset('animations/rejected.json');}}",text:" El pedido fue rechazado por el restaurante .",title:"Rechazado"},
              assigned_to_driver:{lottie:"{{asset('animations/picked_up.json');}}",text:"El pedido fue entregado al conductor",title:"Asignado al conductor"},
              delivered:{lottie:"{{asset('animations/delivered.json');}}",text:"Finalizo el pedido, ha sido entregado ",title:"Entregado"},
