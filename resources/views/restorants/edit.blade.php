@@ -356,7 +356,7 @@
             }
             Swal.fire({
                 icon: 'warning',
-                title: 'Validan los datos',
+                title: 'Validando los datos',
                 timer: 2000,
                 timerProgressBar: true,
                 showConfirmButton: false,
