@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 //comandos
 Route::get('storage-link', function () {
     Artisan::call('storage:link');

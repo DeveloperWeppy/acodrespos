@@ -224,7 +224,7 @@
                                                 ?>
 
                                                 @if ($dsc>0 && $dsc!=null)
-                                                    <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
+                                                    <span class="text-danger " style="text-decoration: line-through;white-space: nowrap;">
                                                         @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                         @if(isset($variante2))
                                                         - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))
@@ -320,7 +320,7 @@
                                             ?>
 
                                             @if ($dsc>0 && $dsc!=null)
-                                                <span class="text-muted" style="text-decoration: line-through;white-space: nowrap;">
+                                                <span class="text-danger" style="text-decoration: line-through;white-space: nowrap;">
                                                     @money($variante1, config('settings.cashier_currency'),config('settings.do_convertion'))
                                                     @if(isset($variante2))
                                                     - @money($variante2, config('settings.cashier_currency'),config('settings.do_convertion'))

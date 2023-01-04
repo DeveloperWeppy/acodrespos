@@ -100,7 +100,7 @@ function updateSubTotalPrice(net,enableDelivery){
  * Saves the values in vue
  */
 function getCartContentAndTotalPrice(){
-   axios.get('/cart-getContent',{discount:desc}).then(function (response) {
+   axios.get('/cart-getContent').then(function (response) {
     console.log(response.data.data);
     cartContent.items=response.data.data;
     //cartContentMobile.items=response.data.data;

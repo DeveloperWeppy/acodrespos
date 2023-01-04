@@ -20,8 +20,8 @@
                             @endif
                             <br />  
                             <div v-if="deduct"> 
-                                <span v-if="deduct">{{ __('Applied coupon discount') }}:</span>
-                                <span v-if="deduct" class="ammount">@{{ deductFormat }}</span>
+                                <span class="text-danger" v-if="deduct">{{ __('Applied coupon discount') }}:</span>
+                                <span class="text-danger" v-if="deduct" class="ammount">-@{{ deductFormat }}</span>
                                 <br />  
                                 <br />  
                             </div>

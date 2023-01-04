@@ -16,6 +16,7 @@ class LaravelPWAController extends Controller
     }
 
     public function offline(){
-        return view('laravelpwa::offline');
+        return view('posoffline::login');
+        //return view('laravelpwa::offline');
     }
 }

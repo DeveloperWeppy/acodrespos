@@ -52,7 +52,7 @@
 
 
         @yield('head')
-        @laravelPWA
+       
         @include('layouts.rtl')
 
         <!-- Custom CSS defined by admin -->
@@ -60,7 +60,7 @@
 
 
 
-
+        @laravelPWA
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()
