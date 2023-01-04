@@ -21,7 +21,7 @@
       var USER_ID = '{{ isset($data->id)? $data->id:''}}';
       var PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
       var PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
-      var SITE_LOGO="{{ asset('argonfront') }}/img/apple-icon.png";
+      var SITE_LOGO="{{ asset('apple-touch-icon.png') }}";
     </script>
     <script src="{{ asset('custom') }}/js/notify.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>

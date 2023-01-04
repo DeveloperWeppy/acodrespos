@@ -9,6 +9,9 @@
   margin-right: 10px;
 }
 
+.noicon[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  }
 .input-group-text2 {
     font-size: 1rem;
     font-weight: 400;

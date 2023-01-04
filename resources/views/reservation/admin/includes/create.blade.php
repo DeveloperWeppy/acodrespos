@@ -518,6 +518,7 @@ $(document).ready(function() {
         name: "Por favor ingrese el nombre",
         number_identification: "Por favor ingrese el documento de identificacion",
         email: "Por favor ingrese el email",
+        birth_date: "Por favor ingrese la fecha de nacimiento",
         phone: "Por favor el numero de telefono",
     },
     errorElement: 'span',
@@ -599,8 +600,9 @@ $(document).ready(function() {
                               timer: 2000
                           });
              }).fail(function( jqXHR,textStatus ) {
+                console.log(JSON.stringify(jqXHR));
                 var mensajeError="";
-                if (typeof jqXHR.responseJSON.errors.email != "undefined"){
+                if (typeof jqXHR.responseJSON.errors.email !== "undefined"){
                      mensajeError="El correo electrónico ya se tomó.";
                 }
                             Swal.fire({
