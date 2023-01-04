@@ -792,6 +792,7 @@
                           });
              }).fail(function( jqXHR,textStatus ) {
                 var mensajeError="";
+                console.log(JSON.stringify(jqXHR));
                 if (typeof jqXHR.responseJSON.errors.email != "undefined"){
                      mensajeError="El correo electrónico ya se tomó.";
                 }
