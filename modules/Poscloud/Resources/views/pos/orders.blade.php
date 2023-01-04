@@ -19,7 +19,7 @@
                 </a>
                 <a href="#" onclick="moveOrder()" class="btn bg-gradient-default active" role="button" aria-pressed="true">
                   <span class="btn-inner--icon"><i class="ni ni-ui-04"></i></span>
-                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('Move order') }}</span>
+                  <span class="btn-inner--text d-none d-sm-inline-block">{{ __('Translado de cuentas') }}</span>
                 </a>
               </div>
             </div>
