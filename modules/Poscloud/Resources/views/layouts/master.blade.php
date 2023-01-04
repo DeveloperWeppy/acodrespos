@@ -772,6 +772,9 @@
              }).done(function( respuesta ) {
 
                   $.ajax({
+                    headers: {
+                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
                     method: "GET",
                     url: "/listclients/select",
                     dataType:'json',
