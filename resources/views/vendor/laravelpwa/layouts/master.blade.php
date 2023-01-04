@@ -23,7 +23,7 @@
   <link rel="icon" type="image/png" href="{{ asset('softd') }}/img/favicon.png">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>
-    {{ $vendor->name." - ".config('app.name')}}
+ {{--    {{ $vendor->name." - ".config('app.name')}} --}}
   </title>
   <!--     Fonts and icons     -->
   <link href="{{ asset('css') }}/gfonts.css" rel="stylesheet">
@@ -50,17 +50,17 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-
-
+  
   <div class="main-content position-relative bg-gray-100">
-    @include('poscloud::navbar')
+   
+    @include('laravelpwa::navbar')
       <div class="nav-wrapper position-relative end-0 mt-2" id="floorAreas">
         <ul class="nav nav-pills nav-fill p-1 bg-transparent " role="tablist">
-          @foreach ($vendor->areas as $key =>$area)
+         {{--  @foreach ($vendor->areas as $key =>$area)
             <li class="nav-item" style="padding-top:8px" >
               <a style="height: 50px;"  class="nav-link mb-0 px-0 py-1 {{$key==0?"active":""}}" id="area-{{ $area->id }}-tab"  data-bs-toggle="tab" data-bs-target="#area-{{ $area->id }}" type="button" role="tab" aria-controls="area-{{ $area->id }}" aria-selected="{{$key==0?"tru":"false"}}"><strong>{{ $area->name }}</strong></a>
             </li>
-          @endforeach
+          @endforeach --}}
         </ul>
       </div>
       @yield('floorPlan')
@@ -68,7 +68,7 @@
       @yield('orderDetails')  
     </div>
   </div>
-  <input type="hidden" name="propina" id="porcentaje_propina" value="{{$vendor->propina}}">
+{{--   <input type="hidden" name="propina" id="porcentaje_propina" value="{{$vendor->propina}}"> --}}
   <!--   Core JS Files   -->
   <script src="{{ asset('softd') }}/js/core/popper.min.js"></script>
   <script src="{{ asset('softd') }}/js/core/bootstrap.min.js"></script>
@@ -107,19 +107,19 @@
       var CASHIER_CURRENCY = "<?php echo  config('settings.cashier_currency') ?>";
       var LOCALE="<?php echo  App::getLocale() ?>";
       var SELECT_OR_ENTER_STRING="{{ __('Select, or enter keywords to search items') }}";
-      var DELIVERY_AREAS = @json($deliveryAreasCost, JSON_PRETTY_PRINT);
+      var DELIVERY_AREAS = "";
       var IS_POS=true;
       var CURRENT_TABLE_ID=null;
       var EXPEDITION=3;
       var CURRENT_TABLE_NAME=null;
       var CURRENT_RECEIPT_NUMBER="";
-      var SHOWN_NOW="floor"; //floor,orders,order
-      var floorPlan=@json($floorPlan);
+      var SHOWN_NOW="floor"; 
+      var floorPlan="";
 
       // "Global" flag to indicate whether the select2 control is oedropped down).
       var _selectIsOpen = false;
-      var datalistClient=@json($selectClient);
-      var datalistPhone=@json($selectTelefono);
+      var datalistClient="";
+      var datalistPhone="";
       var selectClientId=0;
       var selectClientText="";
       var mesaocupada = false;
@@ -820,40 +820,11 @@ $(document).on('click','.checkvariable',  function(  ){
 
     </script>
 
+<script>
     
-     <script>
-       
-        function openDb(){
-          alert();
-  // Open the database
-  //parameters - database name and version number. - integer
-  var db
-  var request = indexedDB.open("usuario", 4);
-  db = this.result
-  //Generating handlers
-  //Error handlers
-  request.onerror = function(event) {
-    console.log("Error: ")
-  };
-  //OnSuccess Handler
-  request.onsuccess = function(event) {
-       console.log("Success: ")
-       db = event.target.result
-   };
+</script>
     
-    //OnUpgradeNeeded Handler
-  request.onupgradeneeded = function(event) { 
-    console.log("On Upgrade Needed")
-       
-      db = event.target.result;
-      // Create an objectStore for this database
-      //Provide the ObjectStore name and provide the keyPath which acts as a primary key
-      var obj = ;
-      var objectStore = db.createObjectStore("ObjectStoreName",  obj);
-  };
-}
-openDb();
-     </script>
+     
 
 </body>
 
