@@ -347,6 +347,7 @@
                     location.reload();
                 }, 3000);
              }).fail(function( jqXHR,textStatus ) {
+                console.log(JSON.stringify(jqXHR));
                 var mensajeError="";
                 if (typeof jqXHR.responseJSON.errors.email != "undefined"){
                      mensajeError="El correo electrónico ya se tomó.";
