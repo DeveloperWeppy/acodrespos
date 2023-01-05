@@ -169,7 +169,7 @@
                                     allowEscapeKey: false,
                                     showCancelButton: false,
                                     showConfirmButton: false,
-                                    timer: 4000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                         didOpen: () => {
                                             Swal.showLoading()
@@ -329,7 +329,7 @@
                                         text:'mensajeError',
                                         icon: 'error',
                                         button: true,
-                                        timer: 2000
+                                        timer: 3000
                                     });
                         });
             }

@@ -772,6 +772,9 @@
              }).done(function( respuesta ) {
 
                   $.ajax({
+                    headers: {
+                       'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
                     method: "GET",
                     url: "/listclients/select",
                     dataType:'json',
@@ -792,6 +795,7 @@
                           });
              }).fail(function( jqXHR,textStatus ) {
                 var mensajeError="";
+                console.log(JSON.stringify(jqXHR));
                 if (typeof jqXHR.responseJSON.errors.email != "undefined"){
                      mensajeError="El correo electrónico ya se tomó.";
                 }

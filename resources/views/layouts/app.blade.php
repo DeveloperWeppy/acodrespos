@@ -329,7 +329,7 @@
                            allowEscapeKey: false,
                            showCancelButton: false,
                            showConfirmButton: false,
-                           timer: 4000,
+                           timer: 3000,
                            timerProgressBar: true,
                                didOpen: () => {
                                    Swal.showLoading()
@@ -341,12 +341,13 @@
                               title: 'Cliente registrado',
                               icon: 'success',
                               button: true,
-                              timer: 2000
+                              timer: 3000
                           });
                 setTimeout(() => {
                     location.reload();
-                }, 2000);
+                }, 3000);
              }).fail(function( jqXHR,textStatus ) {
+                console.log(JSON.stringify(jqXHR));
                 var mensajeError="";
                 if (typeof jqXHR.responseJSON.errors.email != "undefined"){
                      mensajeError="El correo electrónico ya se tomó.";

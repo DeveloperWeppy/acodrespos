@@ -207,6 +207,14 @@
           </div>
           <div class="form-group" >
             <div class="input-group input-group-alternative mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text2"><i class="fa fa-calendar"></i></span>
+              </div>
+              <input class="form-control" placeholder="Fecha de Nacimiento" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="birth_date" value="" required="">
+            </div>
+          </div>
+          <div class="form-group" >
+            <div class="input-group input-group-alternative mb-3">
               <input class="form-control" id="formPhone"  placeholder="Teléfono" type="phone" name="phone" value="" required="">
             </div>
           </div>
@@ -217,9 +225,6 @@
       </form>
     </div>
   </div>
-
-
-
 
 
 

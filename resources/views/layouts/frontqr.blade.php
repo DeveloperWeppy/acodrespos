@@ -15,10 +15,13 @@
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script>
       var LOCALE="<?php echo  App::getLocale() ?>";
+      var SW_JS="{{asset('js/sw.js');}}";
+      var SW_TYPE_N=1;
       var CASHIER_CURRENCY = "<?php echo  config('settings.cashier_currency') ?>";
       var USER_ID = '{{ isset($data->id)? $data->id:''}}';
       var PUSHER_APP_KEY = "{{ config('broadcasting.connections.pusher.key') }}";
       var PUSHER_APP_CLUSTER = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
+      var SITE_LOGO="{{ asset('apple-touch-icon.png') }}";
     </script>
     <script src="{{ asset('custom') }}/js/notify.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
