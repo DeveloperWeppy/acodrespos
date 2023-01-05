@@ -50,8 +50,6 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-
-
   <div class="main-content position-relative bg-gray-100">
     @include('poscloud::navbar')
       <div class="nav-wrapper position-relative end-0 mt-2" id="floorAreas">
@@ -821,39 +819,7 @@ $(document).on('click','.checkvariable',  function(  ){
     </script>
 
     
-     <script>
-       
-        function openDb(){
-          alert();
-  // Open the database
-  //parameters - database name and version number. - integer
-  var db
-  var request = indexedDB.open("usuario", 4);
-  db = this.result
-  //Generating handlers
-  //Error handlers
-  request.onerror = function(event) {
-    console.log("Error: ")
-  };
-  //OnSuccess Handler
-  request.onsuccess = function(event) {
-       console.log("Success: ")
-       db = event.target.result
-   };
-    
-    //OnUpgradeNeeded Handler
-  request.onupgradeneeded = function(event) { 
-    console.log("On Upgrade Needed")
-       
-      db = event.target.result;
-      // Create an objectStore for this database
-      //Provide the ObjectStore name and provide the keyPath which acts as a primary key
-      var obj = ;
-      var objectStore = db.createObjectStore("ObjectStoreName",  obj);
-  };
-}
-openDb();
-     </script>
+     
 
 </body>
 
